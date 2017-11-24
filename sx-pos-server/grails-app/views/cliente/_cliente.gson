@@ -1,0 +1,9 @@
+import sx.core.Cliente
+
+model{
+    Cliente cliente
+}
+
+json g.render(cliente, [excludes:['credito']]){
+  credito g.render(cliente.credito )
+}

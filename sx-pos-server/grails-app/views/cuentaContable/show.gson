@@ -1,0 +1,7 @@
+import sx.contabilidad.CuentaContable
+
+model {
+    CuentaContable cuentaContable
+}
+
+json tmpl.cuentaContable(cuentaContable)

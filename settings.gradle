@@ -1,0 +1,4 @@
+include 'utils'
+include 'sx-core-plugin'
+include 'sx-ventas-api-plugin'
+include 'sx-pos-server'

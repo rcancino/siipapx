@@ -1,0 +1,19 @@
+import sx.inventario.Traslado
+
+model {
+    Traslado traslado
+}
+
+json g.render(traslado, [excludes:['solicitudDeTraslado']]){
+	solicitudDeTraslado {
+		id traslado.solicitudDeTraslado.id
+		sucursalSolicita {
+			id traslado.solicitudDeTraslado.sucursalSolicita.id
+			nombre traslado.solicitudDeTraslado.sucursalSolicita.nombre
+		}
+		sucursalAtiende {
+			id traslado.solicitudDeTraslado.sucursalAtiende.id
+			nombre traslado.solicitudDeTraslado.sucursalAtiende.nombre
+		}
+	}
+}

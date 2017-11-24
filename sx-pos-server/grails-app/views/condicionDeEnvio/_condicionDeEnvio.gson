@@ -1,0 +1,26 @@
+import sx.logistica.CondicionDeEnvio
+
+model {
+    CondicionDeEnvio condicionDeEnvio
+}
+
+
+json g.render(condicionDeEnvio, [excludes:['venta'] ]){
+
+    venta {
+        id condicionDeEnvio.venta.id
+        cliente condicionDeEnvio.venta.cliente.nombre
+        tipo condicionDeEnvio.venta.tipo
+        entidad  'VENTA'
+        documento  condicionDeEnvio.venta.documento
+        fecha  condicionDeEnvio.venta.fecha
+        total  condicionDeEnvio.venta.total
+        formaPago  condicionDeEnvio.venta.formaDePago
+        nombre  condicionDeEnvio.venta.cliente.nombre
+        kilos  condicionDeEnvio.venta.kilos
+        lastUpdated condicionDeEnvio.venta.lastUpdated
+    }
+    retraso condicionDeEnvio.venta.lastUpdated
+    documento condicionDeEnvio.venta.documento
+    
+}

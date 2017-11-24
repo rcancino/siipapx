@@ -1,0 +1,9 @@
+import sx.tesoreria.Requisicion
+
+model {
+    Requisicion requisicion
+}
+
+json g.render(requisicion, [excludes:['moneda','dateCreated','lastUpdated']]){
+    moneda requisicion.moneda.currencyCode
+}
