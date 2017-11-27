@@ -7,78 +7,80 @@ import groovy.transform.ToString
 @ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
-	private static final long serialVersionUID = 1
+    private static final long serialVersionUID = 1
 
-	transient springSecurityService
+    transient springSecurityService
 
-	String username
-	String password
-	boolean enabled = true
-	boolean accountExpired
-	boolean accountLocked
-	boolean passwordExpired
+    String username
+    String password
+    boolean enabled = true
+    boolean accountExpired
+    boolean accountLocked
+    boolean passwordExpired
 
-  String apellidoPaterno
-  String apellidoMaterno
-  String nombres
-  String nombre
-  Integer numeroDeEmpleado
-  String email
-  String sucursal
-  String puesto
+    String apellidoPaterno
+    String apellidoMaterno
+    String nombres
+    String nombre
+    Integer numeroDeEmpleado
+    String email
+    String sucursal
+    String puesto
 
-	User(String username, String password) {
-		//this()
-		this.username = username
-		this.password = password
-	}
+    User() {}
 
-	Set<Role> getAuthorities() {
-		UserRole.findAllByUser(this)*.role
-	}
-
-	def beforeInsert() {
-		encodePassword()
-    	capitalizarNombre()
-	}
-
-
-
-	def beforeUpdate() {
-		if (isDirty('password')) {
-			encodePassword()
-		}
-    if (isDirty('apellidoPaterno') || isDirty('apellidoMaterno') || isDirty('nombres')) {
-      capitalizarNombre()
-      
+    User(String username, String password) {
+        //this()
+        this.username = username
+        this.password = password
     }
-	}
 
-	protected void encodePassword() {
-		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
-	}
+    Set<Role> getAuthorities() {
+        UserRole.findAllByUser(this)*.role
+    }
 
-  private capitalizarNombre(){
-    apellidoPaterno=apellidoPaterno.toUpperCase()
-    apellidoMaterno=apellidoMaterno.toUpperCase()
-    nombres=nombres.toUpperCase()
-    nombre="$nombres $apellidoPaterno $apellidoMaterno"
-  }
+    def beforeInsert() {
+        encodePassword()
+        capitalizarNombre()
+    }
 
-	static transients = ['springSecurityService']
 
-	static constraints = {
-		username blank: false, unique: true
-		password blank: false
 
-    email nullable:true,email:true
-    numeroDeEmpleado nullable:true
-    sucursal nullable:true,maxSize:20
-    puesto nullable:true,maxSize:30
-    
-	}
+    def beforeUpdate() {
+        if (isDirty('password')) {
+            encodePassword()
+        }
+        if (isDirty('apellidoPaterno') || isDirty('apellidoMaterno') || isDirty('nombres')) {
+            capitalizarNombre()
 
-	static mapping = {
-		password column: '`password`'
-	}
+        }
+    }
+
+    protected void encodePassword() {
+        password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+    }
+
+    private capitalizarNombre(){
+        apellidoPaterno=apellidoPaterno.toUpperCase()
+        apellidoMaterno=apellidoMaterno.toUpperCase()
+        nombres=nombres.toUpperCase()
+        nombre="$nombres $apellidoPaterno $apellidoMaterno"
+    }
+
+    static transients = ['springSecurityService']
+
+    static constraints = {
+        username blank: false, unique: true
+        password blank: false
+
+        email nullable:true,email:true
+        numeroDeEmpleado nullable:true
+        sucursal nullable:true,maxSize:20
+        puesto nullable:true,maxSize:30
+
+    }
+
+    static mapping = {
+        password column: '`password`'
+    }
 }

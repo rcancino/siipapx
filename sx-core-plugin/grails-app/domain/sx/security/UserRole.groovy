@@ -8,96 +8,98 @@ import org.apache.commons.lang3.builder.HashCodeBuilder
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRole implements Serializable {
 
-	private static final long serialVersionUID = 1
+    private static final long serialVersionUID = 1
 
-	User user
-	Role role
+    User user
+    Role role
 
-	UserRole(User u, Role r) {
-		//this()
-		user = u
-		role = r
-	}
+    UserRole() {}
 
-	@Override
-	boolean equals(other) {
-		if (!(other instanceof UserRole)) {
-			return false
-		}
+    UserRole(User u, Role r) {
+        //this()
+        user = u
+        role = r
+    }
 
-		other.user?.id == user?.id && other.role?.id == role?.id
-	}
+    @Override
+    boolean equals(other) {
+        if (!(other instanceof UserRole)) {
+            return false
+        }
 
-	@Override
-	int hashCode() {
-		def builder = new HashCodeBuilder()
-		if (user) builder.append(user.id)
-		if (role) builder.append(role.id)
-		builder.toHashCode()
-	}
+        other.user?.id == user?.id && other.role?.id == role?.id
+    }
 
-	static UserRole get(long userId, long roleId) {
-		criteriaFor(userId, roleId).get()
-	}
+    @Override
+    int hashCode() {
+        def builder = new HashCodeBuilder()
+        if (user) builder.append(user.id)
+        if (role) builder.append(role.id)
+        builder.toHashCode()
+    }
 
-	static boolean exists(long userId, long roleId) {
-		criteriaFor(userId, roleId).count()
-	}
+    static UserRole get(long userId, long roleId) {
+        criteriaFor(userId, roleId).get()
+    }
 
-	private static DetachedCriteria criteriaFor(long userId, long roleId) {
-		UserRole.where {
-			user == User.load(userId) &&
-			role == Role.load(roleId)
-		}
-	}
+    static boolean exists(long userId, long roleId) {
+        criteriaFor(userId, roleId).count()
+    }
 
-	static UserRole create(User user, Role role, boolean flush = false) {
-		def instance = new UserRole(user: user, role: role)
-		instance.save(flush: flush, insert: true)
-		instance
-	}
+    private static DetachedCriteria criteriaFor(long userId, long roleId) {
+        UserRole.where {
+            user == User.load(userId) &&
+                    role == Role.load(roleId)
+        }
+    }
 
-	static boolean remove(User u, Role r, boolean flush = false) {
-		if (u == null || r == null) return false
+    static UserRole create(User user, Role role, boolean flush = false) {
+        def instance = new UserRole(user: user, role: role)
+        instance.save(flush: flush, insert: true)
+        instance
+    }
 
-		int rowCount = UserRole.where { user == u && role == r }.deleteAll()
+    static boolean remove(User u, Role r, boolean flush = false) {
+        if (u == null || r == null) return false
 
-		if (flush) { UserRole.withSession { it.flush() } }
+        int rowCount = UserRole.where { user == u && role == r }.deleteAll()
 
-		rowCount
-	}
+        if (flush) { UserRole.withSession { it.flush() } }
 
-	static void removeAll(User u, boolean flush = false) {
-		if (u == null) return
+        rowCount
+    }
 
-		UserRole.where { user == u }.deleteAll()
+    static void removeAll(User u, boolean flush = false) {
+        if (u == null) return
 
-		if (flush) { UserRole.withSession { it.flush() } }
-	}
+        UserRole.where { user == u }.deleteAll()
 
-	static void removeAll(Role r, boolean flush = false) {
-		if (r == null) return
+        if (flush) { UserRole.withSession { it.flush() } }
+    }
 
-		UserRole.where { role == r }.deleteAll()
+    static void removeAll(Role r, boolean flush = false) {
+        if (r == null) return
 
-		if (flush) { UserRole.withSession { it.flush() } }
-	}
+        UserRole.where { role == r }.deleteAll()
 
-	static constraints = {
-		role validator: { Role r, UserRole ur ->
-			if (ur.user == null || ur.user.id == null) return
-			boolean existing = false
-			UserRole.withNewSession {
-				existing = UserRole.exists(ur.user.id, r.id)
-			}
-			if (existing) {
-				return 'userRole.exists'
-			}
-		}
-	}
+        if (flush) { UserRole.withSession { it.flush() } }
+    }
 
-	static mapping = {
-		id composite: ['user', 'role']
-		version false
-	}
+    static constraints = {
+        role validator: { Role r, UserRole ur ->
+            if (ur.user == null || ur.user.id == null) return
+            boolean existing = false
+            UserRole.withNewSession {
+                existing = UserRole.exists(ur.user.id, r.id)
+            }
+            if (existing) {
+                return 'userRole.exists'
+            }
+        }
+    }
+
+    static mapping = {
+        id composite: ['user', 'role']
+        version false
+    }
 }

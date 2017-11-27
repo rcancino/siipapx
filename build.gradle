@@ -13,7 +13,6 @@ buildscript {
 ext {
     grailsApps = ['sx-pos-server']
     grailsPlugins = ['sx-core-plugin','sx-ventas-api-plugin']
-    grailsSecuredApp = ['sx-pos-server']
 }
 
 allprojects {
