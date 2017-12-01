@@ -1,9 +1,7 @@
 package sx.core
 
-
 import groovy.transform.ToString
 import org.grails.datastore.gorm.GormValidateable
-
 
 /**
  * Created by rcancino on 06/09/16.

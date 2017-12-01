@@ -1,6 +1,7 @@
 package sx.core
 
 import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 import sx.cxc.CuentaPorCobrar
@@ -8,6 +9,7 @@ import sx.logistica.CondicionDeEnvio
 
 @GrailsCompileStatic
 @ToString( includes = "sucursal,documento,fecha,total",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes = 'id')
 class Venta {
 
     String id
@@ -90,12 +92,17 @@ class Venta {
 
     CuentaPorCobrar cuentaPorCobrar
 
+    CondicionDeEnvio envio
+
     Boolean cod = false;
 
     String cfdiMail
+
     String usoDeCfdi
 
     List<VentaDet> partidas = []
+
+    String folio
 
     static constraints = {
         nombre nullable: true
@@ -131,5 +138,19 @@ class Venta {
     static hasMany =[partidas:VentaDet]
 
     static hasOne = [envio: CondicionDeEnvio]
+
+    static transients = ['folio']
+
+
+    String getFolio() {
+        return "${tipo} - ${documento}"
+    }
+
+    String statusInfo() {
+        if(cuentaPorCobrar)
+            return 'FACTURA: ' + cuentaPorCobrar.getFolio()
+        else
+            return 'PEDIDO: ' + getFolio()
+    }
 
 }

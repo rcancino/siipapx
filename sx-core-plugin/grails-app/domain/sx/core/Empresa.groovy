@@ -87,7 +87,7 @@ class Empresa {
             //assert certificadoDigital,'Debe cargar el binario del certificado '
             try {
 
-                log.info('Cargando certificado digital en formato X509')
+                // log.info('Cargando certificado digital en formato X509')
                 CertificateFactory fact= CertificateFactory.getInstance("X.509","BC")
                 InputStream is=new ByteArrayInputStream(certificadoDigital)
                 certificado = (X509Certificate)fact.generateCertificate(is)
@@ -119,7 +119,7 @@ class Empresa {
                 this.privateKey=keyFactory.generatePrivate(keySpec)
             } catch (Exception e) {
                 e.printStackTrace()
-                log.error 'Error tratando de leer llave privada :'+ExceptionUtils.getRootCauseMessage(e)
+                // log.error 'Error tratando de leer llave privada :'+ExceptionUtils.getRootCauseMessage(e)
             }
 
         }

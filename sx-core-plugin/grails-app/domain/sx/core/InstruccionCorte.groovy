@@ -15,8 +15,6 @@ class InstruccionCorte {
 
     BigDecimal largo = 0
 
-    // Integer tamaños = 0
-
     Boolean refinado = false
 
     String seleccionCalculo
@@ -41,6 +39,6 @@ class InstruccionCorte {
     }
 
     // static belongsTo = [ventaDet: VentaDet]
-    static belongsTo = [ventaDet:Venta]
+    // static belongsTo = [ventaDet:Venta]
 
 }

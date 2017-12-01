@@ -4,7 +4,10 @@ model {
     Cliente cliente
 }
 
-json g.render(cliente, [deep:true])
+json g.render(cliente, [deep:false, excludes:['direccion','credito']]) {
+    credito g.render(cliente.credito)
+    direccion g.render(cliente.direccion)
+}
 
 
 

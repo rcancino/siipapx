@@ -1,10 +1,7 @@
 package sx.core
 
-
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
-
-
 
 @ToString(includes = 'nombre,clave',includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes='nombre,rfc')
@@ -52,6 +49,12 @@ class Cliente {
 
     Set<ComunicacionEmpresa> medios = []
 
+    ClienteCredito credito
+
+    // Transient properties
+    Set telefonos
+    String fax
+    String cfdiMail
 
     static constraints = {
         rfc maxSize:13
@@ -89,7 +92,7 @@ class Cliente {
     }
 
     def getFax() {
-        return medios.find{ it.tipo == 'FAX'}.collect {it.descripcion}
+        return medios.find{ it.tipo == 'FAX'}?.descripcion
     }
 
     def getCfdiMail() {

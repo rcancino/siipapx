@@ -21,7 +21,7 @@ class Folio {
     }
 
     Long next(){
-        folio++
+        folio = folio + 1
         return folio
     }
 

@@ -82,10 +82,14 @@ class CuentaPorCobrar {
 
     }
 
-    static transients = ['saldo']
+    static transients = ['saldo','folio']
 
     BigDecimal getSaldo() {
         return total - pagos
+    }
+
+    String getFolio() {
+        return "${tipo}-${documento}"
     }
 
 

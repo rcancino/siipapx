@@ -1,9 +1,13 @@
+import groovy.transform.Field
 import sx.core.Cliente
 
-model{
-    Cliente cliente
+@Field Cliente cliente
+
+json g.render(cliente, [excludes:['credito','direccion','medios']]){
+    credito g.render(cliente.credito)
+    direccion g.render(cliente.direccion)
+    telefonos cliente.telefonos
+    fax cliente.fax
+    cfdiMail cliente.cfdiMail
 }
 
-json g.render(cliente, [excludes:['credito']]){
-  credito g.render(cliente.credito )
-}

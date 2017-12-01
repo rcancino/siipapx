@@ -1,13 +1,22 @@
 package sx.logistica
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import sx.core.InstruccionCorte
 import sx.core.Producto
 import sx.security.User
 
+@GrailsCompileStatic
+@ToString( includes = "producto, asignado",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes = 'id, producto, asignado')
 class Corte {
 
     String	id
 
-    InstruccionDeCorte	instruccionDeCorte
+    InstruccionCorte instruccionCorte
+
+    Surtido surtido
 
     Producto producto
 
@@ -30,8 +39,7 @@ class Corte {
     Date	asignacion
 
     static constraints = {
-
-        instruccionDeCorte nullable: true
+        instruccionCorte nullable: true
         asignado nullable: true
         empacador nullable: true
         canceladoUsuario nullable: true
@@ -41,10 +49,11 @@ class Corte {
         empacadoInicio nullable: true
         cancelado nullable: true
         asignacion nullable: true
-
     }
 
     static mapping = {
         id generator: 'uuid'
     }
+
+    static belongsTo = [surtido:Surtido]
 }

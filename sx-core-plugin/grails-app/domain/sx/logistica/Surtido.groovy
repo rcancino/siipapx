@@ -1,9 +1,13 @@
 package sx.logistica
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 import sx.security.User
 
+@EqualsAndHashCode(includes='nombre,rfc')
+@ToString( includes = "origen,entidad,nombre,documento",includeNames=true,includePackage=false)
 class Surtido {
-
 
     String	id
 
@@ -78,9 +82,10 @@ class Surtido {
 
     Boolean	valido	 = false
 
+    List<Corte> cortes = []
+
 
     static constraints = {
-
         comentario nullable: true
         asignado nullable: true
         iniciado nullable: true
@@ -105,7 +110,10 @@ class Surtido {
         entidad inList:['PST','FAC','SOL','TRS']
     }
 
+    static hasMany =[cortes:Corte]
+
     static mapping = {
         id generator: 'uuid'
+        cortes cascade: "all-delete-orphan"
     }
 }
