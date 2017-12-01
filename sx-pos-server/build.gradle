@@ -21,4 +21,8 @@ dependencies {
 
 
 }
-
+/*
+tasks.withType(org.springframework.boot.gradle.run.BootRunTask) {
+    systemProperty('JDBC_URL', 'jdbc:mysql://localhost/siipapx_dev?autoReconnect=false')
+}
+*/
