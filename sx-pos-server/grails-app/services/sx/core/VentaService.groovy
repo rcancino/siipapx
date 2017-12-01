@@ -6,6 +6,8 @@ import grails.plugin.springsecurity.SpringSecurityService
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
+import sx.cxc.AplicacionDeCobro
+import sx.cxc.Cobro
 import sx.cxc.CuentaPorCobrar
 import lx.cfdi.v33.CfdiUtils
 
@@ -94,8 +96,8 @@ class VentaService {
     @Publisher
     def facturar(Venta pedido) {
         log.debug("Facturando  ${pedido.statusInfo()}")
+        assert pedido.cuentaPorCobrar == null, "Pedido${pedido.getFolio()} ya facturado : ${pedido.statusInfo()}"
         pedido = generarCuentaPorCobrar(pedido)
-        // generarCfdi(pedido)
         return pedido
     }
 
@@ -129,7 +131,6 @@ class VentaService {
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
         CfdiFacturaBuilder builder = new CfdiFacturaBuilder();
         def comprobante = builder.build(venta)
-        // println CfdiUtils.serialize(comprobante)
         def cfdi = cfdiService.generarCfdi(comprobante, 'I')
         venta.cuentaPorCobrar.cfdi = cfdi
         venta.save flush: true
@@ -137,6 +138,7 @@ class VentaService {
     }
 
     def timbrar(Venta venta){
+        log.debug("Timbrando  {}", venta.statusInfo());
         assert venta.cuentaPorCobrar, "La venta ${venta} no se ha facturado"
         assert !venta.cuentaPorCobrar?.cfdi?.uuid, "La venta ${venta} ya esta timbrada "
         def cfdi = venta.cuentaPorCobrar.cfdi
@@ -162,6 +164,38 @@ class VentaService {
 
     def getFolio() {
         return Folio.nextFolio('VENTAS','PEDIDOS')
+    }
+
+    def cancelar(Venta venta) {
+        if(!venta.cuentaPorCobrar) {
+            respond venta
+            return
+        }
+
+        CuentaPorCobrar cxc = venta.cuentaPorCobrar
+
+        // Eliminando los pagos
+        if(cxc && cxc.pagos) {
+            log.debug('Eliminando aplicaciones de cobro')
+            def aplicaciones = AplicacionDeCobro.where{ cuentaPorCobrar == cxc}.list()
+            aplicaciones.each { AplicacionDeCobro a ->
+                Cobro cobro = a.cobro
+                cobro.removeFromAplicaciones(a)
+                cobro.save()
+            }
+        }
+        venta.cuentaPorCobrar = null
+        venta.save()
+        /*
+        if(cxc.cfdi) {
+            Cfdi cfdi = cxc.cfdi
+            cxc.cfdi = null
+            cfdiService.cancelar(cfdi)
+        }
+        log.debug('Eliminando la cuenta por cobrar')
+        cxc.delete ()
+        */
+        return venta
     }
 
 }

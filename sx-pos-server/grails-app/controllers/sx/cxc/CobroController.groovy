@@ -33,7 +33,6 @@ class CobroController extends RestfulController{
     }
 
     protected Cobro saveResource(Cobro resource) {
-        println 'Salvando cobro: ' + resource
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.clave

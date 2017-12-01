@@ -58,17 +58,14 @@ class UrlMappings {
         "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
         "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')
         "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
+        "/api/ventas/cancelar/$id"( controller: 'venta', action: 'cancelar')
         "/api/ventas/print/$id"(controller: "venta", action: 'print', method: 'GET')
-        // "/api/ventas/generarValeAutomatico/$id"(controller: "venta", action:"generarValeAutomatico", method: 'PUT')
-
-
 
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
         "/api/tesoreria/corteCobranza"(resources:"corteCobranza")
         "/api/tesoreria/fondoFijo"(resources:"fondoFijo")
         "/api/tesoreria/morralla"(resources:"morralla")
-
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")

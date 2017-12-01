@@ -133,6 +133,21 @@ class VentaController extends RestfulController{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
 
+    /**
+     * Cancela la venta, que implica eliminar la cuenta por cobrar pero deja el pedido  vivo
+     *
+     * @param venta
+     * @return
+     */
+    def cancelar(Venta venta) {
+        if(venta == null ){
+            notFound()
+            return
+        }
+        venta = ventaService.cancelar(venta)
+        respond venta
+    }
+
 }
 
 @ToString(includeNames=true,includePackage=false)

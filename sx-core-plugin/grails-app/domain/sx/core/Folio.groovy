@@ -31,11 +31,11 @@ class Folio {
 
     static Long nextFolio(String entidad, String serie){
         Folio.withTransaction {
-            def folio=Folio.findOrCreateWhere(entidad: entidad, serie: serie)
-            def res=folio.next()
+            def folio = Folio.findOrCreateWhere(entidad: entidad, serie: serie)
+            def res = folio.folio + 1
+            folio.folio = res
             folio.save()
             return res
         }
-
     }
 }
