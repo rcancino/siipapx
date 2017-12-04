@@ -47,14 +47,14 @@ class SolicitudDeDepositoController extends RestfulController{
             // resource.createUser = username
         }
         // resource.updateUser = username
-        resource.total = resource.cheque + resource.efectivo + resource.tarjeta
+        resource.total = resource.cheque + resource.efectivo + resource.transferencia
         return super.saveResource(resource)
     }
 
     protected SolicitudDeDeposito updateResource(SolicitudDeDeposito resource) {
         // def username = getPrincipal().username
         // resource.updateUser = username
-        resource.total = resource.cheque + resource.efectivo + resource.tarjeta
+        resource.total = resource.cheque + resource.efectivo + resource.transferencia
         return super.updateResource(resource)
     }
 
