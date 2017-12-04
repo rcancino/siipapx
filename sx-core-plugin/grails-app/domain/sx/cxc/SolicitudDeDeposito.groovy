@@ -37,7 +37,7 @@ class SolicitudDeDeposito {
 
     BigDecimal	efectivo	 = 0
 
-    BigDecimal	tarjeta	 = 0
+    BigDecimal	transferencia	 = 0
 
     BigDecimal	total	 = 0
 
