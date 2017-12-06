@@ -1,9 +1,7 @@
 package sx.cfdi
 
-
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import org.apache.commons.io.FileUtils
-import org.springframework.context.ApplicationContext
 
 import com.luxsoft.utils.ZipUtils
 
@@ -41,7 +39,7 @@ class CfdiTimbradoService {
   */
   def timbrarEdicom(Cfdi cfdi) {
     File file = FileUtils.toFile(cfdi.url)
-    // log.debug 'Timbrando archivo: ' + file.getPath()
+    log.debug('Timbrando archivo {}' ,file.getPath())
     byte[] res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
 
     Map map = ZipUtils.descomprimir(res)

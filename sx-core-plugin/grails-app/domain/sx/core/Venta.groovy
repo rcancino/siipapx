@@ -126,6 +126,7 @@ class Venta {
         cfdiMail nullable: true
         usoDeCfdi nullable: true, maxSize:3
         envio nullable: true
+        importe scale: 2
     }
 
     static mapping = {
