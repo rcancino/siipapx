@@ -152,7 +152,7 @@ class VentaService {
         if (cfdi == null) {
             cfdi = generarCfdi(venta)
         }
-        CFDI = cfdiTimbradoService.timbrar(cfdi)
+        cfdi = cfdiTimbradoService.timbrar(cfdi)
         return cfdi;
     }
 

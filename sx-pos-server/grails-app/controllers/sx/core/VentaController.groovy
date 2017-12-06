@@ -83,7 +83,7 @@ class VentaController extends RestfulController{
         params.max = params.registros ?:150
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null}
+        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null}
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
