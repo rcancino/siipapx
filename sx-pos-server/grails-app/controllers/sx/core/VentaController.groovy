@@ -22,6 +22,7 @@ class VentaController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
+        // log.debug('Localizando ventas {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 100
@@ -37,9 +38,12 @@ class VentaController extends RestfulController{
                 query = query.where {tipo != 'CRE'}
             }
         }
+        /*
         if (params.facturados) {
-            query = query.where {cuentaPorCobrar != null && tipo == params.facturados}
+            log.debug('Buscando pedidos facturados {}', params)
+            query = query.where {cuentaPorCobrar != null}
         }
+        */
         def list = query.list(params)
         return list
     }
@@ -76,11 +80,39 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
+        params.max = params.registros ?:150
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null}
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where{documento == params.term.toInteger()}
+            } else {
+                query = query.where { nombre =~ search }
+            }
+        }
+        respond query.list(params)
+    }
+
+    def facturados(Sucursal sucursal) {
+        if (sucursal == null) {
+            notFound()
+            return
+        }
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-        def ventas = Venta.where{ sucursal == sucursal && facturar == null}.list(params)
-        respond ventas
+        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where{cuentaPorCobrar.documento == params.term.toInteger()}
+            } else {
+                query = query.where { nombre =~ search }
+            }
+        }
+        respond query.list(params)
     }
 
     def findManiobra() {

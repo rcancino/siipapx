@@ -73,39 +73,53 @@ hibernate:
         use_query_cache: false
 dataSource:
     pooled: true
-    jmxExport: true
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-
+    dbCreate: ''
+    driverClassName: com.mysql.jdbc.Driver
+    dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 environments:
     development:
         dataSource:
-            dbCreate: create-drop
-            url: jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            dbCreate: update
+            #url: '${JDBC_URL}'
+            url: jdbc:mysql://localhost/siipapx_dev?autoReconnect=false
+            #url: jdbc:mysql://10.10.1.229:3306/siipapx_dev?autoReconnect=true
+            username: 'root'
+            password: 'sys'
     test:
         dataSource:
-            dbCreate: update
+            dbCreate: create-drop
+            pooled: true
+            jmxExport: true
+            driverClassName: org.h2.Driver
             url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            username: sa
+            password:
     production:
         dataSource:
             dbCreate: none
-            url: jdbc:h2:./prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=false
+            username: root
+            password: sys
             properties:
-                jmxEnabled: true
-                initialSize: 5
-                maxActive: 50
-                minIdle: 5
-                maxIdle: 25
-                maxWait: 10000
-                maxAge: 600000
-                timeBetweenEvictionRunsMillis: 5000
-                minEvictableIdleTimeMillis: 60000
-                validationQuery: SELECT 1
-                validationQueryTimeout: 3
-                validationInterval: 15000
+                maxActive: 10
+                maxIdle: 10
+                minIdle: 3
+                initialSize: 3
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
                 testOnBorrow: true
                 testWhileIdle: true
-                testOnReturn: false
-                jdbcInterceptors: ConnectionState
-                defaultTransactionIsolation: 2 # TRANSACTION_READ_COMMITTED
+                testOnReturn: true
+                maxWait: 10000
+                validationQuery: 'SELECT 1'
+                validationQueryTimeout: 3
+                validationInterval: 15000
+---
+server:
+  port: 9095
+  contextPath: /siipapx
+---
+grails:
+    cors:
+        enabled: true

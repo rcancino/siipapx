@@ -29,13 +29,11 @@ class VentaService {
         fixNombre(venta)
         logEntity(venta)
         fixVendedor(venta)
+        fixDescuentoOriginal(venta)
         if(venta.id == null){
             Folio folio=Folio.findOrCreateWhere(entidad: 'VENTAS', serie: 'PEDIDOS')
             def res = folio.folio + 1
-            // def res = folio.next()
             folio.folio = res
-            log.debug('Utilizando folio: {}', folio)
-            log.debug('Asignando folio: {}', res)
             venta.documento = res
             folio.save()
         }
@@ -74,6 +72,14 @@ class VentaService {
             venta.vendedor = Vendedor.findByNombres('CASA')
         }
         assert venta.vendedor, 'No fue posible asignar vendedor a la venta'
+    }
+
+    private fixDescuentoOriginal(Venta venta) {
+        def desc = null;
+        if(venta.tipo == 'CRE') {
+            venta.partidas.each {it.descuentoOriginal = it.descuento}
+            venta.descuentoOriginal = venta.descuento
+        }
     }
 
     /**

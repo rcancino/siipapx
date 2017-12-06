@@ -14,7 +14,7 @@ buildscript {
 }
 
 ext {
-    grailsApps = ['sx-pos-server']
+    grailsApps = ['sx-pos-server', 'sx-admin-server']
     grailsPlugins = ['sx-core-plugin']
 }
 
