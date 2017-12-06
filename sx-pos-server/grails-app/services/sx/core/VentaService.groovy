@@ -135,6 +135,7 @@ class VentaService {
 
     def generarCfdi(Venta venta){
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
+        log.debug('Generando CFDI para  {}', venta.statusInfo())
         CfdiFacturaBuilder builder = new CfdiFacturaBuilder();
         def comprobante = builder.build(venta)
         def cfdi = cfdiService.generarCfdi(comprobante, 'I')
@@ -151,7 +152,7 @@ class VentaService {
         if (cfdi == null) {
             cfdi = generarCfdi(venta)
         }
-        cfdi = cfdiTimbradoService.timbrar(cfdi)
+        CFDI = cfdiTimbradoService.timbrar(cfdi)
         return cfdi;
     }
 

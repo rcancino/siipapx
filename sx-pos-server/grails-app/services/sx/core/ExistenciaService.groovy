@@ -13,7 +13,7 @@ class ExistenciaService {
         log.debug('Detectando facturacion procesando existencias')
     }
 
-    private actualizarExistencias(Venta venta) {
+    private actualizarExistenciasPorVenta(Venta venta) {
         log.debug("Actualizando existencias por ${venta.statusInfo()}")
         Date hoy = new Date()
         int month = hoy[Calendar.MONTH] + 1
@@ -50,5 +50,45 @@ class ExistenciaService {
                 exis.pedidosPendiente += det.cantidad
             }
         }
+    }
+
+    def actualizarExistencias(Long ejercicio, Long mes, Producto producto) {
+
+        def mesAnterior = mes == 1 ? 12 : mes - 1
+        def ejercicioAnterior = mes == 1 ? ejercicio -1 : ejercicio
+        def anterior = findExitencia(producto, ejercicioAnterior, mesAnterior)
+        def actual = findOrCreateNext(anterior)
+        actual.with {
+
+        }
+    }
+
+    Existencia findOrCreateNext(Existencia existencia) {
+        def year = existencia.mes == 12 ? existencia.anio + 1 : existencia.anio
+        def mes = existencia.mes == 12 ? 1 : existencia.mes + 1
+        return Existencia.findOrSaveWhere(
+                sucursal: getSucursal(),
+                producto: existencia.producto,
+                ejercicio: year,
+                mes: mes);
+    }
+
+    Existencia findExitencia(Producto producto, Long ejercicio, Long mes) {
+        return Existencia.where {
+            sucursal == getSucursal() &&
+            producto == producto &&
+            anio == ejercicio &&
+            mes == mes }.find()
+    }
+
+
+
+    private Sucursal sucursal
+
+    Sucursal getSucursal() {
+        if(sucursal == null){
+            sucursal = AppConfig.first().sucursal
+        }
+        return sucursal
     }
 }

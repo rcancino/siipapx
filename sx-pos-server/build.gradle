@@ -13,11 +13,16 @@ dependencies {
     compile "org.grails.plugins:spring-security-rest:2.0.0.M2"
 
     compile 'lx.cfdi:v33:1.0.5'
-    // compile 'org.grails.plugins:grails-cxf-client:3.0.3' //This line
+    compile 'org.grails.plugins:grails-cxf-client:3.0.3' //This line
     compile 'sx.cfdi.providers:edicom:1.0.0'
     compile 'org.apache.commons:commons-compress:1.15'
     compile 'net.glxn:qrgen:1.2'
     compile 'org.grails.plugins:jasper:2.1.0.RC1'
+
+    // Temporal
+    compile "org.grails.plugins:gsp"
+    runtime 'org.grails.plugins:grails-console:2.1.1'
+    // compile 'org.grails.plugins:asset-pipeline:3.2.1'
 
 
 }

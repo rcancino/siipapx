@@ -67,11 +67,10 @@ class V33PdfGenerator {
                         res['InstruccionDeCorte'] = partida.corte.instruccion
                     }
                     res['COMENTARIO'] = partida.comentario
-                    res['Descuento'] = partida.descuento
+                    res['Descuento'] = partida.descuento.toString()
 
                 }
             }
-
             return res
         }
         def params = getParametros(cfdi, comprobante, xmlFile)
@@ -167,10 +166,7 @@ class V33PdfGenerator {
 
     public static parametrosAdicionalesVenta(Cfdi cfdi, Map parametros) {
         Venta venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
-        if(venta.impreso == null) {
-            venta.impreso = new Date()
-            venta = venta.save flush:true
-        }
+
         assert venta, 'No existe la venta origen del CFDI: ' + cfdi.id
         parametros.CLAVCTE = venta.cliente.clave
         parametros.KILOS = venta.kilos.toDouble()
@@ -194,6 +190,10 @@ class V33PdfGenerator {
         if (venta.envio) {
             parametros.ENVIO = venta.envio.direccion.toLabel()
             parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
+        }
+        if(venta.impreso == null) {
+            venta.impreso = new Date()
+            venta = venta.save flush:true
         }
     }
 
