@@ -19,9 +19,7 @@ class CancelacionCfdi {
     static belongsTo = [cfdi: Cfdi]
 
     static constraints = {
-        motivo nullable:true
-        acuse url:true
-        //message maxSize:(1024 * 512)  // 50kb para almacenar el xml
+        acuse url:true, nullable: true
         createUser nullable:true, maxSize: 100
         updateUser nullable:true, maxSize: 100
     }
