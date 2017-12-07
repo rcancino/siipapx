@@ -85,6 +85,7 @@ class UrlMappings {
             }
         }
         "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
+
         //Inventario
         "/api/inventario"(resources: "inventario")
         "/api/inventario/movimientos"(resources: "movimientoDeAlmacen")

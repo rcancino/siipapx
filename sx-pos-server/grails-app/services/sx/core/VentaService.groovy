@@ -26,6 +26,7 @@ class VentaService {
     @Publisher
     def save(Venta venta) {
         fixCortes(venta)
+        // fixEnvio(venta)
         fixNombre(venta)
         logEntity(venta)
         fixVendedor(venta)
@@ -53,6 +54,13 @@ class VentaService {
         venta.partidas.each {
             if(it.corte)
                 it.corte.ventaDet = it;
+        }
+    }
+
+    private fixEnvio(Venta venta) {
+        if(!venta.id && venta.envio) {
+            if (!venta.envio.venta)
+                venta.envio.venta = venta;
         }
     }
 

@@ -1,68 +1,58 @@
 package sx.core
 
-
+import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.*
-import grails.converters.*
-import sx.core.Sucursal
-import sx.core.Producto
 
+@Secured("hasRole('ROLE_POS_USER')")
 class InventarioController extends RestfulController {
 
     static responseFormats = ['json', 'xml']
+
     InventarioController() {
         super(Inventario)
     }
 
-    def kardex(String clave ){
-
-        def inicio= new Date(params.fechaIni)
-
-       def fin= new Date(params.fechaFin)
-
-
-        println "Ejecutando el kardex para la clave "+clave +"  "+inicio+" - "+fin
-
-        println params
-
-        Producto producto=Producto.where{clave==clave}.find()
-
-        def inventarios= Inventario.where{producto==producto && fecha>= inicio && fecha<= fin}.list()
-
-        inventarios.each {inv ->
-            println inv.producto.clave+" - - - "+inv.cantidad+" "+inv.fecha
+    protected List listAllResources(Map params) {
+        log.debug('Localizando movimientos de inventario {}', params)
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
+        params.max = 200
+        def query = Inventario.where {}
+        if(params.sucursal){
+            query = query.where {sucursal.id ==  params.sucursal}
         }
+        if(params.term){
+            def search = '%' + params.term + '%'
+            query = query.where { producto.clave =~ search || producto.descripcion =~ search}
+        }
+        def list = query.list(params)
+        return list
+    }
 
-        //respond inventarios:inventarios, inventarioCount:100
+    def kardex(KardexCommand command){
+        log.debug('Kardex: {}', command)
+        command.validate()
+        if (command.hasErrors()) {
+            respond command.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        def inicio= new Date(params.fechaIni)
+        def fin= new Date(params.fechaFin)
+        def inventarios= Inventario.where{producto==producto && fecha>= inicio && fecha<= fin}.list()
         respond inventarios:inventarios, inventarioCount:100
     }
 
-    def saveInventario(){
-
-        println "Salvando El inventario"
-
-        Inventario inventario= new Inventario()
-
-        Sucursal sucursal=Sucursal.where{nombre == params.sucursal}.find()
-
-        Producto producto= Producto.where{clave== params.clave}.find()
-
-        def fecha=new Date(params.fecha)
-
-        inventario.sucursal=sucursal
-        inventario.producto=producto
-        inventario.documento = new Long(params.documento)
-        inventario.tipo = params.tipo
-        inventario.tipoVenta = params.tipoVenta
-        inventario.cantidad = new BigDecimal(params.cantidad)
-        inventario.kilos = new BigDecimal(params.kilos)
-        inventario.fecha= fecha
-
-        inventario.save failOnError:true, flush:true
-
-        respond inventario, view: 'show'
 
 
+}
 
+class KardexCommand {
+
+    Producto producto
+    Date fechaInicial
+    Date fechaFinal
+
+    String toString() {
+        return "${producto.clave}  del ${fechaInicial.format('dd/MM/yyyy')} al ${fechaFinal.format('dd/MM/yyyy')}"
     }
-
 }

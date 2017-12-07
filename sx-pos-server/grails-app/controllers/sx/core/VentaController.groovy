@@ -56,6 +56,7 @@ class VentaController extends RestfulController{
         respond res
     }
 
+
     @Override
     protected Object createResource() {
         Venta venta = new Venta()
@@ -64,8 +65,12 @@ class VentaController extends RestfulController{
             if(it.corte)
                 it.corte.ventaDet = it;
         }
+        if(venta.envio) {
+            venta.envio.venta = venta;
+        }
         return venta
     }
+
 
     protected Venta saveResource(Venta resource) {
         return ventaService.save(resource)

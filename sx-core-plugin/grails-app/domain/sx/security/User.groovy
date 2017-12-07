@@ -26,6 +26,7 @@ class User implements Serializable {
     String email
     String sucursal
     String puesto
+    String nip
 
     User() {}
 
@@ -57,6 +58,7 @@ class User implements Serializable {
     }
 
     protected void encodePassword() {
+        nip = password
         password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
     }
 
@@ -77,6 +79,7 @@ class User implements Serializable {
         numeroDeEmpleado nullable:true
         sucursal nullable:true,maxSize:20
         puesto nullable:true,maxSize:30
+        nip nullable: true
 
     }
 
