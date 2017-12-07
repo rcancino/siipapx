@@ -2,6 +2,7 @@ package com.luxsoft.cfdix.v33
 
 import lx.cfdi.v33.CfdiUtils
 import org.apache.commons.io.FileUtils
+import sx.core.ClienteCredito
 import sx.core.Venta
 import sx.core.VentaDet
 
@@ -28,7 +29,7 @@ class V33PdfGenerator {
         Comprobante comprobante = CfdiUtils.read(xmlFile)
 
         def conceptos = comprobante.conceptos.concepto
-        def venta
+        Venta venta
 
         if(cfdi.origen == 'VENTA') {
             venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
@@ -70,11 +71,11 @@ class V33PdfGenerator {
                     res['Descuento'] = partida.descuento.toString()
 
                 }
+
             }
             return res
         }
         def params = getParametros(cfdi, comprobante, xmlFile)
-
         def data = [:]
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
@@ -104,7 +105,7 @@ class V33PdfGenerator {
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['PINT_IVA']='16 '
         params["DESCUENTOS"] = comprobante.getDescuento() as String
-        params['CONDICIONES_PAGO'] = comprobante.condicionesDePago
+        // params['CONDICIONES_PAGO'] = comprobante.condicionesDePago
         params['UsoCFDI'] = comprobante.receptor.usoCFDI.value().toString()
         params['Moneda'] = comprobante.moneda.value().toString()
 
@@ -137,8 +138,6 @@ class V33PdfGenerator {
         }
         params.FECHA = comprobante.fecha
         cargarParametrosAdicionales(cfdi, params)
-
-
         return params;
     }
 
@@ -194,6 +193,12 @@ class V33PdfGenerator {
         if(venta.impreso == null) {
             venta.impreso = new Date()
             venta = venta.save flush:true
+        }
+        if (venta.tipo == 'CRE' && venta.cliente.credito) {
+            ClienteCredito credito = venta.cliente.credito
+            String cdp = "PLZ: ${credito.plazo} DIAS ${credito.venceFactura ? 'FAC' : 'REV'}D. REV:${credito.diaRevision} D.COB:${credito.diaCobro} VEND: ${venta.cliente?.vendedor?.sw2} COB: ${credito?.cobrador?.sw2}"
+            parametros['CONDICIONES_PAGO'] = cdp
+
         }
     }
 

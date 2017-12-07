@@ -139,6 +139,7 @@ class CfdiFacturaBuilder {
             }
             comprobante.metodoPago = CMetodoPago.PUE
         }
+        comprobante.condicionesDePago = this.venta.tipo == 'CON' ? 'Contado' : 'Credito'
         /*
         comprobante.condicionesDePago = this.venta.tipo == 'CON' ? 'Contado' : 'Credito'
         if(this.venta.tipo == 'CON' && !this.venta.cod) {
