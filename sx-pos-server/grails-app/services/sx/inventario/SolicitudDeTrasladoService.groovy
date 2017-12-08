@@ -29,7 +29,7 @@ class SolicitudDeTrasladoService {
             sol.clasificacionVale = venta.clasificacionVale
             sol.documento = getFolio()
             sol.venta = venta
-            sol.comentario = 'SOLICITUD AUTOMATICA'
+            sol.comentario =  "${venta.statusInfo()} ${venta.clasificacionVale}"
             sol.fecha = new Date()
             sol.sucursalSolicita = venta.sucursal
             sol.sucursalAtiende = venta.sucursalVale
@@ -37,7 +37,7 @@ class SolicitudDeTrasladoService {
             partidas.each { VentaDet det ->
                 SolicitudDeTrasladoDet solDet = new SolicitudDeTrasladoDet()
                 solDet.producto = det.producto
-                solDet.comentario = "SOL AUTOMATICO"
+                solDet.comentario = "${venta.statusInfo()} ${venta.clasificacionVale}"
                 solDet.solicitado = det.cantidad
                 if(det.corte) {
                     solDet.cortesInstruccion = det.corte.instruccion

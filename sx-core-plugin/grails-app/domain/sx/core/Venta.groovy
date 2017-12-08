@@ -149,9 +149,9 @@ class Venta {
 
     String statusInfo() {
         if(cuentaPorCobrar)
-            return 'FACTURA: ' + cuentaPorCobrar.getFolio()
+            return 'FAC: ' + cuentaPorCobrar.getFolio()
         else
-            return 'PEDIDO: ' + getFolio()
+            return 'PED: ' + getFolio()
     }
 
 }

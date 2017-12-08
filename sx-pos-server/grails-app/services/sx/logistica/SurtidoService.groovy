@@ -47,7 +47,7 @@ class SurtidoService {
             surtido.entidad = pedido.puesto ? 'PST' : 'FAC'
             surtido.origen = pedido.id
             surtido.entregaLocal = pedido.envio ? false : true
-            surtido.prods = pedido.partidas.count{ VentaDet det -> det.producto.inventariable}
+            surtido.prods = pedido.partidas.count{ VentaDet det -> det.producto.inventariable && !det.conVale}
             surtido.prodsCorte = pedido.partidas.count { VentaDet det -> det.corte != null}
             surtido.userLastUpdate = User.findByUsername(pedido.updateUser)
             surtido.tipoDeVenta = pedido.tipo

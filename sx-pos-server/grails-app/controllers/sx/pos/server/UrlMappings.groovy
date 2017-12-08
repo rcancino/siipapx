@@ -55,6 +55,7 @@ class UrlMappings {
         "/api/ventas/facturados/$id"( controller: 'venta', action: 'facturados')
         "/api/ventas/findManiobra"( controller: 'venta', action: 'findManiobra')
         "/api/ventas/mandarFacturar/$id"( controller: 'venta', action: 'mandarFacturar')
+        "/api/ventas/asignarEnvio/$id"( controller: 'venta', action: 'asignarEnvio', method: 'PUT')
         "/api/ventas/generarSolicitudAutomatica/$id"( controller: 'venta', action: 'generarSolicitudAutomatica')
         "/api/ventas/facturar/$id"( controller: 'venta', action: 'facturar')
         "/api/ventas/cobradas/$id"( controller: 'venta', action: 'cobradas')

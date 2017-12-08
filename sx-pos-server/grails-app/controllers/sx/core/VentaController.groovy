@@ -4,6 +4,7 @@ import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
+import sx.logistica.CondicionDeEnvio
 import sx.reports.ReportService
 
 
@@ -56,6 +57,19 @@ class VentaController extends RestfulController{
         respond res
     }
 
+    @Transactional
+    def asignarEnvio() {
+        Venta venta = Venta.get(params.id)
+        log.debug('Asignando envio para venta: {}', venta)
+        Direccion direccion = new Direccion()
+        bindData direccion, getObjectToBind()
+        log.debug('Data to bind: {}', direccion)
+        if(venta.envio) {
+            venta.envio.direccion = direccion
+        }
+        respond venta
+    }
+
 
     @Override
     protected Object createResource() {
@@ -77,6 +91,7 @@ class VentaController extends RestfulController{
     }
 
     protected Venta updateResource(Venta resource) {
+        log.debug('Actualizando venta: {}', resource)
         return ventaService.save(resource)
     }
 
