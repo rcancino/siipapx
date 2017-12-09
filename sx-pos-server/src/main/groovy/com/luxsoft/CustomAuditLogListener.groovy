@@ -136,7 +136,7 @@ def dataSource
             }
 
         }catch (e){
-            log.error "Error for register event on : ${entity.name} ", e
+            log.error "Error for register event on : ${event.entityObject} ", e
         }
 
     }
