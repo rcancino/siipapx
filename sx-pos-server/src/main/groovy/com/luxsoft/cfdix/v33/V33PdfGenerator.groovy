@@ -187,7 +187,6 @@ class V33PdfGenerator {
         parametros.IMPRESO = venta.impreso
 
         if (venta.envio) {
-            parametros.ENVIO = venta.envio.direccion.toLabel()
             parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
         }
         if(venta.impreso == null) {
@@ -200,6 +199,7 @@ class V33PdfGenerator {
             parametros['CONDICIONES_PAGO'] = cdp
 
         }
+        parametros.TELEFONOS = venta.cliente.getTelefonos().join('/')
     }
 
 }

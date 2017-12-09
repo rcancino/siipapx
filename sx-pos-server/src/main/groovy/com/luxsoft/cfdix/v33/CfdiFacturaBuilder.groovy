@@ -69,7 +69,7 @@ class CfdiFacturaBuilder {
         this.comprobante = factory.createComprobante()
         comprobante.version = "3.3"
         comprobante.tipoDeComprobante = CTipoDeComprobante.I
-        comprobante.serie = cxc.tipo
+        comprobante.serie = "${cxc.sucursal.nombre.substring(0,2)}FAC${cxc.tipo}"
         comprobante.folio = cxc.documento.toString()
         comprobante.setFecha(DateUtils.getCfdiDate(new Date()))
         comprobante.moneda =  V33CfdiUtils.getMonedaCode(cxc.moneda)
