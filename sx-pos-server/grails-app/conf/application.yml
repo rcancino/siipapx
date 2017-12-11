@@ -81,10 +81,11 @@ environments:
         dataSource:
             dbCreate: update
             #url: '${JDBC_URL}'
-            url: jdbc:mysql://localhost/siipapx_dev?autoReconnect=false
+            # url: jdbc:mysql://localhost/siipapx_dev?autoReconnect=false
             #url: jdbc:mysql://10.10.1.229:3306/siipapx_dev?autoReconnect=true
+            url: jdbc:mysql://10.10.1.84:3306/siipapx_dev?autoReconnect=true
             username: 'root'
-            password: 'sys1'
+            password: 'sys'
     test:
         dataSource:
             dbCreate: create-drop
