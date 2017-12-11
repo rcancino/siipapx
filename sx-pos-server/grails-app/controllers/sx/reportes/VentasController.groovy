@@ -7,6 +7,7 @@ import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Sucursal
+import sx.reports.ReportService
 
 @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class VentasController {
@@ -14,7 +15,7 @@ class VentasController {
     // static responseFormats = ['json', 'xml']
 
 
-    def reporteService
+    ReportService reportService
 
     def ventasDiarias() {
         
@@ -29,7 +30,7 @@ class VentasController {
         repParams['SUCURSAL'] = params.SUCURSAL
         repParams['FECHA'] = params.FECHA
         println 'Ejecutando reporte de Ventas Diarias con parametros: ' + repParams +"---"+params.name+"---"+params.fileName
-        def pdf = this.reporteService.run('ventas_diarias', repParams)
+        def pdf = this.reportService.run('ventas_diarias', repParams)
         def fileName = "VentasDiarias.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
 
@@ -45,7 +46,7 @@ class VentasController {
         repParams['FECHA'] = params.FECHA
         repParams['SALDOAFAVOR']=0.0
         println 'Ejecutando reporte de Cobranza COD con parametros: ' + repParams +"---"+params.name+"---"+params.fileName
-        def pdf = this.reporteService.run('CobranzaCamioneta', repParams)
+        def pdf = this.reportService.run('CobranzaCamioneta', repParams)
         def fileName = "CobranzaCOD.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
 
@@ -53,42 +54,42 @@ class VentasController {
 
     def cobranzaEfectivo() {
 
-       def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA, 'CobranzaEfectivo')
+       def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA, 'CobranzaEfectivo')
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CobranzaEfectivo.pdf")
     }
 
     def cobranzaContado(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'FacturasCobrada')
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'FacturasCobrada')
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CobranzaContado.pdf")
     }
 
     def facturasCanceladas(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'')
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'')
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "FacturasCanceladas.pdf")
     }
 
     def aplicacionDeSaldos(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,params.name)
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,params.name)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "AplicacionDeSaldos.pdf")
     }
 
     def disponiblesSucursal(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,params.name)
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,params.name)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "DisponiblesSucursal.pdf")
     }
 
     def facturasPendientesCod(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'fac_pen_camioneta')
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'fac_pen_camioneta')
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "FacturasPendientesCOD.pdf")
     }
 
     def facturasPendientesCodEmbarques(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'fac_pen_camionetaNew')
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,'fac_pen_camionetaNew')
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "FacturasPendientesCODEmbarques.pdf")
     }
 
     def ventasDiariasCheques(){
-        def pdf= this.reporteService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,params.name)
+        def pdf= this.reportService.reporteFechaSucursal(params.SUCURSAL,params.FECHA,params.name)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "VentasDiariasCheques.pdf")
     }
 
