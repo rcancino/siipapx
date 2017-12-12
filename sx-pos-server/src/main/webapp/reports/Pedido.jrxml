@@ -260,7 +260,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-15"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[CANTIDAD]]></text>
 				</staticText>
@@ -273,7 +273,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-16"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[Kg.]]></text>
 				</staticText>
@@ -286,7 +286,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-17"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[UNI]]></text>
 				</staticText>
@@ -299,7 +299,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-18"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[DESCRIPCION]]></text>
 				</staticText>
@@ -324,7 +324,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-31"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[IMPORTE]]></text>
 				</staticText>
@@ -337,7 +337,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-32"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[INSTRUCCION]]></text>
 				</staticText>
@@ -467,7 +467,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-43"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[PRECIO]]></text>
 				</staticText>
@@ -480,7 +480,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-44"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[CORTES]]></text>
 				</staticText>
@@ -623,7 +623,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-63"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[g.]]></text>
 				</staticText>
@@ -645,7 +645,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
 				</textField>
@@ -663,7 +663,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{UNIDAD}]]></textFieldExpression>
 				</textField>
@@ -681,7 +681,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{KXMLL}]]></textFieldExpression>
 				</textField>
@@ -699,7 +699,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
 				</textField>
@@ -717,7 +717,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTED}]]></textFieldExpression>
 				</textField>
@@ -735,7 +735,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CORTES_INSTRUCCION}]]></textFieldExpression>
 				</textField>
@@ -753,7 +753,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{PRECIO}]]></textFieldExpression>
 				</textField>
@@ -773,7 +773,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{CORTES}]]></textFieldExpression>
 				</textField>
@@ -793,7 +793,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[x]]></text>
 				</staticText>
@@ -813,7 +813,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CORTES_PRECIO}]]></textFieldExpression>
 				</textField>
@@ -831,7 +831,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{GRAMOS}]]></textFieldExpression>
 				</textField>
@@ -873,7 +873,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
 				</textField>
@@ -893,7 +893,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[SIIPAP WIN EX]]></text>
 				</staticText>
@@ -913,7 +913,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
@@ -933,7 +933,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Fecha de impresión:]]></text>
 				</staticText>
@@ -953,7 +953,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -975,7 +975,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE}]]></textFieldExpression>
 				</textField>
@@ -988,7 +988,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-33"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[SUBTOTAL 1 ]]></text>
 				</staticText>
@@ -1001,7 +1001,7 @@ order by i.partidas_idx]]></queryString>
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Left">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS}]]></textFieldExpression>
 				</textField>
@@ -1019,7 +1019,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DESCUENTO_IMPORTE}]]></textFieldExpression>
 				</textField>
@@ -1037,7 +1037,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPUESTO}]]></textFieldExpression>
 				</textField>
@@ -1050,7 +1050,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-53"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[%      I.V.A.]]></text>
 				</staticText>
@@ -1063,7 +1063,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-54"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<text><![CDATA[16.00]]></text>
 				</staticText>
@@ -1081,7 +1081,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Double"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TOTAL}]]></textFieldExpression>
 				</textField>
@@ -1094,7 +1094,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-55"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[TOTAL ]]></text>
 				</staticText>
@@ -1107,7 +1107,7 @@ order by i.partidas_idx]]></queryString>
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Left">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{FPAGO}]]></textFieldExpression>
 				</textField>
@@ -1120,7 +1120,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-56"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[PAGO : ]]></text>
 				</staticText>
@@ -1133,7 +1133,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-57"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[KILOS : ]]></text>
 				</staticText>
@@ -1151,7 +1151,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
 </box>
 					<textElement verticalAlignment="Top">
-						<font fontName="Arial" size="8"/>
+						<font fontName="Times-Roman" size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENTARIO}]]></textFieldExpression>
 				</textField>
@@ -1164,7 +1164,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-58"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[COMENTARIOS : ]]></text>
 				</staticText>
@@ -1195,7 +1195,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-59"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[IMPORTE CON LETRA : ]]></text>
 				</staticText>
@@ -1215,7 +1215,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Página " + $V{PAGE_NUMBER} + " de "]]></textFieldExpression>
 				</textField>
@@ -1235,7 +1235,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[SIIPAP WIN EX]]></text>
 				</staticText>
@@ -1255,7 +1255,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
@@ -1275,7 +1275,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Fecha de impresión:]]></text>
 				</staticText>
@@ -1295,7 +1295,7 @@ order by i.partidas_idx]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -1322,7 +1322,7 @@ order by i.partidas_idx]]></queryString>
 						key="textField-28"/>
 					<box></box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ID}]]></textFieldExpression>
 				</textField>
@@ -1335,7 +1335,7 @@ order by i.partidas_idx]]></queryString>
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Left">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CREADO_USR}]]></textFieldExpression>
 				</textField>
@@ -1348,7 +1348,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-60"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[ELABORO : ]]></text>
 				</staticText>
@@ -1387,7 +1387,7 @@ order by i.partidas_idx]]></queryString>
 						key="textField-31"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PUESTO}]]></textFieldExpression>
 				</textField>
@@ -1400,7 +1400,7 @@ order by i.partidas_idx]]></queryString>
 						key="staticText-61"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[ENTREGAR EN : ]]></text>
 				</staticText>
@@ -1423,7 +1423,7 @@ $V{MODVTA}.doubleValue()<=0.00
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Top">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DESCUENTO}]]></textFieldExpression>
 				</textField>
@@ -1437,7 +1437,7 @@ $V{MODVTA}.doubleValue()<=0.00
 					<box>					<rightPen lineWidth="0.0"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}.equals( new String("CREDITO") ) && !$F{FPAGO}.equals("CHEQUE_POSTFECHADO") ? "% DESCTO" :
 $V{MODVTA}.doubleValue()<=0.00 ? "% DESCTO" :  "$ DESCTO"]]></textFieldExpression>
@@ -1456,7 +1456,7 @@ $V{MODVTA}.doubleValue()<=0.00 ? "% DESCTO" :  "$ DESCTO"]]></textFieldExpressio
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-Bold" size="9" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SUBTOTAL}]]></textFieldExpression>
 				</textField>
@@ -1469,7 +1469,7 @@ $V{MODVTA}.doubleValue()<=0.00 ? "% DESCTO" :  "$ DESCTO"]]></textFieldExpressio
 						key="staticText-65"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
+						<font fontName="Times-Roman" pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true"/>
 					</textElement>
 				<text><![CDATA[SUBTOTAL ]]></text>
 				</staticText>
