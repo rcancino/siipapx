@@ -21,7 +21,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
 
   @Override
   protected List listAllResources(Map params) {
-    println ' Buscando sols: '+params
+    log.debug('Buscando solicitudes.... {}', params)
     params.sort = 'lastUpdated'
     params.order = 'desc'
     def query = SolicitudDeTraslado.where {}
