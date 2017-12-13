@@ -2,4 +2,4 @@ include 'utils'
 include 'sx-core-plugin'
 include 'sx-pos-server'
 include 'sx-admin-server'
-
+include 'sx-replica'
