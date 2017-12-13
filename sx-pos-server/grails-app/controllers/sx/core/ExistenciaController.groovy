@@ -18,9 +18,11 @@ class ExistenciaController extends RestfulController {
 
     def existenciasPorSucursal(ExistenciaFilter filter) {
         params.max = params.max ?: 20
+        addPeriodo(params)
         def query = Existencia.where { }
+
         if(filter.sucursal) {
-            query = Existencia.where { sucursal == filter.sucursal}
+            query = Existencia.where { sucursal == filter.sucursal && anio == params.year && mes == params.mes}
         }
 
         if(filter.ejercicio) {
@@ -43,10 +45,10 @@ class ExistenciaController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        
+        addPeriodo(params)
         params.max = params.max ?: 20
-        
-        def query = Existencia.where {}
+
+        def query = Existencia.where {anio == params.year && mes == params.mes}
         if( params.ejercicio) {
             query = query.where { anio == params.int('ejercicio')}
         }
@@ -77,6 +79,12 @@ class ExistenciaController extends RestfulController {
             mes == command.month}
             .list()
         respond existencias
+    }
+
+    protected addPeriodo(Map params){
+        Date today = new Date()
+        params.year = params.year ?: today[Calendar.YEAR]
+        params.mes  = params.mes ?: today[Calendar.MONTH]
     }
 }
 

@@ -56,7 +56,7 @@ class DevolucionDeVentaController extends RestfulController {
             respond command.errors, view:'create' // STATUS CODE 422
             return
         }
-        def q = Venta.where{sucursal == command.sucursal && documento == command.documento && tipo == command.tipo}
+        def q = Venta.where{sucursal == command.sucursal && cuentaPorCobrar.documento == command.documento && tipo == command.tipo}
         if(command.fecha){
             q = q.where { fecha == command.fecha}
         }

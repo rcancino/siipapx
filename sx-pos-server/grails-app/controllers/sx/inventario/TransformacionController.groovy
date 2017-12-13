@@ -21,7 +21,7 @@ class TransformacionController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        println ' Buscando tranforacmiones...' + params
+        log.debug('Buscando transformaciones: {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = Transformacion.where {}
@@ -30,7 +30,6 @@ class TransformacionController extends RestfulController {
         }
         if(params.documento) {
             def documento = params.int('documento')
-
             query = query.where {documento >=  documento}
         }
         return query.list(params)

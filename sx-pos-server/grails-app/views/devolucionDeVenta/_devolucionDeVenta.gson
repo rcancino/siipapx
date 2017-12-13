@@ -19,4 +19,5 @@ json g.render(devolucionDeVenta){
             nombre devolucionDeVenta.venta.cliente.nombre
         }
     }
+    factura devolucionDeVenta.venta.cuentaPorCobrar.documento
 }

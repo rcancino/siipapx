@@ -7,11 +7,14 @@ import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
 import sx.core.Inventario
+import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
 class MovimientoDeAlmacenController extends RestfulController {
 
     static responseFormats = ['json']
+
+    ReportService reportService
 
     MovimientoDeAlmacenController() {
         super(MovimientoDeAlmacen)
@@ -49,6 +52,7 @@ class MovimientoDeAlmacenController extends RestfulController {
     protected MovimientoDeAlmacen updateResource(MovimientoDeAlmacen resource) {
 
         if(params.inventariar){
+            def renglon = 1;
             resource.partidas.each { det ->
                 Inventario inventario = new Inventario()
                 inventario.sucursal = resource.sucursal
@@ -58,12 +62,20 @@ class MovimientoDeAlmacenController extends RestfulController {
                 inventario.fecha = resource.fecha
                 inventario.producto = det.producto
                 inventario.tipo = resource.tipo
+                inventario.renglon = renglon
                 det.inventario = inventario
+                renglon++
             }
             resource.fechaInventario = new Date()
 
         }
 
         return super.updateResource(resource)
+    }
+
+    def print() {
+        // log.debug('Imprimiendo movimiento: {}', params.ID)
+        def pdf =  reportService.run('MovGenerico.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
 }
