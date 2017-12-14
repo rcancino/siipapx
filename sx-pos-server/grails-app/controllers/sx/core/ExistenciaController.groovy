@@ -47,6 +47,7 @@ class ExistenciaController extends RestfulController {
     protected List listAllResources(Map params) {
         addPeriodo(params)
         params.max = params.max ?: 20
+        log.debug('Buscando existencias: {}', params)
 
         def query = Existencia.where {anio == params.year && mes == params.mes}
         if( params.ejercicio) {
@@ -84,7 +85,7 @@ class ExistenciaController extends RestfulController {
     protected addPeriodo(Map params){
         Date today = new Date()
         params.year = params.year ?: today[Calendar.YEAR]
-        params.mes  = params.mes ?: today[Calendar.MONTH]
+        params.mes  = params.mes ?: today[Calendar.MONTH] + 1
     }
 }
 
