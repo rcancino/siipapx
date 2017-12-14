@@ -55,7 +55,7 @@ class DevolucionDeCompra {
         updateUser nullable: true
         sw2 nullable: true
         recepcionDeCompra nullable: true
-        fechaInventario nullbale: true
+        fechaInventario nullable: true
     }
 
     static  mapping ={
