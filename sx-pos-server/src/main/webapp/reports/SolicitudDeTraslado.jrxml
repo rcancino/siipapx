@@ -26,7 +26,7 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SOL_ID" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT M.ID,M.FECHA,M.REFERENCIA,M.DOCUMENTO,b.NOMBRE AS SUC_SOL,S.NOMBRE AS SUC_ATD,'SOL' AS CONCEPTO,M.COMENTARIO,M.UPDATE_USER AS ELABORO
 ,(CASE WHEN P.UNIDAD='MIL' THEN I.SOLICITADO/1000 ELSE I.SOLICITADO END) AS CANTIDAD,P.KILOS AS KXMLL,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.SOLICITADO/1000 ELSE I.SOLICITADO END) AS KILOS
 ,P.UNIDAD,I.PARTIDAS_IDX AS RENGLON,P.CLAVE,P.DESCRIPCION,I.COMENTARIO AS COMENT_PART
@@ -36,7 +36,7 @@ JOIN solicitud_de_traslado_det I ON(M.ID=I.solicitud_de_traslado_id)
 JOIN producto P ON(P.ID=I.PRODUCTO_ID)
 join sucursal b on(B.ID=M.sucursal_solicita_id) 
 join sucursal S on(S.ID=M.sucursal_atiende_id) 
-where M.ID='402880e55ea4efa2015ea5041c370575']]></queryString>
+where M.ID=$P{ID}]]></queryString>
 
 	<field name="ID" class="java.lang.String"/>
 	<field name="FECHA" class="java.sql.Timestamp"/>

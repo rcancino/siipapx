@@ -19,7 +19,7 @@ class SolicitudDeTraslado {
 
     Venta venta
 
-    String	clasificacionVale
+    String	clasificacionVale = 'EXISTENCIA'
 
     Boolean	noAtender	 = false
 

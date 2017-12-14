@@ -101,6 +101,7 @@ class UrlMappings {
         // Sols
         "/api/inventario/sols"(resources: "solicitudDeTraslado")
         "/api/inventario/sols/buscarSolicitudPendiente"(controller: 'solicitudDeTraslado', action: 'buscarSolicitudPendiente', method: 'GET')
+        "/api/inventario/sols/print"(controller: "solicitudDeTraslado", action: 'print', method: 'GET')
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
