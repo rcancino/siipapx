@@ -64,7 +64,9 @@ class TrasladoService {
     }
 
     private generarTps(SolicitudDeTraslado sol, Chofer chofer, String comentario){
-        log.debug('Generando TPS para Sol: {}', sol);
+        assert chofer, 'Se requiere el chofer para atender el traslado'
+        assert comentario, 'Se requiere el comentario al atender el traslado'
+        log.debug('Generando TPS para Sol:{} Chofer:{} comentario: {}', sol.id, chofer.id, comentario);
         Traslado tps = new Traslado()
         tps.sucursal = sol.sucursalAtiende
         tps.fecha = new Date()

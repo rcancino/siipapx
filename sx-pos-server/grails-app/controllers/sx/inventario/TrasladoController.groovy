@@ -3,6 +3,7 @@ package sx.inventario
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.*
 import grails.converters.*
+import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
 class TrasladoController extends RestfulController {
@@ -10,6 +11,8 @@ class TrasladoController extends RestfulController {
     static responseFormats = ['json']
 
     SolicitudDeTrasladoService solicitudDeTrasladoService
+
+    ReportService reportService
 
     TrasladoController() {
         super(Traslado)
@@ -31,9 +34,9 @@ class TrasladoController extends RestfulController {
     }
 
     def print() {
-        // log.debug('Imprimiendo TPS.jrxml: ID:{}', params.ID)
-        params.ID = params.ID
-        def pdf =  reportService.run('SolicitudDeTraslado.jrxml', params)
+        log.debug('Imprimiendo SalidaDeTraslado.jrxml: ID:{}', params.ID)
+        params.TRASLADO_ID = params.ID
+        def pdf =  reportService.run('SalidaDeTraslado.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Traslado.pdf')
     }
 }
