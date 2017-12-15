@@ -1,9 +1,15 @@
 package sx.inventario
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Inventario
 import sx.core.Sucursal
+import sx.logistica.Chofer
 
-
+@GrailsCompileStatic
+@ToString( includes = "tipo, documento,fecha,comentario",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes = 'id')
 class Traslado {
 
     String	id
@@ -46,6 +52,8 @@ class Traslado {
 
     Date asignado
 
+    Chofer chofer
+
     static hasMany = [partidas:TrasladoDet]
 
     static constraints = {
@@ -69,6 +77,7 @@ class Traslado {
         id generator:'uuid'
         sucursal index:'SUCURSAL_IDX'
         fecha index: 'FECHA_IDX'
+        partidas cascade: "all-delete-orphan"
 
     }
 }

@@ -1,5 +1,6 @@
 package sx.inventario
 
+import grails.events.annotation.Publisher
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
@@ -12,6 +13,12 @@ import sx.core.VentaDet
 class SolicitudDeTrasladoService {
 
     SpringSecurityService springSecurityService
+
+    @Publisher
+    def atender(SolicitudDeTraslado sol) {
+        sol = sol.save()
+        return sol
+    }
 
     @Subscriber
     def onMandarFacturar(Venta venta) {

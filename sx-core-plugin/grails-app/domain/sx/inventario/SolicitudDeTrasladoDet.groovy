@@ -1,7 +1,13 @@
 package sx.inventario
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Producto
 
+@GrailsCompileStatic
+@ToString(includes = 'producto,solicitado, recibido', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'producto, cantidad')
 class SolicitudDeTrasladoDet {
 
     String	id

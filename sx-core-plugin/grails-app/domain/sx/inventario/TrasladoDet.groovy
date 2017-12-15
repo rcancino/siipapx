@@ -1,10 +1,15 @@
 package sx.inventario
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Inventario
 import sx.core.Producto
 
+@GrailsCompileStatic
+@ToString(includes = 'producto,cantidad', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'id, producto, cantidad')
 class TrasladoDet {
-
 
     String	id
 
@@ -32,17 +37,13 @@ class TrasladoDet {
 
     Date lastUpdated
 
-
-
     static belongsTo = [traslado:Traslado]
-
 
     static constraints = {
         cortesInstruccion nullable:true
         comentario nullable: true
         sw2 nullable: true
         inventario nullable: true
-
     }
 
     static mapping = {

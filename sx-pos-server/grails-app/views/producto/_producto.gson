@@ -6,8 +6,8 @@ model {
 
 json g.render(producto, [excludes: ['linea','marca','clase']]){
     linea {
-        id producto.linea.id
-        linea producto.linea.linea
+        id producto?.linea?.id
+        linea producto?.linea?.linea
      }
     marca {
         id producto?.marca?.id

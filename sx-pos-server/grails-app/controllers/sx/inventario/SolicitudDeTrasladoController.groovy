@@ -2,6 +2,7 @@ package sx.inventario
 
 import grails.rest.RestfulController
 import groovy.transform.ToString
+import sx.core.AppConfig
 import sx.core.Proveedor
 import sx.core.Sucursal
 import grails.plugin.springsecurity.annotation.Secured
@@ -15,6 +16,8 @@ class SolicitudDeTrasladoController extends  RestfulController{
 
     static responseFormats = ['json']
 
+    SolicitudDeTrasladoService solicitudDeTrasladoService
+
     ReportService reportService
 
     public SolicitudDeTrasladoController() {
@@ -23,7 +26,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        log.debug('Buscando solicitudes.... {}', params)
+        // log.debug('Buscando solicitudes.... {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = SolicitudDeTraslado.where {}
@@ -33,6 +36,9 @@ class SolicitudDeTrasladoController extends  RestfulController{
         if( params.sucursalAtiende) {
             query = query.where {sucursalAtiende.id ==  params.sucursalAtiende}
         }
+        if (params.porAtender) {
+            query = query.where {atender == null}
+        }
         if(params.documento) {
             def documento = params.int('documento')
             query = query.where {documento ==  documento}
@@ -40,44 +46,30 @@ class SolicitudDeTrasladoController extends  RestfulController{
         return query.list(params)
     }
 
+
+
     protected SolicitudDeTraslado saveResource(SolicitudDeTraslado resource) {
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursalSolicita.clave
             resource.documento = Folio.nextFolio('SOLS',serie)
             resource.createUser = username
-        }
-        resource.partidas.each {
-            it.comentario = resource.comentario
+            resource.partidas.each {
+                it.comentario = resource.comentario
+            }
         }
         resource.updateUser = username
         return super.saveResource(resource)
     }
 
-    protected SolicitudDeTraslado updateResource(SolicitudDeTraslado resource) {
-        if(params.inventariar){
-            def renglon = 1;
-            resource.partidas.each { det ->
-                // Inventario inventario = new Inventario()
-                // inventario.sucursal = resource.sucursal
-                // inventario.documento = resource.documento
-                // inventario.cantidad = det.cantidad
-                // inventario.comentario = det.comentario
-                // inventario.fecha = resource.fecha
-                // inventario.producto = det.producto
-                // inventario.tipo = resource.tipo
-                // det.inventario = inventario
-                // det.renglon = renglon
-                renglon++
-            }
-            resource.fechaInventario = new Date()
+    protected Object updateResource(SolicitudDeTraslado resource) {
+        if(resource.atender) {
+            return solicitudDeTrasladoService.atender(resource)
         }
-
-        return super.updateResource(resource)
+        return saveResource(resource)
     }
 
     public buscarSolicitudPendiente(SolSearchCommand command){
-
         command.validate()
         if (command.hasErrors()) {
             respond command.errors // STATUS CODE 422

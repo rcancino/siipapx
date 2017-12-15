@@ -27,9 +27,4 @@ class TrasladoController extends RestfulController {
         respond traslado
     }
 
-
-
-
-
-
 }

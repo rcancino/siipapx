@@ -1,8 +1,14 @@
 package sx.inventario
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Sucursal
 import sx.core.Venta
 
+@GrailsCompileStatic
+@ToString(includes = 'sucursalSolicita, sucursalAtiende, comentario', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'id')
 class SolicitudDeTraslado {
 
     String	id
@@ -39,6 +45,8 @@ class SolicitudDeTraslado {
 
     Date fechaInventario
 
+    Date atender
+
     static hasMany = [partidas:SolicitudDeTrasladoDet]
 
     static constraints = {
@@ -52,7 +60,9 @@ class SolicitudDeTraslado {
         updateUser nullable: true
         sw2 nullable: true
         fechaInventario nullable: true
+        atender nullable: true
     }
+
     static mapping = {
         id generator:'uuid'
         fecha index:'FECHA_IDX'
