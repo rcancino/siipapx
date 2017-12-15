@@ -104,6 +104,7 @@ class UrlMappings {
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
+        "/api/inventario/traslados/print"(controller: "traslado", action: 'print', method: 'GET')
 
         // Sectores
         "/api/inventario/sectores"(resources: "sector")

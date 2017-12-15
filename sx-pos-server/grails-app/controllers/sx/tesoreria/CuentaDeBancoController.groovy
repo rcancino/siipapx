@@ -13,4 +13,21 @@ class CuentaDeBancoController extends RestfulController {
     CuentaDeBancoController() {
         super(CuentaDeBanco)
     }
+
+    @Override
+    protected List listAllResources(Map params) {
+        /// log.debug('Buscando cuentas bancarias {}', params)
+        println 'Buscando cuentas: ' + params
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
+        params.max = 100
+        def query = CuentaDeBanco.where {}
+        if(params.disponibleEnVenta){
+            query = query.where {disponibleEnVenta ==  true}
+        }
+        if(params.activa) {
+            query = query.where {activo ==  true}
+        }
+        return query.list(params)
+    }
 }

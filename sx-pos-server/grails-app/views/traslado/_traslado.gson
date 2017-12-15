@@ -5,15 +5,16 @@ model {
 }
 
 json g.render(traslado, [excludes:['solicitudDeTraslado']]){
-	solicitudDeTraslado {
-		id traslado.solicitudDeTraslado.id
-		sucursalSolicita {
-			id traslado.solicitudDeTraslado.sucursalSolicita.id
-			nombre traslado.solicitudDeTraslado.sucursalSolicita.nombre
-		}
-		sucursalAtiende {
-			id traslado.solicitudDeTraslado.sucursalAtiende.id
-			nombre traslado.solicitudDeTraslado.sucursalAtiende.nombre
-		}
-	}
+    solicitudDeTraslado {
+        id traslado.solicitudDeTraslado.id
+        documento traslado.solicitudDeTraslado.documento
+        sucursalSolicita {
+            id traslado.solicitudDeTraslado.sucursalSolicita.id
+            nombre traslado.solicitudDeTraslado.sucursalSolicita.nombre
+        }
+        sucursalAtiende {
+            id traslado.solicitudDeTraslado.sucursalAtiende.id
+            nombre traslado.solicitudDeTraslado.sucursalAtiende.nombre
+        }
+    }
 }

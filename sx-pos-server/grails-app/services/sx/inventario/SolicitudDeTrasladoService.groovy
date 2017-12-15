@@ -7,6 +7,7 @@ import grails.plugin.springsecurity.SpringSecurityService
 import sx.core.Folio
 import sx.core.Venta
 import sx.core.VentaDet
+import sx.logistica.Chofer
 
 
 @Transactional
@@ -15,9 +16,13 @@ class SolicitudDeTrasladoService {
     SpringSecurityService springSecurityService
 
     @Publisher
-    def atender(SolicitudDeTraslado sol) {
+    def atender(SolicitudDeTraslado sol, Chofer chofer, String comentario) {
         sol = sol.save()
-        return sol
+        Map map = [:]
+        map.sol = sol.id
+        map.chofer = chofer
+        map.comentario = comentario
+        return map
     }
 
     @Subscriber

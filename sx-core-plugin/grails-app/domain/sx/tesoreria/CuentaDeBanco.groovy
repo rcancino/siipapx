@@ -20,6 +20,8 @@ class CuentaDeBanco {
 
     Boolean activo = true
 
+    Boolean disponibleEnVenta = false
+
     String subCuentaOperativa
 
     String impresionTemplate

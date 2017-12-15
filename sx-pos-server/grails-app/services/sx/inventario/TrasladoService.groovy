@@ -5,12 +5,14 @@ import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import sx.core.Folio
 import sx.core.Producto
+import sx.logistica.Chofer
 
 @Transactional
 class TrasladoService {
 
     SpringSecurityService springSecurityService
 
+    /*
     @Subscriber
     public atender(SolicitudDeTraslado sol ){
         log.debug('Atendiendo solicitud de traslado: ', sol);
@@ -18,6 +20,17 @@ class TrasladoService {
             SolicitudDeTraslado origen = SolicitudDeTraslado.get(sol.id)
             generarTpe(origen)
             generarTps(origen)
+        }
+    }
+    */
+
+    @Subscriber
+    public atender(Map  map ){
+        log.debug('Atendiendo solicitud de traslado: {}', map);
+        Traslado.withNewTransaction {
+            SolicitudDeTraslado origen = SolicitudDeTraslado.get(map.sol)
+            generarTpe(origen)
+            generarTps(origen, map.chofer, map.comentario)
         }
     }
 
@@ -50,12 +63,14 @@ class TrasladoService {
         return traslado
     }
 
-    private generarTps(SolicitudDeTraslado sol){
+    private generarTps(SolicitudDeTraslado sol, Chofer chofer, String comentario){
         log.debug('Generando TPS para Sol: {}', sol);
         Traslado tps = new Traslado()
         tps.sucursal = sol.sucursalAtiende
         tps.fecha = new Date()
         tps.documento = getFolio()
+        tps.comentario = comentario
+        tps.chofer = chofer
         tps.tipo = 'TPS'
         tps.clasificacionVale = sol.clasificacionVale
         tps.kilos = 0

@@ -8,6 +8,7 @@ import sx.core.Sucursal
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Folio
 import sx.core.Inventario
+import sx.logistica.Chofer
 import sx.reports.ReportService
 
 
@@ -69,6 +70,18 @@ class SolicitudDeTrasladoController extends  RestfulController{
         return saveResource(resource)
     }
 
+    def atender(SolicitudDeTraslado sol) {
+        if(sol == null) {
+            notFound()
+            return
+        }
+        def chofer = Chofer.get(params.chofer_id)
+        def comentario = params.comentario
+        solicitudDeTrasladoService.atender(sol,chofer,comentario)
+        respond sol
+
+    }
+
     public buscarSolicitudPendiente(SolSearchCommand command){
         command.validate()
         if (command.hasErrors()) {
@@ -86,8 +99,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
         forward action: 'show', id: res.id
     }
     def print() {
-        log.debug('Imprimiendo SolicitudDeTraslado.jrxml: ID:{}', params.ID)
-        params.SOL_ID = params.ID
+        // log.debug('Imprimiendo SolicitudDeTraslado.jrxml: ID:{}', params.ID)
         def pdf =  reportService.run('SolicitudDeTraslado.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'SolicitudDeTraslado.pdf')
     }

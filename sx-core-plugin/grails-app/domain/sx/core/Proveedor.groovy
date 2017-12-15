@@ -29,6 +29,8 @@ class Proveedor {
 
     String	cuentaBancaria
 
+    Integer plazo = 0
+
     Direccion direccion
 
     Long sw2
@@ -36,12 +38,6 @@ class Proveedor {
     Date dateCreated
 
     Date lastUpdated
-
-
-
-
-
-
 
     static constraints = {
         rfc size:12..13
@@ -55,12 +51,7 @@ class Proveedor {
         telefono3 nullable:true ,maxSize:30
         cuentaBancaria nullable: true
         direccion nullable: true
-
     }
-
-
-
-
 
     static embedded = ['direccion']
 
