@@ -71,6 +71,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
     }
 
     def atender(SolicitudDeTraslado sol) {
+        log.debug('Atendiendo sol {}', params)
         if(sol == null) {
             notFound()
             return
