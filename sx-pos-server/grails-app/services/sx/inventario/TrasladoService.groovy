@@ -46,7 +46,7 @@ class TrasladoService {
         traslado.kilos = 0
         traslado.porInventario = false
         traslado.solicitudDeTraslado = sol
-        sol.partidas.each { SolicitudDeTrasladoDet solDet ->
+        sol.partidas.findAll{ it.recibido > 0}.each { SolicitudDeTrasladoDet solDet ->
             TrasladoDet det = new TrasladoDet()
             det.producto = solDet.producto
             det.kilos = 0
@@ -78,7 +78,7 @@ class TrasladoService {
         tps.kilos = 0
         tps.porInventario = false
         tps.solicitudDeTraslado = sol
-        sol.partidas.each { SolicitudDeTrasladoDet solDet ->
+        sol.partidas.findAll{ it.recibido > 0}.each { SolicitudDeTrasladoDet solDet ->
             TrasladoDet det = new TrasladoDet()
             det.producto = solDet.producto
             det.kilos = 0
