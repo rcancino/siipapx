@@ -4,11 +4,14 @@ import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
+import sx.reports.ReportService
 
 @Secured("ROLE_COMPRAS_USER")
 class CompraController extends RestfulController{
 
     static responseFormats = ['json']
+
+    ReportService reportService;
 
     CompraController(){
         super(Compra)
@@ -37,6 +40,12 @@ class CompraController extends RestfulController{
         resource.folio = Folio.nextFolio('COMPRA','OFICINAS')
         resource.createdBy = getPrincipal().username
         return super.saveResource(resource)
+    }
+
+    def print( ) {
+        //params.ID = params.id;
+        def pdf =  reportService.run('OrdenDeCompraSuc.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'OrdenDeCompraSuc.pdf')
     }
 
 }

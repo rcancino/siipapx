@@ -13,13 +13,14 @@ class ExistenciaService {
         }
     }
 
-    private actualizarExistenciasPorFactura(Venta factura) {
-        log.debug("Actualizando existencias por ${venta.statusInfo()}")
+    private actualizarExistenciasPorFactura(Venta venta) {
         Date hoy = new Date()
         int month = hoy[Calendar.MONTH] + 1
         def year = hoy[Calendar.YEAR]
-        venta.partidas.each { VentaDet det ->
-            Existencia.withNewTransaction {
+        Existencia.withNewTransaction {
+            Venta factura = Venta.get(venta.id)
+            log.debug("Actualizando existencias por ${factura.statusInfo()}")
+            factura.partidas.each { VentaDet det ->
                 Existencia exis = Existencia.where{ producto == det.producto && anio == year && mes== month}.find()
                 assert exis, "No existe existencia ${year} - ${month} Para ${det.producto.clave}"
                 exis.venta = exis.venta - det.cantidad

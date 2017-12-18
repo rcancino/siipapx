@@ -29,7 +29,7 @@
 	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="CLAVE" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="PRODUCTO" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT 
 i.tipo as GP,''as ORIGEN,
 CASE WHEN P.ANCHO=0 THEN "" ELSE CONCAT(P.ANCHO,'X',P.LARGO) END AS MEDIDA
@@ -45,7 +45,7 @@ AND X.SUCURSAL_ID=I.SUCURSAL_ID),0) AS INI_INV
 ,IFNULL((SELECT SUM(CANTIDAD) FROM inventario X WHERE X.FECHA >$P{FECHA_INI}  AND X.FECHA <=  CONCAT(YEAR( $P{FECHA_FIN}),'/',MONTH( $P{FECHA_FIN}),'/',31)  AND X.PRODUCTO_ID=I.PRODUCTO_ID
 AND X.SUCURSAL_ID=I.SUCURSAL_ID),0) AS FIN_INV
 FROM  inventario i join  producto p on (p.id=i.producto_id) join sucursal s on (s.id=i.sucursal_id)
-WHERE I.producto_id=$P{CLAVE} and DATE(i.fecha) BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} AND S.ID=$P{SUCURSAL}
+WHERE I.producto_id=$P{PRODUCTO} and DATE(i.fecha) BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} AND S.ID=$P{SUCURSAL}
 order by fecha asc]]></queryString>
 
 	<field name="GP" class="java.lang.String"/>
@@ -1027,7 +1027,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -1105,7 +1105,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>

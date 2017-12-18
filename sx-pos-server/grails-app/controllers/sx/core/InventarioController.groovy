@@ -2,11 +2,14 @@ package sx.core
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.*
+import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
 class InventarioController extends RestfulController {
 
     static responseFormats = ['json', 'xml']
+
+    ReportService reportService;
 
     InventarioController() {
         super(Inventario)
@@ -42,17 +45,26 @@ class InventarioController extends RestfulController {
         respond inventarios:inventarios, inventarioCount:100
     }
 
-
-
+    def printKardex(KardexCommand command) {
+        log.debug('Imprimiendo kardex de: {}', command);
+        log.debug('Kardex params: {}', params);
+        params['FECHA_INI'] = command.fechaInicial
+        params['FECHA_FIN'] = command.fechaFinal
+        params['PRODUCTO'] = command.producto.id
+        params['SUCURSAL'] = command.sucursal.id
+        def pdf =  reportService.run('KardexSuc.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
+    }
 }
 
 class KardexCommand {
 
     Producto producto
+    Sucursal sucursal
     Date fechaInicial
     Date fechaFinal
 
     String toString() {
-        return "${producto.clave}  del ${fechaInicial.format('dd/MM/yyyy')} al ${fechaFinal.format('dd/MM/yyyy')}"
+        return "${sucursal?.nombre} ${producto?.clave}  del ${fechaInicial?.format('dd/MM/yyyy')} al ${fechaFinal?.format('dd/MM/yyyy')}"
     }
 }

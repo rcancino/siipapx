@@ -42,12 +42,14 @@ class UrlMappings {
         "/api/compras"(resources: "compra"){
             "/partidas"(resources:"compraDet")
         }
+        "/api/compras/print/$ID"(controller: 'compra', action: 'print', method: 'GET')
         "/api/listaDePreciosPorProveedor"(resources: "listaDePreciosPorProveedor")
         "/api/compras/recepciones"(resources: "recepcionDeCompra") {
             "/partidas"(resource: "recepcionDeCompraDet")
         }
         "/api/compras/recepciones/buscarCompra"(controller: 'recepcionDeCompra', action: 'buscarCompra', method: 'GET')
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
+
 
         // Ventas
         "/api/ventas"(resources:"venta")
@@ -103,6 +105,7 @@ class UrlMappings {
         "/api/inventario/sols/print"(controller: "solicitudDeTraslado", action: 'print', method: 'GET')
         "/api/inventario/sols/atender/$id"(controller: "solicitudDeTraslado", action: 'atender', method: 'PUT')
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
+        "/api/inventario/printKardex"(controller: "inventario", action: "printKardex", method: 'GET' )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
         "/api/inventario/traslados/print"(controller: "traslado", action: 'print', method: 'GET')
