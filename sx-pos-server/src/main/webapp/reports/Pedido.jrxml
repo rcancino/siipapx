@@ -30,7 +30,8 @@
 	<parameter name="IMP_CON_LETRA" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select C.CLAVE AS CLAVCTE,C.NOMBRE,CONCAT(C.direccion_calle,' ',C.direccion_numero_exterior,' ',C.direccion_numero_interior) AS CALLE,CONCAT(C.direccion_colonia,',     CP : ',C.direccion_codigo_postal) AS COLONIA,C.direccion_municipio AS DELMPO,C.direccion_estado AS ESTADO,C.direccion_pais AS PAIS,C.RFC
 ,V.TIPO,V.FECHA,V.ID,V.DOCUMENTO AS DOCTO,S.NOMBRE AS SUCURSAL,P.CLAVE,P.DESCRIPCION,P.KILOS AS KXMLL,P.GRAMOS,P.UNIDAD,I.CANTIDAD,I.PRECIO,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,I.IMPORTE AS IMPORTED
-,(SELECT MAX(X.cantidad) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES,(SELECT MAX(X.precio) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES_PRECIO,(SELECT MAX(X.instruccion) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES_INSTRUCCION
+,(SELECT MAX(X.cantidad) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES,(SELECT MAX(X.precio) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES_PRECIO
+,concat((SELECT MAX(X.tipo) FROM instruccion_corte X WHERE X.venta_det_id=I.ID),' ',(SELECT MAX(X.instruccion) FROM instruccion_corte X WHERE X.venta_det_id=I.ID)) AS CORTES_INSTRUCCION
 ,V.IMPORTE,V.DESCUENTO,V.DESCUENTO_IMPORTE,V.SUBTOTAL,V.IMPUESTO,V.TOTAL,V.COMENTARIO,(CASE WHEN (SELECT X.ID FROM condicion_de_envio X WHERE X.VENTA_ID=V.ID)=NULL THEN 'PASAN' ELSE 'ENVIO' END) AS ENVIO,'X' AS GRUPO,V.FORMA_DE_PAGO AS FPAGO,V.CREATE_USER AS CREADO_USR
 ,(SELECT CONCAT(IFNULL(X.DIRECCION_CALLE,''),' #',IFNULL(X.DIRECCION_NUMERO_EXTERIOR,''),' ',IFNULL(X.DIRECCION_NUMERO_INTERIOR,''),', ',IFNULL(X.DIRECCION_COLONIA,''),', ',IFNULL(X.DIRECCION_CODIGO_POSTAL,''),', ',IFNULL(X.DIRECCION_MUNICIPIO,''),', ',IFNULL(X.DIRECCION_ESTADO,'')) FROM condicion_de_envio X  WHERE V.ID=X.VENTA_ID)  AS DIR_ENTREGA
 ,IFNULL((SELECT X.NOMBRE FROM venta_credito Y JOIN SOCIO X ON(Y.SOCIO_ID=X.ID) WHERE Y.SOCIO_ID=X.ID),"") AS SOCIO
@@ -201,9 +202,9 @@ order by i.partidas_idx]]></queryString>
 				</line>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="523"
+						x="510"
 						y="91"
-						width="51"
+						width="64"
 						height="13"
 						key="textField"/>
 					<box></box>
@@ -214,7 +215,7 @@ order by i.partidas_idx]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="462"
+						x="449"
 						y="91"
 						width="61"
 						height="13"
@@ -227,7 +228,7 @@ order by i.partidas_idx]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="470"
+						x="457"
 						y="105"
 						width="53"
 						height="13"
@@ -240,7 +241,7 @@ order by i.partidas_idx]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="450"
+						x="437"
 						y="78"
 						width="73"
 						height="12"
@@ -343,9 +344,9 @@ order by i.partidas_idx]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="523"
+						x="510"
 						y="78"
-						width="51"
+						width="64"
 						height="12"
 						key="textField"/>
 					<box></box>
@@ -369,9 +370,9 @@ order by i.partidas_idx]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="523"
+						x="510"
 						y="105"
-						width="51"
+						width="64"
 						height="13"
 						key="textField"/>
 					<box></box>
@@ -564,9 +565,9 @@ order by i.partidas_idx]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="523"
+						x="510"
 						y="52"
-						width="51"
+						width="64"
 						height="20"
 						key="textField-17"/>
 					<box></box>
@@ -577,7 +578,7 @@ order by i.partidas_idx]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="436"
+						x="423"
 						y="54"
 						width="87"
 						height="13"
@@ -1141,8 +1142,8 @@ order by i.partidas_idx]]></queryString>
 					<reportElement
 						x="116"
 						y="1"
-						width="246"
-						height="11"
+						width="458"
+						height="17"
 						key="textField"/>
 					<box>					<pen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
