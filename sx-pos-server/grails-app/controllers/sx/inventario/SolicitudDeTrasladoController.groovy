@@ -55,8 +55,10 @@ class SolicitudDeTrasladoController extends  RestfulController{
             def serie = resource.sucursalSolicita.clave
             resource.documento = Folio.nextFolio('SOLS',serie)
             resource.createUser = username
-            resource.partidas.each {
+            resource.partidas.each { SolicitudDeTrasladoDet it ->
                 it.comentario = resource.comentario
+                it.recibido = it.solicitado
+
             }
         }
         resource.updateUser = username

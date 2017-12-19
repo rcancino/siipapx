@@ -45,6 +45,7 @@ class TrasladoService {
             det.solicitado = solDet.solicitado
             det.cantidad = solDet.recibido
             det.kilos = calcularKilos(det.producto, solDet.recibido.abs())
+            traslado.kilos += det.kilos
             det.cortes = solDet.cortes
             det.cortesInstruccion = solDet.cortesInstruccion
             traslado.addToPartidas(det)
@@ -67,7 +68,6 @@ class TrasladoService {
         tps.chofer = chofer
         tps.tipo = 'TPS'
         tps.clasificacionVale = sol.clasificacionVale
-        tps.kilos = 0
         tps.porInventario = false
         tps.solicitudDeTraslado = sol
         sol.partidas.findAll{ it.recibido > 0}.each { SolicitudDeTrasladoDet solDet ->
@@ -77,10 +77,12 @@ class TrasladoService {
             det.solicitado = solDet.solicitado
             det.cantidad = solDet.recibido.abs() * -1
             det.kilos = calcularKilos(det.producto, solDet.recibido.abs())
+            tps.kilos += det.kilos
             det.cortes = solDet.cortes
             det.cortesInstruccion = solDet.cortesInstruccion
             tps.addToPartidas(det)
         }
+
         logEntity(tps)
         tps.save()
         log.debug('TPS generado: {}', tps)
@@ -120,7 +122,7 @@ class TrasladoService {
             inventario.fecha = tps.fecha
             inventario.producto = det.producto
             inventario.tipo = 'TPS'
-            inventario.kilos = tps.kilos
+            inventario.kilos = det.kilos
             inventario.renglon = renglon
             det.inventario = inventario
             inventario.save()
