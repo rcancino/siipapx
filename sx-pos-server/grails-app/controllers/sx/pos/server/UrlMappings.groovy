@@ -109,6 +109,7 @@ class UrlMappings {
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
         "/api/inventario/traslados"(resources: "traslado")
         "/api/inventario/traslados/print"(controller: "traslado", action: 'print', method: 'GET')
+        "/api/inventario/traslados/salida/$id"(controller: "traslado", action: 'salida', method: 'PUT')
 
         // Sectores
         "/api/inventario/sectores"(resources: "sector")

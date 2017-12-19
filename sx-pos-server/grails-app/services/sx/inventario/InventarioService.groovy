@@ -25,6 +25,7 @@ class InventarioService {
                 inventario.sucursal = venta.sucursal
                 inventario.documento = venta.cuentaPorCobrar.documento
                 inventario.cantidad = det.cantidad.abs() * -1
+                inventario.kilos = det.kilos;
                 inventario.comentario = det.comentario
                 inventario.fecha = venta.cuentaPorCobrar.fecha
                 inventario.producto = det.producto

@@ -1,9 +1,11 @@
 package sx.inventario
 
+import com.luxsoft.utils.MonedaUtils
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import sx.core.Folio
+import sx.core.Inventario
 import sx.core.Producto
 import sx.logistica.Chofer
 
@@ -12,18 +14,6 @@ class TrasladoService {
 
     SpringSecurityService springSecurityService
 
-    /*
-    @Subscriber
-    public atender(SolicitudDeTraslado sol ){
-        log.debug('Atendiendo solicitud de traslado: ', sol);
-        Traslado.withNewTransaction {
-            SolicitudDeTraslado origen = SolicitudDeTraslado.get(sol.id)
-            generarTpe(origen)
-            generarTps(origen)
-        }
-    }
-    */
-
     @Subscriber
     public atender(Map  map ){
         log.debug('Atendiendo solicitud de traslado: {}', map);
@@ -31,6 +21,8 @@ class TrasladoService {
             SolicitudDeTraslado origen = SolicitudDeTraslado.get(map.sol)
             generarTpe(origen)
             generarTps(origen, map.chofer, map.comentario)
+            origen.atender = new Date()
+            origen.save()
         }
     }
 
@@ -49,12 +41,12 @@ class TrasladoService {
         sol.partidas.findAll{ it.recibido > 0}.each { SolicitudDeTrasladoDet solDet ->
             TrasladoDet det = new TrasladoDet()
             det.producto = solDet.producto
-            det.kilos = 0
             det.comentario = solDet.comentario
+            det.solicitado = solDet.solicitado
             det.cantidad = solDet.recibido
+            det.kilos = calcularKilos(det.producto, solDet.recibido.abs())
             det.cortes = solDet.cortes
             det.cortesInstruccion = solDet.cortesInstruccion
-            det.solicitado = solDet.solicitado
             traslado.addToPartidas(det)
         }
         logEntity(traslado)
@@ -81,12 +73,12 @@ class TrasladoService {
         sol.partidas.findAll{ it.recibido > 0}.each { SolicitudDeTrasladoDet solDet ->
             TrasladoDet det = new TrasladoDet()
             det.producto = solDet.producto
-            det.kilos = 0
             det.comentario = solDet.comentario
+            det.solicitado = solDet.solicitado
             det.cantidad = solDet.recibido.abs() * -1
+            det.kilos = calcularKilos(det.producto, solDet.recibido.abs())
             det.cortes = solDet.cortes
             det.cortesInstruccion = solDet.cortesInstruccion
-            det.solicitado = solDet.solicitado
             tps.addToPartidas(det)
         }
         logEntity(tps)
@@ -114,6 +106,35 @@ class TrasladoService {
         }
         */
         return 'NA'
+    }
+
+    def registrarSalida(Traslado tps){
+        def res = [];
+        int renglon = 1
+        tps.partidas.each { TrasladoDet det ->
+            Inventario inventario = new Inventario()
+            inventario.sucursal = tps.sucursal
+            inventario.documento = tps.documento
+            inventario.cantidad = det.cantidad.abs() * -1
+            inventario.comentario = det.comentario
+            inventario.fecha = tps.fecha
+            inventario.producto = det.producto
+            inventario.tipo = 'TPS'
+            inventario.kilos = tps.kilos
+            inventario.renglon = renglon
+            det.inventario = inventario
+            inventario.save()
+            renglon++
+            res.add(inventario)
+        }
+        tps.fechaInventario  = new Date()
+        tps.save()
+        return res;
+    }
+
+    def calcularKilos(Producto producto, BigDecimal cantidad){
+        def factor = producto.unidad == 'MIL' ? 1000 : 1
+        return MonedaUtils.round( (cantidad / factor) * producto.kilos , 3 )
     }
 
 }

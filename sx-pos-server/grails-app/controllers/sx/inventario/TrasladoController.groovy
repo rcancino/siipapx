@@ -12,6 +12,8 @@ class TrasladoController extends RestfulController {
 
     SolicitudDeTrasladoService solicitudDeTrasladoService
 
+    TrasladoService trasladoService
+
     ReportService reportService
 
     TrasladoController() {
@@ -31,6 +33,17 @@ class TrasladoController extends RestfulController {
             query = query.where {tipo == params.tipo}
         }
         return query.list(params)
+    }
+
+    def salida(Traslado tps){
+        if(tps == null) {
+            notFound()
+            return
+        }
+        assert tps.tipo == 'TPS', 'El registro de salida es para trasplados tipo TPS'
+        def res = trasladoService.registrarSalida(tps)
+        respond res
+
     }
 
     def print() {
