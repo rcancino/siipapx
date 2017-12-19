@@ -2,6 +2,7 @@ package sx.core
 
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
+import sx.inventario.Traslado
 
 @Transactional
 class ExistenciaService {
@@ -47,6 +48,40 @@ class ExistenciaService {
                 producto: existencia.producto,
                 ejercicio: year,
                 mes: mes);
+    }
+
+    @Subscriber
+    def onRegistrarEntradaPorTpe(List<Inventario> entradas){
+        log.debug('Afectando existencias por entada de TPE ')
+        Existencia.withNewTransaction {
+            entradas.each {
+                int ejercicio = it.fecha[Calendar.YEAR]
+                int mes = it.fecha[Calendar.MONTH] + 1
+                Existencia e = findExitencia(it.producto, ejercicio, mes)
+                if (e) {
+                    e.cantidad += it.cantidad
+                    // e.traslado += it.cantidad
+                }
+                e.save()
+            }
+        }
+    }
+
+    @Subscriber
+    def onRegistrarSalidaPorTps(List<Inventario> entradas){
+        log.debug('Afectando existencias por entada de TPS ')
+        Existencia.withNewTransaction {
+            entradas.each {
+                int ejercicio = it.fecha[Calendar.YEAR]
+                int mes = it.fecha[Calendar.MONTH] + 1
+                Existencia e = findExitencia(it.producto, ejercicio, mes)
+                if (e) {
+                    e.cantidad += it.cantidad
+                    // e.traslado += it.cantidad
+                }
+                e.save()
+            }
+        }
     }
 
     Existencia findExitencia(Producto producto, Long ejercicio, Long mes) {

@@ -46,10 +46,24 @@ class TrasladoController extends RestfulController {
 
     }
 
+    def entrada(Traslado tpe){
+        if(tpe == null) {
+            notFound()
+            return
+        }
+        assert tpe.tipo == 'TPE', 'El registro de entrada es para trasplados tipo TPE'
+        def res = trasladoService.registrarEntrada(tpe)
+        respond res
+
+    }
+
     def print() {
-        log.debug('Imprimiendo SalidaDeTraslado.jrxml: ID:{}', params.ID)
-        params.TRASLADO_ID = params.ID
-        def pdf =  reportService.run('SalidaDeTraslado.jrxml', params)
+        params.TRALADO_ID = params.ID
+        Traslado traslado = Traslado.get(params.ID)
+        params.SOL_ID = traslado.solicitudDeTraslado.id
+        def reportName = traslado.tipo == 'TPS' ? 'SalidaDeTraslado.jrxml' : 'EntradaTraslado.jrxml'
+        log.debug('Imprimiendo Traslado: {}-{} Usando reporte: {} params: {}', traslado.tipo, traslado.documento, reportName, params)
+        def pdf =  reportService.run(reportName, params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Traslado.pdf')
     }
 }

@@ -1,6 +1,7 @@
 package sx.inventario
 
 import com.luxsoft.utils.MonedaUtils
+import grails.events.annotation.Publisher
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
@@ -110,8 +111,10 @@ class TrasladoService {
         return 'NA'
     }
 
+    @Publisher('registrarSalidaPorTps')
     def registrarSalida(Traslado tps){
-        def res = [];
+        log.debug('Afectando inventario por {}: {}', tps.tipo, tps.documento)
+        List<Inventario> res = [];
         int renglon = 1
         tps.partidas.each { TrasladoDet det ->
             Inventario inventario = new Inventario()
@@ -119,7 +122,7 @@ class TrasladoService {
             inventario.documento = tps.documento
             inventario.cantidad = det.cantidad.abs() * -1
             inventario.comentario = det.comentario
-            inventario.fecha = tps.fecha
+            inventario.fecha = new Date()
             inventario.producto = det.producto
             inventario.tipo = 'TPS'
             inventario.kilos = det.kilos
@@ -131,6 +134,32 @@ class TrasladoService {
         }
         tps.fechaInventario  = new Date()
         tps.save()
+        return res;
+    }
+
+    @Publisher('registrarEntradaPorTpe')
+    def registrarEntrada(Traslado tpe){
+        log.debug('Afectando inventario por {}: {}', tpe.tipo, tpe.documento)
+        List<Inventario> res = [];
+        int renglon = 1
+        tpe.partidas.each { TrasladoDet det ->
+            Inventario inventario = new Inventario()
+            inventario.sucursal = tpe.sucursal
+            inventario.documento = tpe.documento
+            inventario.cantidad = det.cantidad.abs()
+            inventario.comentario = det.comentario
+            inventario.fecha = new Date()
+            inventario.producto = det.producto
+            inventario.tipo = 'TPE'
+            inventario.kilos = det.kilos
+            inventario.renglon = renglon
+            det.inventario = inventario
+            inventario.save()
+            renglon++
+            res.add(inventario)
+        }
+        tpe.fechaInventario  = new Date()
+        tpe.save()
         return res;
     }
 
