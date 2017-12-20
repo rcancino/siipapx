@@ -1,5 +1,6 @@
 package sx.core
 
+import com.luxsoft.utils.ImporteALetra
 import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import groovy.transform.ToString
@@ -181,6 +182,7 @@ class VentaController extends RestfulController{
 
     def print( Venta pedido) {
         params.ID = pedido.id
+        params.IMP_CON_LETRA = ImporteALetra.aLetra(pedido.total)
         def pdf =  reportService.run('Pedido.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }

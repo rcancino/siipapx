@@ -42,7 +42,7 @@ class CfdiController extends RestfulController{
     }
 
     private generarImpresionV33( Cfdi cfdi) {
-        def realPath = servletContext.getRealPath("/reports")
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def data = V33PdfGenerator.getReportData(cfdi)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'

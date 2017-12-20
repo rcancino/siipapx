@@ -17,4 +17,5 @@ json g.render(traslado, [excludes:['solicitudDeTraslado']]){
             nombre traslado.solicitudDeTraslado.sucursalAtiende.nombre
         }
     }
+
 }

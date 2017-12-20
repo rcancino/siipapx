@@ -100,17 +100,24 @@ class UrlMappings {
         // Decs
         "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/decs/buscarCom"(controller: 'devolucionDeCompra', action: 'buscarCom', method: 'GET')
+
         // Sols
         "/api/inventario/sols"(resources: "solicitudDeTraslado")
         "/api/inventario/sols/print"(controller: "solicitudDeTraslado", action: 'print', method: 'GET')
         "/api/inventario/sols/atender/$id"(controller: "solicitudDeTraslado", action: 'atender', method: 'PUT')
+
+        // Traslados
+        "/api/inventario/traslados"(resources: "traslado")
+        "/api/inventario/traslados/print"(controller: "traslado", action: 'print', method: 'GET')
+        "/api/inventario/traslados/printCfdi"(controller: "traslado", action: 'printCfdi', method: 'GET')
+        "/api/inventario/traslados/salida/$id"(controller: "traslado", action: 'salida', method: 'PUT')
+        "/api/inventario/traslados/timbrar/$id"(controller: "traslado", action: 'timbrar', method: 'PUT')
+        "/api/inventario/traslados/entrada/$id"(controller: "traslado", action: 'entrada', method: 'PUT')
+
+        // Kardex
         "/api/inventario/kardex"(controller: "inventario", action: "kardex" )
         "/api/inventario/printKardex"(controller: "inventario", action: "printKardex", method: 'GET' )
         "/api/inventario/saveInventario"(controller: "inventario", action: "saveInventario" , method: 'POST')
-        "/api/inventario/traslados"(resources: "traslado")
-        "/api/inventario/traslados/print"(controller: "traslado", action: 'print', method: 'GET')
-        "/api/inventario/traslados/salida/$id"(controller: "traslado", action: 'salida', method: 'PUT')
-        "/api/inventario/traslados/entrada/$id"(controller: "traslado", action: 'entrada', method: 'PUT')
 
         // Sectores
         "/api/inventario/sectores"(resources: "sector")

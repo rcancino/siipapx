@@ -4,7 +4,7 @@ model {
     Traslado traslado
 }
 
-json g.render(traslado, [excludes:['partidas', 'solicitudDeTraslado']]){
+json g.render(traslado, [excludes:['partidas', 'solicitudDeTraslado', 'cfdi']]){
     solicitudDeTraslado {
         id traslado.solicitudDeTraslado.id
         documento traslado.solicitudDeTraslado.documento
@@ -18,6 +18,14 @@ json g.render(traslado, [excludes:['partidas', 'solicitudDeTraslado']]){
         }
     }
     partidas g.render(traslado.partidas)
+    if(traslado.cfdi) {
+        cfdi {
+            id traslado.cfdi.id
+            uuid: traslado.cfdi.uuid
+        }
+    }
+    chofer g.render(traslado.chofer)
+    cfdi g.render(traslado.cfdi)
 }
 
 

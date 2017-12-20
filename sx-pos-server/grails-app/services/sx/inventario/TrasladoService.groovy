@@ -1,10 +1,13 @@
 package sx.inventario
 
+import com.luxsoft.cfdix.v33.TrasladoBuilder
 import com.luxsoft.utils.MonedaUtils
 import grails.events.annotation.Publisher
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
+import sx.cfdi.CfdiService
+import sx.cfdi.CfdiTimbradoService
 import sx.core.Folio
 import sx.core.Inventario
 import sx.core.Producto
@@ -14,6 +17,10 @@ import sx.logistica.Chofer
 class TrasladoService {
 
     SpringSecurityService springSecurityService
+
+    CfdiTimbradoService cfdiTimbradoService
+
+    CfdiService cfdiService
 
     @Subscriber
     public atender(Map  map ){
@@ -166,6 +173,30 @@ class TrasladoService {
     def calcularKilos(Producto producto, BigDecimal cantidad){
         def factor = producto.unidad == 'MIL' ? 1000 : 1
         return MonedaUtils.round( (cantidad / factor) * producto.kilos , 3 )
+    }
+
+    def generarCfdi(Traslado tps){
+        assert tps.tipo == 'TPS', " El trslado a timbrar no es de tipo TPS"
+        log.debug('Generando CFDI para  TPS: {}', tps.documento)
+        TrasladoBuilder builder = new TrasladoBuilder();
+        def comprobante = builder.build(tps)
+        def cfdi = cfdiService.generarCfdi(comprobante, 'T')
+        tps.cfdi = cfdi
+        tps.save()
+        return cfdi
+    }
+
+    def timbrar(Traslado tps){
+        log.debug("Timbrando TPS: {}", tps.documento);
+        assert tps.tipo == 'TPS', " El trslado a timbrar no es de tipo TPS"
+        assert !tps?.cfdi?.uuid, "La venta ${venta} ya esta timbrada "
+        def cfdi = tps.cfdi
+        if (cfdi == null) {
+            cfdi = generarCfdi(tps)
+        }
+        cfdi = cfdiTimbradoService.timbrar(cfdi)
+        tps.uuid = cfdi.uuid
+        return cfdi;
     }
 
 }

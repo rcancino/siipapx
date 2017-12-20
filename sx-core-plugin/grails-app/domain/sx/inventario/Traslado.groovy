@@ -3,6 +3,7 @@ package sx.inventario
 import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import sx.cfdi.Cfdi
 import sx.core.Inventario
 import sx.core.Sucursal
 import sx.logistica.Chofer
@@ -34,7 +35,7 @@ class Traslado {
 
     String	comentario
 
-    String cfdiId
+    // String cfdiId
 
     List partidas =[]
 
@@ -54,6 +55,10 @@ class Traslado {
 
     Chofer chofer
 
+    Cfdi cfdi
+
+    String uuid
+
     static hasMany = [partidas:TrasladoDet]
 
     static constraints = {
@@ -69,8 +74,10 @@ class Traslado {
         updateUser nullable: true
         porInventario nullable: true
         fechaInventario nullable: true
-        cfdiId nullable: true
+        // cfdiId nullable: true
         asignado nullable: true
+        cfdi nullable: true
+        uuid nullable: true
     }
 
     static mapping = {

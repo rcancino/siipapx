@@ -16,17 +16,30 @@ class InventarioController extends RestfulController {
     }
 
     protected List listAllResources(Map params) {
-        log.debug('Localizando movimientos de inventario {}', params)
+        // log.debug('Localizando movimientos de inventario {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 200
+
         def query = Inventario.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}
         }
         if(params.term){
-            def search = '%' + params.term + '%'
+            String term = params.term
+            String[] parts = term.split(',')
+            def search = '%' + parts[0] + '%'
+
+            if( parts.length == 1 ){
+                if(term.endsWith(',')) {
+                    search = parts[0]
+                }
+            }
+            // log.debug('Buscando con: {}', search);
             query = query.where { producto.clave =~ search || producto.descripcion =~ search}
+            if (parts.length == 2) {
+                query = query.where { tipo =~ parts[1]}
+            }
         }
         def list = query.list(params)
         return list

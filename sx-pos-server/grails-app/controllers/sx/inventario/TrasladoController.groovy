@@ -1,8 +1,10 @@
 package sx.inventario
 
+import com.luxsoft.cfdix.v33.TrasladoPdfGenerator
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.*
 import grails.converters.*
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -57,6 +59,32 @@ class TrasladoController extends RestfulController {
 
     }
 
+    def timbrar(Traslado tps) {
+        if(tps == null) {
+            notFound()
+            return
+        }
+        assert tps.tipo == 'TPS', 'El timbrado es para TPS'
+        def hoy = new Date()
+        if( (hoy - tps.fechaInventario)  >= 2) {
+            Map data = [:]
+            data.message = "TPS ${tps.documento} fuera de tiempo para timbrado"
+            respond data, status: 500
+            return
+        }
+        try {
+            def res = trasladoService.timbrar(tps)
+            respond res
+        } catch (Exception ex) {
+            def causa = ExceptionUtils.getRootCauseMessage(ex)
+            log.error('Error timbrando TPS {}', ExceptionUtils.getMessage(ex))
+            Map data = [:]
+            data.message = ExceptionUtils.getRootCauseMessage(ex)
+            respond data, status: 500
+        }
+
+    }
+
     def print() {
         params.TRALADO_ID = params.ID
         Traslado traslado = Traslado.get(params.ID)
@@ -65,5 +93,21 @@ class TrasladoController extends RestfulController {
         log.debug('Imprimiendo Traslado: {}-{} Usando reporte: {} params: {}', traslado.tipo, traslado.documento, reportName, params)
         def pdf =  reportService.run(reportName, params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Traslado.pdf')
+    }
+
+    def printCfdi() {
+
+        Traslado tps = Traslado.get(params.ID)
+        assert tps.tipo == 'TPS', 'Traslado no es un TPS'
+        assert tps.cfdi, 'TPS no se ha timbrado'
+
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def data = TrasladoPdfGenerator.getReportData(tps)
+        Map parametros = data['PARAMETROS']
+        parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
+        parametros.FACTURA_USD = realPath + '/facUSD.jpg'
+        def pdf  = reportService.run('CFDITraslado.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CfdiTPS.pdf')
     }
 }
