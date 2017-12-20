@@ -13,7 +13,6 @@ class ClienteController extends RestfulController{
     ClienteController(){
         super(Cliente)
     }
-
     
     @Override
     protected List listAllResources(Map params) {
@@ -29,7 +28,6 @@ class ClienteController extends RestfulController{
         if(params.activo){
             query = query.where { activo == params.activo}
         }
-
         return query.list(params)
     }
 
