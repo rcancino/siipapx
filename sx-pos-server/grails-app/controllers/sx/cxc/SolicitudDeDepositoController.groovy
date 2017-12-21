@@ -39,21 +39,15 @@ class SolicitudDeDepositoController extends RestfulController{
     
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
-        
-        // def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
             resource.folio = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)
-            // resource.createUser = username
         }
-        // resource.updateUser = username
         resource.total = resource.cheque + resource.efectivo + resource.transferencia
         return super.saveResource(resource)
     }
 
     protected SolicitudDeDeposito updateResource(SolicitudDeDeposito resource) {
-        // def username = getPrincipal().username
-        // resource.updateUser = username
         resource.total = resource.cheque + resource.efectivo + resource.transferencia
         return super.updateResource(resource)
     }

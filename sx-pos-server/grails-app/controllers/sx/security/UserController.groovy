@@ -6,11 +6,22 @@ import grails.plugin.springsecurity.annotation.Secured
 
 @Secured("hasRole('ROLE_ADMIN')")
 class UserController extends RestfulController {
-  
-  static responseFormats = ['json']
 
-  UserController() {
-      super(User)
-  }
+    static responseFormats = ['json']
+
+    UserController() {
+        super(User)
+    }
+
+    def findByNip() {
+        def nip = params['nip'];
+        User user = User.where {nip == nip}.find();
+        if (user == null) {
+            notFound()
+            return
+        }
+        respond user
+    }
+
 
 }

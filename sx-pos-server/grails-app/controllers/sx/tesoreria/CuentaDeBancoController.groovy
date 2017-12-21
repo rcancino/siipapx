@@ -16,8 +16,7 @@ class CuentaDeBancoController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        /// log.debug('Buscando cuentas bancarias {}', params)
-        println 'Buscando cuentas: ' + params
+
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 100

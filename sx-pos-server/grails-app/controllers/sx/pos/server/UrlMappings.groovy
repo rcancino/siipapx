@@ -163,6 +163,7 @@ class UrlMappings {
         // Security
         "/api/security/users"(resources: "user")
         "/api/security/roles"(resources: "role")
+        "/api/security/users/findByNip"( controller:'user', action: 'findByNip', method: 'GET')
 
         "/"(controller: 'application', action:'index')
         "500"(view: '/error')
