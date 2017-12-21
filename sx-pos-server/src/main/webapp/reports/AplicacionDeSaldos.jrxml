@@ -30,7 +30,7 @@
 		<defaultValueExpression ><![CDATA["REPORTE DE VENTAS"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.Long"/>
+	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT  
 b.id as abono_id,S.NOMBRE AS SUCURSAL,S.CLAVE AS SUCCLAVE,l.CLAVE,l.NOMBRE,c.tipo as CAR_ORIGEN,c.documento CAR_DOCTO,c.fecha as CAR_FECHA,A.IMPORTE AS APLICADO_FAC
 ,0 as FOLIO,'' as BANCO,
