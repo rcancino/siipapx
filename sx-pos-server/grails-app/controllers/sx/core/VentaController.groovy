@@ -64,9 +64,17 @@ class VentaController extends RestfulController{
         log.debug('Asignando envio para venta: {}', venta)
         Direccion direccion = new Direccion()
         bindData direccion, getObjectToBind()
-        log.debug('Data to bind: {}', direccion)
+        log.debug('Direccion asignada: {}', direccion)
         if(venta.envio) {
             venta.envio.direccion = direccion
+        } else {
+            log.debug('Venta sin envio, generando un envio nuevo para direccion {}', direccion)
+            CondicionDeEnvio envio = new CondicionDeEnvio()
+            envio.direccion = direccion
+            envio.condiciones = 'ENVIO'
+            envio.venta = venta
+            venta.envio = envio
+            venta = venta.save()
         }
         respond venta
     }
