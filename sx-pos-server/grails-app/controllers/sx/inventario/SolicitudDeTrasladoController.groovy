@@ -1,8 +1,9 @@
 package sx.inventario
 
+
 import grails.rest.RestfulController
 import groovy.transform.ToString
-import sx.core.AppConfig
+
 import sx.core.Proveedor
 import sx.core.Sucursal
 import grails.plugin.springsecurity.annotation.Secured
@@ -49,6 +50,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
 
 
 
+
     protected SolicitudDeTraslado saveResource(SolicitudDeTraslado resource) {
         def username = getPrincipal().username
         if(resource.id == null) {
@@ -62,7 +64,8 @@ class SolicitudDeTrasladoController extends  RestfulController{
             }
         }
         resource.updateUser = username
-        return super.saveResource(resource)
+        resource.save flush: true
+        // return super.saveResource(resource)
     }
 
     protected Object updateResource(SolicitudDeTraslado resource) {

@@ -64,7 +64,8 @@ class TrasladoService {
         return traslado
     }
 
-    private generarTps(SolicitudDeTraslado sol, Chofer chofer, String comentario){
+    @Publisher('generarTps')
+    def generarTps(SolicitudDeTraslado sol, Chofer chofer, String comentario){
         assert chofer, 'Se requiere el chofer para atender el traslado'
         assert comentario, 'Se requiere el comentario al atender el traslado'
         log.debug('Generando TPS para Sol:{} Chofer:{} comentario: {}', sol.id, chofer.id, comentario);

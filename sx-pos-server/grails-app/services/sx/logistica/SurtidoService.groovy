@@ -4,6 +4,9 @@ import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import sx.core.Venta
 import sx.core.VentaDet
+import sx.inventario.SolicitudDeTraslado
+import sx.inventario.Traslado
+import sx.inventario.TrasladoDet
 import sx.security.User
 
 @Transactional
@@ -61,5 +64,44 @@ class SurtidoService {
             log.debug('Surtido generado {}', surtido)
             return surtido
         }
+    }
+
+    @Subscriber
+    public onGenerarTps(Traslado  origen ){
+        log.debug('Atendiendo solicitud de traslado: {}', origen.documento);
+
+        Surtido.withNewTransaction {
+            Traslado tps = Traslado.get(origen.id)
+            Surtido found = Surtido.where{ origen == tps.id}.find()
+            assert found == null, 'TPS con surtido ya iniciado'
+
+            Surtido surtido = new Surtido()
+            surtido.documento = tps.documento
+            surtido.comentario =  tps.comentario
+            surtido.fecha = new Date()
+            surtido.clasificacionVale = tps.clasificacionVale
+            surtido.folioFac = 0
+            surtido.nombre = tps.solicitudDeTraslado.sucursalSolicita.nombre
+            surtido.kilos = tps.kilos
+            surtido.kilosCorte = 0
+            surtido.folioFac = 0
+            surtido.entidad = 'TRS'
+            surtido.origen = tps.id
+            surtido.entregaLocal = false
+            surtido.prods = tps.partidas.count{ TrasladoDet det -> det.producto.inventariable}
+            surtido.prodsCorte = 0
+            surtido.userLastUpdate = User.findByUsername(tps.updateUser) ?: User.first()
+            surtido.tipoDeVenta = 'TPS'
+            tps.partidas.findAll{it.cortes > 0 }.each { TrasladoDet det ->
+                Corte corte = new Corte()
+                corte.producto = det.producto
+                corte.instruccionCorte = det.cortesInstruccion
+                surtido.addToCortes(corte)
+            }
+            surtido.save failOnError: true, flush: true
+            log.debug('Surtido generado {}', surtido)
+            return surtido
+        }
+
     }
 }
