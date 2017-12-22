@@ -28,7 +28,7 @@ class SolicitudDeTrasladoService {
     @Subscriber
     def onMandarFacturar(Venta venta) {
         if(venta.clasificacionVale != 'SIN_VALE' && venta.clasificacionVale != 'EXISTENCIA_VENTA') {
-            log.debug (' Generando  vale automatico tipo: '+venta.clasificacionVale )
+            log.debug (' Generando  vale automatico tipo: {} para: {}', venta.clasificacionVale, venta.statusInfo() )
             generarValeAutomatico(venta.id);
         }
     }
@@ -37,29 +37,35 @@ class SolicitudDeTrasladoService {
         Venta.withNewTransaction {
             Venta venta = Venta.get(ventaId)
             List partidas = venta.partidas.findAll{ it.conVale }
-            SolicitudDeTraslado sol = new SolicitudDeTraslado()
-            sol.clasificacionVale = venta.clasificacionVale
-            sol.documento = getFolio()
-            sol.venta = venta
-            sol.comentario =  "${venta.statusInfo()} ${venta.clasificacionVale}"
-            sol.fecha = new Date()
-            sol.sucursalSolicita = venta.sucursal
-            sol.sucursalAtiende = venta.sucursalVale
-            sol.referencia = "${venta.tipo} - ${venta.documento}"
-            partidas.each { VentaDet det ->
-                SolicitudDeTrasladoDet solDet = new SolicitudDeTrasladoDet()
-                solDet.producto = det.producto
-                solDet.comentario = "${venta.statusInfo()} ${venta.clasificacionVale}"
-                solDet.solicitado = det.cantidad
-                if(det.corte) {
-                    solDet.cortesInstruccion = det.corte.instruccion
-                    solDet.cortes = det.corte.cantidad
+            if (partidas) {
+                // log.debug('Partidas para el vale: {}', partidas.size())
+                SolicitudDeTraslado sol = new SolicitudDeTraslado()
+                sol.clasificacionVale = venta.clasificacionVale
+                sol.documento = getFolio()
+                sol.venta = venta.id
+                sol.comentario =  "${venta.statusInfo()} ${venta.clasificacionVale}"
+                sol.fecha = new Date()
+                sol.sucursalSolicita = venta.sucursal
+                sol.sucursalAtiende = venta.sucursalVale
+                sol.referencia = "${venta.tipo} - ${venta.documento}"
+                partidas.each { VentaDet det ->
+                    SolicitudDeTrasladoDet solDet = new SolicitudDeTrasladoDet()
+                    solDet.producto = det.producto
+                    solDet.comentario = "${venta.statusInfo()} ${venta.clasificacionVale}"
+                    solDet.solicitado = det.cantidad
+                    if(det.corte) {
+                        solDet.cortesInstruccion = det.corte.instruccion
+                        solDet.cortes = det.corte.cantidad
+                    }
+                    sol.addToPartidas(solDet)
                 }
-                sol.addToPartidas(solDet)
+                sol.updateUser = venta.updateUser
+                sol.createUser = venta.createUser
+                sol.save()
+            } else {
+                log.debug( 'La venta no tiene partidas que califiquen para vale')
             }
-            sol.updateUser = venta.updateUser
-            sol.createUser = venta.createUser
-            sol.save()
+
         }
     }
 

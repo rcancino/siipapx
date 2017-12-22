@@ -23,7 +23,7 @@ class SolicitudDeTraslado {
 
     String	referencia
 
-    Venta venta
+    String venta
 
     String	clasificacionVale = 'EXISTENCIA'
 
