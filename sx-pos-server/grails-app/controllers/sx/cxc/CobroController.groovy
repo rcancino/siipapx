@@ -6,6 +6,7 @@ import grails.transaction.Transactional
 import groovy.transform.ToString
 
 import sx.core.Venta
+import sx.reports.ReportService
 import sx.tesoreria.Banco
 import sx.core.Sucursal
 import sx.core.Cliente
@@ -16,6 +17,8 @@ class CobroController extends RestfulController{
     def cobroService
 
     def ventaService
+
+    ReportService reportService
 
     static responseFormats = ['json']
 
@@ -101,6 +104,12 @@ class CobroController extends RestfulController{
         // def cobros = Cobro.where { cliente == cliente && (importe - aplicado) > 0}.list(params)
         def cobros = Cobro.findAll(' from Cobro c where c.cliente = ? and c.importe - c.aplicado > 0', cliente)
         respond cobros
+    }
+
+    def reporteDeAarqueoCaja() {
+        def pdf = reportService.run('CajaArqueo', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CajaArqueo.pdf")
+
     }
 
 }

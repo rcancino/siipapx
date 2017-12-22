@@ -70,6 +70,7 @@ class UrlMappings {
         "/api/tesoreria/corteCobranza"(resources:"corteCobranza")
         "/api/tesoreria/fondoFijo"(resources:"fondoFijo")
         "/api/tesoreria/morralla"(resources:"morralla")
+        "/api/tesoreria/reporteDeAarqueoCaja"(controller: 'cobro', action: 'reporteDeAarqueoCaja', method: 'GET')
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
