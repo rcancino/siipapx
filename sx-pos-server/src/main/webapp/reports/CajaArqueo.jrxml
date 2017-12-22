@@ -29,7 +29,7 @@
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["ARQUEO DE CAJA"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT A.documento,A.clase,A.descripcion,A.tipo,A.fecha,A.corte,A.deposito,A.comentario,A.cortes_acumulado,A.pagos_registrados,A.fecha_deposito,(select SUM(x.importe) from morralla x where fecha<$P{FECHA}) as morralla
 ,(select SUM(x.importe) from fondo_fijo x where fecha<$P{FECHA}) as saldoFF ,(select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is not null) as solicitadoReembolso,(select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is null) as gastoPendiente
@@ -726,7 +726,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND FECHA=$P{FECHA}
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
