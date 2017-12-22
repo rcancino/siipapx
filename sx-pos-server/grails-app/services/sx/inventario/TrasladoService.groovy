@@ -24,7 +24,7 @@ class TrasladoService {
 
     @Subscriber
     public atender(Map  map ){
-        log.debug('Atendiendo solicitud de traslado: {}', map);
+        log.debug('Generando traslados TPE y TPS para la solicitud de traslado: {}', map);
         Traslado.withNewTransaction {
             SolicitudDeTraslado origen = SolicitudDeTraslado.get(map.sol)
             generarTpe(origen)
@@ -35,7 +35,7 @@ class TrasladoService {
     }
 
     private generarTpe( SolicitudDeTraslado sol) {
-        log.debug('Generando TPE para Sol: {}', sol);
+        // log.debug('Generando TPE para Sol: {}', sol);
         Traslado traslado = new Traslado()
         traslado.sucursal = sol.sucursalSolicita
         traslado.fecha = new Date()
@@ -59,8 +59,8 @@ class TrasladoService {
             traslado.addToPartidas(det)
         }
         logEntity(traslado)
-        traslado.save()
-        log.debug('TPE generado: {}', traslado)
+        traslado = traslado.save()
+        log.debug('TPE generado: {}', traslado.documento)
         return traslado
     }
 
@@ -93,8 +93,8 @@ class TrasladoService {
         }
 
         logEntity(tps)
-        tps.save()
-        log.debug('TPS generado: {}', tps)
+        tps = tps.save()
+        log.debug('TPS generado: {}', tps.documento)
         return tps
     }
 

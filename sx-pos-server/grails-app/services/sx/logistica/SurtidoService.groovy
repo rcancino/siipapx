@@ -2,6 +2,7 @@ package sx.logistica
 
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
+import sx.core.InstruccionCorte
 import sx.core.Venta
 import sx.core.VentaDet
 import sx.inventario.SolicitudDeTraslado
@@ -93,10 +94,16 @@ class SurtidoService {
             surtido.userLastUpdate = User.findByUsername(tps.updateUser) ?: User.first()
             surtido.tipoDeVenta = 'TPS'
             tps.partidas.findAll{it.cortes > 0 }.each { TrasladoDet det ->
+                /**
+                 *  EN EL MODELO ACTUAL NO SE PUEDE GENERAR LA INSTRUCCION DE CORTE DE POR EL VINCULO CON VENTADET
                 Corte corte = new Corte()
                 corte.producto = det.producto
-                corte.instruccionCorte = det.cortesInstruccion
+                InstruccionCorte instruccionCorte = new InstruccionCorte()
+                instruccionCorte.instruccion = det.cortesInstruccion
+                instruccionCorte.cantidad = det.cortes
+                corte.instruccionCorte = instruccionCorte
                 surtido.addToCortes(corte)
+                **/
             }
             surtido.save failOnError: true, flush: true
             log.debug('Surtido generado {}', surtido)
