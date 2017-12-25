@@ -31,6 +31,7 @@ class VentaService {
         logEntity(venta)
         fixVendedor(venta)
         fixDescuentoOriginal(venta)
+        fixSinExistencias(venta)
         if(venta.id == null){
             Folio folio=Folio.findOrCreateWhere(entidad: 'VENTAS', serie: 'PEDIDOS')
             def res = folio.folio + 1
@@ -88,6 +89,10 @@ class VentaService {
             venta.partidas.each {it.descuentoOriginal = it.descuento}
             venta.descuentoOriginal = venta.descuento
         }
+    }
+    private fixSinExistencias(Venta venta) {
+        def sinExistencias = venta.partidas.find { it.sinExistencia}
+        venta.sinExistencia = sinExistencias != null
     }
 
     /**
@@ -166,10 +171,12 @@ class VentaService {
 
 
     def logEntity(Venta venta) {
+        /*
         def user = getUser()
         if(! venta.id)
             venta.createUser = user
         venta.updateUser = user
+        */
     }
 
     def getUser() {

@@ -104,6 +104,8 @@ class Venta {
 
     String folio
 
+    Boolean sinExistencia = false
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -127,6 +129,7 @@ class Venta {
         usoDeCfdi nullable: true, maxSize:3
         envio nullable: true
         importe scale: 2
+        sinExistencia nullable: true
     }
 
     static mapping = {

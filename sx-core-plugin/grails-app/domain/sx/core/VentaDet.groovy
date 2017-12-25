@@ -57,6 +57,8 @@ class VentaDet {
 
     BigDecimal enviado = 0
 
+    Boolean sinExistencia = false
+
     // InstruccionCorte corte
 
     String  sw2
@@ -69,6 +71,8 @@ class VentaDet {
         comentario nullable: true
         inventario nullable: true
         corte nullable: true
+        sinExistencia nullable: true
+
     }
 
     static mapping = {
