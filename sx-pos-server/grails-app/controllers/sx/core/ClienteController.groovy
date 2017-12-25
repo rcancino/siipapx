@@ -41,7 +41,7 @@ class ClienteController extends RestfulController{
             def fol = Folio.nextFolio('CLIENTES',serie).toString()
             fol = fol.padLeft(7, '0')
             def clave = "SX${serie.substring(0,2)}${fol}"
-            println 'Clave generada para nuevo cliente: ' + clave 
+            log.debug('Clave generada para cliente nuevo {} : {} ', resource.nombre, clave);
             resource.clave = clave
             resource.createUser = username
             if (resource.vendedor == null) {
@@ -59,7 +59,7 @@ class ClienteController extends RestfulController{
         }
         String email = params.email
         def medio = cliente.medios.find {it.tipo =='MAIL' && it.cfdi}
-        println 'Medio localizado: ' + medio
+        log.debug('Medio localizado: {}', medio)
         if(!medio) {
             medio = new ComunicacionEmpresa()
             medio.tipo = 'MAIL'
@@ -69,7 +69,6 @@ class ClienteController extends RestfulController{
             medio.cliente = cliente
             cliente.addToMedios(medio)
         }
-        println 'Email a asignar: '+email 
         medio.descripcion = email
         cliente.save failOnError: true, flush:true
         respond cliente
