@@ -1,0 +1,9 @@
+import sx.compras.ListaDePreciosVenta
+
+model {
+    ListaDePreciosVenta listaDePreciosVenta
+}
+
+json g.render(listaDePreciosVenta, [excludes:['dateCreated', 'lastUpdated']]){
+    modificado listaDePreciosVenta.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+}

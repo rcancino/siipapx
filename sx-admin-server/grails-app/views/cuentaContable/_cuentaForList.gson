@@ -1,0 +1,6 @@
+import sx.contabilidad.CuentaContable
+
+model {
+    CuentaContable cuentaContable
+}
+json g.render(cuentaContable, [excludes:['subCuentas'], deep:true])

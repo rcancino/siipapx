@@ -1,0 +1,16 @@
+import sx.contabilidad.CuentaContable
+
+model {
+    CuentaContable cuentaContable
+}
+
+/*json g.render(cuentaContable, [excludes:['cuentaSat']]){
+    cuentaSat g.render(cuentaContable.cuentaSat)
+}*/
+
+//json g.render(cuentaContable, [deep:true])
+
+json g.render(cuentaContable, [deep:true, excludes:['dateCreated','lastUpdated'] ]){
+    modificado cuentaContable.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    creado cuentaContable.dateCreated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+}

@@ -39,6 +39,14 @@ logger("org.springframework.security", OFF, ['STDOUT'], false)
 logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
 logger("org.pac4j", OFF, ['STDOUT'], false)
 
+logger("org.springframework.security", OFF, ['STDOUT'], false)
+logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
+logger("org.pac4j", OFF, ['STDOUT'], false)
+
 logger("sx.core", DEBUG, ['STDOUT'], false)
-logger("sx.inventario", DEBUG, ['STDOUT'], false)
-logger("sx.logistica", DEBUG, ['STDOUT'], false)
+logger("sx.tesoreria", DEBUG, ['STDOUT'], false)
+logger("sx.cxc", DEBUG, ['STDOUT'], false)
+logger("sx.cfdi", DEBUG, ['STDOUT'], false)
+logger("sx.reports", DEBUG, ['STDOUT'], false)
+logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
+

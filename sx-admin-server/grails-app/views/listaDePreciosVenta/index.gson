@@ -1,0 +1,8 @@
+import sx.compras.ListaDePreciosVenta
+
+model {
+    Iterable<ListaDePreciosVenta> listaDePreciosVentaList
+}
+
+json tmpl.listaDePreciosVenta(listaDePreciosVentaList ?: [])
+
