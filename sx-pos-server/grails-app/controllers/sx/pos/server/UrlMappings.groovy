@@ -32,6 +32,7 @@ class UrlMappings {
         // Tesoreria
         "/api/tesoreria/bancos"(resources: "banco")
         "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
+        "/api/tesoreria/fichas"(resources: "ficha")
 
         //Comprobantes fiscales de proveedores CFDI's
         "/api/cfdis"(resources: "cfdi")
@@ -65,6 +66,8 @@ class UrlMappings {
         "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
         "/api/ventas/cancelar/$id"( controller: 'venta', action: 'cancelar')
         "/api/ventas/print/$id"(controller: "venta", action: 'print', method: 'GET')
+
+        "/api/socios"(resources:"socio")
 
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')

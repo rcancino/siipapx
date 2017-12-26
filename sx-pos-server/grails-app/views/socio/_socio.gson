@@ -1,0 +1,9 @@
+import groovy.transform.Field
+import sx.core.Socio
+
+@Field Socio socio
+
+json g.render(socio, [excludes:['direccion']]){
+  direccion g.render(cliente.direccion)
+}
+
