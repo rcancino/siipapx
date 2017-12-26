@@ -59,6 +59,14 @@ class VentaController extends RestfulController{
     }
 
     @Transactional
+    def mandarFacturarConAutorizacion(AutorizacionDeVenta autorizacion) {
+        // log.debug('Mandando facturar con autorizacion: {}', autorizacion)
+        def res = ventaService.mandarFacturar(autorizacion.venta.id)
+        autorizacion.save failOnError: true, flush: true
+        respond res
+    }
+
+    @Transactional
     def asignarEnvio() {
         Venta venta = Venta.get(params.id)
         log.debug('Asignando envio para venta: {}', venta)
