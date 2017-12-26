@@ -29,15 +29,15 @@
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="IMP_CON_LETRA" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select C.CLAVE AS CLAVCTE,C.NOMBRE,CONCAT(C.direccion_calle,' ',C.direccion_numero_exterior,' ',C.direccion_numero_interior) AS CALLE,CONCAT(C.direccion_colonia,',     CP : ',C.direccion_codigo_postal) AS COLONIA,C.direccion_municipio AS DELMPO,C.direccion_estado AS ESTADO,C.direccion_pais AS PAIS,C.RFC
+,V.IMPORTE,V.DESCUENTO,V.DESCUENTO_IMPORTE,V.SUBTOTAL,V.IMPUESTO,V.TOTAL,V.COMENTARIO,(CASE WHEN (SELECT X.ID FROM condicion_de_envio X WHERE X.VENTA_ID=V.ID)=NULL THEN 'PASAN' ELSE 'ENVIO' END) AS ENVIO,'X' AS GRUPO,V.FORMA_DE_PAGO AS FPAGO,V.CREATE_USER AS CREADO_USR
 ,V.TIPO,V.FECHA,V.ID,V.DOCUMENTO AS DOCTO,S.NOMBRE AS SUCURSAL,P.CLAVE,P.DESCRIPCION,P.KILOS AS KXMLL,P.GRAMOS,P.UNIDAD,I.CANTIDAD,I.PRECIO,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,I.IMPORTE AS IMPORTED
 ,(SELECT MAX(X.cantidad) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES,(SELECT MAX(X.precio) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES_PRECIO
-,concat((SELECT MAX((case when X.tipo is null then '' when x.tipo = "CALCULADO" then 'CALC' else x.tipo end)) FROM instruccion_corte X WHERE X.venta_det_id=I.ID),' ',(SELECT MAX(X.instruccion) FROM instruccion_corte X WHERE X.venta_det_id=I.ID)) AS CORTES_INSTRUCCION
-,V.IMPORTE,V.DESCUENTO,V.DESCUENTO_IMPORTE,V.SUBTOTAL,V.IMPUESTO,V.TOTAL,V.COMENTARIO,(CASE WHEN (SELECT X.ID FROM condicion_de_envio X WHERE X.VENTA_ID=V.ID)=NULL THEN 'PASAN' ELSE 'ENVIO' END) AS ENVIO,'X' AS GRUPO,V.FORMA_DE_PAGO AS FPAGO,V.CREATE_USER AS CREADO_USR
+,concat((SELECT MAX((case when X.tipo is null then '' when x.tipo = "CALCULADO" then 'CALC' else x.tipo end)) FROM instruccion_corte X WHERE X.venta_det_id=I.ID),' ',(SELECT MAX((case when X.instruccion is null then '' else X.instruccion end)) FROM instruccion_corte X WHERE X.venta_det_id=I.ID)) AS CORTES_INSTRUCCION
 ,(SELECT CONCAT(IFNULL(X.DIRECCION_CALLE,''),' #',IFNULL(X.DIRECCION_NUMERO_EXTERIOR,''),' ',IFNULL(X.DIRECCION_NUMERO_INTERIOR,''),', ',IFNULL(X.DIRECCION_COLONIA,''),', ',IFNULL(X.DIRECCION_CODIGO_POSTAL,''),', ',IFNULL(X.DIRECCION_MUNICIPIO,''),', ',IFNULL(X.DIRECCION_ESTADO,'')) FROM condicion_de_envio X  WHERE V.ID=X.VENTA_ID)  AS DIR_ENTREGA
 ,IFNULL((SELECT X.NOMBRE FROM venta_credito Y JOIN SOCIO X ON(Y.SOCIO_ID=X.ID) WHERE Y.SOCIO_ID=X.ID),"") AS SOCIO
 ,(CASE WHEN V.PUESTO IS NOT NULL THEN "**PUESTO**" ELSE " " END ) AS PUESTO
 ,CASE WHEN P.MODO_VENTA="N" THEN 1.00 ELSE 0.00 END  AS MDV,P.MODO_VENTA
-,CONCAT(IFNULL((SELECT CONCAT('1) ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='TEL'),'  ')
+,CONCAT(IFNULL((SELECT CONCAT('1) ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='TEL1'),'  ')
        ,IFNULL((SELECT CONCAT('2) ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='TEL2'),'  ')
        ,IFNULL((SELECT CONCAT('3) ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='TEL3'),'  ')  
        ,IFNULL((SELECT CONCAT('4) ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='TEL4'),'  ') 
@@ -60,6 +60,17 @@ order by i.partidas_idx]]></queryString>
 	<field name="ESTADO" class="java.lang.String"/>
 	<field name="PAIS" class="java.lang.String"/>
 	<field name="RFC" class="java.lang.String"/>
+	<field name="IMPORTE" class="java.math.BigDecimal"/>
+	<field name="DESCUENTO" class="java.math.BigDecimal"/>
+	<field name="DESCUENTO_IMPORTE" class="java.math.BigDecimal"/>
+	<field name="SUBTOTAL" class="java.math.BigDecimal"/>
+	<field name="IMPUESTO" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="COMENTARIO" class="java.lang.String"/>
+	<field name="ENVIO" class="java.lang.String"/>
+	<field name="GRUPO" class="java.lang.String"/>
+	<field name="FPAGO" class="java.lang.String"/>
+	<field name="CREADO_USR" class="java.lang.String"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="FECHA" class="java.sql.Date"/>
 	<field name="ID" class="java.lang.String"/>
@@ -77,17 +88,6 @@ order by i.partidas_idx]]></queryString>
 	<field name="CORTES" class="java.lang.Long"/>
 	<field name="CORTES_PRECIO" class="java.math.BigDecimal"/>
 	<field name="CORTES_INSTRUCCION" class="java.lang.String"/>
-	<field name="IMPORTE" class="java.math.BigDecimal"/>
-	<field name="DESCUENTO" class="java.math.BigDecimal"/>
-	<field name="DESCUENTO_IMPORTE" class="java.math.BigDecimal"/>
-	<field name="SUBTOTAL" class="java.math.BigDecimal"/>
-	<field name="IMPUESTO" class="java.math.BigDecimal"/>
-	<field name="TOTAL" class="java.math.BigDecimal"/>
-	<field name="COMENTARIO" class="java.lang.String"/>
-	<field name="ENVIO" class="java.lang.String"/>
-	<field name="GRUPO" class="java.lang.String"/>
-	<field name="FPAGO" class="java.lang.String"/>
-	<field name="CREADO_USR" class="java.lang.String"/>
 	<field name="DIR_ENTREGA" class="java.lang.String"/>
 	<field name="SOCIO" class="java.lang.String"/>
 	<field name="PUESTO" class="java.lang.String"/>
