@@ -12,4 +12,16 @@ class BancoController extends RestfulController {
     BancoController() {
       super(Banco)
     }
+
+
+      @Override
+    protected List listAllResources(Map params) {
+
+        //params.sort = 'lastUpdated'
+        //params.order = 'desc'
+        params.max = 100
+        def query = Banco.where {}
+   
+        return query.list(params)
+    }
 }
