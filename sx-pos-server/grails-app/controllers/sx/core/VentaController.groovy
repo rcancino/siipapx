@@ -199,6 +199,7 @@ class VentaController extends RestfulController{
     def print( Venta pedido) {
         params.ID = pedido.id
         params.IMP_CON_LETRA = ImporteALetra.aLetra(pedido.total)
+        params.TELEFONOS = pedido.cliente.getTelefonos().join('/')
         def pdf =  reportService.run('Pedido.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
