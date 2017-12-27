@@ -172,7 +172,7 @@ class V33PdfGenerator {
         String tipo = 'CONTADO'
         switch (venta.tipo){
             case 'CRE':
-                tipo = 'CONTADO'
+                tipo = 'CREDITO'
                 break
             case 'COD':
                 tipo = 'COD'
@@ -186,8 +186,11 @@ class V33PdfGenerator {
         parametros.ELAB_VTA = venta.updateUser ?: 'ND'
         parametros.IMPRESO = venta.impreso
 
+        parametros.ENVIO = "LOCAL"
+
         if (venta.envio) {
             parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
+            parametros.ENVIO = venta.envio.condiciones
         }
         if(venta.impreso == null) {
             venta.impreso = new Date()
