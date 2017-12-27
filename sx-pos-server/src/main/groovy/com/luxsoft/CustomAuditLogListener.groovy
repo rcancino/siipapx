@@ -13,10 +13,7 @@ import org.springframework.context.ApplicationEvent
 import grails.core.GrailsDomainClass
 import sx.core.AuditLog
 
-
-
 @Commons
-
 class CustomAuditLogListener extends AbstractPersistenceEventListener {
 
 def dataSource
