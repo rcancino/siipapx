@@ -19,6 +19,8 @@ class VentaService {
 
     CfdiService cfdiService
 
+    CfdiFacturaBuilder cfdiFacturaBuilder
+
     CfdiTimbradoService cfdiTimbradoService
 
     SpringSecurityService springSecurityService
@@ -149,8 +151,8 @@ class VentaService {
     def generarCfdi(Venta venta){
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
         log.debug('Generando CFDI para  {}', venta.statusInfo())
-        CfdiFacturaBuilder builder = new CfdiFacturaBuilder();
-        def comprobante = builder.build(venta)
+        // CfdiFacturaBuilder builder = new CfdiFacturaBuilder();
+        def comprobante = cfdiFacturaBuilder.build(venta)
         def cfdi = cfdiService.generarCfdi(comprobante, 'I')
         venta.cuentaPorCobrar.cfdi = cfdi
         venta.save flush: true

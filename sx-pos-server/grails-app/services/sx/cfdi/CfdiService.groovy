@@ -40,7 +40,7 @@ class CfdiService {
         String year = date[Calendar.YEAR]
         String month = date[Calendar.MONTH]+1
         String day = date[Calendar.DATE]
-        def cfdiRootDir = new File(getConfig().cfdiLocation?: System.properties['user.home'])
+        def cfdiRootDir = new File(getConfig().cfdiLocation?: "${System.properties['user.home']}/cfdis")
         final FileTreeBuilder treeBuilder = new FileTreeBuilder(cfdiRootDir)
         treeBuilder{
             dir(cfdi.emisor){
@@ -85,10 +85,13 @@ class CfdiService {
 
 
     AppConfig getConfig() {
+        /*
         if(!this.config){
             this.config = AppConfig.first()
         }
         return this.config
+        */
+        return AppConfig.first()
     }
 
     def cancelar(Cfdi cfdi) {

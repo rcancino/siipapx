@@ -1,5 +1,6 @@
 package com.luxsoft.cfdix.v33
 
+import groovy.util.logging.Slf4j
 import org.apache.commons.logging.LogFactory
 import org.bouncycastle.util.encoders.Base64
 
@@ -27,9 +28,8 @@ import java.math.RoundingMode
 /**
  * TODO: Parametrizar el regimenFiscal de
  */
+@Slf4j
 class CfdiFacturaBuilder {
-
-    private static final log=LogFactory.getLog(this)
 
     private factory = new ObjectFactory();
     private Comprobante comprobante;
@@ -41,7 +41,7 @@ class CfdiFacturaBuilder {
     private BigDecimal subTotal = 0.0
     private BigDecimal totalImpuestosTrasladados
 
-
+    CfdiSellador33 sellador
 
     def build(Venta factura){
 
@@ -58,7 +58,7 @@ class CfdiFacturaBuilder {
                 .buildTotales()
                 .buildCertificado()
 
-        CfdiSellador33 sellador = new CfdiSellador33()
+        // CfdiSellador33 sellador = new CfdiSellador33()
         comprobante = sellador.sellar(comprobante, empresa)
         return comprobante
     }

@@ -23,6 +23,8 @@ class TrasladoBuilder {
 
     // private static final log=LogFactory.getLog(this)
 
+    CfdiSellador33 sellador
+
     private factory = new ObjectFactory();
     private Comprobante comprobante;
     private Empresa empresa
@@ -46,8 +48,6 @@ class TrasladoBuilder {
                 .buildImpuestos()
                 .buildTotales()
                 .buildCertificado()
-
-        CfdiSellador33 sellador = new CfdiSellador33()
         comprobante = sellador.sellar(comprobante, empresa)
         return comprobante
     }
