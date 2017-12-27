@@ -9,6 +9,8 @@ class CorteCobranzaController extends RestfulController {
 
     static responseFormats = ['json']
 
+    CorteCobranzaService corteCobranzaService
+
     CorteCobranzaController() {
       super(CorteCobranza)
     }
@@ -32,6 +34,17 @@ class CorteCobranzaController extends RestfulController {
     protected CorteCobranza updateResource(CorteCobranza resource) {
         resource.updateUser = getPrincipal().username
         return super.updateResource(resource)
+    }
+
+
+    def preparar(){
+        log.debug('Preparando corte: {}', params)
+        String formaDePago = params.formaDePago
+        String tipo = params.tipo
+        log.debug('Preparando corte {}', formaDePago )
+        CorteCobranza corte = corteCobranzaService.prepararCorte(formaDePago, tipo);
+        respond corte
+
     }
 
 

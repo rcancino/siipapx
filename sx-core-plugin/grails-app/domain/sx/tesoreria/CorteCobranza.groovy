@@ -5,7 +5,7 @@ import groovy.transform.ToString
 
 import sx.core.Sucursal
 
-@ToString(includes = ['sucursal,formaDePago','corte'],includeNames=true,includePackage=false)
+@ToString(includes = ['sucursal','formaDePago','corte'],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = "id")
 class CorteCobranza {
 

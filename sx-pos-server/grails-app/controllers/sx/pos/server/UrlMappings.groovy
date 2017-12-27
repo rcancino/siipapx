@@ -72,6 +72,7 @@ class UrlMappings {
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
         "/api/tesoreria/corteCobranza"(resources:"corteCobranza")
+        "/api/tesoreria/corteCobranza/preparar"(controller:"corteCobranza", action: 'preparar', method: 'GET')
         "/api/tesoreria/fondoFijo"(resources:"fondoFijo")
         "/api/tesoreria/morralla"(resources:"morralla")
         "/api/tesoreria/reporteDeAarqueoCaja"(controller: 'cobro', action: 'reporteDeAarqueoCaja', method: 'GET')
