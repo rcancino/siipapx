@@ -1,0 +1,36 @@
+import sx.cxp.CuentaPorPagar
+
+model {
+    CuentaPorPagar cuentaPorPagar
+}
+/*
+json {
+    id cuentaPorPagar.id
+    fecha cuentaPorPagar.fecha
+    vencimiento cuentaPorPagar.vencimiento
+    proveedor g.render(cuentaPorPagar.proveedor, [includes:['id','nombre']])
+}
+*/
+/*
+json g.render(cuentaPorPagar,[includes:['id','nombre','fecha','vencimieto','tipoDeCambio','importe','impuesto',
+                                        'total','comprobante','acuse','comentario',
+                                        'pagosAplicados','totalMN','retensionIsr','retensionIsrTasa',
+                                        'impuesto','impuestoTasa',
+                                        'retensionIva','retensionIvaTasa']
+]){
+    proveedor g.render(cuentaPorPagar.proveedor, [includes: ['id','nombre']])
+    modificado cuentaPorPagar.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    creado cuentaPorPagar.dateCreated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    saldo cuentaPorPagar.getSaldo()
+    porRequisitar cuentaPorPagar.getPendienteRequisitar()
+    moneda cuentaPorPagar.moneda.currencyCode
+}
+*/
+
+json g.render(cuentaPorPagar, [excludes:['moneda','dateCreated','lastUpdated','proveedor']]){
+    proveedor g.render(cuentaPorPagar.proveedor, [includes: ['id','nombre']])
+    modificado cuentaPorPagar.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    creado cuentaPorPagar.dateCreated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    moneda cuentaPorPagar.moneda.currencyCode
+}
+

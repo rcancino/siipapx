@@ -4,10 +4,11 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Sucursal
+import sx.tesoreria.AutorizacionDeDeposito
 import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 
-@ToString(excludes = ["id,lastUpdated,dateCreated"],includeNames=true,includePackage=false)
+@ToString(excludes = ["id,cliente,sucursal, total"],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
 class SolicitudDeDeposito {
 
@@ -59,6 +60,8 @@ class SolicitudDeDeposito {
 
     String updateUser
 
+    AutorizacionDeDeposito autorizacion
+
     static mapping={
         id generator: 'uuid'
     }
@@ -71,5 +74,6 @@ class SolicitudDeDeposito {
         comentario nullable: true
         createUser nullable: true
         updateUser nullable: true
+        autorizacion nullable: true
     }
 }

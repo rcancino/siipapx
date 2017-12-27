@@ -1,0 +1,13 @@
+import sx.compras.ListaDePreciosPorProveedor
+
+model {
+    ListaDePreciosPorProveedor listaDePrecios
+}
+
+/*
+json g.render(listaDePrecios, [excludes:['dateCreated','lastUpdated','proveedor','vigente']]){
+    proveedor g.render(listaDePreciosPorProveedor.proveedor, [includes: ['id', 'clave', 'nombre']])
+    modificado listaDePreciosPorProveedor.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    vigente listaDePreciosPorProveedor.vigente
+}
+*/

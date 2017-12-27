@@ -1,0 +1,13 @@
+import sx.tesoreria.Requisicion
+
+model {
+    Requisicion requisicion
+}
+
+json g.render(requisicion, [deep:true,excludes:['moneda','dateCreated','lastUpdated']]){
+    moneda requisicion.moneda.currencyCode
+    partidas g.render(requisicion.partidas, [deep:true, excludes:['requisicion','lastUpdated']] )
+
+}
+
+

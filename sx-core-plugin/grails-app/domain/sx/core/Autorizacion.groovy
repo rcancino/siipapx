@@ -15,16 +15,18 @@ class Autorizacion {
 
     String comentario
 
-    Date fechaDeAutorizacion
+    Date fecha
 
     Date dateCreated
+    Date lastUpdated
 
     static constraints = {
         comentario nullable:true
     }
+
     static mapping = {
         id generator:'uuid'
-        fechaDeAutorizacion type:'date', index: 'AUT_IDX1'
+        fecha type:'date', index: 'AUT_IDX1'
         solicito index: 'AUT_IDX2'
         autorizo index: 'AUT_IDX3'
     }

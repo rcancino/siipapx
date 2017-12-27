@@ -1,0 +1,13 @@
+import sx.cxp.ContraRecibo
+
+model {
+    ContraRecibo contraRecibo
+}
+
+json g.render(contraRecibo, [excludes:[ 'proveedor', 'dateCreated', 'lastUpdated'] ]){
+    modificado contraRecibo.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+    proveedor {
+        id contraRecibo.proveedor.id
+        nombre contraRecibo.proveedor.nombre
+    }
+}
