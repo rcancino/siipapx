@@ -4,6 +4,7 @@ import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 import com.luxsoft.cfdix.v33.CfdiSellador33
 import com.luxsoft.cfdix.v33.TrasladoBuilder
 
+
 // Place your Spring DSL code here
 beans = {
     customAuditLogListener(CustomAuditLogListener) {
@@ -23,5 +24,6 @@ beans = {
     trasladoBuilder(TrasladoBuilder) {
         sellador = ref('cfdiSellador')
     }
+
 
 }

@@ -1,6 +1,7 @@
 package sx.cfdi
 
 import grails.gorm.transactions.Transactional
+import grails.util.Environment
 import org.apache.commons.io.FileUtils
 
 import com.luxsoft.utils.ZipUtils
@@ -24,6 +25,8 @@ class CfdiTimbradoService {
 
     // WS cerpiService
 
+
+
     CFDi edicomService
 
     def timbrar(Cfdi cfdi) {
@@ -40,8 +43,14 @@ class CfdiTimbradoService {
     def timbrarEdicom(Cfdi cfdi) {
         File file = FileUtils.toFile(cfdi.url)
         log.debug('Timbrando archivo {}' ,file.getPath())
-        byte[] res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
-        log.debug('Timbrado terminado')
+        byte[] res = null;
+        if (this.isTimbradoDePrueba()) {
+            log.debug('Timbrado de prueba')
+            res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
+        } else {
+            res = edicomService.getCfdi('PAP830101CR3','yqjvqfofb', file.bytes)
+        }
+        log.debug('Timbrado exitoso')
         Map map = ZipUtils.descomprimir(res)
 
         def entry = map.entrySet().iterator().next()
@@ -84,6 +93,10 @@ class CfdiTimbradoService {
                 [cfdi.uuid],
                 empresa.certificadoDigitalPfx,
                 empresa.passwordPfx)
+    }
+
+    Boolean isTimbradoDePrueba() {
+        return Environment.current == Environment.PRODUCTION
     }
 
 }

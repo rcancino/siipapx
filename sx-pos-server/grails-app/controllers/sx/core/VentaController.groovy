@@ -27,7 +27,7 @@ class VentaController extends RestfulController{
         // log.debug('Localizando ventas {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        params.max = 100
+        params.max = 500
         def query = Venta.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}
