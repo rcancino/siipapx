@@ -15,10 +15,15 @@ class CorteCobranzaController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
+        log.debug('Buscando cortes con {}', params)
         params.sort = 'corte'
         params.order = 'asc'
         params.max = 100
         def query = CorteCobranza.where {}
+        if (params.fecha) {
+            Date fecha = Date.parse('dd/MM/yyyy', params.fecha)
+            query = query.where {fecha == fecha}
+        }
         return query.list(params)
     }
 
