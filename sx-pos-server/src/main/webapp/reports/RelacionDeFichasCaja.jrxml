@@ -209,7 +209,7 @@ WHERE F.FECHA=$P{FECHA}  AND S.ID=$P{SUCURSAL} AND ORIGEN=$P{ORIGEN}]]></querySt
 				</staticText>
 				<staticText>
 					<reportElement
-						x="225"
+						x="217"
 						y="19"
 						width="222"
 						height="17"
@@ -223,7 +223,7 @@ WHERE F.FECHA=$P{FECHA}  AND S.ID=$P{SUCURSAL} AND ORIGEN=$P{ORIGEN}]]></querySt
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-BoldOblique" size="10" isBold="true" isItalic="true" isUnderline="true" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[F I C H A S   D E   D E P O S I T O   D E   ]]></text>
+				<text><![CDATA[F I C H A S   D E   D E P O S I T O   D E     ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -332,9 +332,9 @@ WHERE F.FECHA=$P{FECHA}  AND S.ID=$P{SUCURSAL} AND ORIGEN=$P{ORIGEN}]]></querySt
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="447"
+						x="439"
 						y="19"
-						width="99"
+						width="107"
 						height="17"
 						forecolor="#000000"
 						key="textField-18"/>
