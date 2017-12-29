@@ -78,6 +78,7 @@ class UrlMappings {
         "/api/tesoreria/fondoFijo"(resources:"fondoFijo")
         "/api/tesoreria/morralla"(resources:"morralla")
         "/api/tesoreria/reporteDeAarqueoCaja"(controller: 'cobro', action: 'reporteDeAarqueoCaja', method: 'GET')
+        "/api/tesoreria/reporteDeFichas"(controller: 'cobro', action: 'reporteDeFichas', method: 'GET')
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")

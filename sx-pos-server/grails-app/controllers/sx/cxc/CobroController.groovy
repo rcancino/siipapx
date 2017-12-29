@@ -108,10 +108,20 @@ class CobroController extends RestfulController{
     }
 
     def reporteDeAarqueoCaja(PorFechaCommand command) {
-        log.debug(' Arqueo: {}', command)
-        println 'Arequ ' + command
-        params.FECHA = command.fecha.format('dd/MM/yyyy')
-        def pdf = reportService.run('CajaArqueo', params)
+        //log.debug(' Arqueo: {}', command)
+        Map repParams = [:];
+        repParams['FECHA'] = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = params['SUCURSAL']
+        def pdf = reportService.run('CajaArqueo', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CajaArqueo.pdf")
+    }
+
+    def reporteDeFichas(PorFechaCommand command) {
+        Map repParams = [:];
+        repParams['SUCURSAL'] = params['SUCURSAL']
+        repParams['FECHA'] = command.fecha
+        repParams['ORIGEN'] = params.origen
+        def pdf = reportService.run('RelacionDeFichasCaja', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CajaArqueo.pdf")
 
     }

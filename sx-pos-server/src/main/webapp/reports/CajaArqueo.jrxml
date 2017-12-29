@@ -317,48 +317,6 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND FECHA=$P{FECHA}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="378"
-						y="8"
-						width="64"
-						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{clase}.startsWith( "CORTE" )
-)]]></printWhenExpression>
-						</reportElement>
-					<box>					<pen lineWidth="0.0" lineStyle="Double"/>
-					<topPen lineWidth="1.75" lineStyle="Double"/>
-					<leftPen lineWidth="0.0" lineStyle="Double"/>
-					<bottomPen lineWidth="0.0" lineStyle="Double"/>
-					<rightPen lineWidth="0.0" lineStyle="Double"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_PAGOS}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="442"
-						y="8"
-						width="64"
-						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{clase}.startsWith( "CORTE" )
-)]]></printWhenExpression>
-						</reportElement>
-					<box>					<pen lineWidth="0.0" lineStyle="Double"/>
-					<topPen lineWidth="1.75" lineStyle="Double"/>
-					<leftPen lineWidth="0.0" lineStyle="Double"/>
-					<bottomPen lineWidth="0.0" lineStyle="Double"/>
-					<rightPen lineWidth="0.0" lineStyle="Double"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_POR_DEPOSITAR}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
 						x="250"
 						y="8"
 						width="64"
@@ -935,7 +893,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND FECHA=$P{FECHA}
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP WIN EX]]></text>
+				<text><![CDATA[SIIPAP-X Rx]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1039,7 +997,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND FECHA=$P{FECHA}
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP WIN EX]]></text>
+				<text><![CDATA[SIIPAP-X Rx]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement

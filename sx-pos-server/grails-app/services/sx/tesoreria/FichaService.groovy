@@ -19,7 +19,7 @@ class FichaService {
                 break
             case 'EFECTIVO':
                 log.info('CorteCobranza  de tipo EFECTIVO detectado, generando fichas...')
-                generarFicha(corte.fecha, corte.tipoDeVenta, corte.deposito)
+                buildFicha('EFECTIVO', corte.tipoDeVenta,corte.deposito)
         }
 
     }
@@ -89,7 +89,7 @@ class FichaService {
         return ficha
     }
 
-    def registrarFicha(String tipo, String origen, BigDecimal total) {
+    def buildFicha(String tipo, String origen, BigDecimal total) {
         def cuenta = CuentaDeBanco.where{numero == '16919455' }.find()
         assert cuenta, 'No existe la cuenta de banco para fichas'
         Ficha ficha = new Ficha()
@@ -101,10 +101,6 @@ class FichaService {
         ficha.total = total
         ficha.folio = Folio.nextFolio('FICHAS','FICHAS')
         ficha.save failOnError: true, flush: true
-        grupo.each {
-            it.cheque.ficha = ficha
-            it.save flush:true
-        }
         log.debug('Fihca generada {}', ficha)
         return ficha
     }
