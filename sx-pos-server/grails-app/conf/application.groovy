@@ -36,6 +36,7 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     [pattern: '/',                      access: ['permitAll']],
     [pattern: '/console/**',            access: ['permitAll']],
+    [pattern: '/static/console/**',            access: ['permitAll']], // Grails 3.x
     [pattern: '/**/vendor/**',            access: ['permitAll']],
     [pattern: '/application/index',     access: ['permitAll']],
     [pattern: '/error',                 access: ['permitAll']],
@@ -75,3 +76,4 @@ cxf {
 
     }
 }
+grails.plugin.console.enabled = true

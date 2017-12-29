@@ -17,6 +17,9 @@ class CobroService {
             aplicacion.fecha = new Date()
             aplicacion.importe = importe
             cobro.addToAplicaciones(aplicacion)
+            if(!cobro.primeraAplicacion) {
+                cobro.primeraAplicacion = aplicacion.fecha
+            }
             disponible = disponible - aplicacion.importe
 
             if(disponible < 10 && disponible > 0.01) {
