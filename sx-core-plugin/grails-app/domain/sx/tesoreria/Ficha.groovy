@@ -1,73 +1,77 @@
 package sx.tesoreria
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Sucursal
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.MovimientoDeCuenta
 
+@ToString(includes = "folio, sucursal, origen, cuentaDeBanco,total",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = 'id,folio')
 class Ficha {
 
-	String id
+    String id
 
-	Long folio = 0
+    Long folio = 0
 
-	Sucursal sucursal
+    Sucursal sucursal
 
-	String origen
+    String origen
 
-	Date fecha
+    Date fecha
 
-	BigDecimal cheque = 0.0
+    // BigDecimal cheque = 0.0
 
-	BigDecimal efectivo = 0.0
+    // BigDecimal efectivo = 0.0
 
-	BigDecimal total = 0.0
+    BigDecimal total = 0.0
 
-	CuentaDeBanco cuentaDeBanco
+    CuentaDeBanco cuentaDeBanco
 
-	String tipoDeFicha
+    String tipoDeFicha
 
-	boolean envioForaneo = true
+    // boolean envioForaneo = true
 
-	Date fechaCorte
+    Date fechaCorte
 
-	Date cancelada
+    Date cancelada
 
-	MovimientoDeCuenta ingreso
+    MovimientoDeCuenta ingreso
 
-	String comentario
+    String comentario
 
-	String	tipo
+    // String	tipo
 
-	Boolean	envioValores	 = true
+    Boolean	envioValores	 = true
 
-	String sw2
+    String sw2
 
-	List partidas = []
+    // List partidas = []
 
-	Date dateCreated
+    Date dateCreated
 
-	Date lastUpdated
+    Date lastUpdated
 
 
-	static hasMany =[partidas: FichaDet]
+    // static hasMany =[partidas: FichaDet]
 
     static constraints = {
-    	sw2 nullable: true
-    	origen inList: ['CRE','MOS','CAM','CHE','JUR']
-    	comentario nullable: true
-    	tipoDeFicha inList:['EFECTIVO', 'OTROS BANCOS', 'MISMO BANCO']
-    	ingreso nullable:true
-    	cancelada nullable: true
-    	fechaCorte nullable: true
-		tipo nullable: true
+        sw2 nullable: true
+        origen inList: ['CON','COD','CRE','CAM','CHE','JUR']
+        comentario nullable: true
+        tipoDeFicha inList:['EFECTIVO', 'OTROS_BANCOS', 'MISMO_BANCO']
+        ingreso nullable:true
+        cancelada nullable: true
+        fechaCorte nullable: true
+        // tipo nullable: true
     }
 
     static mapping ={
-		id generator: 'uuid'
+        id generator: 'uuid'
         fecha type:'date' , index: 'FICHA_IDX1'
         sucursal index: 'FICHA_IDX1'
-        partidas cascade: "all-delete-orphan"
-        cheque formula:"(select sum(X.cheque) FROM ficha_det X where X.ficha_id=id )"
-        efectivo formula:"(select sum(X.cheque) FROM ficha_det X where X.ficha_id=id )"
+        // partidas cascade: "all-delete-orphan"
+        // cheque formula:"(select sum(X.cheque) FROM ficha_det X where X.ficha_id=id )"
+        // efectivo formula:"(select sum(X.cheque) FROM ficha_det X where X.ficha_id=id )"
     }
 }

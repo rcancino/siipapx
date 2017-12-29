@@ -24,7 +24,7 @@ class FichaDet {
 	Date dateCreated
 	Date lastUpdated
 
-	static belongsTo = [ficha: Ficha]
+	// static belongsTo = [ficha: Ficha]
 
     static constraints = {
     	sw2 nullable:true

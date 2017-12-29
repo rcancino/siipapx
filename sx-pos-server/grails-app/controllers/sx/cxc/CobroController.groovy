@@ -6,6 +6,7 @@ import grails.transaction.Transactional
 import groovy.transform.ToString
 
 import sx.core.Venta
+import sx.reportes.PorFechaCommand
 import sx.reports.ReportService
 import sx.tesoreria.Banco
 import sx.core.Sucursal
@@ -106,7 +107,10 @@ class CobroController extends RestfulController{
         respond cobros
     }
 
-    def reporteDeAarqueoCaja() {
+    def reporteDeAarqueoCaja(PorFechaCommand command) {
+        log.debug(' Arqueo: {}', command)
+        println 'Arequ ' + command
+        params.FECHA = command.fecha.format('dd/MM/yyyy')
         def pdf = reportService.run('CajaArqueo', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CajaArqueo.pdf")
 

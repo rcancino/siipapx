@@ -65,7 +65,7 @@ class V33PdfGenerator {
                 VentaDet partida = venta.partidas.get(index++)
                 if (partida) {
                     if (partida.corte) {
-                        res['InstruccionDeCorte'] = partida.corte.instruccion
+                        res['InstruccionDeCorte'] = "${partida.corte.tipo} ${partida.corte.instruccion}"
                     }
                     res['COMENTARIO'] = partida.comentario
                     res['Descuento'] = partida.descuento.toString()

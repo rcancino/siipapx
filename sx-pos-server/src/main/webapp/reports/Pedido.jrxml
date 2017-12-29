@@ -29,7 +29,7 @@
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="IMP_CON_LETRA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="TELEFONOS" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select C.CLAVE AS CLAVCTE,C.NOMBRE,CONCAT(C.direccion_calle,' ',C.direccion_numero_exterior,' ',C.direccion_numero_interior) AS CALLE,CONCAT(C.direccion_colonia,',     CP : ',C.direccion_codigo_postal) AS COLONIA,C.direccion_municipio AS DELMPO,C.direccion_estado AS ESTADO,C.direccion_pais AS PAIS,C.RFC
+	<queryString><![CDATA[select C.CLAVE AS CLAVCTE,V.NOMBRE,CONCAT(C.direccion_calle,' ',C.direccion_numero_exterior,' ',C.direccion_numero_interior) AS CALLE,CONCAT(C.direccion_colonia,',     CP : ',C.direccion_codigo_postal) AS COLONIA,C.direccion_municipio AS DELMPO,C.direccion_estado AS ESTADO,C.direccion_pais AS PAIS,C.RFC
 ,V.IMPORTE,V.DESCUENTO,V.DESCUENTO_IMPORTE,V.SUBTOTAL,V.IMPUESTO,V.TOTAL,V.COMENTARIO,(CASE WHEN (SELECT X.ID FROM condicion_de_envio X WHERE X.VENTA_ID=V.ID)=NULL THEN 'PASAN' ELSE 'ENVIO' END) AS ENVIO,'X' AS GRUPO,V.FORMA_DE_PAGO AS FPAGO,V.CREATE_USER AS CREADO_USR
 ,V.TIPO,V.FECHA,V.ID,V.DOCUMENTO AS DOCTO,S.NOMBRE AS SUCURSAL,P.CLAVE,P.DESCRIPCION,P.KILOS AS KXMLL,P.GRAMOS,P.UNIDAD,I.CANTIDAD,I.PRECIO,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,I.IMPORTE AS IMPORTED
 ,(SELECT MAX(X.cantidad) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES,(SELECT MAX(X.precio) FROM instruccion_corte X WHERE X.venta_det_id=I.ID) AS CORTES_PRECIO

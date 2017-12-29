@@ -19,7 +19,7 @@ class InstruccionCorte {
 
     String seleccionCalculo
 
-    String tipo = 'CALCULADO'
+    String tipo
 
     String instruccion
 

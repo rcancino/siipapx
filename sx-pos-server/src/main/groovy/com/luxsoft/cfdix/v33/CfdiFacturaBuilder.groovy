@@ -91,7 +91,7 @@ class CfdiFacturaBuilder {
         /** Receptor ***/
         Comprobante.Receptor receptor = factory.createComprobanteReceptor()
         receptor.rfc = venta.cliente.rfc
-        receptor.nombre = venta.cliente.nombre
+        receptor.nombre = venta.nombre
         switch(venta.usoDeCfdi) {
             case 'G01':
                 receptor.usoCFDI = CUsoCFDI.G_01

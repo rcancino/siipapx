@@ -1,5 +1,6 @@
 package sx.tesoreria
 
+
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
@@ -33,16 +34,11 @@ class CorteCobranzaController extends RestfulController {
     }
 
     protected CorteCobranza saveResource(CorteCobranza resource) {
+        log.debug('Salvando corte de cobranza ...')
         def username = getPrincipal().username
         resource.createUser = username
         resource.updateUser = username
-        resource.corte = new Date()
-        if(resource.anticipoCorte) {
-            resource.fechaDeposito = resource.fecha - 1
-        } else {
-            resource.fechaDeposito = resource.fecha
-        }
-        return super.saveResource(resource)
+        return corteCobranzaService.salvarCorteCobranza(resource)
     }
 
     protected CorteCobranza updateResource(CorteCobranza resource) {
@@ -51,7 +47,7 @@ class CorteCobranzaController extends RestfulController {
     }
 
     def cortes(CortesPorFecha command) {
-        log.debug('Buscando cortes del {}', command.fecha)
+        // log.debug('Buscando cortes del {}', command.fecha)
         params.sort = 'corte'
         params.order = 'asc'
         def query = CorteCobranza.where {fecha == command.fecha}
@@ -59,9 +55,27 @@ class CorteCobranzaController extends RestfulController {
     }
 
     def preparar(CortesPorFecha command){
-        log.debug('Preparando corte: {}', command)
         CorteCobranza corte = corteCobranzaService.prepararCorte(command.formaDePago, command.tipo, command.fecha);
         respond corte
+    }
+
+    def corteChequeInfo(CortesPorFecha command) {
+        Date fecha = Date.parse('dd/MM/yyyy', '28/12/2017')
+        def res = corteCobranzaService.getCobrosDeCheque(fecha, command.tipo)
+        Map data = [:]
+        def mismo = res['MISMO'] ?: []
+        def otros = res['OTROS'] ?: []
+        data.chequesMismo = mismo.size()
+        data.chequesOtros = otros.size()
+        data.importeMismo = mismo.sum (0.0, {it.importe})
+        data.importeOtros = otros.sum (0.0, {it.importe})
+        List fichasMismo = corteCobranzaService.agruparParaFichas(new ArrayList(mismo))
+        List fichasOtros = corteCobranzaService.agruparParaFichas(new ArrayList(otros))
+        data.fichasMismo = fichasMismo.size()
+        data.fichasMismoImporte = fichasMismo.sum( 0.0, {it.importe})
+        data.fichasOtros = fichasOtros.size()
+        data.fichasOtrosImporte = fichasOtros.sum( 0.0, {it.importe})
+        respond data
     }
 
 }

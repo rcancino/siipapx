@@ -17,23 +17,14 @@ class VentasController {
 
     ReportService reportService
 
-    def ventasDiarias() {
-        
-        // println 'Fecha: ' + params.fecha
-        params.FECHA = params.fecha
-        params.ORIGEN = 'CON'
-        // println "Generando  Reporte... con params: " + params
+    def ventasDiarias(PorFechaCommand command) {
         def repParams = [:]
-
-        fileFormat: JasperExportFormat.PDF_FORMAT
-        repParams['ORIGEN'] = params.ORIGEN
+        repParams['ORIGEN'] = 'CON'
         repParams['SUCURSAL'] = params.SUCURSAL
-        repParams['FECHA'] = params.FECHA
-        // println 'Ejecutando reporte de Ventas Diarias con parametros: ' + repParams +"---"+params.name+"---"+params.fileName
+        repParams['FECHA'] = command.fecha.format('dd/MM/yyyy')
         def pdf = this.reportService.run('ventas_diarias', repParams)
         def fileName = "VentasDiarias.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
-
     }
 
     def cobranzaCod() {
@@ -104,6 +95,14 @@ class VentasController {
 
 }
 
+
+class PorFechaCommand {
+    Date fecha
+
+    String toString() {
+        return fecha.format('dd/MM/yyyy')
+    }
+}
 
 
 
