@@ -16,7 +16,7 @@ class SolicitudDeDepositoService {
         cobro.tipo = ''
         cobro.formaDePago = solicitud.transferencia > 0.0 ? 'TRANSFERENCIA' : 'DEPOSITO'
         cobro.referencia = solicitud.referencia
-        cobro.sw2 = 'SOLICITUD AUTORIZADA'
+        cobro.sw2 = 'SOLICITUD AUTORIZADA,' + solicitud.id
         cobro.importe = solicitud.total
         if(solicitud.transferencia > 0.0 ){
             CobroTransferencia transferencia = new CobroTransferencia()
@@ -38,7 +38,7 @@ class SolicitudDeDepositoService {
         // log.debug('Errores: {}', cobro.errors)
         cobro.save failOnError: true, flush: true
         solicitud.cobro = cobro
-        solicitud.save flush: true
+        solicitud.save failOnError: true, flush: true
         return cobro
     }
 }
