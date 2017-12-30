@@ -79,12 +79,12 @@ dataSource:
 environments:
     development:
         dataSource:
-            dbCreate: update
+            dbCreate: none
             #url: '${JDBC_URL}'
-            url: jdbc:mysql://localhost/siipapx_tacuba?autoReconnect=false
-            #url: jdbc:mysql://10.10.1.229:3306/siipapx_dev?autoReconnect=true
+            #url: jdbc:mysql://localhost/siipapx_tacuba?autoReconnect=false
+            url: jdbc:mysql://10.10.1.229:3306/siipapx?autoReconnect=true
             username: 'root'
-            password: 'sys1'
+            password: 'sys'
     test:
         dataSource:
             dbCreate: create-drop

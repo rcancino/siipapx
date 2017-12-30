@@ -2,6 +2,7 @@ package sx.compras
 
 import grails.rest.RestfulController
 import groovy.transform.ToString
+import sx.core.Existencia
 import sx.core.Proveedor
 import sx.core.Sucursal
 import grails.plugin.springsecurity.annotation.Secured
@@ -93,8 +94,18 @@ class RecepcionDeCompraController extends  RestfulController{
             }
             resource.fechaInventario = new Date()
         }
-
-        return super.updateResource(resource)
+        RecepcionDeCompra res = resource.save flush: true
+        Date hoy = new Date()
+        Integer ejercicio = hoy[Calendar.YEAR]
+        Integer mes = hoy[Calendar.MONTH] + 1
+        res.partidas.each { RecepcionDeCompraDet det ->
+            Existencia existencia = Existencia.where { anio == ejercicio && mes == mes && producto == det.producto }.find()
+            assert existencia, "No existe la existencia del producto ${det.producto.clave} para ${ejercicio} - ${mes}"
+            existencia.cantidad = existencia.cantidad + det.cantidad.abs()
+            existencia.save flush: true
+            log.debug('Existencia actualizada: {}', existencia)
+        }
+        return res
     }
 
     public buscarCompra(CompraParaComSearchCommand command){
