@@ -107,6 +107,9 @@ class V33PdfGenerator {
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['PINT_IVA']='16 '
         params["DESCUENTOS"] = comprobante.getDescuento() as String
+        BigDecimal descuentos = comprobante.getDescuento()?: 0.0;
+        BigDecimal subTotal = comprobante.getSubTotal()?: 0.0
+        params["IMPORTE_BRUTO"] = (subTotal - descuentos).toString()
         // params['CONDICIONES_PAGO'] = comprobante.condicionesDePago
         params['UsoCFDI'] = comprobante.receptor.usoCFDI.value().toString()
         params['Moneda'] = comprobante.moneda.value().toString()
@@ -187,6 +190,7 @@ class V33PdfGenerator {
         parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'
         parametros.ELAB_VTA = venta.updateUser ?: 'ND'
         parametros.IMPRESO = venta.impreso
+        parametros.FPAGO = venta.cuentaPorCobrar.formaDePago
 
         parametros.ENVIO = "LOCAL"
 
