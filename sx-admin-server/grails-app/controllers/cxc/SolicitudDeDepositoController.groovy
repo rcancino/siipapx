@@ -24,10 +24,10 @@ class SolicitudDeDepositoController extends RestfulController{
         params.order = params.order ?:'desc'
 
         def query = SolicitudDeDeposito.where {
-            cobro == null
+            cobro == null && comentario == null
         }
         Date inicio = Date.parse('dd/MM/yyyy', '29/12/2017')
-        query = query.where {sw2 ==  null}
+        // query = query.where {sw2 ==  null}
         def list = query.list(params)
         log.debug('Solicitudes pendientes: {}', list.size())
         respond list
