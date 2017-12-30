@@ -28,7 +28,7 @@
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select E.ID,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,E.sucursal_id,s.NOMBRE AS SUCURSAL,t.NUMERO AS TRANSP,C.NOMBRE AS CHOFER
-,T.DESCRIPCION,v.documento AS PEDIDO,v.fecha AS FECHA_PED,v.tipo as ORIGEN,x.folio as DOCUMENTO,x.fecha as FECHA_DOCTO,y.nombre AS CLIENTE,F.total_documento as TOTAL_DOCTO,v.KILOS,F.PAQUETES
+,T.DESCRIPCION,v.documento AS PEDIDO,v.fecha AS FECHA_PED,v.tipo as ORIGEN,x.documento as DOCUMENTO,x.fecha as FECHA_DOCTO,y.nombre AS CLIENTE,F.total_documento as TOTAL_DOCTO,v.KILOS,F.PAQUETES
 ,'ENVIO' AS TIPO,(CASE  WHEN V.tipo='COD' THEN 'SI' ELSE 'NO' END) AS PAGO_VS_ENTREGA
 ,I.direccion_municipio AS POBLACION,SUBSTR(I.direccion_codigo_postal,1,2) AS DEL,SUBSTR(I.direccion_codigo_postal,3,1) AS AGR,SUBSTR(I.direccion_codigo_postal,4,2) AS ZONA
 ,CONCAT(I.direccion_calle,' ',I.direccion_numero_exterior,' ',I.direccion_numero_interior,', ',I.direccion_colonia,', ',I.direccion_codigo_postal) AS RUTA

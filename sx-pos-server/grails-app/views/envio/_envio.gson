@@ -25,6 +25,7 @@ json g.render(envio, [excludes:['partidas','embarque'] ]){
     	retraso envio.embarque.salida
 	}
 	numeroDePartidas envio.partidas.size()
+
     
 }
 

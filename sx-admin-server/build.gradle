@@ -17,4 +17,8 @@ dependencies {
     compile 'org.apache.commons:commons-compress:1.15'
     compile 'net.glxn:qrgen:1.2'
     compile 'org.grails.plugins:jasper:2.1.0.RC1'
+
+    // Temporal
+    compile "org.grails.plugins:gsp"
+    runtime 'org.grails.plugins:grails-console:2.1.1'
 }

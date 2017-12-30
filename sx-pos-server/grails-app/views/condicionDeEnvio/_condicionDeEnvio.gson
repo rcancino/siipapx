@@ -5,7 +5,7 @@ model {
 }
 
 
-json g.render(condicionDeEnvio, [excludes:['venta'] ]){
+json g.render(condicionDeEnvio, [excludes:['venta','direccion'] ]){
 
     venta {
         id condicionDeEnvio.venta.id
@@ -21,6 +21,10 @@ json g.render(condicionDeEnvio, [excludes:['venta'] ]){
         lastUpdated condicionDeEnvio.venta.lastUpdated
     }
     retraso condicionDeEnvio.venta.lastUpdated
-    documento condicionDeEnvio.venta.documento
+    if(condicionDeEnvio.venta.cuentaPorCobrar) {
+        documento  condicionDeEnvio.venta.cuentaPorCobrar.documento
+    } else
+        documento condicionDeEnvio.venta.documento
+    direccion g.render(condicionDeEnvio.direccion)
     
 }

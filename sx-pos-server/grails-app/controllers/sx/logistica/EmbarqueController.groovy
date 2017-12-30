@@ -10,6 +10,7 @@ import sx.core.Sucursal
 import sx.core.Venta
 import sx.inventario.Traslado
 import sx.inventario.DevolucionDeVenta
+import sx.reports.ReportService
 
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -17,8 +18,8 @@ class EmbarqueController extends RestfulController {
     
     static responseFormats = ['json']
 
-    
-    def reporteService
+
+    ReportService reportService
 
     EmbarqueController() {
         super(Embarque)
@@ -58,9 +59,7 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
-        println 'Actualizando embarque ' + resource
         // Actualizar la condicion asignado
-        
         resource.partidas.each { 
             if(it.entidad == 'VENTA'){ 
                 def ventaId = it.origen
@@ -120,7 +119,7 @@ class EmbarqueController extends RestfulController {
     private cargarEnvioParaVenta(DocumentSearchCommand command){
         def q = CondicionDeEnvio.where{
             venta.sucursal == command.sucursal && 
-            venta.documento == command.documento &&
+            venta.cuentaPorCobrar.documento == command.documento &&
             venta.fecha == command.fecha
         }
         q = q.where {
@@ -260,8 +259,8 @@ class EmbarqueController extends RestfulController {
     }
 
     def print() {
-        // println 'Generando impresion para trs: '+ params
-        def pdf = this.reporteService.run('AsignacionDeEnvio', params)
+        println 'Generando impresion para trs: '+ params
+        def pdf = this.reportService.run('AsignacionDeEnvio', params)
         def fileName = "AsignacionDeEnvio.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
@@ -273,7 +272,7 @@ class EmbarqueController extends RestfulController {
         repParams['SUCURSAL'] = command.sucursal.id
         repParams['FECHA'] = command.fecha.format('yyyy/MM/dd')
         println 'Ejecutando reporte de engregas por chofer con parametros: ' + repParams
-        def pdf = this.reporteService.run('EntregaPorChofer', repParams)
+        def pdf = this.reportService.run('EntregaPorChofer', repParams)
         def fileName = "EntregaPorChofer.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
@@ -288,6 +287,9 @@ class EmbarqueController extends RestfulController {
     def enviosPendientes() {
         def q = CondicionDeEnvio.where{
             asignado == null || (asignado != null && parcial == true)
+        }
+        q = q. where {
+            venta.cuentaPorCobrar != null
         }
         def  list = q.list()
         respond list 

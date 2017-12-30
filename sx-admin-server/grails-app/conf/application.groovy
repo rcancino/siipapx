@@ -35,6 +35,8 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 ]
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     [pattern: '/',                      access: ['permitAll']],
+    [pattern: '/console/**',            access: ['permitAll']],
+    [pattern: '/static/console/**',            access: ['permitAll']], // Grails 3.x
     [pattern: '/application/index',     access: ['permitAll']],
     [pattern: '/error',                 access: ['permitAll']],
     [pattern: '/index',                 access: ['permitAll']],
