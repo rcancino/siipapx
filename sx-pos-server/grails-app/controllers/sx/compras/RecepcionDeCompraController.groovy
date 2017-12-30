@@ -89,7 +89,6 @@ class RecepcionDeCompraController extends  RestfulController{
                 inventario.tipo = 'COM'
                 inventario.renglon = renglon
                 det.inventario = inventario
-                
                 renglon++
             }
             resource.fechaInventario = new Date()

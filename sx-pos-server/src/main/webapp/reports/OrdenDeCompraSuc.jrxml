@@ -30,7 +30,9 @@
 		<defaultValueExpression ><![CDATA["ORDEN DE COMPRA No. "]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="CLAVEPROV" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="CLAVEPROV" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["NO"]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[select (CASE WHEN c.especial IS true THEN 'ESPECIAL' ELSE '' END) AS ESPECIAL,c.FOLIO ,(case when c.nacional is true then 'NACIONAL' else 'IMPORTADO' end) as TIPO,c.ultima_depuracion as FECHA_DEPU
 ,(CASE WHEN c.ultima_depuracion IS NOT NULL and c.pendiente is false  THEN 'DEPURADO' ELSE ' ' END) AS ESTADO,c.FECHA,s.clave as SUC_CLAVE,s.nombre as SUC_NOMBRE,p.clave as PROV_CLAVE,p.nombre as PROV_NOMBRE
 ,p.plazo as PLAZO,a.clave as PROD_CLAVE,a.DESCRIPCION,a.kilos as KXM,a.GRAMOS,(SELECT Y.clave_proveedor FROM proveedor_producto Y WHERE D.PRODUCTO_ID=Y.PRODUCTO_ID AND P.ID=Y.PROVEEDOR_ID) AS CLAVEPROV
@@ -745,8 +747,7 @@ Tel. 53 42 71 66   Fax 24 65 03 88
 						width="36"
 						height="11"
 						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{IMPRIMIR_COSTO}.equals( "SI" ))
-]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean($F{IMPRIMIR_COSTO}.equals( "SI" ))]]></printWhenExpression>
 						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right">
