@@ -27,8 +27,8 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select E.ID,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,E.sucursal_id,s.NOMBRE AS SUCURSAL,t.NUMERO AS TRANSP,C.NOMBRE AS CHOFER
-,T.DESCRIPCION,v.documento AS PEDIDO,v.fecha AS FECHA_PED,v.tipo as ORIGEN,x.documento as DOCUMENTO,x.fecha as FECHA_DOCTO,y.nombre AS CLIENTE,F.total_documento as TOTAL_DOCTO,v.KILOS,F.PAQUETES
+	<queryString><![CDATA[select E.ID,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,E.sucursal_id,s.NOMBRE AS SUCURSAL,C.NOMBRE AS CHOFER
+,x.DOCUMENTO,v.documento AS PEDIDO,v.fecha AS FECHA_PED,v.tipo as ORIGEN,x.fecha as FECHA_DOCTO,y.nombre AS CLIENTE,F.total_documento as TOTAL_DOCTO,v.KILOS,F.PAQUETES
 ,'ENVIO' AS TIPO,(CASE  WHEN V.tipo='COD' THEN 'SI' ELSE 'NO' END) AS PAGO_VS_ENTREGA
 ,I.direccion_municipio AS POBLACION,SUBSTR(I.direccion_codigo_postal,1,2) AS DEL,SUBSTR(I.direccion_codigo_postal,3,1) AS AGR,SUBSTR(I.direccion_codigo_postal,4,2) AS ZONA
 ,CONCAT(I.direccion_calle,' ',I.direccion_numero_exterior,' ',I.direccion_numero_interior,', ',I.direccion_colonia,', ',I.direccion_codigo_postal) AS RUTA
@@ -38,7 +38,6 @@
 from embarque e 
 join sucursal s on(s.id=e.sucursal_id)
 join chofer c on(c.id=e.chofer_id)
-join transporte t on(c.id=t.chofer_id)
 JOIN envio F ON(E.ID=F.EMBARQUE_ID)
 JOIN condicion_de_envio I ON(I.venta_id=F.origen)
 JOIN venta v on(v.id=F.origen)
@@ -50,17 +49,15 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 
 	<field name="ID" class="java.lang.String"/>
 	<field name="DOCTO_EMB" class="java.lang.Integer"/>
-	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="FECHA" class="java.sql.Date"/>
 	<field name="SALIDA" class="java.sql.Timestamp"/>
 	<field name="sucursal_id" class="java.lang.String"/>
 	<field name="SUCURSAL" class="java.lang.String"/>
-	<field name="TRANSP" class="java.lang.String"/>
 	<field name="CHOFER" class="java.lang.String"/>
-	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="DOCUMENTO" class="java.lang.Long"/>
 	<field name="PEDIDO" class="java.lang.Long"/>
 	<field name="FECHA_PED" class="java.sql.Date"/>
 	<field name="ORIGEN" class="java.lang.String"/>
-	<field name="DOCUMENTO" class="java.lang.String"/>
 	<field name="FECHA_DOCTO" class="java.sql.Date"/>
 	<field name="CLIENTE" class="java.lang.String"/>
 	<field name="TOTAL_DOCTO" class="java.math.BigDecimal"/>
@@ -383,19 +380,6 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="77"
-						y="55"
-						width="67"
-						height="12"
-						key="textField-11"/>
-					<box></box>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TRANSP}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="77"
 						y="81"
 						width="320"
 						height="12"
@@ -569,7 +553,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DOCUMENTO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{DOCUMENTO}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1075,7 +1059,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="350"
 						y="5"
