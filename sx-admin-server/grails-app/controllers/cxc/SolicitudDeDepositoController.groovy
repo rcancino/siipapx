@@ -3,12 +3,15 @@ package sx.cxc
 import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
+import sx.tesoreria.SolicitudDeDepositoService
 
 
 @Secured("hasRole('ROLE_POS_USER')")
 class SolicitudDeDepositoController extends RestfulController{
 
     static responseFormats = ['json']
+
+    SolicitudDeDepositoService solicitudDeDepositoService;
 
     SolicitudDeDepositoController(){
         super(SolicitudDeDeposito)
@@ -23,6 +26,13 @@ class SolicitudDeDepositoController extends RestfulController{
         def list = query.list(params)
         log.debug('Solicitudes pendientes: {}', list.size())
         respond list
+    }
+
+    def autorizar(SolicitudDeDeposito sol) {
+        log.debug('Autorizando solicitud de deposito {}', params.id)
+        def res = solicitudDeDepositoService.autorizar(sol)
+        respond res;
+
     }
     
 }

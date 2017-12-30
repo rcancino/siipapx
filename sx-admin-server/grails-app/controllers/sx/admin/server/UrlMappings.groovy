@@ -45,6 +45,7 @@ class UrlMappings {
 
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes"( controller: 'solicitudDeDeposito', action: 'pendientes')
+        "/api/tesoreria/solicitudes/autorizar/$id"( controller: 'solicitudDeDeposito', action: 'autorizar')
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
