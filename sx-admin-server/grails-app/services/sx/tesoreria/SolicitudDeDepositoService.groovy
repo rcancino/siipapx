@@ -16,6 +16,7 @@ class SolicitudDeDepositoService {
         cobro.tipo = ''
         cobro.formaDePago = solicitud.transferencia > 0.0 ? 'TRANSFERENCIA' : 'DEPOSITO'
         cobro.referencia = solicitud.referencia
+        cobro.sw2 = 'SOLICITUD AUTORIZADA'
         cobro.importe = solicitud.total
         if(solicitud.transferencia > 0.0 ){
             CobroTransferencia transferencia = new CobroTransferencia()
