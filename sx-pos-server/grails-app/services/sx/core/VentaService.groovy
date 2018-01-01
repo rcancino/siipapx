@@ -1,8 +1,10 @@
 package sx.core
 
+import grails.events.EventPublisher
 import grails.events.annotation.Publisher
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
@@ -15,7 +17,7 @@ import lx.cfdi.v33.CfdiUtils
 import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 
 @Transactional
-class VentaService {
+class VentaService implements  EventPublisher{
 
     CfdiService cfdiService
 
@@ -122,36 +124,35 @@ class VentaService {
         return pedido
     }
 
+    @Publisher('facturar')
     def generarCuentaPorCobrar(Venta pedido) {
-        if (pedido.cuentaPorCobrar == null) {
-            CuentaPorCobrar cxc = new CuentaPorCobrar()
-            cxc.sucursal = pedido.sucursal
-            cxc.cliente = pedido.cliente
-            cxc.tipoDocumento = 'VENTA'
-            cxc.importe = pedido.importe
-            cxc.impuesto = pedido.impuesto
-            cxc.total  = pedido.total
-            cxc.formaDePago = pedido.formaDePago
-            cxc.moneda = pedido.moneda
-            cxc.tipoDeCambio = pedido.tipoDeCambio
-            cxc.comentario = pedido.comentario
-            cxc.tipo = pedido.cod ? 'COD': pedido.tipo
-            cxc.documento = Folio.nextFolio('FACTURAS',cxc.tipo)
-            cxc.fecha = new Date()
-            cxc.createUser = pedido.createUser
-            cxc.updateUser = pedido.updateUser
-            cxc.comentario = 'GENERACION AUTOMATICA'
-            pedido.cuentaPorCobrar = cxc
-            cxc.save failOnError: true
-            pedido.cuentaPorCobrar = cxc
-            pedido.save flush: true
-        }
+        CuentaPorCobrar cxc = new CuentaPorCobrar()
+        cxc.sucursal = pedido.sucursal
+        cxc.cliente = pedido.cliente
+        cxc.tipoDocumento = 'VENTA'
+        cxc.importe = pedido.importe
+        cxc.impuesto = pedido.impuesto
+        cxc.total  = pedido.total
+        cxc.formaDePago = pedido.formaDePago
+        cxc.moneda = pedido.moneda
+        cxc.tipoDeCambio = pedido.tipoDeCambio
+        cxc.comentario = pedido.comentario
+        cxc.tipo = pedido.cod ? 'COD': pedido.tipo
+        cxc.documento = Folio.nextFolio('FACTURAS',cxc.tipo)
+        cxc.fecha = new Date()
+        cxc.createUser = pedido.createUser
+        cxc.updateUser = pedido.updateUser
+        cxc.comentario = 'GENERACION AUTOMATICA'
+        pedido.cuentaPorCobrar = cxc
+        cxc.save failOnError: true
+        pedido.cuentaPorCobrar = cxc
+        pedido.save flush: true
+        return pedido
     }
 
     def generarCfdi(Venta venta){
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
         log.debug('Generando CFDI para  {}', venta.statusInfo())
-        // CfdiFacturaBuilder builder = new CfdiFacturaBuilder();
         def comprobante = cfdiFacturaBuilder.build(venta)
         def cfdi = cfdiService.generarCfdi(comprobante, 'I')
         venta.cuentaPorCobrar.cfdi = cfdi
@@ -190,36 +191,76 @@ class VentaService {
         return Folio.nextFolio('VENTAS','PEDIDOS')
     }
 
-    def cancelar(Venta venta) {
-        if(!venta.cuentaPorCobrar) {
-            respond venta
-            return
-        }
+    /**
+     * Cancela una Factura (Venta facturada) cancelando su CFDI
+     *
+     * @param venta
+     * @return
+     */
+    @Publisher
+    def cancelarFactura(Venta factura) {
+        assert factura.cuentaPorCobrar, "El pedido ${factura.statusInfo()} no esta facturado "
 
-        CuentaPorCobrar cxc = venta.cuentaPorCobrar
+        log.debug('Cancelando factura {}', factura.statusInfo())
+        CuentaPorCobrar cxc = factura.cuentaPorCobrar
 
-        // Eliminando los pagos
-        if(cxc && cxc.pagos) {
-            log.debug('Eliminando aplicaciones de cobro')
-            def aplicaciones = AplicacionDeCobro.where{ cuentaPorCobrar == cxc}.list()
-            aplicaciones.each { AplicacionDeCobro a ->
-                Cobro cobro = a.cobro
-                cobro.removeFromAplicaciones(a)
-                cobro.save()
+
+        // 1o Desvincular la cuenta por cobrar y la venta
+        factura.cuentaPorCobrar = null
+        factura.facturar = null
+        factura.save()
+
+        // 2o Eliminar la cuenta por cobrar sus aplicaciones y cancelar su CFDI
+        eliminarAplicaciones(cxc)
+        eliminarCuentaPorCobrar(cxc)
+
+        Map res = [
+                ventaInfo: factura.statusInfo(),
+                factura: factura.id,
+                cuentaPorCobrar: cxc.id,
+                cfdi: cxc.cfdi ? cxc.cfdi.id : null
+        ]
+
+        // 3o Cancelar el CFDI
+        Cfdi cfdi = cxc.cfdi
+        if(cfdi.uuid) {
+            if (cfdi.status != 'CANCELACION_PENDIENTE') {
+                this.cfdiTimbradoService.cancelar(cfdi)
             }
         }
-        venta.cuentaPorCobrar = null
-        venta.save()
-        /*
-        if(cxc.cfdi) {
-            Cfdi cfdi = cxc.cfdi
-            cxc.cfdi = null
-            cfdiService.cancelar(cfdi)
+        return res
+    }
+
+    /**
+     * Elimina la CuentaPorCobrar
+     *
+     * @param cxc
+     * @return
+     */
+    @Publisher
+    def eliminarCuentaPorCobrar(CuentaPorCobrar cxc) {
+        if(cxc.pagos) {
+            eliminarAplicaciones(cxc)
         }
-        log.debug('Eliminando la cuenta por cobrar')
-        cxc.delete ()
-        */
-        return venta
+        cxc.delete flush: true
+    }
+
+    /**
+     * Elimina las aplicaciones de cobro de la cuenta por cobrar
+     *
+     * @param cxc
+     * @return La cuenta por cobar sin aplicaciones sociadas
+     */
+    @Publisher
+    def eliminarAplicaciones(CuentaPorCobrar cxc) {
+        def aplicaciones = AplicacionDeCobro.where{ cuentaPorCobrar == cxc}.list()
+        log.debug('Eliminando {} aplicaciones a la factura {}', aplicaciones.size(), cxc.folio)
+        aplicaciones.each { AplicacionDeCobro a ->
+            Cobro cobro = a.cobro
+            cobro.removeFromAplicaciones(a)
+            cobro.save()
+        }
+        return cxc
     }
 
 }
