@@ -8,7 +8,7 @@ import sx.tesoreria.AutorizacionDeDeposito
 import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 
-@ToString(excludes = ["id,cliente,sucursal, total"],includeNames=true,includePackage=false)
+@ToString(excludes = ["id,cliente,sucursal,efectivo,cheque,transferencia total"],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
 class SolicitudDeDeposito {
 
@@ -26,7 +26,7 @@ class SolicitudDeDeposito {
 
     String	tipo = 'NORMAL'
 
-    Integer	folio	 = 0
+    Integer	folio = 0
 
     Date	fecha
 
@@ -34,13 +34,13 @@ class SolicitudDeDeposito {
 
     String	referencia
 
-    BigDecimal	cheque	 = 0
+    BigDecimal	cheque	 = 0.0
 
-    BigDecimal	efectivo	 = 0
+    BigDecimal	efectivo = 0.0
 
-    BigDecimal	transferencia	 = 0
+    BigDecimal	transferencia = 0.0
 
-    BigDecimal	total	 = 0
+    BigDecimal	total = 0.0
 
     String	comentario
 

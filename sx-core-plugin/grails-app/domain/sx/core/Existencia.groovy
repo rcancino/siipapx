@@ -68,7 +68,13 @@ class Existencia {
     /**
      *
      */
+    BigDecimal existenciaInicial = 0
+
+    /**
+     *
+     */
     BigDecimal cantidad = 0
+
 
     /**
      *
@@ -76,6 +82,14 @@ class Existencia {
     BigDecimal disponible = 0
 
     String sw2
+
+    String clave
+
+    String sucursalNombre
+
+    Date dateCreated
+
+    Date lastUpdated
 
     static constraints = {
         pedidosPendiente nullable: true
@@ -87,6 +101,10 @@ class Existencia {
         traslado nullable: true
         transformacion nullable: true
         sw2 nullable: true
+        clave nullable: true
+        sucursalNombre nullable: true
+        dateCreated nullable: true
+        lastUpdated nullable: true
     }
 
     static mapping={
@@ -95,5 +113,20 @@ class Existencia {
         anio index: 'YEAR_IDX'
         mes index: 'MES_IDX'
         disponible formula:'cantidad + entrada_compra + devolucion_compra + venta + devolucion_venta + transformacion + traslado + movimiento_almacen'
+    }
+
+    def beforeInsert() {
+        updateDatos()
+    }
+
+    def beforeUpdate() {
+        if(this.clave == null) {
+            updateDatos()
+        }
+    }
+
+    def updateDatos() {
+        this.clave = this.producto.clave
+        this.sucursalNombre = this.sucursal.nombre
     }
 }

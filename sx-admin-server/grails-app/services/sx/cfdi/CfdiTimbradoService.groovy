@@ -4,7 +4,7 @@ import grails.gorm.transactions.Transactional
 import org.apache.commons.io.FileUtils
 
 import com.luxsoft.utils.ZipUtils
-
+import org.bouncycastle.util.encoders.Base64
 import sx.cfdi.providers.edicom.CFDi
 import sx.cfdi.providers.edicom.CancelaResponse
 import sx.core.Empresa
@@ -17,70 +17,103 @@ import sx.cfdi.providers.cepdi.WS
 
 /**
  * Prueba de service para timbrado
- * 
+ *
  */
 @Transactional
 class CfdiTimbradoService {
 
-  // WS cerpiService
+    // WS cerpiService
 
-  CFDi edicomService
+    CFDi edicomService
 
-  def timbrar(Cfdi cfdi) {
-    timbrarEdicom(cfdi)
-    return cfdi
-  }
+    Empresa empresaTransient
 
-  /**
-  * Web Service SAOP (wsdl) para los diversos servicios de timbado proporcionados por EDICOM. Actualmente 
-  * se requiere habilitar un certificado inadecuado 
-  * Utilizando (en Mac o unix): sudo keytool -importcert -alias edicom -file ~/dumps/certificados/caedicom01.cer -keystore cacerts;
-  *
-  */
-  def timbrarEdicom(Cfdi cfdi) {
-    File file = FileUtils.toFile(cfdi.url)
-    log.debug('Timbrando archivo {}' ,file.getPath())
-    byte[] res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
+    def timbrar(Cfdi cfdi) {
+        timbrarEdicom(cfdi)
+        return cfdi
+    }
 
-    Map map = ZipUtils.descomprimir(res)
+    /**
+     * Web Service SAOP (wsdl) para los diversos servicios de timbado proporcionados por EDICOM. Actualmente
+     * se requiere habilitar un certificado inadecuado
+     * Utilizando (en Mac o unix): sudo keytool -importcert -alias edicom -file ~/dumps/certificados/caedicom01.cer -keystore cacerts;
+     *
+     */
+    def timbrarEdicom(Cfdi cfdi) {
+        File file = FileUtils.toFile(cfdi.url)
+        log.debug('Timbrando archivo {}' ,file.getPath())
+        byte[] res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
 
-    def entry = map.entrySet().iterator().next()
-    File target = new File(file.getParent(), file.getName().replaceAll(".xml", "_SIGNED.xml"))
-    FileUtils.writeByteArrayToFile(target, entry.getValue())
-    CfdiTimbre timbre = new CfdiTimbre(entry.getValue())
-    cfdi.uuid = timbre.uuid
-    cfdi.url = target.toURI().toURL()
-    cfdi.save flush: true
-  }
-  /*
-  def timbrarCerpi() {
-    File file = FileUtils.toFile(cfdi.url)
-    DatosExtra extra = new DatosExtra()
-    RespuestaTimbrado res = cerpiService.timbraXML('clientetimbrado001@mail.com','Demo123#',file.toString(), extra)
-    if(res.exitoso) {
-      cfdi.uuid = res.UUID
-      println 'TFD: ' + res.TFD
-      return res.XMLTimbrado
-    } else {
-      println( 'Error timbrando XML: ' + res.mensajeError + ' Código: ' + res.codigoError)
-      return null
+        Map map = ZipUtils.descomprimir(res)
+
+        def entry = map.entrySet().iterator().next()
+        File target = new File(file.getParent(), file.getName().replaceAll(".xml", "_SIGNED.xml"))
+        FileUtils.writeByteArrayToFile(target, entry.getValue())
+        CfdiTimbre timbre = new CfdiTimbre(entry.getValue())
+        cfdi.uuid = timbre.uuid
+        cfdi.url = target.toURI().toURL()
+        cfdi.save flush: true
+    }
+    /*
+    def timbrarCerpi() {
+      File file = FileUtils.toFile(cfdi.url)
+      DatosExtra extra = new DatosExtra()
+      RespuestaTimbrado res = cerpiService.timbraXML('clientetimbrado001@mail.com','Demo123#',file.toString(), extra)
+      if(res.exitoso) {
+        cfdi.uuid = res.UUID
+        println 'TFD: ' + res.TFD
+        return res.XMLTimbrado
+      } else {
+        println( 'Error timbrando XML: ' + res.mensajeError + ' Código: ' + res.codigoError)
+        return null
+
+      }
+    }
+    */
+
+    def cancelar(Cfdi cfdi){
+        Empresa empresa = Empresa.first()
 
     }
-  }
-  */
 
-  def cancelar(Cfdi cfdi){
-    Empresa empresa = Empresa.first()
+    def cancelarEdicom(Cfdi cfdi) {
 
-  }
+        CfdiCancelado cancelacion = new CfdiCancelado()
+        cancelacion.cfdi = cfdi
+        cancelacion.uuid = cfdi.uuid
+        cancelacion.serie = cfdi.serie
+        cancelacion.folio = cfdi.folio
 
-  def cancelarEdicom(Cfdi cfdi, Empresa empresa) {
-    CancelaResponse response = edicomService.cancelaCFDi(
-            empresa.usuarioPac,
-            empresa.passwordPac,
-            [cfdi.uuid],
-            empresa.certificadoDigitalPfx,
-            empresa.passwordPfx)
-  }
+        // Iniciando cancelacion
+        Empresa empresa = getEmpresa()
+        CancelaResponse response = edicomService.cancelaCFDi(
+                empresa.usuarioPac,
+                empresa.passwordPac,
+                [cfdi.uuid],
+                empresa.certificadoDigitalPfx,
+                empresa.passwordPfx)
+        response.getUuids().getItem().each {
+            log.debug('UUID Cancelado: ', it)
+        }
+        String msg=response.getText()
+        log.debug('Cancelacion text: ',mes)
+        log.debug('Cancelacion Base64.decore: ', Base64.decode(msg.getBytes()))
+        cancelacion.message = Base64.decode(msg.getBytes())
+
+        String aka=response.getAck()
+        cancelacion.aka=Base64.decode(aka.getBytes())
+        cancelacion.save failOnError: true, flush: true
+
+        cfdi.cancelado = true
+        cfdi.save flush: true
+    }
+
+
+    Empresa getEmpresa() {
+        if(!empresaTransient) {
+            empresaTransient = Empresa.first()
+        }
+        return empresaTransient
+    }
 
 }

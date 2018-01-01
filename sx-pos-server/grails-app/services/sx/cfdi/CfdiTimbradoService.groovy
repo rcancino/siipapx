@@ -5,7 +5,7 @@ import grails.util.Environment
 import org.apache.commons.io.FileUtils
 
 import com.luxsoft.utils.ZipUtils
-
+import org.bouncycastle.util.encoders.Base64
 import sx.cfdi.providers.edicom.CFDi
 import sx.cfdi.providers.edicom.CancelaResponse
 import sx.core.Empresa
@@ -24,10 +24,9 @@ import sx.cfdi.providers.cepdi.WS
 class CfdiTimbradoService {
 
     // WS cerpiService
-
-
-
     CFDi edicomService
+
+    Empresa empresaTransient
 
     def timbrar(Cfdi cfdi) {
         timbrarEdicom(cfdi)
@@ -81,22 +80,70 @@ class CfdiTimbradoService {
     }
     */
 
+    /**
+     * Cancela el CFDI utilizando el servicio del proveedor de timbrado activo
+     *
+     * @param cfdi
+     * @return
+     */
     def cancelar(Cfdi cfdi){
-        Empresa empresa = Empresa.first()
+        cancelarEdicom(cfdi);
 
     }
 
-    def cancelarEdicom(Cfdi cfdi, Empresa empresa) {
+    /**
+     * Cancela el CFDI utilizando el serivio de EDICOM
+     *
+     * @param cfdi
+     * @return
+     */
+    def cancelarEdicom(Cfdi cfdi) {
+        assert cfdi.uuid, "El Cfdi ${cfdi.serie} - ${cfdi.folio} no se a timbrado por lo que no puede ser cancelado"
+        CfdiCancelado cancelacion = new CfdiCancelado()
+        cancelacion.cfdi = cfdi
+        cancelacion.uuid = cfdi.uuid
+        cancelacion.serie = cfdi.serie
+        cancelacion.folio = cfdi.folio
+
+        // Iniciando cancelacion
+        Empresa empresa = getEmpresa()
         CancelaResponse response = edicomService.cancelaCFDi(
                 empresa.usuarioPac,
                 empresa.passwordPac,
+                empresa.rfc,
                 [cfdi.uuid],
                 empresa.certificadoDigitalPfx,
-                empresa.passwordPfx)
+                'certificadopapel')
+
+        response.getUuids().getItem().each {
+            log.debug('UUID Cancelado: ', it)
+        }
+        String msg=response.getText()
+        log.debug('Cancelacion text: ',mes)
+        log.debug('Cancelacion Base64.decore: ', Base64.decode(msg.getBytes()))
+        cancelacion.message = Base64.decode(msg.getBytes())
+
+        String aka=response.getAck()
+        cancelacion.aka=Base64.decode(aka.getBytes())
+        cancelacion.save failOnError: true, flush: true
+
+        cfdi.cancelado = true
+        cfdi.status = 'CANCELADO'
+        cfdi.save flush: true
+        cancelacion.save failOnError: true, flush: true
+        log.debug(" CFDI: ${cfdi.serie} - ${cfdi.folio} cancelado exitosamente")
+        return cancelacion
     }
 
     Boolean isTimbradoDePrueba() {
         return Environment.current != Environment.PRODUCTION
+    }
+
+    Empresa getEmpresa() {
+        if(!empresaTransient) {
+            empresaTransient = Empresa.first()
+        }
+        return empresaTransient
     }
 
 }

@@ -39,16 +39,18 @@ class SolicitudDeDepositoController extends RestfulController{
     
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
+        resource.total = resource.cheque + resource.efectivo + resource.transferencia
+        log.debug('Salvando solicitud: {}', resource)
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
             resource.folio = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)
         }
-        resource.total = resource.cheque + resource.efectivo + resource.transferencia
         return super.saveResource(resource)
     }
 
     protected SolicitudDeDeposito updateResource(SolicitudDeDeposito resource) {
         resource.total = resource.cheque + resource.efectivo + resource.transferencia
+        resource.comentario = null;
         return super.updateResource(resource)
     }
 

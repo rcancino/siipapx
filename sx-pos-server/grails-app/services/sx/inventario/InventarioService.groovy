@@ -37,4 +37,9 @@ class InventarioService {
             }
         }
     }
+
+    @Subscriber
+    def onCancelarFactura(Map result){
+        log.debug('Detectando factura cancelada {}', result.factura);
+    }
 }

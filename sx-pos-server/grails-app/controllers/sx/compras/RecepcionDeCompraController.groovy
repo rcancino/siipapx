@@ -16,29 +16,11 @@ class RecepcionDeCompraController extends  RestfulController{
 
     static responseFormats = ['json']
 
+    RecepcionDeCompraService recepcionDeCompraService
+
     public RecepcionDeCompraController() {
         super(RecepcionDeCompra)
     }
-
-
-    /*def index(RecepcionesFiltro filtro){
-        log.info('Buscando con filtro: ' + filtro)
-        params.max = filtro.registros ?:10
-        def query  = RecepcionDeCompra.where {}
-        if(filtro.fechaInicial){
-            Date inicio = filtro.fechaInicial
-            Date fin = filtro.fechaFinal ?: inicio
-            query = query.where {fecha >= inicio && fecha <= fin}
-        }
-        if (filtro.sucursal) {
-            query = query.where { sucursal == filtro.sucursal}
-        }
-        if(filtro.proveedor) {
-            query = query.where {proveedor == filtro.proveedor}
-        }
-        respond query.list(params)
-    }*/
-
 
    @Override
     protected List listAllResources(Map params) {
@@ -77,35 +59,14 @@ class RecepcionDeCompraController extends  RestfulController{
     }
 
     protected RecepcionDeCompra updateResource(RecepcionDeCompra resource) {
+        def username = getPrincipal().username
+        resource.updateUser = username
         if(params.inventariar){
-            def renglon = 1;
-            resource.partidas.each { det ->
-                Inventario inventario = new Inventario()
-                inventario.sucursal = resource.sucursal
-                inventario.documento = resource.documento
-                inventario.cantidad = det.cantidad
-                inventario.comentario = det.comentario
-                inventario.fecha = resource.fecha
-                inventario.producto = det.producto
-                inventario.tipo = 'COM'
-                inventario.renglon = renglon
-                det.inventario = inventario
-                renglon++
-            }
-            resource.fechaInventario = new Date()
+            recepcionDeCompraService.afectarInventario(resource)
+        } else {
+            resource.save flush: true
         }
-        RecepcionDeCompra res = resource.save flush: true
-        Date hoy = new Date()
-        Integer ejercicio = hoy[Calendar.YEAR]
-        Integer mes = hoy[Calendar.MONTH] + 1
-        res.partidas.each { RecepcionDeCompraDet det ->
-            Existencia existencia = Existencia.where { anio == ejercicio && mes == mes && producto == det.producto }.find()
-            assert existencia, "No existe la existencia del producto ${det.producto.clave} para ${ejercicio} - ${mes}"
-            existencia.cantidad = existencia.cantidad + det.cantidad.abs()
-            existencia.save flush: true
-            log.debug('Existencia actualizada: {}', existencia)
-        }
-        return res
+        return resource
     }
 
     public buscarCompra(CompraParaComSearchCommand command){

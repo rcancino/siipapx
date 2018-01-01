@@ -11,63 +11,70 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includeFields = true, includes = ['serie', 'folio', 'uuid', 'id'])
 class Cfdi {
 
-  String id
+    String id
 
-  String versionCfdi = '3.3'
+    String versionCfdi = '3.3'
 
-  Date fecha
+    Date fecha
 
-  String serie
+    String serie
 
-  String folio
+    String folio
 
-  String emisor
+    String emisor
 
-  String emisorRfc
+    String emisorRfc
 
-  String receptor
+    String receptor
 
-  String receptorRfc
+    String receptorRfc
 
-  String tipoDeComprobante
+    String tipoDeComprobante
 
-  String fileName
+    String fileName
 
-  String uuid
+    String uuid
 
-  BigDecimal total
+    BigDecimal total
 
-  URL url
+    URL url
 
-  String sw2
+    String sw2
 
-  Date dateCreated
+    Date dateCreated
 
-  Date lastUpdated
+    Date lastUpdated
 
-  CfdiTimbre timbre
+    CfdiTimbre timbre
 
-  String origen = 'VENTA'
+    String origen = 'VENTA'
 
-  static constraints = {
-    emisorRfc minSize: 12, maxSize:13
-    receptorRfc minSize: 12, maxSize:13
-    uuid unique:true , nullable: true
-    url url:true
-    fileName maxSize:150
-    serie nullable:true,maxSize:30
-    folio nullable:true,maxSize:30
-    tipoDeComprobante inList:['I','E','T','P','N']
-    sw2 nullable: true
-    versionCfdi inList: ['3.2', '3.3']
-    origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO']
-  }
+    Boolean cancelado = false;
 
-  static  mapping={
-      id generator:'uuid'
-  }
+    String status
 
-  static transients = ['timbre']
+
+    static constraints = {
+        emisorRfc minSize: 12, maxSize:13
+        receptorRfc minSize: 12, maxSize:13
+        uuid unique:true , nullable: true
+        url url:true
+        fileName maxSize:150
+        serie nullable:true,maxSize:30
+        folio nullable:true,maxSize:30
+        tipoDeComprobante inList:['I','E','T','P','N']
+        sw2 nullable: true
+        versionCfdi inList: ['3.2', '3.3']
+        origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO']
+        cancelado nullable: true
+        status nullable: true
+    }
+
+    static  mapping={
+        id generator:'uuid'
+    }
+
+    static transients = ['timbre']
 
 
 }

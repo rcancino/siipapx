@@ -5,6 +5,8 @@ import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
+import org.apache.commons.lang3.exception.ExceptionUtils
+import org.springframework.http.HttpStatus
 import sx.logistica.CondicionDeEnvio
 import sx.reports.ReportService
 
@@ -192,8 +194,13 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        def cfdi = ventaService.timbrar(venta)
-        respond cfdi
+        try {
+            def cfdi = ventaService.timbrar(venta)
+            respond cfdi
+            return
+        }catch (Exception ex) {
+            respond( [message: ExceptionUtils.getRootCauseMessage(ex)], status: HttpStatus.NOT_ACCEPTABLE )
+        }
     }
 
     def print( Venta pedido) {
@@ -215,8 +222,18 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        venta = ventaService.cancelar(venta)
-        respond venta
+        if (!venta.cuentaPorCobrar) {
+            respond( [message: 'NO ESTA FACTURADA'], status: HttpStatus.NOT_ACCEPTABLE )
+            return
+        }
+        try {
+            def res = ventaService.cancelarFactura(venta)
+            respond res
+            return
+        }catch (Exception ex) {
+            respond( [message: ExceptionUtils.getRootCauseMessage(ex)], status: HttpStatus.NOT_ACCEPTABLE )
+        }
+
     }
 
 }

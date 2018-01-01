@@ -1,11 +1,13 @@
 package sx.cxc
 
+import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
+
 import groovy.transform.ToString
 
 import sx.core.Venta
+import sx.core.VentaService
 import sx.reportes.PorFechaCommand
 import sx.reports.ReportService
 import sx.tesoreria.Banco
@@ -15,9 +17,9 @@ import sx.core.Cliente
 @Secured("hasRole('ROLE_CXC_USER')")
 class CobroController extends RestfulController{
 
-    def cobroService
+    CobroService cobroService
 
-    def ventaService
+    VentaService ventaService
 
     ReportService reportService
 
@@ -34,6 +36,33 @@ class CobroController extends RestfulController{
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         return query.list(params)
+    }
+
+    /**
+     * Regresa las ventas de contado pendientes de factura
+     */
+    def ventasFacturables(PorFacturarCommand command){
+        log.debug('Buscando ventas pendientes de facturar {}', params)
+        log.debug('Buscando ventas pendientes de facturar command {}', command)
+
+        if (command == null){
+            notFound()
+            return
+        }
+
+        params.sort = 'lastUpdated'
+        params.order = 'asc'
+        params.max = 200
+
+        def query = Venta.where {sucursal ==  command.sucursal && cuentaPorCobrar == null && facturar != null}
+        if(command.tipo == 'CRE'){
+            query = query.where {tipo == command.tipo}
+        } else {
+            query = query.where {tipo != 'CRE'} // Contado y COD
+        }
+        def list = query.list(params)
+        log.debug('Facturas pendientes de tipo {}: {}', command.tipo, list.size())
+        respond list
     }
 
     protected Cobro saveResource(Cobro resource) {
@@ -68,7 +97,6 @@ class CobroController extends RestfulController{
 
     @Transactional
     def cambioDeCheque(CambioDeCheque cambio) {
-        // println 'Cambio de cheque : '+ cambio
         if (cambio == null) {
             notFound()
             return
@@ -102,7 +130,6 @@ class CobroController extends RestfulController{
         params.max = 20
         params.sort = 'fecha'
         params.order = 'asc'
-        // def cobros = Cobro.where { cliente == cliente && (importe - aplicado) > 0}.list(params)
         def cobros = Cobro.findAll(' from Cobro c where c.cliente = ? and c.importe - c.aplicado > 0', cliente)
         respond cobros
     }
@@ -158,4 +185,12 @@ public class CambioDeCheque {
     static constraints = {
         comentario nullable: true
     }
+}
+
+@ToString(includeNames=true,includePackage=false)
+public class PorFacturarCommand {
+    String tipo
+    Sucursal sucursal
+
+
 }
