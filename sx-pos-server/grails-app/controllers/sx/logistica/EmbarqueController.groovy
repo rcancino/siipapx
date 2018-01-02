@@ -27,6 +27,7 @@ class EmbarqueController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
+        log.info('Localizando embarques: {}', params)
         params.sort = 'documento'
         params.order = 'desc'
         params.max = 500
@@ -44,7 +45,9 @@ class EmbarqueController extends RestfulController {
         if(params.regresos) {
             query = query.where{regreso != null }
         }
-        return query.list(params)
+        def list =  query.list(params)
+        log.debug('Encontro: {}', list.size())
+        return list
     }
 
     protected Embarque saveResource(Embarque resource) {

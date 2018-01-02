@@ -21,7 +21,7 @@ class ChoferController extends RestfulController {
         def query = Chofer.where {}
         params.sort = params.sort ?:'nombre'
         params.order = params.order ?:'asc'
-        params.max = params.max ?: 200
+        params.max = 1000
         if(params.term){
             def search = '%' + params.term + '%'
             query = query.where { nombre =~ search }

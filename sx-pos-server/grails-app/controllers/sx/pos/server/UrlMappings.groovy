@@ -49,6 +49,7 @@ class UrlMappings {
             "/partidas"(resource: "recepcionDeCompraDet")
         }
         "/api/compras/recepciones/buscarCompra"(controller: 'recepcionDeCompra', action: 'buscarCompra', method: 'GET')
+        "/api/compras/recepciones/print/$id"(controller: 'recepcionDeCompra', action: 'print', method: 'GET')
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
 
 

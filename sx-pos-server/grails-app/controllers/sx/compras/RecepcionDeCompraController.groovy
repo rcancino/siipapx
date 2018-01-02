@@ -8,7 +8,7 @@ import sx.core.Sucursal
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Folio
 import sx.core.Inventario
-
+import sx.reports.ReportService
 
 
 @Secured("ROLE_INVENTARIO_USER")
@@ -17,6 +17,8 @@ class RecepcionDeCompraController extends  RestfulController{
     static responseFormats = ['json']
 
     RecepcionDeCompraService recepcionDeCompraService
+
+    ReportService reportService
 
     public RecepcionDeCompraController() {
         super(RecepcionDeCompra)
@@ -86,6 +88,12 @@ class RecepcionDeCompraController extends  RestfulController{
         }
         // respond res, status: 200
         forward controller: 'compra', action: 'show', id: res.id
+    }
+
+    def print() {
+        // log.debug('Imprimiendo movimiento: {}', params.ID)
+        def pdf =  reportService.run('MovGenerico.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
 }
 

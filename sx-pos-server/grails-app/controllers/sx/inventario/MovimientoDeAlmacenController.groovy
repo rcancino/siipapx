@@ -74,7 +74,7 @@ class MovimientoDeAlmacenController extends RestfulController {
     }
 
     def print() {
-        // log.debug('Imprimiendo movimiento: {}', params.ID)
+        log.debug('Imprimiendo recepcion de compra: {}', params.ID)
         def pdf =  reportService.run('MovGenerico.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }

@@ -66,12 +66,14 @@ class TrasladoController extends RestfulController {
         }
         assert tps.tipo == 'TPS', 'El timbrado es para TPS'
         def hoy = new Date()
+        /*
         if( (hoy - tps.fechaInventario)  >= 2) {
             Map data = [:]
             data.message = "TPS ${tps.documento} fuera de tiempo para timbrado"
             respond data, status: 500
             return
         }
+        */
         try {
             def res = trasladoService.timbrar(tps)
             respond res

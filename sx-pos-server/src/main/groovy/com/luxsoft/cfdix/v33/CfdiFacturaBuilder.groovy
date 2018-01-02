@@ -102,6 +102,9 @@ class CfdiFacturaBuilder {
             case 'G03':
                 receptor.usoCFDI = CUsoCFDI.G_03
                 break
+            case 'P01':
+                receptor.usoCFDI = CUsoCFDI.P_01
+                break
             default:
                 receptor.usoCFDI = CUsoCFDI.G_01
                 break

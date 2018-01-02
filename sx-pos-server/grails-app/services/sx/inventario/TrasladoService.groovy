@@ -182,6 +182,7 @@ class TrasladoService {
         assert tps.tipo == 'TPS', " El trslado a timbrar no es de tipo TPS"
         log.debug('Generando CFDI para  TPS: {}', tps.documento)
         //TrasladoBuilder builder = new TrasladoBuilder();
+        assert builder, 'no se reguistro el builder'
         def comprobante = builder.build(tps)
         def cfdi = cfdiService.generarCfdi(comprobante, 'T')
         tps.cfdi = cfdi
@@ -192,7 +193,7 @@ class TrasladoService {
     def timbrar(Traslado tps){
         log.debug("Timbrando TPS: {}", tps.documento);
         assert tps.tipo == 'TPS', " El trslado a timbrar no es de tipo TPS"
-        assert !tps?.cfdi?.uuid, "La venta ${venta} ya esta timbrada "
+        assert !tps?.cfdi?.uuid, "El tps ${tps} ya esta timbrada "
         def cfdi = tps.cfdi
         if (cfdi == null) {
             cfdi = generarCfdi(tps)
