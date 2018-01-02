@@ -6,9 +6,11 @@ import sx.utils.MonedaUtils
 
 @ToString(includes = 'clave, descripcion', includeNames = true, includePackage = false)
 @EqualsAndHashCode(includes = 'clave, moneda')
-class PrecioPorClienteDet {
+class PreciosPorClienteDet {
 
     String id
+
+    PreciosPorCliente preciosPorCliente
 
     Producto producto
 
@@ -36,10 +38,14 @@ class PrecioPorClienteDet {
 
     String sw2
 
-    static belongsTo = [precio:PreciosPorCliente]
+    static belongsTo = [preciosPorCliente:PreciosPorCliente]
 
     static constraints = {
         sw2 nullable: true
+    }
+
+    static mapping={
+        id generator:'uuid'
     }
 
     def updateData(){

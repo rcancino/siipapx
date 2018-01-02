@@ -30,7 +30,7 @@ class PreciosPorCliente {
         sw2 nullable: true
     }
 
-    static hasMany =[partidas:PrecioPorClienteDet]
+    static hasMany =[partidas:PreciosPorClienteDet]
 
     static mapping={
         id generator:'uuid'

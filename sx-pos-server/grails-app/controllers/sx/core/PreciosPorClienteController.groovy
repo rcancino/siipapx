@@ -10,7 +10,10 @@ class PreciosPorClienteController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
+        log.debug('Buscando precios por cliente ', params)
         params.max = 100
-        return super.listAllResources(params)
+        Cliente cliente = Cliente.get(params.cliente)
+        def list = PreciosPorCliente.where { cliente == cliente && activo }.last()
+        render list
     }
 }
