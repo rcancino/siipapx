@@ -9,12 +9,11 @@ class DescuentoPorVolumenController extends RestfulController{
     static responseFormats = ['json']
 
     public DescuentoPorVolumenController(){
-        super(Clase)
+        super(DescuentoPorVolumen)
     }
 
     @Override
     protected List listAllResources(Map params) {
-        params.max = 500
-        return super.listAllResources(params)
+        return DescuentoPorVolumen.where {activo == true}.list()
     }
 }

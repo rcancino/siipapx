@@ -70,6 +70,7 @@ class UrlMappings {
         "/api/preciosPorCliente"(resources: 'preciosPorCliente')
         "/api/preciosPorCliente/buscarPrecio"(controller: 'preciosPorCliente', action: 'buscarPrecio', method: 'GET')
         "/api/preciosPorCliente/preciosPorCliente"(controller: 'preciosPorCliente', action: 'preciosPorCliente', method: 'GET')
+        "/api/descuentoPorVolumen"(resources: 'descuentoPorVolumen')
 
         "/api/socios"(resources:"socio")
 

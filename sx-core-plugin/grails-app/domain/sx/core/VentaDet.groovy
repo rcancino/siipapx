@@ -6,7 +6,7 @@ import groovy.transform.ToString
 
 @GrailsCompileStatic
 @ToString(includes = 'producto,cantidad,subtotal', includeNames = true, includePackage = false)
-@EqualsAndHashCode(includes = 'id')
+@EqualsAndHashCode(includes = 'producto,cantidad,importe,total')
 class VentaDet {
 
     String  id
