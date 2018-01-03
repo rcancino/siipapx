@@ -29,6 +29,9 @@ class VentaService implements  EventPublisher{
 
     @Publisher
     def save(Venta venta) {
+        venta.partidas.each {
+            log.debug('Partidas BEFORE de venta producto:{} precio:{} cantidad:{} ', it.producto.clave, it.precio, it.cantidad)
+        }
         fixCortes(venta)
         // fixEnvio(venta)
         fixNombre(venta)
@@ -42,6 +45,9 @@ class VentaService implements  EventPublisher{
             folio.folio = res
             venta.documento = res
             folio.save()
+        }
+        venta.partidas.each {
+            log.debug('Partidas  AFTER de venta producto:{} precio:{} cantidad:{} ', it.producto.clave, it.precio, it.cantidad)
         }
         venta.save()
         return venta
@@ -257,8 +263,12 @@ class VentaService implements  EventPublisher{
         log.debug('Eliminando {} aplicaciones a la factura {}', aplicaciones.size(), cxc.folio)
         aplicaciones.each { AplicacionDeCobro a ->
             Cobro cobro = a.cobro
-            cobro.removeFromAplicaciones(a)
-            cobro.save()
+            if(cobro.aplicaciones.size() == 1 ){
+                cobro.delete flush:true;
+            } else {
+                cobro.removeFromAplicaciones(a)
+                cobro.save()
+            }
         }
         return cxc
     }

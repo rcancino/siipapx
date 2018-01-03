@@ -106,6 +106,7 @@ class VentaController extends RestfulController{
 
 
     protected Venta saveResource(Venta resource) {
+        log.debug('Salvando venta {}', resource.statusInfo())
         return ventaService.save(resource)
     }
 

@@ -67,7 +67,9 @@ class UrlMappings {
         "/api/ventas/timbrar/$id"( controller: 'venta', action: 'timbrar')
         "/api/ventas/cancelar/$id"( controller: 'venta', action: 'cancelar')
         "/api/ventas/print/$id"(controller: "venta", action: 'print', method: 'GET')
-        "/api/preciosPorCliente"(resource: 'precioPorCliente')
+        "/api/preciosPorCliente"(resources: 'preciosPorCliente')
+        "/api/preciosPorCliente/buscarPrecio"(controller: 'preciosPorCliente', action: 'buscarPrecio', method: 'GET')
+        "/api/preciosPorCliente/preciosPorCliente"(controller: 'preciosPorCliente', action: 'preciosPorCliente', method: 'GET')
 
         "/api/socios"(resources:"socio")
 

@@ -19,43 +19,43 @@ class VentaDet {
 
     Inventario  inventario
 
-    BigDecimal  cantidad = 0
+    BigDecimal  cantidad = 0.0
 
-    BigDecimal  precio = 0
+    BigDecimal  precio = 0.0
 
-    BigDecimal  importe = 0
+    BigDecimal  importe = 0.0
 
-    BigDecimal  descuento = 0
+    BigDecimal  descuento = 0.0
 
-    BigDecimal  descuentoImporte = 0
+    BigDecimal  descuentoImporte = 0.0
 
-    BigDecimal  subtotal = 0
+    BigDecimal  subtotal = 0.0
 
-    BigDecimal impuesto = 0
+    BigDecimal impuesto = 0.0
 
     BigDecimal impuestoTasa = 0.16
 
-    BigDecimal total = 0
+    BigDecimal total = 0.0
 
     Boolean nacional = true
 
-    BigDecimal  kilos = 0
+    BigDecimal  kilos = 0.0
 
     String  comentario
 
     Boolean conVale = false
 
-    BigDecimal  precioLista = 0
+    BigDecimal  precioLista = 0.0
 
-    BigDecimal  precioOriginal = 0
+    BigDecimal  precioOriginal = 0.0
 
-    BigDecimal  descuentoOriginal = 0
+    BigDecimal  descuentoOriginal = 0.0
 
-    BigDecimal  importeCortes = 0
+    BigDecimal  importeCortes = 0.0
 
     BigDecimal devuelto
 
-    BigDecimal enviado = 0
+    BigDecimal enviado = 0.0
 
     Boolean sinExistencia = false
 
