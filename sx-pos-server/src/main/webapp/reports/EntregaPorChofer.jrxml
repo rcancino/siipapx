@@ -31,11 +31,12 @@
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT 
 E.id,
-F.tipo_documento as TIPO,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,S.NOMBRE AS SUCURSAL,t.numero AS TRANSP,C.NOMBRE AS CHOFER
+F.tipo_documento as TIPO,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,S.NOMBRE AS SUCURSAL
+,C.NOMBRE AS CHOFER
 ,F.tipo_documento AS ORIGEN,F.DOCUMENTO,F.fecha_documento as FECHA_DOCTO,F.NOMBRE AS CLIENTE
 ,total_documento AS TOTAL
 ,case when F.PARCIAL is true then "P" ELSE "" END AS PARCIAL 
-,N.VALOR 
+,F.VALOR 
 ,0 AS CANTIDAD
 ,F.KILOS,F.PAQUETES
 ,CASE WHEN F.POR_COBRAR=0 THEN 'NO' ELSE 'SI' END AS CE
@@ -46,8 +47,6 @@ from embarque E
 JOIN envio F ON(E.ID=F.EMBARQUE_ID)
 JOIN CHOFER C ON(C.ID=E.chofer_ID)
 JOIN sucursal S ON(S.ID=E.sucursal_id)
-JOIN envio_comision N ON (N.envio_id=F.ID)
-join transporte T on (t.chofer_id=c.id)
 LEFT JOIN condicion_de_envio I ON(I.venta_id=f.origen)
 WHERE DATE(E.REGRESO) = $P{FECHA}
 AND E.chofer_id=$P{CHOFER}
@@ -57,10 +56,9 @@ ORDER BY F.tipo_documento,F.fecha_documento,F.DOCUMENTO]]></queryString>
 	<field name="id" class="java.lang.String"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="DOCTO_EMB" class="java.lang.Integer"/>
-	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="FECHA" class="java.sql.Date"/>
 	<field name="SALIDA" class="java.sql.Timestamp"/>
 	<field name="SUCURSAL" class="java.lang.String"/>
-	<field name="TRANSP" class="java.lang.String"/>
 	<field name="CHOFER" class="java.lang.String"/>
 	<field name="ORIGEN" class="java.lang.String"/>
 	<field name="DOCUMENTO" class="java.lang.String"/>
@@ -414,19 +412,6 @@ ORDER BY F.tipo_documento,F.fecha_documento,F.DOCUMENTO]]></queryString>
 					</textElement>
 				<text><![CDATA[DOCUMENTO]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="77"
-						y="55"
-						width="67"
-						height="12"
-						key="textField-11"/>
-					<box></box>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica-BoldOblique" size="9" isBold="true" isItalic="true" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TRANSP}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="77"

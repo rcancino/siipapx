@@ -1,6 +1,7 @@
 package sx.logistica
 
 import sx.core.Cliente
+import sx.core.Venta
 
 class Envio {
 
@@ -68,6 +69,8 @@ class Envio {
 
     String	reportoPuesto
 
+    BigDecimal valor = 0.0
+
     List partidas = []
 
     Date dateCreated
@@ -100,5 +103,25 @@ class Envio {
     def afterDelete() {
         println 'Eliminando envio...... debe actualizar CondicionDeEnvio'
     }
+
+    def beforeUpdate() {
+        /*
+       if(!partidas) {
+           this.acualizarValorDeOrigen()
+       } else {
+       }
+       */
+    }
+
+    def acualizarValorDeOrigen() {
+        /*
+        if (entidad == 'VENTA') {
+            Venta venta = Venta.get(envio.origen)
+            this.valor = venta.subtotal
+        }
+        */
+    }
+
+
 
 }

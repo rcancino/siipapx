@@ -1,13 +1,15 @@
 package sx.logistica
 
+import com.luxsoft.utils.MonedaUtils
+import grails.gorm.transactions.Transactional
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
-import grails.transaction.Transactional
 
 import sx.core.Folio
 import sx.core.Sucursal
 import sx.core.Venta
+import sx.core.VentaDet
 import sx.inventario.Traslado
 import sx.inventario.DevolucionDeVenta
 import sx.reports.ReportService
@@ -18,7 +20,6 @@ class EmbarqueController extends RestfulController {
     
     static responseFormats = ['json']
 
-
     ReportService reportService
 
     EmbarqueController() {
@@ -27,10 +28,10 @@ class EmbarqueController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        log.info('Localizando embarques: {}', params)
         params.sort = 'documento'
         params.order = 'desc'
         params.max = 500
+        // log.info('Localizando embarques: {}', params)
         def query = Embarque.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}   
@@ -46,7 +47,6 @@ class EmbarqueController extends RestfulController {
             query = query.where{regreso != null }
         }
         def list =  query.list(params)
-        log.debug('Encontro: {}', list.size())
         return list
     }
 
@@ -62,12 +62,10 @@ class EmbarqueController extends RestfulController {
     }
 
     protected Embarque updateResource(Embarque resource) {
-        // Actualizar la condicion asignado
-        resource.partidas.each { 
+        resource.partidas.each { Envio it ->
             if(it.entidad == 'VENTA'){ 
                 def ventaId = it.origen
                 def parcial = it.parcial
-                println "Actualizando condicion de venta atendido ${ventaId} Parcial: ${parcial}" 
                 def condicion = CondicionDeEnvio.where{venta.id == ventaId}.find()
                 if(!parcial){
                     condicion.asignado = resource.fecha
@@ -76,23 +74,23 @@ class EmbarqueController extends RestfulController {
                     condicion.parcial = true
                     condicion.save()
                 }
-                
-                /*
-                if(condicion) {
-                    def venta = it.venta
-                    def pendiente = venta.partidas.sum {det -> (det.cantidad.abs() - det.enviado)}
-                    println 'Pendientes: '+pendientes
-                    
-                    if(pendiente <= 0) {
-                        condicion.asignado = resource.fecha    
+                // Actualizando valor
+                if (!it.partidas) {
+                    log.debug('Calculando valor de evnio TOTAL')
+                    Venta venta = Venta.get(it.origen)
+                    it.valor = venta.subtotal
+                } else {
+                    log.debug(' Calculando valor de envio PARCIAL ')
+                    it.partidas.each { EnvioDet det ->
+                        def factor = det.ventaDet.producto.unidad == 'MIL' ? 1000 : 1
+                        def rv  = (det.cantidad * det.ventaDet.precio)/ factor
+                        def valDet = ( (100 - det.ventaDet.descuento) * rv ) /  100
+                        det.valor = MonedaUtils.round(valDet, 2)
                     }
-                    
+                    it.valor = it.partidas.sum(0.0, { EnvioDet rr -> rr.valor})
                 }
-                */
             }
-            
         }
-        
         resource.updateUser = getPrincipal().username
         return super.updateResource(resource)
     }
@@ -120,6 +118,7 @@ class EmbarqueController extends RestfulController {
 
 
     private cargarEnvioParaVenta(DocumentSearchCommand command){
+        log.debug('Perarando envio {}', command)
         def q = CondicionDeEnvio.where{
             venta.sucursal == command.sucursal && 
             venta.cuentaPorCobrar.documento == command.documento &&
@@ -137,7 +136,6 @@ class EmbarqueController extends RestfulController {
         def venta = res.venta
         // determinando si la venta ya tiene envios
         def isParcial = venta.partidas.find { it.enviado} ? true : false
-        println 'El envio debe ser parcial: ' + isParcial
         def envio = new Envio()
         envio.cliente = venta.cliente
         envio.tipoDocumento = venta.tipo
@@ -165,15 +163,6 @@ class EmbarqueController extends RestfulController {
     }
 
     private cargarEnvioParaTraslado(DocumentSearchCommand command) {
-        println 'Cargando envio para  traslado con: ' + command
-        /*
-        def q = Traslado.where{
-            sucursal == command.sucursal && 
-            documento == command.documento && 
-            fecha == command.fecha &&
-            tipo == 'TPS'
-        }
-        */
         def traslado = buscarTraslado(command.sucursal, command.documento. command.fecha)
         if(!traslado) {
             return null
@@ -192,9 +181,7 @@ class EmbarqueController extends RestfulController {
         return envio
     }
 
-    private buscarDevolucion(DocumentSearchCommand command){
-
-    }
+    private buscarDevolucion(DocumentSearchCommand command){}
 
     public buscarVenta(DocumentSearchCommand command){
         command.validate()
@@ -282,7 +269,6 @@ class EmbarqueController extends RestfulController {
 
     def documentosEnTransito() {
         def envios = Envio.where{ embarque.regreso ==null && embarque.salida != null}.list()
-        println 'Envios pendientes: ' + envios
         respond envios
     }
 
@@ -332,7 +318,6 @@ class EmbarqueController extends RestfulController {
         }
         def embarque = res.embarque
         res.condiciones.each { cn ->
-            
             CondicionDeEnvio condicion = CondicionDeEnvio.get(cn.id)
             def venta = Venta.get(cn.venta.id)
             def isParcial = cn.parcial
@@ -352,23 +337,6 @@ class EmbarqueController extends RestfulController {
             condicion.asignado = new Date()
             condicion.save()
         }
-
-        // resource.partidas.each { 
-        //     if(it.entidad == 'VENTA'){ 
-        //         def ventaId = it.origen
-        //         def parcial = it.parcial
-        //         println "Actualizando condicion de venta atendido ${ventaId} Parcial: ${parcial}" 
-        //         def condicion = CondicionDeEnvio.where{venta.id == ventaId}.find()
-        //         if(!parcial){
-        //             condicion.asignado = resource.fecha
-        //             condicion.save()
-        //         } else {
-        //             condicion.parcial = true
-        //             condicion.save()
-        //         }
-        //     }
-            
-        // }
         respond embarque, status:200
     }
 
