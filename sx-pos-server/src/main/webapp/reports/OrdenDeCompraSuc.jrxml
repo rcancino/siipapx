@@ -36,7 +36,7 @@
 	<queryString><![CDATA[select (CASE WHEN c.especial IS true THEN 'ESPECIAL' ELSE '' END) AS ESPECIAL,c.FOLIO ,(case when c.nacional is true then 'NACIONAL' else 'IMPORTADO' end) as TIPO,c.ultima_depuracion as FECHA_DEPU
 ,(CASE WHEN c.ultima_depuracion IS NOT NULL and c.pendiente is false  THEN 'DEPURADO' ELSE ' ' END) AS ESTADO,c.FECHA,s.clave as SUC_CLAVE,s.nombre as SUC_NOMBRE,p.clave as PROV_CLAVE,p.nombre as PROV_NOMBRE
 ,p.plazo as PLAZO,a.clave as PROD_CLAVE,a.DESCRIPCION,a.kilos as KXM,a.GRAMOS,(SELECT Y.clave_proveedor FROM proveedor_producto Y WHERE D.PRODUCTO_ID=Y.PRODUCTO_ID AND P.ID=Y.PROVEEDOR_ID) AS CLAVEPROV
-,(SELECT Y.descripcion_proveedor FROM proveedor_producto Y WHERE a.id=Y.PRODUCTO_ID  AND p.id=Y.PROVEEDOR_ID) AS DESCRIPROV,sum((CASE WHEN a.unidad='MIL' THEN d.SOLICITADO/1000 ELSE d.SOLICITADO END)) AS SOLICITADO
+,(SELECT Y.descripcion_proveedor FROM proveedor_producto Y WHERE a.id=Y.PRODUCTO_ID  AND p.id=Y.PROVEEDOR_ID) AS DESCRIPROV,sum(d.SOLICITADO) AS SOLICITADO
 ,A.UNIDAD,(D.COSTO)AS PRECIO_UNITARIO,SUM(D.importe_neto) AS IMPORTE,c.COMENTARIO,d.comentario as COMENT_DET,CONCAT(P.DIRECCION_CALLE,', ',P.DIRECCION_COLONIA,', ',P.DIRECCION_CODIGO_POSTAL,',',P.DIRECCION_MUNICIPIO ) AS DIRECCION
 ,CONCAT(p.telefono1,'   ',p.telefono2,'  ',p.telefono3) AS TELEFONO
 ,c.importe_neto as SUBTOTAL,c.IMPUESTOS,c.TOTAL,'NO' as IMPRIMIR_COSTO,(CASE WHEN C.CONSOLIDADA is true THEN 'SI' ELSE 'NO' END) AS CONSOLIDADA
@@ -59,7 +59,7 @@ ORDER BY a.clave]]></queryString>
 	<field name="SUC_NOMBRE" class="java.lang.String"/>
 	<field name="PROV_CLAVE" class="java.lang.String"/>
 	<field name="PROV_NOMBRE" class="java.lang.String"/>
-	<field name="PLAZO" class="java.lang.Long"/>
+	<field name="PLAZO" class="java.lang.Integer"/>
 	<field name="PROD_CLAVE" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
 	<field name="KXM" class="java.math.BigDecimal"/>
@@ -326,7 +326,7 @@ Tel. 53 42 71 66   Fax 24 65 03 88
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{PLAZO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{PLAZO}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

@@ -29,9 +29,9 @@
 	<parameter name="DEVOLUCION" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT D.ID AS DEVO_ID,D.documento AS FOLIO,D.COMENTARIO
-,(select max(nombre) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as NOMBRE
+,(select max(c.nombre) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as NOMBRE
 ,(select max(clave) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as CLAV_CLIENTE
-,(select max(v.documento) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID ) AS FACTURA
+,(select max(x.documento) from VENTA V JOIN cuenta_por_cobrar x on(x.id=v.cuenta_por_cobrar_id) join cliente c WHERE V.ID=D.VENTA_ID ) AS FACTURA
 ,b.clave as sucursal_id,b.nombre as sucursal
 ,(a.CANTIDAD) AS CANTIDAD
 ,p.clave,p.deScripcion,d.fecha
@@ -318,7 +318,7 @@ WHERE D.ID=$P{DEVOLUCION} AND B.ID=$P{SUCURSAL}]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="12"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="###0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="20"
 						y="1"
@@ -370,7 +370,7 @@ WHERE D.ID=$P{DEVOLUCION} AND B.ID=$P{SUCURSAL}]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{deScripcion}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="373"
 						y="1"

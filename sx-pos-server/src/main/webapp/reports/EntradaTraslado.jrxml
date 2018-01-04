@@ -28,7 +28,7 @@
 	</parameter>
 	<parameter name="SOL_ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT M.ID,M.FECHA,'00:00:00' as HORA,M.DOCUMENTO,B.NOMBRE AS SUCURSAL,S.NOMBRE AS SUC_SOL,ST.DOCUMENTO AS SOL,M.TIPO AS CONCEPTO,M.COMENTARIO
-,(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS CANTIDAD,P.KILOS AS KXMLL,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,P.UNIDAD
+,I.CANTIDAD,P.KILOS AS KXMLL,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,P.UNIDAD
 ,I.partidas_idx AS RENGLON,P.CLAVE,P.DESCRIPCION,I.COMENTARIO AS COMENT_PART
 ,M.CHOFER_id AS CHOFER,M.DATE_CREATED,M.create_user AS ATENDIO
 ,(SELECT S.DOCUMENTO FROM traslado S WHERE S.solicitud_de_traslado_id=ST.ID AND S.TIPO='TPS') AS DOCTO_TPS
@@ -543,7 +543,7 @@ $F{CONCEPTO}.equals( new String ("TPS")) ? "SOLICITADO POR : " : ""]]></textFiel
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENT_PART}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="###0.000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="2"
 						y="1"
@@ -569,7 +569,7 @@ $F{CONCEPTO}.equals( new String ("TPS")) ? "SOLICITADO POR : " : ""]]></textFiel
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{KXMLL}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="443"
 						y="1"

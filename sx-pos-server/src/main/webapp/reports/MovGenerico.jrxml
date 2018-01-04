@@ -28,7 +28,7 @@
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT M.ID,M.FECHA,M.DOCUMENTO,s.NOMBRE AS SUCURSAL,M.tipo AS CONCEPTO,M.COMENTARIO,M.FECHA,I.TIPOCIS
-,(I.CANTIDAD/(case when p.unidad='MIL' then 1000 else 1 end)) AS CANTIDAD,P.UNIDAD,I.partidas_idx AS RENGLON,P.CLAVE,P.DESCRIPCION,I.COMENTARIO AS COMENT_PART
+,I.CANTIDAD,P.UNIDAD,I.partidas_idx AS RENGLON,P.CLAVE,P.DESCRIPCION,I.COMENTARIO AS COMENT_PART
 ,CASE WHEN M.por_inventario IS TRUE THEN '*** POR INVENTARIO ***' ELSE  '' END  AS POR_INV
 ,M.FECHA_INVENTARIO,(case when I.INVENTARIO_ID is null then '=== FALTA REGISTRAR EN EL INVENTARIO ===' else '' end) as INVENTARIADO
 FROM movimiento_de_almacen M
@@ -418,7 +418,7 @@ $F{CONCEPTO}.equals( new String ("TPE"))?"TRASPASO DE ENTRADA":""]]></textFieldE
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENT_PART}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="###0.000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="24"
 						y="1"

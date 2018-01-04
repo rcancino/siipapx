@@ -1481,16 +1481,16 @@
 				</textField>
 				<staticText>
 					<reportElement
-						x="467"
+						x="457"
 						y="102"
-						width="30"
+						width="40"
 						height="11"
 						key="staticText-209"/>
 					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
 					</textElement>
-				<text><![CDATA[R.F.C. :]]></text>
+				<text><![CDATA[R.F.C. : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -2137,7 +2137,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 						mode="Opaque"
 						x="162"
 						y="11"
-						width="93"
+						width="97"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -2176,7 +2176,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 						mode="Opaque"
 						x="162"
 						y="11"
-						width="93"
+						width="97"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -2199,7 +2199,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="staticText-292">
-							<printWhenExpression><![CDATA[new Boolean(!$P{SERIE}.startsWith( "TA" ))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean($P{SERIE}.startsWith( "TA" ))]]></printWhenExpression>
 						</reportElement>
 					<box></box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
@@ -2233,7 +2233,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 						mode="Opaque"
 						x="162"
 						y="11"
-						width="85"
+						width="97"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -2272,7 +2272,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 						mode="Opaque"
 						x="162"
 						y="11"
-						width="92"
+						width="97"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -2316,9 +2316,9 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="staticText-298"/>
-					<box>					<topPen lineWidth="0.75"/>
-					<leftPen lineWidth="0.75"/>
-					<rightPen lineWidth="0.75"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="6" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
@@ -2327,9 +2327,9 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="364"
+						x="393"
 						y="114"
-						width="216"
+						width="187"
 						height="13"
 						key="textField-239"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -2337,8 +2337,8 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="0.0"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TELEFONOS}]]></textFieldExpression>
 				</textField>
@@ -2352,6 +2352,19 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 						key="rectangle-15"/>
 					<graphicElement stretchType="NoStretch"/>
 				</rectangle>
+				<staticText>
+					<reportElement
+						x="364"
+						y="114"
+						width="28"
+						height="13"
+						key="staticText-299"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[TELS.: ]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>

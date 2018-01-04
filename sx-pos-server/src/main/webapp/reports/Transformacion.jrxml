@@ -35,7 +35,7 @@ FROM transformacion T
 JOIN transformacion_det a ON(A.TRANSFORMACION_ID=T.ID)
 join producto p on (a.producto_id=p.id)
 join sucursal b on (t.SUCURSAL_ID=b.ID) 
-where T.ID=$P{ID}  ]]></queryString>
+where T.ID=$P{ID}]]></queryString>
 
 	<field name="TRANSFORMACION_ID" class="java.lang.String"/>
 	<field name="CLASE" class="java.lang.String"/>
@@ -319,7 +319,7 @@ where T.ID=$P{ID}  ]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="12"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="###0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="5"
 						y="1"
@@ -397,7 +397,7 @@ where T.ID=$P{ID}  ]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COM_ART}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="527"
 						y="1"
