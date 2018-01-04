@@ -813,7 +813,7 @@
 						width="78"
 						height="13"
 						key="textField-232">
-							<printWhenExpression><![CDATA[new Boolean(!$P{TIPO}.equals( "CREDITO" ) || !$P{TIPO}.equals( "PSF" ))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(!$P{TIPO}.equals( "CREDITO" ))]]></printWhenExpression>
 						</reportElement>
 					<box></box>
 					<textElement textAlignment="Center">
