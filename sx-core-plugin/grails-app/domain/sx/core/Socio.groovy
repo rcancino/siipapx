@@ -27,9 +27,9 @@ class Socio {
     Long sw2
 
     static constraints = {
-
         vendedor nullable:true
         sw2 nullable:true
+        direccionFiscal nullable: true
     }
 
     static mapping = {

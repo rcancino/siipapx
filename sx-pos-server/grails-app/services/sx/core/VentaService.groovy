@@ -1,5 +1,6 @@
 package sx.core
 
+import com.luxsoft.utils.MonedaUtils
 import grails.events.EventPublisher
 import grails.events.annotation.Publisher
 import grails.gorm.transactions.Transactional
@@ -32,11 +33,8 @@ class VentaService implements  EventPublisher{
 
     @Publisher
     def save(Venta venta) {
-        venta.partidas.each {
-            log.debug('Partidas BEFORE de venta producto:{} precio:{} cantidad:{} ', it.producto.clave, it.precio, it.cantidad)
-        }
         fixCortes(venta)
-        // fixEnvio(venta)
+        fixDescuentos(venta)
         fixNombre(venta)
         logEntity(venta)
         fixVendedor(venta)
@@ -48,9 +46,6 @@ class VentaService implements  EventPublisher{
             folio.folio = res
             venta.documento = res
             folio.save()
-        }
-        venta.partidas.each {
-            log.debug('Partidas  AFTER de venta producto:{} precio:{} cantidad:{} ', it.producto.clave, it.precio, it.cantidad)
         }
         venta.save()
         return venta
@@ -71,13 +66,22 @@ class VentaService implements  EventPublisher{
         }
     }
 
-    private fixImporteEnCortes(Venta venta) {
+    private fixDescuentos(Venta venta) {
         venta.partidas.each {
             if(it.corte) {
                 def descuentoGeneral = venta.descuento
                 def descuento = it.descuento
-                // if(des)
+                def factor = it.producto.unidad == 'MIL' ? 1000.00 : 1.00
+                def importe = (it.cantidad * it.precio)/ factor
+                def descuentoCalculado = importe * (descuento/100)
+                descuentoCalculado = MonedaUtils.round (descuentoCalculado , 2)
+                if(descuentoCalculado != it.descuentoImporte) {
+                    log.debug('Error en descuento en partidas....')
+                    it.descuentoImporte = descuentoCalculado
+                    it.total = it.subtotal + it.impuesto
+                }
             }
+            it.descuentoOriginal = it.descuentoOriginal > 0 ? venta.descuentoOriginal: it.descuentoOriginal
         }
     }
 
