@@ -95,6 +95,8 @@ class UrlMappings {
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/pendientesCod/$id"( controller: 'cuentaPorCobrar', action: 'pendientesCod')
 
+        "/api/remoteCredito"(resources: "remoteCredito")
+        "/api/remoteCredito/actualizarCredito"(controller: 'remoteCredito', action:'actualizarCredito')
 
         //Existencias
         "/api/existencias"(resources: "existencia"){
