@@ -73,6 +73,11 @@ class CfdiFacturaBuilder {
         comprobante.folio = cxc.documento.toString()
         comprobante.setFecha(DateUtils.getCfdiDate(new Date()))
         comprobante.moneda =  V33CfdiUtils.getMonedaCode(cxc.moneda)
+
+        if(cxc.moneda != MonedaUtils.PESOS){
+            comprobante.tipoCambio = cxc.tipoDeCambio
+        }
+
         comprobante.lugarExpedicion = cxc.sucursal.direccion.codigoPostal
         return this
     }

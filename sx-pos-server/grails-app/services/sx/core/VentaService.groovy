@@ -151,8 +151,10 @@ class VentaService implements  EventPublisher{
         cxc.comentario = 'GENERACION AUTOMATICA'
         pedido.cuentaPorCobrar = cxc
         cxc.save failOnError: true
+        log.debug('Cuenta por cobrar generada: {}', cxc)
         pedido.cuentaPorCobrar = cxc
         pedido.save flush: true
+
         return pedido
     }
 
@@ -160,6 +162,7 @@ class VentaService implements  EventPublisher{
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
         log.debug('Generando CFDI para  {}', venta.statusInfo())
         def comprobante = cfdiFacturaBuilder.build(venta)
+        // log.debug('Comprobante: {}', CfdiUtils.serialize(comprobante))
         def cfdi = cfdiService.generarCfdi(comprobante, 'I')
         venta.cuentaPorCobrar.cfdi = cfdi
         venta.save flush: true

@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils
 import sx.core.ClienteCredito
 import sx.core.Venta
 import sx.core.VentaDet
+import sx.utils.MonedaUtils
 
 import java.text.SimpleDateFormat
 import java.text.MessageFormat
@@ -104,6 +105,7 @@ class V33PdfGenerator {
         params.put("METODO_PAGO", 		comprobante.metodoPago.toString());
         params.put("FORMA_PAGO", 		comprobante.formaPago);
         params.put("IMP_CON_LETRA", 	ImporteALetra.aLetra(comprobante.getTotal()));
+
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['PINT_IVA']='16 '
         params["DESCUENTOS"] = comprobante.getDescuento() as String
@@ -208,8 +210,12 @@ class V33PdfGenerator {
             parametros['CONDICIONES_PAGO'] = cdp
 
         }
-        if(venta.socio)
+
         parametros.TELEFONOS = venta.cliente.getTelefonos().join('/')
+
+        if(venta.moneda != MonedaUtils.PESOS) {
+            parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetraDolares(venta.getTotal()));
+        }
     }
 
 }

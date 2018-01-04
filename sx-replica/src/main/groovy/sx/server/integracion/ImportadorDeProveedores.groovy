@@ -153,6 +153,49 @@ class ImportadorDeProveedores implements Importador{
         return message
     }
 
+
+    def importarProveedorProductos(def prov){
+        String query = "select * from sx_proveedor_productos where proveedor_id=? "
+        leerRegistros(query, [prov]).each {  row ->
+            println  row
+            def proveedor = Proveedor.where{sw2==row.proveedor_id && tipo =='COMPRAS'}.find() //.findBySw2(row.proveedor_id)
+
+
+            println "**************************"+proveedor+"********************************************"
+
+
+            Producto producto = Producto.where {sw2 == row.producto_id}.find()
+            /*
+             if(!producto){
+                 producto = importadorDeProductos.importar(row.producto_id)
+             }
+             */
+            if(producto){
+                println "**********************************************************************"+"---------------"
+                ProveedorProducto provProd = ProveedorProducto.where {proveedor == proveedor && producto == producto}.find()
+
+                println "+++++++++++"+provProd
+
+                if(!provProd){
+                    provProd = new ProveedorProducto(proveedor:proveedor, producto:producto)
+                }
+                provProd.proveedor=proveedor
+                provProd.claveProveedor = row.claveprov
+                provProd.codigoProveedor = row.codigoprov
+                provProd.descripcionProveedor = row.descriprov
+                provProd.paqueteTarima = row.paqtarima
+                provProd.piezaPaquete = row.piezapaq
+
+
+                provProd.save failOnError:true, flush: true
+
+            }
+
+        }
+        def message = "Productos por proveedor importados"
+        return message
+    }
+
     static String QUERY_COMPRAS = """
         select nombre,clave,
         if(ifnull(rfc,'') = '', 'XAXX010101000', rfc) as rfc,
