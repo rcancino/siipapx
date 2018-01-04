@@ -208,6 +208,7 @@ class V33PdfGenerator {
             parametros['CONDICIONES_PAGO'] = cdp
 
         }
+        if(venta.socio)
         parametros.TELEFONOS = venta.cliente.getTelefonos().join('/')
     }
 

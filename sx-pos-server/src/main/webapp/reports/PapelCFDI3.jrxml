@@ -813,7 +813,7 @@
 						width="78"
 						height="13"
 						key="textField-232">
-							<printWhenExpression><![CDATA[new Boolean(!$P{TIPO}.equals( "CRE" ) || $P{FPAGO}.equals( "CHEQUE_POSTFECHADO" ))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean(!$P{TIPO}.equals( "CREDITO" ) || !$P{TIPO}.equals( "PSF" ))]]></printWhenExpression>
 						</reportElement>
 					<box></box>
 					<textElement textAlignment="Center">
@@ -1250,7 +1250,7 @@
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="96"
+						x="134"
 						y="200"
 						width="446"
 						height="221"
@@ -1468,20 +1468,20 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="521"
+						x="497"
 						y="102"
-						width="59"
+						width="83"
 						height="11"
 						key="textField-158"/>
 					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RECEPTOR_RFC}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="491"
+						x="467"
 						y="102"
 						width="30"
 						height="11"
@@ -1814,7 +1814,7 @@ C.P. 02870  TEL/FAX: 5342-7166]]></text>
 				<rectangle>
 					<reportElement
 						mode="Transparent"
-						x="2"
+						x="3"
 						y="0"
 						width="144"
 						height="85"
@@ -2272,7 +2272,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 						mode="Opaque"
 						x="162"
 						y="11"
-						width="93"
+						width="92"
 						height="8"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
