@@ -76,11 +76,11 @@ class EmbarqueController extends RestfulController {
                 }
                 // Actualizando valor
                 if (!it.partidas) {
-                    log.debug('Calculando valor de evnio TOTAL')
+                    // log.debug('Calculando valor de evnio TOTAL')
                     Venta venta = Venta.get(it.origen)
                     it.valor = venta.subtotal
                 } else {
-                    log.debug(' Calculando valor de envio PARCIAL ')
+                    // log.debug(' Calculando valor de envio PARCIAL ')
                     it.partidas.each { EnvioDet det ->
                         def factor = det.ventaDet.producto.unidad == 'MIL' ? 1000 : 1
                         def rv  = (det.cantidad * det.ventaDet.precio)/ factor
@@ -138,10 +138,10 @@ class EmbarqueController extends RestfulController {
         def isParcial = venta.partidas.find { it.enviado} ? true : false
         def envio = new Envio()
         envio.cliente = venta.cliente
-        envio.tipoDocumento = venta.tipo
+        envio.tipoDocumento = venta.cuentaPorCobrar.tipo
         envio.origen = venta.id
         envio.entidad = 'VENTA'
-        envio.documento = venta.documento
+        envio.documento = venta.cuentaPorCobrar.documento
         envio.fechaDocumento = venta.fecha
         envio.totalDocumento = venta.total
         envio.formaPago = venta.formaDePago
@@ -323,10 +323,10 @@ class EmbarqueController extends RestfulController {
             def isParcial = cn.parcial
             def envio = new Envio()
             envio.cliente = venta.cliente
-            envio.tipoDocumento = venta.tipo
+            envio.tipoDocumento = venta.cuentaPorCobrar.tipo
             envio.origen = venta.id
             envio.entidad = 'VENTA'
-            envio.documento = venta.documento
+            envio.documento = venta.cuentaPorCobrar.documento
             envio.fechaDocumento = venta.fecha
             envio.totalDocumento = venta.total
             envio.formaPago = venta.formaDePago
