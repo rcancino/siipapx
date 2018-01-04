@@ -8,6 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.http.HttpStatus
 import sx.logistica.CondicionDeEnvio
+import sx.logistica.Envio
 import sx.reports.ReportService
 
 
@@ -85,6 +86,20 @@ class VentaController extends RestfulController{
             envio.venta = venta
             venta.envio = envio
             venta = venta.save()
+        }
+        respond venta
+    }
+
+    @Transactional
+    def cancelarEnvio() {
+        Venta venta = Venta.get(params.id)
+        log.debug('Cancelar envio para venta: {}', venta)
+        if(venta.envio) {
+            CondicionDeEnvio condicionDeEnvio= venta.envio
+            venta.envio = null
+            venta = venta.save failOnError: true, flush:true
+            condicionDeEnvio.venta = null
+            condicionDeEnvio.delete failOnError: true, flush: true
         }
         respond venta
     }
@@ -208,6 +223,13 @@ class VentaController extends RestfulController{
         params.ID = pedido.id
         params.IMP_CON_LETRA = ImporteALetra.aLetra(pedido.total)
         params.TELEFONOS = pedido.cliente.getTelefonos().join('/')
+        if(pedido.envio) {
+            params.DIR_ENTREGA = pedido.envio.direccion.toLabel()
+        }
+        if(pedido.socio) {
+            params.SOCIO = pedido.socio.nombre
+        }
+
         def pdf =  reportService.run('Pedido.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }

@@ -216,6 +216,9 @@ class V33PdfGenerator {
         if(venta.moneda != MonedaUtils.PESOS) {
             parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetraDolares(venta.getTotal()));
         }
+        if(venta.socio) {
+            parametros.SOCIO = venta.socio.nombre
+        }
     }
 
 }

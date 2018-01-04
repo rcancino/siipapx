@@ -71,6 +71,16 @@ class VentaService implements  EventPublisher{
         }
     }
 
+    private fixImporteEnCortes(Venta venta) {
+        venta.partidas.each {
+            if(it.corte) {
+                def descuentoGeneral = venta.descuento
+                def descuento = it.descuento
+                // if(des)
+            }
+        }
+    }
+
     private fixEnvio(Venta venta) {
         if(!venta.id && venta.envio) {
             if (!venta.envio.venta)
