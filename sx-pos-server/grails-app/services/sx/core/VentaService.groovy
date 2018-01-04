@@ -15,6 +15,7 @@ import lx.cfdi.v33.CfdiUtils
 
 
 import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
+import sx.inventario.InventarioService
 
 @Transactional
 class VentaService implements  EventPublisher{
@@ -26,6 +27,8 @@ class VentaService implements  EventPublisher{
     CfdiTimbradoService cfdiTimbradoService
 
     SpringSecurityService springSecurityService
+
+    InventarioService inventarioService
 
     @Publisher
     def save(Venta venta) {
@@ -154,7 +157,7 @@ class VentaService implements  EventPublisher{
         log.debug('Cuenta por cobrar generada: {}', cxc)
         pedido.cuentaPorCobrar = cxc
         pedido.save flush: true
-
+        inventarioService.afectarInventariosPorFacturar(pedido);
         return pedido
     }
 

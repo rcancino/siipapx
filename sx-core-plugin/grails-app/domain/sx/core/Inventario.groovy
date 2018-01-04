@@ -1,5 +1,10 @@
 package sx.core
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@ToString( includes = "sucursal,documento,fecha,cantidad",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes = 'id')
 class Inventario {
 
 
@@ -63,5 +68,9 @@ class Inventario {
         producto index:'PRODUCTO_IDX'
         sucursal index:'SUCURSAL_IDX'
         fecha index: 'FECHA_IDX'
+    }
+
+    def afterInsert() {
+
     }
 }

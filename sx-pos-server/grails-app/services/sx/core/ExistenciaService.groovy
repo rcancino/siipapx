@@ -7,6 +7,11 @@ import sx.inventario.Traslado
 @Transactional
 class ExistenciaService {
 
+    /**
+     * TODO: Corregir debe ser al salvar inventario
+     * @param factura
+     * @return
+     */
     @Subscriber
     def onFacturar(Venta factura) {
         if( factura.cuentaPorCobrar) {
@@ -20,12 +25,15 @@ class ExistenciaService {
         def year = hoy[Calendar.YEAR]
         Existencia.withNewTransaction {
             Venta factura = Venta.get(venta.id)
-            log.debug("Actualizando existencias por ${factura.statusInfo()}")
+            // log.debug("Actualizando existencias por ${factura.statusInfo()}")
             factura.partidas.each { VentaDet det ->
                 Existencia exis = Existencia.where{ producto == det.producto && anio == year && mes== month}.find()
-                assert exis, "No existe existencia ${year} - ${month} Para ${det.producto.clave}"
-                exis.venta = exis.venta - det.cantidad
-                exis.save()
+               // assert exis, "No existe existencia ${year} - ${month} Para ${det.producto.clave}"
+                if(exis) {
+                    exis.venta = exis.venta - det.cantidad
+                    exis.save()
+                    log.debug('Existencia actualizada: {}', exis)
+                }
             }
         }
     }
