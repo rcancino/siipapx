@@ -22,6 +22,8 @@ class Socio {
 
     String direccion
 
+    Direccion direccionFiscal
+
     Long sw2
 
     static constraints = {
@@ -33,6 +35,8 @@ class Socio {
     static mapping = {
         id generator:'uuid'
     }
+
+    static embedded = ['direccionFiscal']
 
     String toString() {
     	return nombre

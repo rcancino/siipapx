@@ -31,9 +31,9 @@
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT 
 E.id,
-F.tipo_documento as TIPO,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,S.NOMBRE AS SUCURSAL
+F.tipo_documento as TIPO,F.fecha_documento as FECHA_DOCTO,F.DOCUMENTO,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,S.NOMBRE AS SUCURSAL
 ,C.NOMBRE AS CHOFER
-,F.tipo_documento AS ORIGEN,F.DOCUMENTO,F.fecha_documento as FECHA_DOCTO,F.NOMBRE AS CLIENTE
+,F.tipo_documento AS ORIGEN,F.NOMBRE AS CLIENTE
 ,total_documento AS TOTAL
 ,case when F.PARCIAL is true then "P" ELSE "" END AS PARCIAL 
 ,F.VALOR 
@@ -55,14 +55,14 @@ ORDER BY F.tipo_documento,F.fecha_documento,F.DOCUMENTO]]></queryString>
 
 	<field name="id" class="java.lang.String"/>
 	<field name="TIPO" class="java.lang.String"/>
+	<field name="FECHA_DOCTO" class="java.sql.Timestamp"/>
+	<field name="DOCUMENTO" class="java.lang.String"/>
 	<field name="DOCTO_EMB" class="java.lang.Integer"/>
 	<field name="FECHA" class="java.sql.Date"/>
 	<field name="SALIDA" class="java.sql.Timestamp"/>
 	<field name="SUCURSAL" class="java.lang.String"/>
 	<field name="CHOFER" class="java.lang.String"/>
 	<field name="ORIGEN" class="java.lang.String"/>
-	<field name="DOCUMENTO" class="java.lang.String"/>
-	<field name="FECHA_DOCTO" class="java.sql.Timestamp"/>
 	<field name="CLIENTE" class="java.lang.String"/>
 	<field name="TOTAL" class="java.math.BigDecimal"/>
 	<field name="PARCIAL" class="java.lang.String"/>

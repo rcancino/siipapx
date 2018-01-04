@@ -106,6 +106,8 @@ class Venta {
 
     Boolean sinExistencia = false
 
+    Socio socio
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -130,6 +132,7 @@ class Venta {
         envio nullable: true
         importe scale: 2
         sinExistencia nullable: true
+        socio nullable: true
     }
 
     static mapping = {

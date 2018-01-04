@@ -38,6 +38,12 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
             cfdi g.render(venta.cuentaPorCobrar.cfdi)
         }
     }
+    if(venta.socio) {
+        socio {
+            id venta.socio.id
+            nombre venta.socio.nombre
+        }
+    }
     
 
 }

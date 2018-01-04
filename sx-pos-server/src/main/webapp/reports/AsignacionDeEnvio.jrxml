@@ -27,13 +27,13 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select E.ID,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,E.sucursal_id,s.NOMBRE AS SUCURSAL,C.NOMBRE AS CHOFER
-,x.DOCUMENTO,v.documento AS PEDIDO,v.fecha AS FECHA_PED,v.tipo as ORIGEN,x.fecha as FECHA_DOCTO,y.nombre AS CLIENTE,F.total_documento as TOTAL_DOCTO,v.KILOS,F.PAQUETES
+	<queryString><![CDATA[select E.ID,x.DOCUMENTO,E.DOCUMENTO AS DOCTO_EMB,E.FECHA,E.SALIDA,E.sucursal_id,s.NOMBRE AS SUCURSAL,C.NOMBRE AS CHOFER
+,v.documento AS PEDIDO,v.fecha AS FECHA_PED,v.tipo as ORIGEN,x.fecha as FECHA_DOCTO,y.nombre AS CLIENTE,F.total_documento as TOTAL_DOCTO,v.KILOS,F.PAQUETES
 ,'ENVIO' AS TIPO,(CASE  WHEN V.tipo='COD' THEN 'SI' ELSE 'NO' END) AS PAGO_VS_ENTREGA
 ,I.direccion_municipio AS POBLACION,SUBSTR(I.direccion_codigo_postal,1,2) AS DEL,SUBSTR(I.direccion_codigo_postal,3,1) AS AGR,SUBSTR(I.direccion_codigo_postal,4,2) AS ZONA
 ,CONCAT(I.direccion_calle,' ',I.direccion_numero_exterior,' ',I.direccion_numero_interior,', ',I.direccion_colonia,', ',I.direccion_codigo_postal) AS RUTA
 ,F.ARRIBO,F.RECEPCION,F.RECIBIO,CONCAT(IFNULL(F.COMENTARIO,''),' ',IFNULL(I.COMENTARIO,'')) AS COMENTARIO
-,f.forma_pago AS FPAGO,z.VALOR
+,f.forma_pago AS FPAGO,F.VALOR
 ,(SELECT CASE WHEN y.permite_cheque IS FALSE THEN "No Permitir Cheque            F.Pago: " else "F.Pago: " end) as PERMCHE
 from embarque e 
 join sucursal s on(s.id=e.sucursal_id)
@@ -43,18 +43,17 @@ JOIN condicion_de_envio I ON(I.venta_id=F.origen)
 JOIN venta v on(v.id=F.origen)
 JOIN cuenta_por_cobrar x on(x.id=v.cuenta_por_cobrar_id)
 JOIN cliente y on(y.id=x.cliente_id)
-LEFT JOIN envio_comision z on(z.envio_id=f.id)
 WHERE E.ID=$P{ID}
 ORDER BY F.fecha_documento,F.nombre]]></queryString>
 
 	<field name="ID" class="java.lang.String"/>
+	<field name="DOCUMENTO" class="java.lang.Long"/>
 	<field name="DOCTO_EMB" class="java.lang.Integer"/>
 	<field name="FECHA" class="java.sql.Date"/>
 	<field name="SALIDA" class="java.sql.Timestamp"/>
 	<field name="sucursal_id" class="java.lang.String"/>
 	<field name="SUCURSAL" class="java.lang.String"/>
 	<field name="CHOFER" class="java.lang.String"/>
-	<field name="DOCUMENTO" class="java.lang.Long"/>
 	<field name="PEDIDO" class="java.lang.Long"/>
 	<field name="FECHA_PED" class="java.sql.Date"/>
 	<field name="ORIGEN" class="java.lang.String"/>
