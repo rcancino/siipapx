@@ -108,18 +108,28 @@ class CfdiTimbradoService {
         // Iniciando cancelacion
         Empresa empresa = getEmpresa()
         String[] uuids = [cfdi.uuid] as String[]
-        log.debug('Cancelando: ' , uuids)
-        CancelaResponse response = edicomService.cancelaCFDi(
+        log.debug('Cancelando: {}' , cfdi.uuid)
+        edicomService.cancelaCFDi(
                 empresa.usuarioPac,
                 empresa.passwordPac,
                 empresa.rfc,
                 uuids,
                 empresa.certificadoDigitalPfx,
                 'pfxfilepapel')
+        /*
+
+        CancelaResponse response = edicomService.cancelaCFDi(
+                empresa.usuarioPac,
+                empresa.passwordPac,
+                empresa.rfc,
+                [cfdi.uuid],
+                empresa.certificadoDigitalPfx,
+                'pfxfilepapel')
 
         response.getUuids().getItem().each {
             log.debug('UUID Cancelado: ', it)
         }
+
         String msg=response.getText()
         log.debug('Cancelacion text: ',mes)
         log.debug('Cancelacion Base64.decore: ', Base64.decode(msg.getBytes()))
@@ -135,6 +145,7 @@ class CfdiTimbradoService {
         cancelacion.save failOnError: true, flush: true
         log.debug(" CFDI: ${cfdi.serie} - ${cfdi.folio} cancelado exitosamente")
         return cancelacion
+        */
     }
 
     Boolean isTimbradoDePrueba() {
