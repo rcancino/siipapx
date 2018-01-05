@@ -399,7 +399,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{saldoFF}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="367"
 						y="30"
@@ -420,7 +420,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{solicitadoReembolso}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="367"
 						y="19"
@@ -462,7 +462,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["INICIAL : "]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="170"
 						y="8"
@@ -483,7 +483,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{morralla}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="367"
 						y="8"
@@ -525,7 +525,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["FINAL : "]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="367"
 						y="8"
@@ -613,13 +613,31 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="0"
+						x="101"
 						y="2"
-						width="552"
+						width="194"
 						height="0"
 						forecolor="#CCCCCC"
 						backcolor="#FFFFFF"
-						key="line-5"/>
+						key="line-5">
+							<printWhenExpression><![CDATA[new Boolean($F{clase}.startsWith( "MORRALLA" )
+)]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch" fill="Solid" />
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="101"
+						y="2"
+						width="432"
+						height="0"
+						forecolor="#CCCCCC"
+						backcolor="#FFFFFF"
+						key="line-6">
+							<printWhenExpression><![CDATA[new Boolean(!$F{clase}.startsWith( "MORRALLA" )
+)]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch" fill="Solid" />
 				</line>
 			</band>
