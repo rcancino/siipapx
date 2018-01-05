@@ -2387,7 +2387,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NoIdentificacion}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="69"
 						y="1"
