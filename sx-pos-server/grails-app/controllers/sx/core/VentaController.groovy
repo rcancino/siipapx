@@ -196,7 +196,7 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:100
+        params.max = params.registros ?:500
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 

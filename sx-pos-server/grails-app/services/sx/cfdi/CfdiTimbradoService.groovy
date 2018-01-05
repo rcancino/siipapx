@@ -107,13 +107,15 @@ class CfdiTimbradoService {
 
         // Iniciando cancelacion
         Empresa empresa = getEmpresa()
+        String[] uuids = [cfdi.uuid] as String[]
+        log.debug('Cancelando: ' , uuids)
         CancelaResponse response = edicomService.cancelaCFDi(
                 empresa.usuarioPac,
                 empresa.passwordPac,
                 empresa.rfc,
-                [cfdi.uuid],
+                uuids,
                 empresa.certificadoDigitalPfx,
-                'certificadopapel')
+                'pfxfilepapel')
 
         response.getUuids().getItem().each {
             log.debug('UUID Cancelado: ', it)

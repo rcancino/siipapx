@@ -240,13 +240,6 @@ class VentaService implements  EventPublisher{
         eliminarAplicaciones(cxc)
         eliminarCuentaPorCobrar(cxc)
 
-        Map res = [
-                ventaInfo: factura.statusInfo(),
-                factura: factura.id,
-                cuentaPorCobrar: cxc.id,
-                cfdi: cxc.cfdi ? cxc.cfdi.id : null
-        ]
-
         // 3o Cancelar el CFDI
         Cfdi cfdi = cxc.cfdi
         if(cfdi.uuid) {
@@ -254,7 +247,7 @@ class VentaService implements  EventPublisher{
                 this.cfdiTimbradoService.cancelar(cfdi)
             }
         }
-        return res
+        return factura
     }
 
     /**
