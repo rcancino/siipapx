@@ -609,7 +609,19 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND FECHA=$P{FECHA}
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="4"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="2"
+						width="552"
+						height="0"
+						forecolor="#CCCCCC"
+						backcolor="#FFFFFF"
+						key="line-5"/>
+					<graphicElement stretchType="NoStretch" fill="Solid" />
+				</line>
 			</band>
 			</groupFooter>
 		</group>
@@ -740,7 +752,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND FECHA=$P{FECHA}
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="13"  isSplitAllowed="true" >
+			<band height="14"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="295"

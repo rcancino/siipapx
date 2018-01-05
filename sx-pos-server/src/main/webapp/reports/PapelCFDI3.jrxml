@@ -1415,7 +1415,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Times-Bold" size="9" isBold="true"/>
 					</textElement>
-				<text><![CDATA[RECEPTOR]]></text>
+				<text><![CDATA[RECEPTOR                                     ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -1469,8 +1469,8 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="497"
-						y="102"
-						width="83"
+						y="80"
+						width="81"
 						height="11"
 						key="textField-158"/>
 					<box></box>
@@ -1481,9 +1481,9 @@
 				</textField>
 				<staticText>
 					<reportElement
-						x="457"
-						y="102"
-						width="40"
+						x="462"
+						y="80"
+						width="36"
 						height="11"
 						key="staticText-209"/>
 					<box></box>
@@ -2345,8 +2345,8 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<rectangle>
 					<reportElement
 						mode="Transparent"
-						x="364"
-						y="1"
+						x="363"
+						y="2"
 						width="217"
 						height="126"
 						key="rectangle-15"/>
@@ -2387,7 +2387,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NoIdentificacion}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="69"
 						y="1"
