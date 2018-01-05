@@ -244,7 +244,7 @@ class VentaService implements  EventPublisher{
         Cfdi cfdi = cxc.cfdi
         if(cfdi.uuid) {
             if (cfdi.status != 'CANCELACION_PENDIENTE') {
-                this.cfdiTimbradoService.cancelar(cfdi)
+                // this.cfdiTimbradoService.cancelar(cfdi)
             }
         }
         return factura

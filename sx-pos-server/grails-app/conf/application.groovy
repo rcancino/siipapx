@@ -77,3 +77,16 @@ cxf {
     }
 }
 grails.plugin.console.enabled = true
+
+grails {
+    mail {
+        host = "smtp.gmail.com"
+        port = 465
+        username = "credito.papelsa14@gmail.com"
+        password = "Creditopapel"
+        props = ["mail.smtp.auth":"true",
+                 "mail.smtp.socketFactory.port":"465",
+                 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                 "mail.smtp.socketFactory.fallback":"false"]
+    }
+}

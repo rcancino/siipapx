@@ -5,6 +5,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.rest.RestfulController
+import sx.core.Venta
 import sx.reports.ReportService
 
 
@@ -26,6 +27,7 @@ class CfdiController extends RestfulController{
             notFound()
             return
         }
+        cfdi.getUrl().getBytes()
         render (file: cfdi.getUrl().newInputStream(), contentType: 'text/xml', filename: cfdi.fileName, encoding: "UTF-8")
     }
 
@@ -52,6 +54,26 @@ class CfdiController extends RestfulController{
     }
 
     private generarImpresionV32( Cfdi cfdi) {
+    }
+
+
+    def enviarFacturaEmail(Venta factura) {
+        Cfdi cfdi = factura.cuentaPorCobrar.uuid
+        def email = params[email] ?: factura.cliente.getCfdiMail()
+        if (email) {
+            def xml = cfdi.getUrl().getBytes()
+            def pdf = generarImpresionV33(cfdi)
+            sendMail {
+                multipart true
+                from "me@org.com"
+                to "rubencancino6@gmail.com"
+                subject "Correo de prueba"
+                text "Correo de prueba"
+                attach("${cfdi.uuid}.xml", 'text/xml', xml)
+            }
+        }
+        log.debug('Correo enviado para CFDI: {}', cfdi.uuid)
+        respond factura
     }
 
 }
