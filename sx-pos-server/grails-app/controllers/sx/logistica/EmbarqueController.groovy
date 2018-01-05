@@ -207,15 +207,17 @@ class EmbarqueController extends RestfulController {
             respond command.errors, view:'create' // STATUS CODE 422
             return
         }
-        
+        log.debug('Buscando partidas para la venta: {} ', command)
         def q = CondicionDeEnvio.where{
-            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+            venta.sucursal == command.sucursal && venta.cuentaPorCobrar.documento == command.documento && venta.fecha == command.fecha
         }
         CondicionDeEnvio res = q.find()
+        /*
         if (res == null) {
             notFound()
             return
         }
+        */
         def partidas = res.venta.partidas.findAll { it.producto.inventariable == true}
         respond partidas, status: 200
     }

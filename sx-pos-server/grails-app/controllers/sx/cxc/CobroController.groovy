@@ -108,6 +108,7 @@ class CobroController extends RestfulController{
         cobro.fecha = new Date()
         cobro.formaDePago = 'CHEQUE'
         cobro.importe = cambio.importe
+        cobro.primeraAplicacion = new Date()
 
         def cheque = new CobroCheque()
         cheque.bancoOrigen = cambio.banco

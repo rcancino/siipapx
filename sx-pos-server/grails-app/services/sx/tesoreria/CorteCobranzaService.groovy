@@ -75,12 +75,15 @@ class CorteCobranzaService {
             def total = cobros.sum (0.0 , {it.importe})
             return total
         }
-        def pagosRegistrados = Cobro.executeQuery(
-                "select sum(c.importe) from Cobro c " +
-                        " where c.sucursal=? " +
-                        "  and date(primeraAplicacion) = ? " +
-                        "  and c.formaDePago = ?",
-                [corte.sucursal,corte.fecha, corte.formaDePago])[0]?:00
+        if (corte.formaDePago == 'EFECTIVO') {
+            def pagosRegistrados = Cobro.executeQuery(
+                    "select sum(c.importe) from Cobro c " +
+                            " where c.sucursal=? " +
+                            "  and date(primeraAplicacion) = ? " +
+                            "  and c.formaDePago = ?",
+                    [corte.sucursal,corte.fecha, corte.formaDePago])[0]?:00
+            return pagosRegistrados
+        }
 
     }
 
@@ -98,7 +101,10 @@ class CorteCobranzaService {
                         "  and date(c.primeraAplicacion) = ? " +
                         "  and c.formaDePago = ?" +
                         "  and c.cheque.cambioPorEfectivo = true" ,
-                [corte.sucursal,corte.fecha, corte.formaDePago])[0]?:00
+                [corte.sucursal,corte.fecha, 'CHEQUE'])[0]?:00
+        if (corte.formaDePago == 'EFECTIVO') {
+            total = total * -1
+        }
         return total
     }
 
