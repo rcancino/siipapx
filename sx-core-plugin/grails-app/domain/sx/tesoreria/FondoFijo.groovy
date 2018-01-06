@@ -11,24 +11,25 @@ class FondoFijo {
 
 	String id
 
-	Sucursal sucursal
+    Sucursal sucursal
 
-  Date fecha // Fecha que asigna el usuario 
+    Date fecha // Fecha que asigna el usuario
 
 	String documento
 
-  String descripcion
+    String descripcion
 
-  Boolean rembolso = false
+    Boolean rembolso = false
 
 	BigDecimal importe = 0.0
 
-  String solicitud
+    String solicitud
 
-  String comentario
+    Date solicitado
 
-  FondoFijo fondo 
+    String comentario
 
+    FondoFijo fondo
   	
 	Date dateCreated
 	
@@ -36,22 +37,23 @@ class FondoFijo {
 
 	String createUser
 
-  String updateUser
+    String updateUser
 
 
-  static constraints = {
-    documento nullable: true
-    descripcion nullable: true
-    solicitud nullable: true
-  	comentario nullable: true
-  	createUser nullable: true
-  	updateUser nullable: true
-    fondo nullable: true
-  }
+    static constraints = {
+        documento nullable: true
+        descripcion nullable: true
+        solicitud nullable: true
+        comentario nullable: true
+        createUser nullable: true
+        updateUser nullable: true
+        fondo nullable: true
+        solicitado nullable: true
+    }
 
 	static mapping = {
 		id generator: 'uuid'
+        solicitado type: 'date'
 	}
-    
    
 }
