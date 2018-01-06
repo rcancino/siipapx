@@ -32,7 +32,7 @@
 'F' AS TIP
 ,s.clave AS CVE_SUC,s.nombre as suc
 ,CASE WHEN (SELECT c.date_created FROM CFDI C WHERE v.cfdi_id=C.ID) IS NULL THEN v.FECHA ELSE (SELECT date_created FROM CFDI c WHERE v.cfdi_ID=c.ID) END AS fecha
-,v.documento as docto,x.clave,x.nombre,v.uuid as nfiscal,v.tipo_de_cambio as cambio
+,v.documento as docto,x.clave,n.nombre,v.uuid as nfiscal,v.tipo_de_cambio as cambio
 ,case when (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(v.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(v.fecha),0)) end as dias_vencido
 ,v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)as saldo
 ,((v.total-ifnull((select sum(t.importe) from aplicacion_de_cobro t where v.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0))*V.tipo_de_cambio)AS SALDOTOT
@@ -55,7 +55,7 @@ select 'N' AS TIP
 ,'' AS PAGO
 FROM nota_de_credito A join cliente l on (a.cliente_id=l.id) JOIN sucursal S  ON (a.sucursal_id=s.id)
 where (a.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where t.nota_de_credito_id=a.id AND T.FECHA<=$P{FECHA}),0))>1 and  A.tipo like 'DEVOLUCION'
-AND tipo_de_operacion='COD' and A.fecha >='2011/01/01' AND A.FECHA<=$P{FECHA} AND A.SUCURSAL_ID=$P{SUCURSAL}
+AND tipo_de_operacion='COD' and A.fecha >='2017/01/01' AND A.FECHA<=$P{FECHA} AND A.SUCURSAL_ID=$P{SUCURSAL}
 ORDER BY 4]]></queryString>
 
 	<field name="TIP" class="java.lang.String"/>
@@ -94,16 +94,16 @@ ORDER BY 4]]></queryString>
 			<band height="82"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="391"
+						x="229"
 						y="25"
-						width="184"
+						width="346"
 						height="15"
 						key="staticText-1"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Oblique" isBold="false" isItalic="true" isUnderline="true"/>
 					</textElement>
-				<text><![CDATA[FACTURAS PENDIENTES CAMIONETA]]></text>
+				<text><![CDATA[FACTURAS PENDIENTES DE PAGO CONTRA ENTREGA (COD)]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

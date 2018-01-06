@@ -27,7 +27,7 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["COBRANZA DE PAGO CONTRA ENTREGA (COD) DEL DIA:"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["COBRANZA DE PAGO CONTRA ENTREGA (COD) DEL DIA:  "]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
@@ -37,7 +37,7 @@
 ,a.id as id,C.documento AS DOCTO,C.FECHA AS FECHA,l.CLAVE,l.NOMBRE
 ,o.forma_de_pago as ABN_DESCRIPCION,c.TOTAL AS VENTA,a.IMPORTE AS COBRADO
 ,C.total-A.IMPORTE-IFNULL((SELECT diferencia FROM otros_productos T WHERE T.cobro_id=O.ID),0) AS DIFERENCIA
-,CASE WHEN o.primera_aplicacion <> a.FECHA THEN 'SALDO A FAVOR'
+,CASE WHEN date(o.primera_aplicacion) <> a.FECHA THEN 'SALDO A FAVOR'
 	WHEN SUBSTR(o.forma_de_pago,1,8)='DEPOSITO' THEN 'DEPOSITO'
 	WHEN o.anticipo is true then 'ANTICIPO' ELSE   o.forma_de_pago  END AS TIPO
 ,o.forma_de_pago TIPO_PAGO
@@ -49,7 +49,7 @@
         WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5
         WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
         WHEN ANTICIPO IS TRUE THEN 6
-        WHEN o.primera_aplicacion <> a.FECHA THEN 7
+        WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7
         WHEN o.forma_de_pago='NOTA_DEVOLUCION'  THEN 8
 	   WHEN o.forma_de_pago='NOTA_BONIFICACION'  THEN 9
  ELSE 10 END AS ORDEN_PAGO
@@ -241,9 +241,9 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="259"
+						x="152"
 						y="39"
-						width="232"
+						width="339"
 						height="15"
 						key="textField"/>
 					<box></box>
