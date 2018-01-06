@@ -27,17 +27,15 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["COBRANZA CAMIONETA DEL DIA:"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["COBRANZA DE PAGO CONTRA ENTREGA (COD) DEL DIA:"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SALDOAFAVOR" isForPrompting="true" class="java.math.BigDecimal"/>
-	<queryString><![CDATA[SELECT 
-a.id as id
-,C.documento AS DOCTO,C.FECHA AS FECHA,l.CLAVE,l.NOMBRE
-,o.forma_de_pago as ABN_DESCRIPCION
-,c.TOTAL AS VENTA
-,a.IMPORTE AS COBRADO
+	<queryString><![CDATA[SELECT (select s.nombre from sucursal s where s.id=c.sucursal_id) as sucursal
+,(select s.clave from sucursal s where s.id=c.sucursal_id) as clavSuc
+,a.id as id,C.documento AS DOCTO,C.FECHA AS FECHA,l.CLAVE,l.NOMBRE
+,o.forma_de_pago as ABN_DESCRIPCION,c.TOTAL AS VENTA,a.IMPORTE AS COBRADO
 ,C.total-A.IMPORTE-IFNULL((SELECT diferencia FROM otros_productos T WHERE T.cobro_id=O.ID),0) AS DIFERENCIA
 ,CASE WHEN o.primera_aplicacion <> a.FECHA THEN 'SALDO A FAVOR'
 	WHEN SUBSTR(o.forma_de_pago,1,8)='DEPOSITO' THEN 'DEPOSITO'
@@ -58,6 +56,8 @@ a.id as id
 FROM  aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON (C.id=A.cuenta_por_cobrar_id ) left JOIN cobro O ON( O.ID= A.cobro_id) join cliente l on (c.cliente_id=l.id)
 WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO') AND  o.forma_de_pago<> 'PAGO_DIF']]></queryString>
 
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="clavSuc" class="java.lang.String"/>
 	<field name="id" class="java.lang.String"/>
 	<field name="DOCTO" class="java.lang.Long"/>
 	<field name="FECHA" class="java.sql.Date"/>
@@ -283,7 +283,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="10" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{sucursal}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="EEE, d MMM yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -895,7 +895,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="47"
+						x="50"
 						y="54"
 						width="77"
 						height="11"
@@ -915,7 +915,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="51"
 						y="65"
 						width="76"
 						height="11"
@@ -935,7 +935,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="47"
+						x="50"
 						y="21"
 						width="77"
 						height="11"
@@ -955,7 +955,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="47"
+						x="50"
 						y="32"
 						width="77"
 						height="11"
@@ -975,7 +975,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="47"
+						x="50"
 						y="43"
 						width="77"
 						height="11"
@@ -1034,7 +1034,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="32"
 						width="84"
 						height="11"
@@ -1047,7 +1047,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="21"
 						width="84"
 						height="11"
@@ -1081,7 +1081,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="51"
 						y="76"
 						width="76"
 						height="11"
@@ -1100,7 +1100,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="43"
 						width="84"
 						height="11"
@@ -1113,7 +1113,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="54"
 						width="84"
 						height="11"
@@ -1126,7 +1126,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="65"
 						width="84"
 						height="11"
@@ -1139,7 +1139,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="76"
 						width="84"
 						height="11"
@@ -1246,7 +1246,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="51"
 						y="76"
 						width="76"
 						height="11"
@@ -1266,7 +1266,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="51"
 						y="87"
 						width="76"
 						height="11"
@@ -1285,7 +1285,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="87"
 						width="84"
 						height="11"
@@ -1299,7 +1299,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="51"
 						y="87"
 						width="76"
 						height="11"
@@ -1452,7 +1452,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="51"
 						y="98"
 						width="76"
 						height="11"
@@ -1471,7 +1471,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="124"
+						x="127"
 						y="98"
 						width="84"
 						height="11"

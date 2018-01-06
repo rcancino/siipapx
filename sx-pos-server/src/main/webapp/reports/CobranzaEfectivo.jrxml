@@ -32,19 +32,24 @@
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL_ID" isForPrompting="true" class="java.lang.Long"/>
-	<queryString><![CDATA[SELECT 
-l.CLAVE,c.documento as CAR_DOCTO,c.fecha as CAR_FECHA,c.total as CAR_TOTAL,a.IMPORTE,c.tipo AS CAR_ORIGEN,l.NOMBRE
+	<queryString><![CDATA[SELECT (select s.nombre from sucursal s where s.id=c.sucursal_id) as sucursal
+,(select s.clave from sucursal s where s.id=c.sucursal_id) as clavSuc
+,l.CLAVE,c.documento as CAR_DOCTO,c.fecha as CAR_FECHA,c.total as CAR_TOTAL,a.IMPORTE,c.tipo AS CAR_ORIGEN,l.NOMBRE
 ,CASE WHEN C.tipo='CON' THEN 'CONTADO' ELSE 'COD' END AS ORIGEN
 FROM  aplicacion_de_cobro a JOIN cuenta_por_cobrar c ON (C.ID=A.cuenta_por_cobrar_id) JOIN cobro O ON (o.id=a.cobro_id ) join cliente l on (l.id=o.cliente_id)
 where A.fecha =$P{FECHA} AND o.forma_de_pago='EFECTIVO' AND c.sucursal_id=$P{SUCURSAL}
 UNION
-SELECT '' AS CLAVE,E.numero AS DOCTO,O.FECHA, O.importe AS VENTA,O.importe AS COBRADO
+SELECT (select s.nombre from sucursal s where s.id=o.sucursal_id) as sucursal
+,(select s.clave from sucursal s where s.id=o.sucursal_id) as clavSuc
+,'' AS CLAVE,E.numero AS DOCTO,O.FECHA, O.importe AS VENTA,O.importe AS COBRADO
 ,'CAJA'
 ,L.NOMBRE AS NOMBRE
 ,'CAMBIO CHEQUE POR EFECTIVO' AS ORIGEN
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
 where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="clavSuc" class="java.lang.String"/>
 	<field name="CLAVE" class="java.lang.String"/>
 	<field name="CAR_DOCTO" class="java.lang.Long"/>
 	<field name="CAR_FECHA" class="java.sql.Date"/>
@@ -192,7 +197,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="10" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{sucursal}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="EEE, d MMM yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

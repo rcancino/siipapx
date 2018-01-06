@@ -32,7 +32,9 @@
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT
-C.documento AS DOCTO,C.FECHA AS FECHA,L.CLAVE,L.NOMBRE
+(select s.nombre from sucursal s where s.id=c.sucursal_id) as sucursal
+,(select s.clave from sucursal s where s.id=c.sucursal_id) as clavSuc
+,C.documento AS DOCTO,C.FECHA AS FECHA,L.CLAVE,L.NOMBRE
 ,C.TOTAL * O.tipo_de_cambio AS VENTA
 ,A.IMPORTE * O.tipo_de_cambio AS COBRADO
 ,O.tipo_de_cambio AS TC
@@ -49,8 +51,9 @@ FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_i
 WHERE A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.sucursal_id=$P{SUCURSAL}
 and o.forma_de_pago<>'PAGO_DIF'
 UNION
-SELECT e.numero AS DOCTO
-,o.FECHA AS FECHA
+SELECT (select s.nombre from sucursal s where s.id=o.sucursal_id) as sucursal
+,(select s.clave from sucursal s where s.id=o.sucursal_id) as clavSuc
+,e.numero AS DOCTO,o.FECHA AS FECHA
 ,L.CLAVE,L.NOMBRE,O.importe * O.tipo_de_cambio AS VENTA
 ,o.IMPORTE * O.tipo_de_cambio AS COBRADO
 ,O.tipo_de_cambio AS TC
@@ -62,6 +65,8 @@ SELECT e.numero AS DOCTO
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
 where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="clavSuc" class="java.lang.String"/>
 	<field name="DOCTO" class="java.lang.Long"/>
 	<field name="FECHA" class="java.sql.Date"/>
 	<field name="CLAVE" class="java.lang.String"/>
@@ -266,7 +271,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="10"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{sucursal}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
