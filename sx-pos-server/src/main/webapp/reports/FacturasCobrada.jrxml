@@ -39,12 +39,12 @@ C.documento AS DOCTO,C.FECHA AS FECHA,L.CLAVE,L.NOMBRE
 ,C.total-A.IMPORTE-IFNULL((SELECT diferencia FROM otros_productos T WHERE T.cobro_id=O.ID),0) AS DIFERENCIA
 ,(SELECT case 
 when o.anticipo is true then 'ANTICIPO'
-WHEN o.primera_aplicacion <> a.FECHA  THEN 'SALDO A FAVOR'
-when o.primera_aplicacion = a.FECHA  THEN o.forma_de_pago
+WHEN date(o.primera_aplicacion) <> a.FECHA  THEN 'SALDO A FAVOR'
+when date(o.primera_aplicacion) = a.FECHA  THEN o.forma_de_pago
 END )AS TIPO
-,c.total as 'VTA TOTAL'
-,(SELECT IFNULL(b.importe,0) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)='2017/09/04' AND E.cambio_por_efectivo is true)  AS CHEQUE
-,(SELECT IFNULL(b.importe,0) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)='2017/09/04' AND E.cambio_por_efectivo is true)  AS EFECTIVO
+,ifnull((select sum(total) from cuenta_por_cobrar v  where V.fecha=$P{FECHA} and V.SUCURSAL_ID=$P{SUCURSAL} and tipo_documento='VENTA' and tipo='CON'),0) as 'VTA TOTAL'
+,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS CHEQUE
+,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
 FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_id=C.ID) JOIN cobro O ON (O.ID=A.cobro_id) JOIN cliente L ON (L.ID=C.CLIENTE_ID)
 WHERE A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.sucursal_id=$P{SUCURSAL}
 and o.forma_de_pago<>'PAGO_DIF'
@@ -56,9 +56,9 @@ SELECT e.numero AS DOCTO
 ,O.tipo_de_cambio AS TC
 ,0 AS DIFERENCIA
 ,'CAMBIO DE CHEQUE' AS TIPO
-,0 as 'VTA TOTAL'
-,o.importe as CHEQUE
-,O.IMPORTE  AS EFECTIVO
+,ifnull((select sum(total) from cuenta_por_cobrar v  where V.fecha=$P{FECHA} and V.SUCURSAL_ID=$P{SUCURSAL} and tipo_documento='VENTA' and tipo='CON'),0) as 'VTA TOTAL'
+,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS CHEQUE
+,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
 where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
@@ -97,7 +97,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 		<variableExpression><![CDATA[$F{DIFERENCIA}]]></variableExpression>
 	</variable>
 	<variable name="TOT_TARJETA" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "TARJETA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_EFECTIVO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "EFECTIVO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
@@ -115,7 +115,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 		<variableExpression><![CDATA[$V{TOT_CHEQUE}.add( $V{TOT CHEEFE} )]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEPOSITO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEPOSITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "DEPOSITO" ) || $F{TIPO}.startsWith( "TRANSFERENCIA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_RMD" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "RMD" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
@@ -200,7 +200,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			</groupFooter>
 		</group>
 		<background>
-			<band height="49"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</background>
 		<title>
@@ -836,7 +836,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="220"  isSplitAllowed="true" >
+			<band height="199"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="395"

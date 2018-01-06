@@ -31,9 +31,13 @@
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT A.documento,A.clase,A.descripcion,A.tipo,A.fecha,A.corte,A.deposito,A.comentario,A.cortes_acumulado,A.pagos_registrados,A.fecha_deposito,A.cambios_de_cheques,(select SUM(x.importe) from morralla x where fecha<$P{FECHA}) as morralla
-,(select SUM(x.importe) from fondo_fijo x where fecha<$P{FECHA}) as saldoFF ,(select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is not null) as solicitadoReembolso,(select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is null) as gastoPendiente
-,(select s.nombre from sucursal s where s.id=a.sucursal_id) as sucursal,(select s.clave from sucursal s where s.id=a.sucursal_id) as clavSuc
+	<queryString><![CDATA[SELECT A.documento,A.clase,A.descripcion,A.tipo,A.fecha,A.corte,A.deposito,A.comentario,A.cortes_acumulado,A.pagos_registrados,A.fecha_deposito,A.cambios_de_cheques
+,ifnull((select SUM(x.importe) from morralla x where fecha<$P{FECHA}),0) as morralla
+,ifnull((select SUM(x.importe) from fondo_fijo x where fecha<$P{FECHA}),0) as saldoFF 
+,ifnull((select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is not null),0) as solicitadoReembolso
+,ifnull((select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is null),0) as gastoPendiente
+,(select s.nombre from sucursal s where s.id=a.sucursal_id) as sucursal
+,(select s.clave from sucursal s where s.id=a.sucursal_id) as clavSuc
 FROM (
 SELECT 0 as documento,'CORTE DE CAJA' as clase,forma_de_pago as descripcion,tipo_de_venta as tipo,fecha,corte,deposito,comentario
 ,cortes_acumulado,pagos_registrados,fecha_deposito,sucursal_id,cambios_de_cheques
