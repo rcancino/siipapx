@@ -32,7 +32,7 @@
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="ENTRADA" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select a.DOCUMENTO,A.FECHA,A.REMISION,A.ID,A.COMENTARIO,Z.nombre,b.folio as COMPRA,B.FECHA AS FECHA_C
-,P.clave,p.DESCRIPCION,X.SOLICITADO,c.CANTIDAD
+,P.clave,p.DESCRIPCION,X.SOLICITADO,(case when p.unidad='MIL' then c.CANTIDAD/1000 else c.CANTIDAD end) as CANTIDAD
 ,S.ID AS SUCURSAL_ID,S.NOMBRE AS SUCURSAL,P.UNIDAD,P.KILOS,P.GRAMOS,C.partidas_idx AS RENGLON
 from recepcion_de_compra a 
  join compra b on (a.compra_id=b.id)
@@ -511,7 +511,7 @@ ORDER BY RENGLON ASC]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENTARIO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="313"
 						y="0"

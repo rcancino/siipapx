@@ -29,7 +29,7 @@
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT T.id as TRANSFORMACION_ID,T.tipo as CLASE,T.DOCUMENTO,T.FECHA,T.SUCURSAL_ID,T.COMENTARIO,T.tipo as CLASE
 ,p.KILOS,t.fecha
-,(a.CANTIDAD)AS CANTIDAD,p.UNIDAD as UNIDAD_ID,a.partidas_idx+1 as RENGLON,p.CLAVE,p.DESCRIPCION,a.COMENTARIO AS COM_ART,t.tipo as TRTIP,t.FECHA,b.NOMBRE
+,(case when p.unidad='MIL' then a.CANTIDAD/1000 else a.CANTIDAD end) AS CANTIDAD,p.UNIDAD as UNIDAD_ID,a.partidas_idx+1 as RENGLON,p.CLAVE,p.DESCRIPCION,a.COMENTARIO AS COM_ART,t.tipo as TRTIP,t.FECHA,b.NOMBRE
 ,CASE WHEN T.POR_INVENTARIO IS TRUE THEN '*** POR INVENTARIO ***' ELSE  '' END  AS POR_INV
 FROM transformacion T
 JOIN transformacion_det a ON(A.TRANSFORMACION_ID=T.ID)
@@ -319,7 +319,7 @@ where T.ID=$P{ID}]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="12"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="5"
 						y="1"

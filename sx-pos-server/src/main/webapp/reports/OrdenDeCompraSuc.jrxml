@@ -714,7 +714,7 @@ Tel. 53 42 71 66   Fax 24 65 03 88
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{CLAVEPROV}.equals( "SI" ) ? $F{DESCRIPROV} : $F{DESCRIPCION}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="299"
 						y="0"

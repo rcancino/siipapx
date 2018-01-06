@@ -33,7 +33,7 @@
 ,(select max(clave) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as CLAV_CLIENTE
 ,(select max(x.documento) from VENTA V JOIN cuenta_por_cobrar x on(x.id=v.cuenta_por_cobrar_id) join cliente c WHERE V.ID=D.VENTA_ID ) AS FACTURA
 ,b.clave as sucursal_id,b.nombre as sucursal
-,(a.CANTIDAD) AS CANTIDAD
+,(case when p.unidad='MIL' then a.CANTIDAD/1000 else a.CANTIDAD end) AS CANTIDAD
 ,p.clave,p.deScripcion,d.fecha
 ,p.unidad as unidad_ID
 ,(cantidad)*p.kilos as kilos,a.partidas_idx+1 as renglon
@@ -318,7 +318,7 @@ WHERE D.ID=$P{DEVOLUCION} AND B.ID=$P{SUCURSAL}]]></queryString>
 		</columnHeader>
 		<detail>
 			<band height="12"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="20"
 						y="1"

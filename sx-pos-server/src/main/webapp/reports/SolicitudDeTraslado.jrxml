@@ -28,7 +28,7 @@
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT M.ID,M.FECHA,M.REFERENCIA,M.DOCUMENTO,b.NOMBRE AS SUC_SOL,S.NOMBRE AS SUC_ATD,'SOL' AS CONCEPTO,M.COMENTARIO,M.UPDATE_USER AS ELABORO
-,I.SOLICITADO AS CANTIDAD,P.KILOS AS KXMLL,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.SOLICITADO/1000 ELSE I.SOLICITADO END) AS KILOS
+,(case when p.unidad='MIL' then I.SOLICITADO/1000 else I.SOLICITADO end) AS CANTIDAD,P.KILOS AS KXMLL,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.SOLICITADO/1000 ELSE I.SOLICITADO END) AS KILOS
 ,P.UNIDAD,I.PARTIDAS_IDX AS RENGLON,P.CLAVE,P.DESCRIPCION,I.COMENTARIO AS COMENT_PART
 ,M.DATE_CREATED,I.CORTES_INSTRUCCION,M.CLASIFICACION_VALE
 FROM solicitud_de_traslado M
@@ -470,7 +470,7 @@ where M.ID=$P{ID}]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENT_PART}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="1"
 						y="0"

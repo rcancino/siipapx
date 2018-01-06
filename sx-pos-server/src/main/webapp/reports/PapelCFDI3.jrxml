@@ -1412,10 +1412,10 @@
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5" lineStyle="Solid"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Times-Bold" size="9" isBold="true"/>
 					</textElement>
-				<text><![CDATA[RECEPTOR                                     ]]></text>
+				<text><![CDATA[    RECEPTOR                                     ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
