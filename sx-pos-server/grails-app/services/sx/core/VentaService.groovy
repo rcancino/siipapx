@@ -229,23 +229,27 @@ class VentaService implements  EventPublisher{
 
         log.debug('Cancelando factura {}', factura.statusInfo())
         CuentaPorCobrar cxc = factura.cuentaPorCobrar
-
+        Cfdi cfdi = cxc.cfdi
 
         // 1o Desvincular la cuenta por cobrar y la venta
         factura.cuentaPorCobrar = null
-        factura.facturar = null
-        factura.save()
+        // factura.facturar = null
+        factura.save flush: true
 
         // 2o Eliminar la cuenta por cobrar sus aplicaciones y cancelar su CFDI
         eliminarAplicaciones(cxc)
         eliminarCuentaPorCobrar(cxc)
 
         // 3o Cancelar el CFDI
-        Cfdi cfdi = cxc.cfdi
+
         if(cfdi.uuid) {
+            cfdi.status = 'CANCELACION_PENDIENTE'
+            cfdi.save flush:true
+            /*
             if (cfdi.status != 'CANCELACION_PENDIENTE') {
-                // this.cfdiTimbradoService.cancelar(cfdi)
+                this.cfdiTimbradoService.cancelar(cfdi)
             }
+            */
         }
         return factura
     }
@@ -256,12 +260,11 @@ class VentaService implements  EventPublisher{
      * @param cxc
      * @return
      */
-    @Publisher
+    // @Publisher
     def eliminarCuentaPorCobrar(CuentaPorCobrar cxc) {
-        if(cxc.pagos) {
-            eliminarAplicaciones(cxc)
-        }
-        cxc.delete flush: true
+        cxc.cfdi = null
+        cxc.save()
+        // cxc.delete flush: true
     }
 
     /**
@@ -270,14 +273,17 @@ class VentaService implements  EventPublisher{
      * @param cxc
      * @return La cuenta por cobar sin aplicaciones sociadas
      */
-    @Publisher
+    // @Publisher
     def eliminarAplicaciones(CuentaPorCobrar cxc) {
         def aplicaciones = AplicacionDeCobro.where{ cuentaPorCobrar == cxc}.list()
         log.debug('Eliminando {} aplicaciones a la factura {}', aplicaciones.size(), cxc.folio)
         aplicaciones.each { AplicacionDeCobro a ->
             Cobro cobro = a.cobro
             if(cobro.aplicaciones.size() == 1 ){
-                cobro.delete flush:true;
+                if (cxc.formaDePago == 'TRANSFERENCIA' || !cxc.formaDePago.startsWith("DEPOSITO")) {
+                    log.debug('Eliminando cobro {}', cobro)
+                    cobro.delete flush:true;
+                }
             } else {
                 cobro.removeFromAplicaciones(a)
                 cobro.save()

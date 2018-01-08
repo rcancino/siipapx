@@ -70,14 +70,19 @@ class VentasController {
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "AplicacionDeSaldos.pdf")
     }
 
-    def disponiblesSucursal(){
-        params.FECHA = params.fecha
-        def pdf = reportService.run('DisponiblesSucursal', params)
+    def disponiblesSucursal(PorFechaCommand command){
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = params.SUCURSAL
+        def pdf = reportService.run('DisponiblesSucursal', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "DisponiblesSucursal.pdf")
     }
 
-    def facturasPendientesCod(){
-        def pdf = reportService.run('fac_pen_camioneta', params)
+    def facturasPendientesCod(PorFechaCommand command){
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = params.SUCURSAL
+        def pdf = reportService.run('fac_pen_camioneta', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "fac_pen_camioneta.pdf")
     }
 

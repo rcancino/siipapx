@@ -10,25 +10,28 @@ class CobroService {
     def generarCobroDeContado(CuentaPorCobrar cxc, List<Cobro> cobros) {
         def saldo = cxc.saldo
         cobros.each { cobro ->
-            def disponible = cobro.disponible
-            def importe = disponible < saldo ? disponible : saldo
-            def aplicacion = new AplicacionDeCobro()
-            aplicacion.cuentaPorCobrar = cxc
-            aplicacion.fecha = new Date()
-            aplicacion.importe = importe
-            cobro.addToAplicaciones(aplicacion)
-            if(!cobro.primeraAplicacion) {
-                cobro.primeraAplicacion = aplicacion.fecha
-            }
-            disponible = disponible - aplicacion.importe
+            if (cobro.importe > 0) {
+                def disponible = cobro.disponible
+                def importe = disponible < saldo ? disponible : saldo
+                def aplicacion = new AplicacionDeCobro()
+                aplicacion.cuentaPorCobrar = cxc
+                aplicacion.fecha = new Date()
+                aplicacion.importe = importe
+                cobro.addToAplicaciones(aplicacion)
+                if(!cobro.primeraAplicacion) {
+                    cobro.primeraAplicacion = aplicacion.fecha
+                }
+                disponible = disponible - aplicacion.importe
 
-            if(disponible < 10 && disponible > 0.01) {
-                cobro.diferencia = disponible
-                cobro.diferenciaFecha = new Date()
+                if(disponible < 10 && disponible > 0.01) {
+                    cobro.diferencia = disponible
+                    cobro.diferenciaFecha = new Date()
+                }
+                setComisiones(cobro)
+                cobro.tipo = cxc.tipo
+                cobro.save()  //failOnError: true, flush: true
+                saldo = saldo - importe
             }
-            setComisiones(cobro)
-            cobro.save failOnError: true, flush: true
-            saldo = saldo - importe
         }
         return cxc
     }
