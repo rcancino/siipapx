@@ -129,10 +129,14 @@ class CfdiFacturaBuilder {
         } else {
             switch (this.venta.formaDePago) {
                 case 'EFECTIVO':
+                case 'DEPOSITO_EFECTIVO':
                     comprobante.formaPago = '01'
                     break
                 case 'CHEQUE':
+                case 'DEPOSITO_CHEQUE':
+                    log.debug('Forma de pago 02: ', venta.formaDePago)
                     comprobante.formaPago = '02'
+                    break
                 case 'TRANSFERENCIA':
                     comprobante.formaPago = '03'
                     break
