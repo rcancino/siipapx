@@ -18,7 +18,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // println 'Buscando solicitudes: ' + params
+
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 50
