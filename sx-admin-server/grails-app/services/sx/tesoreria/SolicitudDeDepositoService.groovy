@@ -24,6 +24,9 @@ class SolicitudDeDepositoService {
             transferencia.bancoOrigen = solicitud.banco
             transferencia.fechaDeposito = solicitud.fechaDeposito
             transferencia.folio = solicitud.folio
+            transferencia.cobro = cobro
+            transferencia.save failOnError: true, flush: true
+            //log.debug('Cobro transferencia generado: {}', transferencia.id)
 
         } else {
             CobroDeposito deposito = new CobroDeposito()
@@ -33,6 +36,8 @@ class SolicitudDeDepositoService {
             deposito.totalCheque = solicitud.cheque
             deposito.totalEfectivo = solicitud.efectivo
             deposito.folio = solicitud.folio
+            deposito.cobro = cobro
+            deposito.save failOnError: true, flush: true
         }
         // log.debug('Entidad valida: {}', cobro.validate())
         // log.debug('Errores: {}', cobro.errors)

@@ -8,6 +8,6 @@ class CreditoService {
     RestTemplateBuilder restTemplateBuilder
 
     def actualizarLineaDeCredito(Cliente cliente, BigDecimal saldo){
-        restTemplateBuilder.
+
     }
 }
