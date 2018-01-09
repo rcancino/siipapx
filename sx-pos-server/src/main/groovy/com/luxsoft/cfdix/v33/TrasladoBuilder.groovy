@@ -114,7 +114,7 @@ class TrasladoBuilder {
                 cantidad = MonedaUtils.round(det.cantidad.abs() / factor,3)
                 claveUnidad = det.producto.unidadSat.claveUnidadSat
                 unidad = det.producto.unidad
-                descripcion = desc
+                descripcion = 'Traslado de mercancias ' + desc
                 valorUnitario = MonedaUtils.round(0, 2)
                 importe = MonedaUtils.round(0, 2)
                 // descuento = MonedaUtils.round(0, 2)

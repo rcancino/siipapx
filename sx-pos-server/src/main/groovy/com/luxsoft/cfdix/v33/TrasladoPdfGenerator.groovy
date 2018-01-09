@@ -81,6 +81,7 @@ class TrasladoPdfGenerator {
             params.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
             params.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
             params.put("RfcProvCertif", timbre.rfcProvCertif)
+            params.put("TIPO_DE_COMPROBANTE", "T (Traslado)")
         }
         params.FECHA = comprobante.fecha
         // Adiconales

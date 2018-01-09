@@ -86,7 +86,7 @@ environments:
             #url: jdbc:mysql://10.10.1.229:3306/siipapx_dev?autoReconnect=true
             #url: jdbc:mysql://10.10.1.84:3306/siipapx_dev?autoReconnect=true
             username: root
-            password: sys
+            password: shoto
     test:
         dataSource:
             dbCreate: create-drop
