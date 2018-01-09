@@ -61,6 +61,8 @@ class CuentaPorCobrar {
 
     BigDecimal saldo = 0.0
 
+    Boolean chequePostFechado = false
+
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
         tipo nullable:true, inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -71,6 +73,7 @@ class CuentaPorCobrar {
         comentario nullable:true
         sw2 nullable:true
         cfdi nullable: true
+        chequePostFechado nullable: true
     }
 
 

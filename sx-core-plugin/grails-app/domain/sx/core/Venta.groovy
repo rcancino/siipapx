@@ -108,6 +108,8 @@ class Venta {
 
     Socio socio
 
+    Boolean chequePostFechado = false;
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -133,6 +135,7 @@ class Venta {
         importe scale: 2
         sinExistencia nullable: true
         socio nullable: true
+        chequePostFechado nullable: true
     }
 
     static mapping = {
