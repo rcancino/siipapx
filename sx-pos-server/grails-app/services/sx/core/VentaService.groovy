@@ -73,12 +73,13 @@ class VentaService implements  EventPublisher{
                 def descuento = it.descuento
                 def factor = it.producto.unidad == 'MIL' ? 1000.00 : 1.00
                 def importe = (it.cantidad * it.precio)/ factor
-                def descuentoCalculado = importe * (descuento/100)
+                def descuentoCalculado = (importe * descuento)/100.00
                 descuentoCalculado = MonedaUtils.round (descuentoCalculado , 2)
                 if(descuentoCalculado != it.descuentoImporte) {
-                    log.debug('Error en descuento en partidas....')
+                    log.debug('Error Descuento en partidas: {} calculado: {}', it.descuentoImporte, descuentoCalculado)
                     it.descuentoImporte = descuentoCalculado
                     it.total = it.subtotal + it.impuesto
+                    it.descuentoImporte = it.importe - it.subtotal
                 }
             }
             it.descuentoOriginal = it.descuentoOriginal > 0 ? venta.descuentoOriginal: it.descuentoOriginal
@@ -165,6 +166,7 @@ class VentaService implements  EventPublisher{
         cxc.fecha = new Date()
         cxc.createUser = pedido.createUser
         cxc.updateUser = pedido.updateUser
+        cxc.chequePostFechado = pedido.chequePostFechado
         cxc.comentario = 'GENERACION AUTOMATICA'
         pedido.cuentaPorCobrar = cxc
         cxc.save failOnError: true

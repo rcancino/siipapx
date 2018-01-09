@@ -18,7 +18,7 @@ class TrasladoService {
 
     SpringSecurityService springSecurityService
 
-    TrasladoBuilder builder
+    TrasladoBuilder trasladoBuilder
 
     CfdiTimbradoService cfdiTimbradoService
 
@@ -182,8 +182,8 @@ class TrasladoService {
         assert tps.tipo == 'TPS', " El trslado a timbrar no es de tipo TPS"
         log.debug('Generando CFDI para  TPS: {}', tps.documento)
         //TrasladoBuilder builder = new TrasladoBuilder();
-        assert builder, 'no se reguistro el builder'
-        def comprobante = builder.build(tps)
+        assert trasladoBuilder, 'no se reguistro el builder'
+        def comprobante = trasladoBuilder.build(tps)
         def cfdi = cfdiService.generarCfdi(comprobante, 'T')
         tps.cfdi = cfdi
         tps.save()

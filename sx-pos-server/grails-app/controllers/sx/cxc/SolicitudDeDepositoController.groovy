@@ -29,6 +29,7 @@ class SolicitudDeDepositoController extends RestfulController{
             query = query.where {sucursal.id ==  params.sucursal}   
         }
 
+
         if(params.pendientes) {
             query = query.where{ cobro == null || lastUpdated == hoy}
         }
@@ -36,6 +37,8 @@ class SolicitudDeDepositoController extends RestfulController{
         
         return query.list(params)
     }
+
+
     
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
@@ -59,11 +62,16 @@ class SolicitudDeDepositoController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:10
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
-        params.order = params.order ?:'desc'
-        def sols = SolicitudDeDeposito.where{ sucursal == sucursal && cobro == null}.list(params)
-        respond sols
+        params.order = params.order ?:'asc'
+        def query = SolicitudDeDeposito.where{}
+        if (params.folio) {
+            query = query.where { sucursal == sucursal && folio == params.folio}
+        } else {
+            query = query.where{ sucursal == sucursal && cobro == null}
+        }
+        respond query.list(params)
     }
     
 }
