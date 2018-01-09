@@ -2,8 +2,6 @@ package sx.cfdi
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-
-
 /**
  * Created by rcancino on 09/09/16.
  */
@@ -53,6 +51,9 @@ class Cfdi {
 
     String status
 
+    String email
+    Date enviado
+
 
     static constraints = {
         emisorRfc minSize: 12, maxSize:13
@@ -68,6 +69,8 @@ class Cfdi {
         origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO']
         cancelado nullable: true
         status nullable: true
+        email nullable: true
+        enviado nullable: true
     }
 
     static  mapping={

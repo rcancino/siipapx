@@ -77,3 +77,16 @@ class CfdiController extends RestfulController{
     }
 
 }
+
+class EnvioDeFacturaCfdiCommand {
+    String target
+    Venta factura
+
+    static constraints = {
+        target email: true
+    }
+
+    String toString() {
+        return "${factura?.statusInfo()} Email:${target}"
+    }
+}
