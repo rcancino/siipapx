@@ -1,11 +1,11 @@
 package sx.core
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.ToString
 
+@GrailsCompileStatic
+@ToString( includeNames=true,includePackage=false)
 class AuditLog {
-
-    Date dateCreated
-
-    Date lastUpdated
 
     String name
 
@@ -23,9 +23,11 @@ class AuditLog {
 
     Date dateReplicated
 
+    Date dateCreated
+    Date lastUpdated
+
 
     static constraints = {
-
         name nullable: true
         tableName nullable: true
         persistedObjectId nullable: true
@@ -33,8 +35,8 @@ class AuditLog {
         dateReplicated nullable: true
         source nullable: true
         target nullable: true
+        message nullable: true
         lastUpdated nullable: true
         dateCreated nullable: true
-        message nullable: true
     }
 }

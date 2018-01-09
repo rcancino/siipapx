@@ -49,4 +49,5 @@ logger("sx.cxc", DEBUG, ['STDOUT'], false)
 logger("sx.cfdi", DEBUG, ['STDOUT'], false)
 logger("sx.reports", DEBUG, ['STDOUT'], false)
 logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
+logger("com.luxsoft", DEBUG, ['STDOUT'], false)
 
