@@ -22,7 +22,11 @@ class SolicitudDeDepositoController extends RestfulController{
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 50
-        def hoy = new Date()
+        def fechaFinal = new Date()
+        def fechaInicial = fechaFinal - 5
+
+        log.debug('Buscando solicitudes: {}', params)
+
         def query = SolicitudDeDeposito.where {}
         
         if(params.sucursal){
@@ -31,7 +35,15 @@ class SolicitudDeDepositoController extends RestfulController{
 
 
         if(params.pendientes) {
-            query = query.where{ cobro == null || lastUpdated == hoy}
+            query = query.where{ cobro == null  && fecha >= fechaInicial }
+        }
+
+        if(params.autorizadas) {
+            query = query.where{ cobro != null && fecha >= fechaInicial}
+        }
+
+        if(params.documento) {
+            query = SolicitudDeDeposito.where {folio == params.documento}
         }
 
         
