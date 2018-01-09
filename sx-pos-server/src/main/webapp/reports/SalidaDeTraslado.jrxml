@@ -28,7 +28,7 @@
 	</parameter>
 	<parameter name="TRALADO_ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT M.ID,M.FECHA,'00:00:00' as HORA,M.DOCUMENTO,B.NOMBRE AS SUCURSAL,S.NOMBRE AS SUC_SOL,ST.DOCUMENTO AS SOL,M.TIPO AS CONCEPTO,M.COMENTARIO
-,(case when p.unidad='MIL' then i.CANTIDAD/1000 else i.CANTIDAD end) as CANTIDAD,P.KILOS AS KXMLL,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,P.UNIDAD
+,(case when p.unidad='MIL' then i.CANTIDAD/1000 else i.CANTIDAD end) as CANTIDAD,P.KILOS*(CASE WHEN P.UNIDAD='MIL' THEN I.CANTIDAD/1000 ELSE I.CANTIDAD END) AS KILOS,P.KILOS AS KXMLL,P.UNIDAD
 ,I.partidas_idx AS RENGLON,P.CLAVE,P.DESCRIPCION,I.COMENTARIO AS COMENT_PART
 ,(SELECT S.DOCUMENTO FROM traslado S WHERE S.solicitud_de_traslado_id=ST.ID AND S.TIPO='TPS') AS DOCTO_TPS
 ,M.CHOFER_id AS CHOFER,M.DATE_CREATED,M.create_user AS ATENDIO
@@ -52,8 +52,8 @@ where M.ID=$P{TRALADO_ID}]]></queryString>
 	<field name="CONCEPTO" class="java.lang.String"/>
 	<field name="COMENTARIO" class="java.lang.String"/>
 	<field name="CANTIDAD" class="java.math.BigDecimal"/>
-	<field name="KXMLL" class="java.math.BigDecimal"/>
 	<field name="KILOS" class="java.math.BigDecimal"/>
+	<field name="KXMLL" class="java.math.BigDecimal"/>
 	<field name="UNIDAD" class="java.lang.String"/>
 	<field name="RENGLON" class="java.lang.Integer"/>
 	<field name="CLAVE" class="java.lang.String"/>
