@@ -73,8 +73,7 @@ class CfdiController extends RestfulController{
             def xml = cfdi.getUrl().getBytes()
             def pdf = generarImpresionV33(cfdi).toByteArray()
             sendMail {
-                from "facturacion.noreplay@papelsa.com.mx"
-                multipart true
+                multipart false
                 to targetEmail
                 subject "Envio de CFDI ${cfdi.uuid}"
                 text "Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra"
