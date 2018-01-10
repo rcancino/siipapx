@@ -235,23 +235,17 @@ class VentaService implements  EventPublisher{
 
         // 1o Desvincular la cuenta por cobrar y la venta
         factura.cuentaPorCobrar = null
-        // factura.facturar = null
+        factura.facturar = null
         factura.save flush: true
 
         // 2o Eliminar la cuenta por cobrar sus aplicaciones y cancelar su CFDI
         eliminarAplicaciones(cxc)
-        eliminarCuentaPorCobrar(cxc)
+        cancelarCuentaPorCobrar(cxc)
 
         // 3o Cancelar el CFDI
-
         if(cfdi.uuid) {
             cfdi.status = 'CANCELACION_PENDIENTE'
             cfdi.save flush:true
-            /*
-            if (cfdi.status != 'CANCELACION_PENDIENTE') {
-                this.cfdiTimbradoService.cancelar(cfdi)
-            }
-            */
         }
         return factura
     }
@@ -263,8 +257,11 @@ class VentaService implements  EventPublisher{
      * @return
      */
     // @Publisher
-    def eliminarCuentaPorCobrar(CuentaPorCobrar cxc) {
+    def cancelarCuentaPorCobrar(CuentaPorCobrar cxc) {
         cxc.cfdi = null
+        cxc.importe = 0.0
+        cxc.impuesto = 0.0
+        cxc.total = 0.0
         cxc.save()
         // cxc.delete flush: true
     }
