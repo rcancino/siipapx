@@ -135,12 +135,12 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:500
+        params.max = params.registros ?:200
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null}
         if(params.term) {
-            def search = '% ' + params.term + ' %'
+            def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}
             } else {
@@ -197,12 +197,16 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:500
+        params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-
-        def ventas = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}.list(params)
-        respond ventas
+        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}
+        if(params.tipo){
+            if(params.tipo == 'CONTADO') {
+                query = query.where { tipo != 'CRE'}
+            }
+        }
+        respond query.list(params)
     }
 
     @Transactional
