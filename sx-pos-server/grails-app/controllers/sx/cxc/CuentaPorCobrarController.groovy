@@ -49,4 +49,24 @@ class CuentaPorCobrarController extends RestfulController{
         respond rows
     }
 
+    def canceladas(Sucursal sucursal) {
+        if (sucursal == null) {
+            notFound()
+            return
+        }
+        params.max = params.registros ?:100
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+        def query = CuentaPorCobrar.where{ sucursal == sucursal && cancelada != null}
+        if(params.term) {
+            def search = '% ' + params.term + ' %'
+            if(params.term.isInteger()) {
+                query = query.where{documento == params.term.toInteger()}
+            } else {
+                query = query.where { cliente.nombre =~ search }
+            }
+        }
+        respond query.list(params)
+    }
+
 }

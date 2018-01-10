@@ -63,6 +63,12 @@ class CuentaPorCobrar {
 
     Boolean chequePostFechado = false
 
+    Date cancelada
+
+    String cancelacionUsuario
+
+    String cancelacionMotivo
+
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
         tipo nullable:true, inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -74,6 +80,9 @@ class CuentaPorCobrar {
         sw2 nullable:true
         cfdi nullable: true
         chequePostFechado nullable: true
+        cancelada nullable: true
+        cancelacionUsuario nullable: true
+        cancelacionMotivo nullable: true
     }
 
 
@@ -81,6 +90,7 @@ class CuentaPorCobrar {
         id generator:'uuid'
         fecha type:'date' ,index: 'CXC_IDX1'
         cliente index: 'CXC_IDX3'
+        cancelada type: 'date'
         pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
 
     }

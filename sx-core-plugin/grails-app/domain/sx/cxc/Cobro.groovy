@@ -53,7 +53,9 @@ class  Cobro {
 
     BigDecimal diferencia = 0.0
 
-    Date diferenciaFecha 
+    Date diferenciaFecha
+
+    String comentario
 
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
@@ -74,6 +76,8 @@ class  Cobro {
         primeraAplicacion nullable: true
         diferenciaFecha nullable: true
         diferencia nullable: true
+        notaDeCredito nullable: true
+        comentario nullable: true
     }
 
     static mapping={

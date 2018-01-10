@@ -150,6 +150,7 @@ class VentaController extends RestfulController{
         respond query.list(params)
     }
 
+
     def facturados(Sucursal sucursal) {
         if (sucursal == null) {
             notFound()
@@ -249,13 +250,19 @@ class VentaController extends RestfulController{
             respond( [message: 'NO ESTA FACTURADA'], status: HttpStatus.NOT_ACCEPTABLE )
             return
         }
+        String usuario = params.usuario
+        String motivo = params.motivo
+        // log.debug('Canccelando con: {}', params)
+
         try {
-            def res = ventaService.cancelarFactura(venta)
+            def res = ventaService.cancelarFactura(venta, usuario, motivo)
             respond res
             return
         }catch (Exception ex) {
             respond( [message: ExceptionUtils.getRootCauseMessage(ex)], status: HttpStatus.NOT_ACCEPTABLE )
         }
+
+        // respond venta
 
     }
 

@@ -146,6 +146,10 @@ class CfdiFacturaBuilder {
                 case 'TARJETA_DEBITO':
                     comprobante.formaPago = '28'
                     break
+                case 'BONIFICACION':
+                case 'DEVOLUCION':
+                    comprobante.formaPago = '17'
+                    break
                 default:
                     comprobante.formaPago = '99'
             }

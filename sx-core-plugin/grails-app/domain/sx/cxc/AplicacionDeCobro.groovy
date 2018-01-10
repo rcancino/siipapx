@@ -12,8 +12,6 @@ class AplicacionDeCobro {
 
     Cobro	cobro
 
-    NotaDeCredito	notaDeCredito
-
     CuentaPorCobrar	cuentaPorCobrar
 
     Date	fecha
@@ -33,7 +31,6 @@ class AplicacionDeCobro {
     static constraints = {
         sw2 nullable: true
         cobro nullable: true
-        notaDeCredito nullable: true
         createUser nullable: true
         updateUser nullable: true
     }

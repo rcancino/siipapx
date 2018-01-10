@@ -226,8 +226,10 @@ class VentaService implements  EventPublisher{
      * @return
      */
     @Publisher
-    def cancelarFactura(Venta factura) {
+    def cancelarFactura(Venta factura, String username, String motivo) {
         assert factura.cuentaPorCobrar, "El pedido ${factura.statusInfo()} no esta facturado "
+        assert username, 'Debe registrar usiuario para la cancelacion'
+        assert motivo, 'Debe registrar motivo de cancelacion'
 
         log.debug('Cancelando factura {}', factura.statusInfo())
         CuentaPorCobrar cxc = factura.cuentaPorCobrar
@@ -240,7 +242,7 @@ class VentaService implements  EventPublisher{
 
         // 2o Eliminar la cuenta por cobrar sus aplicaciones y cancelar su CFDI
         eliminarAplicaciones(cxc)
-        cancelarCuentaPorCobrar(cxc)
+        cancelarCuentaPorCobrar(cxc, username, motivo)
 
         // 3o Cancelar el CFDI
         if(cfdi.uuid) {
@@ -257,11 +259,14 @@ class VentaService implements  EventPublisher{
      * @return
      */
     // @Publisher
-    def cancelarCuentaPorCobrar(CuentaPorCobrar cxc) {
-        cxc.cfdi = null
+    def cancelarCuentaPorCobrar(CuentaPorCobrar cxc, String usuario, String motivo) {
         cxc.importe = 0.0
         cxc.impuesto = 0.0
         cxc.total = 0.0
+        cxc.comentario = 'CANCELADA'
+        cxc.cancelada = new Date()
+        cxc.cancelacionUsuario = usuario
+        cxc.cancelacionMotivo = motivo
         cxc.save()
         // cxc.delete flush: true
     }
