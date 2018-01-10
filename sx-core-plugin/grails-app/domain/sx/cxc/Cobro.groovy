@@ -55,6 +55,8 @@ class  Cobro {
 
     Date diferenciaFecha
 
+    NotaDeCredito notaDeCredito
+
     String comentario
 
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
