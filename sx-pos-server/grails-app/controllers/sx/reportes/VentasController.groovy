@@ -55,9 +55,11 @@ class VentasController {
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CobranzaContado.pdf")
     }
 
-    def facturasCanceladas(){
-        params.FECHA = params.fecha
-        def pdf = reportService.run('FacturasCanceladas', params)
+    def facturasCanceladas(PorFechaCommand command){
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = params.SUCURSAL
+        def pdf = reportService.run('FacturasCanceladas', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "FacturasCanceladas.pdf")
     }
 
