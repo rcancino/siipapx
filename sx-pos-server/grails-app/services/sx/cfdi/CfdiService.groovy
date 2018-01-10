@@ -118,16 +118,16 @@ class CfdiService {
         Cfdi cfdi = factura.cuentaPorCobrar.cfdi
 
         if (targetEmail) {
-            def xml = cfdi.getUrl().getBytes()
-            def pdf = generarImpresionV33(cfdi)
+            // def xml = cfdi.getUrl().getBytes()
+            // def pdf = generarImpresionV33(cfdi)
             sendMail {
-                multipart true
+                multipart false
                 from "facturacion.papelsa@papelsa.com.mx"
                 to targetEmail
                 subject "Correo de prueba"
                 text "Correo de prueba"
-                attach("${cfdi.uuid}.xml", 'text/xml', xml)
-                attach("${cfdi.uuid}.pdf", 'text/xml', pdf)
+                // attach("${cfdi.uuid}.xml", 'text/xml', xml)
+                // attach("${cfdi.uuid}.pdf", 'text/xml', pdf)
             }
             cfdi.enviado = new Date()
             cfdi.email = targetEmail

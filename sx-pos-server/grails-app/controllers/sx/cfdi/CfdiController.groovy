@@ -57,23 +57,40 @@ class CfdiController extends RestfulController{
     }
 
 
-    def enviarFacturaEmail(Venta factura) {
-        Cfdi cfdi = factura.cuentaPorCobrar.uuid
-        def email = params[email] ?: factura.cliente.getCfdiMail()
-        if (email) {
+    def enviarFacturaEmail(EnvioDeFacturaCfdiCommand command) {
+        if (command == null) {
+            notFound()
+            return
+        }
+        Venta factura = command.factura
+        assert command.factura.cuentaPorCobrar, "La venta ${factura.statusInfo()} no se ha facturado"
+        assert command.factura.cuentaPorCobrar.cfdi.uuid, "La factura ${factura.statusInfo()} no se ha timbrado"
+
+        Cfdi cfdi = factura.cuentaPorCobrar.cfdi
+        String targetEmail = command.target
+
+        if (targetEmail) {
             def xml = cfdi.getUrl().getBytes()
-            def pdf = generarImpresionV33(cfdi)
+            def pdf = generarImpresionV33(cfdi).toByteArray()
             sendMail {
+                from "facturacion.noreplay@papelsa.com.mx"
                 multipart true
-                from "me@org.com"
-                to "rubencancino6@gmail.com"
-                subject "Correo de prueba"
-                text "Correo de prueba"
+                to targetEmail
+                subject "Envio de CFDI ${cfdi.uuid}"
+                text "Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra"
                 attach("${cfdi.uuid}.xml", 'text/xml', xml)
+                attach("${cfdi.uuid}.pdf", 'application/pdf', pdf)
+            }
+            cfdi.enviado = new Date()
+            cfdi.email = targetEmail
+            cfdi.save flush: true
+            if(!factura.cfdiMail) {
+                factura.cfdiMail = targetEmail
+                factura.save flush: true
             }
         }
-        log.debug('Correo enviado para CFDI: {}', cfdi.uuid)
-        respond factura
+        log.debug('CFDI: {} enviado a: {}', cfdi.uuid, targetEmail)
+        respond command
     }
 
 }
