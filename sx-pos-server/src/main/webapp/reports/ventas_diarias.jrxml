@@ -39,8 +39,9 @@ a.documento AS docto
 ,0 AS anticipo_aplicado
 ,a.documento as nfiscal,tipo as ORIGEN,S.NOMBRE,S.CLAVE
 ,(SELECT v.kilos FROM venta v where v.cuenta_por_cobrar_id=a.id )as KILOS
-,CASE WHEN (SELECT UUID FROM CFDI C WHERE C.ID=A.CFDI_ID) = NULL THEN '*' ELSE '' END AS TIMBRADA
+,(CASE WHEN CFDI_ID IS NULL THEN 'S/T*' ELSE '' END) AS TIMBRADA
 ,S.NOMBRE AS SUC
+,(CASE WHEN A.CANCELADA IS NOT NULL THEN 'C' ELSE '' END) AS CANCELADA
 FROM  cuenta_por_cobrar A  JOIN sucursal S ON(A.SUCURSAL_ID=S.ID)  JOIN cliente B ON (A.CLIENTE_ID=B.ID)
 WHERE A.TIPO LIKE $P{ORIGEN} AND A.FECHA = $P{FECHA} AND S.ID= $P{SUCURSAL}
 ORDER BY A.documento,a.date_created]]></queryString>
@@ -61,6 +62,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 	<field name="KILOS" class="java.math.BigDecimal"/>
 	<field name="TIMBRADA" class="java.lang.String"/>
 	<field name="SUC" class="java.lang.String"/>
+	<field name="CANCELADA" class="java.lang.String"/>
 
 	<sortField name="ORIGEN" />
 
@@ -613,30 +615,28 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="1"
+						x="32"
 						y="-1"
 						width="23"
 						height="10"
-						key="textField-8">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-8"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIMBRADA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="24"
-						y="-1"
+						x="1"
+						y="0"
 						width="31"
 						height="10"
 						key="textField-9">
 							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
 						</reportElement>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{tc}]]></textFieldExpression>
@@ -647,14 +647,12 @@ ORDER BY A.documento,a.date_created]]></queryString>
 						y="0"
 						width="11"
 						height="10"
-						key="textField-10">
-							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-10"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIMBRADA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CANCELADA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
