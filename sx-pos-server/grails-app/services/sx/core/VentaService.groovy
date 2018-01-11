@@ -238,6 +238,7 @@ class VentaService implements  EventPublisher{
         // 1o Desvincular la cuenta por cobrar y la venta
         factura.cuentaPorCobrar = null
         factura.facturar = null
+        factura.impreso = null
         factura.save flush: true
 
         // 2o Eliminar la cuenta por cobrar sus aplicaciones y cancelar su CFDI
@@ -245,7 +246,7 @@ class VentaService implements  EventPublisher{
         cancelarCuentaPorCobrar(cxc, username, motivo)
 
         // 3o Cancelar el CFDI
-        if(cfdi.uuid) {
+        if( cfdi && cfdi.uuid) {
             cfdi.status = 'CANCELACION_PENDIENTE'
             cfdi.save flush:true
         }

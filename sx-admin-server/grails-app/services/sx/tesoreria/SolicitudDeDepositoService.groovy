@@ -14,9 +14,17 @@ class SolicitudDeDepositoService {
         cobro.cliente = solicitud.cliente
         cobro.fecha = new Date()
         cobro.tipo = ''
-        cobro.formaDePago = solicitud.transferencia > 0.0 ? 'TRANSFERENCIA' : 'DEPOSITO'
+        if (solicitud.transferencia > 0) {
+            cobro.formaDePago = 'TRANSFERENCIA'
+        } else {
+            if (solicitud.cheque > solicitud.efectivo) {
+                cobro.formaDePago = 'DEPOSITO_CHEQUE'
+            } else {
+                cobro.formaDePago = 'DEPOSITO_EFECTIVO'
+            }
+        }
         cobro.referencia = solicitud.referencia
-        cobro.sw2 = 'SOLICITUD AUTORIZADA,' + solicitud.id
+        cobro.sw2 = 'SOLICITUD AUTORIZADA: ' + solicitud.folio
         cobro.importe = solicitud.total
         if(solicitud.transferencia > 0.0 ){
             CobroTransferencia transferencia = new CobroTransferencia()
@@ -26,7 +34,6 @@ class SolicitudDeDepositoService {
             transferencia.folio = solicitud.folio
             transferencia.cobro = cobro
             transferencia.save failOnError: true, flush: true
-            //log.debug('Cobro transferencia generado: {}', transferencia.id)
 
         } else {
             CobroDeposito deposito = new CobroDeposito()
@@ -39,8 +46,6 @@ class SolicitudDeDepositoService {
             deposito.cobro = cobro
             deposito.save failOnError: true, flush: true
         }
-        // log.debug('Entidad valida: {}', cobro.validate())
-        // log.debug('Errores: {}', cobro.errors)
         cobro.save failOnError: true, flush: true
         solicitud.cobro = cobro
         solicitud.save failOnError: true, flush: true

@@ -192,18 +192,28 @@ class VentaController extends RestfulController{
         respond pedido
     }
 
+    /**
+     * Facturas de Contado, es decir tipo CON and COD
+     * @param sucursal
+     * @return
+     */
     def cobradas(Sucursal sucursal) {
         if (sucursal == null) {
             notFound()
             return
         }
+        // log.debug('Buscando facturas contado : {}', params)
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}
-        if(params.tipo){
-            if(params.tipo == 'CONTADO') {
-                query = query.where { tipo != 'CRE'}
+        query = query.where { tipo != 'CRE'}
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where{cuentaPorCobrar.documento == params.term.toInteger()}
+            } else {
+                query = query.where { nombre =~ search }
             }
         }
         respond query.list(params)
@@ -268,6 +278,25 @@ class VentaController extends RestfulController{
 
         // respond venta
 
+    }
+
+    def cambioDeCliente(Venta venta){
+        if(venta == null ){
+            notFound()
+            return
+        }
+        assert venta.cuentaPorCobrar == null , 'La venta esta facturada no se permite cambio de cliente'
+        assert venta.tipo != 'CRE', 'Venta de credito no permite modificar cliente'
+        assert venta.descuento <= venta.descuentoOriginal  ,
+                "Venta con descuento especial, no permite cambio de cliente " +
+                        " Dsc Original ${venta.descuentoOriginal} Desc: ${venta.descuento}"
+        Cliente cliente = Cliente.get(params.cliente)
+        String usuario = params.usuario
+        venta.cliente = cliente
+        venta.nombre = cliente.nombre
+        venta.updateUser = usuario
+        venta.save flush: true
+        respond venta
     }
 
 }
