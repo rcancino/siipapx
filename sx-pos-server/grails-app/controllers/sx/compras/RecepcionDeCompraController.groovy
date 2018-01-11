@@ -26,38 +26,34 @@ class RecepcionDeCompraController extends  RestfulController{
 
    @Override
     protected List listAllResources(Map params) {
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
-        def query = RecepcionDeCompra.where {}
-        if(params.sucursal){
-            query = query.where {sucursal.id ==  params.sucursal}   
-        }
+       params.sort = 'lastUpdated'
+       params.order = 'desc'
+       def query = RecepcionDeCompra.where {sucursal.id ==  params.sucursal}
+       if(params.term) {
+           if(params.term.isInteger()) {
+               query = query.where{documento == params.term.toInteger() }
+           } else {
+               def search = '%' + params.term + '%'
+               query = query.where { proveedor.nombre =~ search || remision =~ search}
+           }
+       }
+       /*
         if(params.documento) {
             def documento = params.int('documento')
-
             query = query.where {documento >=  documento}
         }
         if(params.remision) {
             def remision = params.remision
             query = query.where {remision >=  remision}
         }
-        
+        */
         return query.list(params)
     }
 
     // @Override
     protected RecepcionDeCompra saveResource(RecepcionDeCompra resource) {
         def username = getPrincipal().username
-        if(resource.id == null) {
-            def serie = resource.sucursal.clave
-            resource.documento = Folio.nextFolio('COMS',serie)
-            resource.createUser = username
-        }
-        resource.partidas.each {
-            it.comentario = resource.comentario
-        }
-        resource.updateUser = username
-        return super.saveResource(resource)
+        recepcionDeCompraService.save(resource, username)
     }
 
     protected RecepcionDeCompra updateResource(RecepcionDeCompra resource) {

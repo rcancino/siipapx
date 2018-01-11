@@ -28,9 +28,9 @@ class SolicitudDeTrasladoController extends  RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('Buscando solicitudes.... {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
+        params.max = 50
         def query = SolicitudDeTraslado.where {}
         if(params.sucursal){
             query = query.where {sucursalSolicita.id ==  params.sucursal}
@@ -45,7 +45,8 @@ class SolicitudDeTrasladoController extends  RestfulController{
             def documento = params.int('documento')
             query = query.where {documento ==  documento}
         }
-        return query.list(params)
+        def list = query.list(params)
+        return list
     }
 
 

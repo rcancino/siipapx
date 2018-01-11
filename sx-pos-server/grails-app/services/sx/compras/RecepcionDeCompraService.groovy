@@ -4,11 +4,26 @@ import grails.events.annotation.Publisher
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import sx.core.Existencia
+import sx.core.Folio
 import sx.core.Inventario
 
 @Transactional
 
 class RecepcionDeCompraService {
+
+    @Publisher('saveCom')
+    def save(RecepcionDeCompra resource, String username) {
+        if(resource.id == null) {
+            def serie = resource.sucursal.clave
+            resource.documento = Folio.nextFolio('COMS',serie)
+            resource.createUser = username
+        }
+        resource.partidas.each {
+            it.comentario = resource.comentario
+        }
+        resource.updateUser = username
+        resource.save failOnError: true, flush: true
+    }
 
     @Publisher
     def afectarInventario( RecepcionDeCompra com) {

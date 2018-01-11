@@ -74,4 +74,6 @@ class CompraDet {
         return this.solicitado - this.depurado - this.recibido
     }
 
+
+
 }
