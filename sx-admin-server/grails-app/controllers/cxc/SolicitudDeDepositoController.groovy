@@ -45,10 +45,10 @@ class SolicitudDeDepositoController extends RestfulController{
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
-                log.debug('Buscando por folio: {}', params)
-                query = query.where{folio == params.term.toInteger()}
+                // log.debug('Buscando por folio: {} o total: {}', params.term.toInteger(), params.term.toBigDecimal())
+                query = query.where { folio == params.term.toInteger() }
             } else {
-                query = query.where { sucursal.nombre =~ search || banco.nombre =~ search}
+                query = query.where { sucursal.nombre =~ search || banco.nombre =~ search  }
             }
         }
         def list = query.list(params)
