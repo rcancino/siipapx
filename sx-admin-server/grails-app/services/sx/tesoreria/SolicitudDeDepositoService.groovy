@@ -24,7 +24,7 @@ class SolicitudDeDepositoService {
             }
         }
         cobro.referencia = solicitud.referencia
-        cobro.sw2 = 'SOLICITUD AUTORIZADA: ' + solicitud.folio
+        // cobro.sw2 = 'SOLICITUD AUTORIZADA: ' + solicitud.folio
         cobro.importe = solicitud.total
         if(solicitud.transferencia > 0.0 ){
             CobroTransferencia transferencia = new CobroTransferencia()
