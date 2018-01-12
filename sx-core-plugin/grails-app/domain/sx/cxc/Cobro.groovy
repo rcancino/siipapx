@@ -55,8 +55,6 @@ class  Cobro {
 
     Date diferenciaFecha
 
-    NotaDeCredito notaDeCredito
-
     String comentario
 
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
@@ -78,7 +76,6 @@ class  Cobro {
         primeraAplicacion nullable: true
         diferenciaFecha nullable: true
         diferencia nullable: true
-        notaDeCredito nullable: true
         comentario nullable: true
     }
 

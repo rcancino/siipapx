@@ -21,9 +21,11 @@ class NotaDeCredito {
 
     String serie
 
-    Long folio
+    Long folio = 0
 
     String tipo
+
+    String tipoCartera
 
     Date fecha
 
@@ -49,9 +51,9 @@ class NotaDeCredito {
 
     BigDecimal descuento = 0.0
 
-    Date impreso
-
     Cobro cobro
+
+    String sw2
 
     Date dateCreated
 
@@ -60,6 +62,7 @@ class NotaDeCredito {
     static constraints = {
         serie maxSize: 20
         folio unique:'serie'
+        tipoCartera minSize:3, maxSize: 3
         tipo(nullable:false,inList:['BONIFICACION','DEVOLUCION'])
         tc(scale:4,validator:{ val,obj ->
             if(obj.moneda!=MonedaUtils.PESOS && val <= 1.0)
@@ -70,6 +73,7 @@ class NotaDeCredito {
         comentario nullable:true
         cfdi nullable:true
         cobro nullable: true
+        sw2 nullable: true
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]
@@ -78,7 +82,6 @@ class NotaDeCredito {
         id generator:'uuid'
         partidas cascade: "all-delete-orphan"
         fecha type: 'date'
-        impreso type: 'date'
     }
 
 
@@ -110,6 +113,11 @@ class NotaDeCredito {
         actualizarImportes()
     }
     */
+
+    def beforeValidate(){
+        if(!nombre)
+            nombre = this.cliente.nombre
+    }
 
 
 }

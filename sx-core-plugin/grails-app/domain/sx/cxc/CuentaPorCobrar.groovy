@@ -25,6 +25,10 @@ class CuentaPorCobrar {
 
     BigDecimal	importe	 = 0
 
+    BigDecimal descuentoImporte = 0
+
+    BigDecimal subtotal = 0
+
     BigDecimal	impuesto	 = 0
 
     BigDecimal	total	 = 0

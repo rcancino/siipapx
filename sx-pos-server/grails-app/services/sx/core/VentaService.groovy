@@ -155,6 +155,8 @@ class VentaService implements  EventPublisher{
         cxc.cliente = pedido.cliente
         cxc.tipoDocumento = 'VENTA'
         cxc.importe = pedido.importe
+        cxc.descuentoImporte = pedido.descuentoImporte
+        cxc.subtotal = pedido.subtotal
         cxc.impuesto = pedido.impuesto
         cxc.total  = pedido.total
         cxc.formaDePago = pedido.formaDePago
