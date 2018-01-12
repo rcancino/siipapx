@@ -33,7 +33,7 @@
 a.documento AS docto
 ,CASE WHEN (SELECT X.date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) IS NULL THEN A.FECHA ELSE (SELECT date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) END AS fecha
 ,B.clave,B.nombre
-,a.moneda,a.tipo_de_cambio as tc,a.importe*a.tipo_de_cambio as importe
+,a.moneda,a.tipo_de_cambio as tc,a.subtotal*a.tipo_de_cambio as importe
 ,a.impuesto*a.tipo_de_cambio as impuesto,a.total*a.tipo_de_cambio as total
 ,0 as anticipo
 ,0 AS anticipo_aplicado
