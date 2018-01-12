@@ -59,6 +59,9 @@ class NotaDeCredito {
 
     Date lastUpdated
 
+    String createUser
+    String updateUser
+
     static constraints = {
         serie maxSize: 20
         folio unique:'serie'
@@ -74,6 +77,8 @@ class NotaDeCredito {
         cfdi nullable:true
         cobro nullable: true
         sw2 nullable: true
+        createUser nullable: true
+        updateUser nullable: true
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]

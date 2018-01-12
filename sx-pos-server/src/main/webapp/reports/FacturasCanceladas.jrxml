@@ -38,7 +38,7 @@
 FROM cuenta_por_cobrar V 
 JOIN SUCURSAL S ON (S.ID=V.SUCURSAL_ID) 
 join cliente l on  (v.cliente_id=l.id)
-WHERE V.CANCELADA=$P{FECHA}
+WHERE V.FECHA=$P{FECHA}
 AND S.ID=$P{SUCURSAL} AND V.tipo_documento='VENTA' AND V.TIPO LIKE '%' 
 order by V.TIPO,V.DOCUMENTO]]></queryString>
 
