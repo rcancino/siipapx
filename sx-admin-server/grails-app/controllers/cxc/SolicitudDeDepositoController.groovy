@@ -33,6 +33,28 @@ class SolicitudDeDepositoController extends RestfulController{
         respond list
     }
 
+    def autorizadas() {
+        log.debug('Buscando solicitudes autorizadas {}', params)
+        params.max = 20
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+
+        def query = SolicitudDeDeposito.where {
+            cobro != null
+        }
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                log.debug('Buscando por folio: {}', params)
+                query = query.where{folio == params.term.toInteger()}
+            } else {
+                query = query.where { sucursal.nombre =~ search || banco.nombre =~ search}
+            }
+        }
+        def list = query.list(params)
+        respond list
+    }
+
     def autorizar(SolicitudDeDeposito sol) {
         log.debug('Autorizando solicitud de deposito {}', params.id)
         def res = solicitudDeDepositoService.autorizar(sol)
