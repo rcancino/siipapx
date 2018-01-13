@@ -90,5 +90,9 @@ class Compra {
         folio index: 'COMPRA_IDX2'
     }
 
+    def actualizarStatus() {
+        this.pendiente = this.partidas.find {it.getPorRecibir() > 0 } ?: false
+    }
+
 }
 

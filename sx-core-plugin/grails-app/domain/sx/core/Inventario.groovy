@@ -70,7 +70,11 @@ class Inventario {
         fecha index: 'FECHA_IDX'
     }
 
-    def afterInsert() {
 
+    def afterInsert() {
+        def factor = this.producto.unidad == 'MIL' ? 1000 : 1;
+        this.kilos = (this.cantidad / factor) * this.producto.kilos
     }
+
+
 }

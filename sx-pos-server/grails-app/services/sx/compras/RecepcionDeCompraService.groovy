@@ -6,10 +6,31 @@ import grails.gorm.transactions.Transactional
 import sx.core.Existencia
 import sx.core.Folio
 import sx.core.Inventario
+import sx.core.Producto
 
 @Transactional
-
 class RecepcionDeCompraService {
+
+    def recibir(Compra compra, String username){
+        log.debug('Generando COM a de comra {} con {} partidas', compra.folio, compra.partidas.size())
+
+        RecepcionDeCompra com = new RecepcionDeCompra()
+        com.sucursal = compra.sucursal
+        com.fecha = new Date()
+        com.compra = compra
+        com.proveedor = compra.proveedor
+        compra.partidas.each { CompraDet item ->
+            log.debug('Procesando partida: {}', item)
+            if (item.getPorRecibir() > 0) {
+                RecepcionDeCompraDet det = new RecepcionDeCompraDet()
+                det.producto = item.producto
+                det.cantidad = item.getPorRecibir()
+                det.compraDet = item
+                com.addToPartidas(det)
+            }
+        }
+        return this.save(com, username)
+    }
 
     @Publisher('saveCom')
     def save(RecepcionDeCompra resource, String username) {
@@ -18,11 +39,13 @@ class RecepcionDeCompraService {
             resource.documento = Folio.nextFolio('COMS',serie)
             resource.createUser = username
         }
-        resource.partidas.each {
+        resource.partidas.each { RecepcionDeCompraDet it ->
             it.comentario = resource.comentario
+            it.kilos = getKilos(it.producto, it.cantidad)
         }
         resource.updateUser = username
-        resource.save failOnError: true, flush: true
+        resource = resource.save failOnError: true, flush: true
+        return resource
     }
 
     @Publisher
@@ -57,5 +80,10 @@ class RecepcionDeCompraService {
             existencia.save failOnError: true, flush: true
             log.debug('Existencia actualizada: {}', existencia)
         }
+    }
+
+    private getKilos(Producto producto, BigDecimal cantidad) {
+        def factor = producto.unidad == 'MIL' ? 1000 : 1;
+        return producto.kilos * (cantidad/factor)
     }
 }

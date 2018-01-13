@@ -74,7 +74,7 @@ class RecepcionDeCompraController extends  RestfulController{
             respond command.errors, view:'create' // STATUS CODE 422
             return
         }
-        def q = Compra.where{sucursal == command.sucursal && folio == command.folio }
+        def q = Compra.where{ (sucursal == command.sucursal || sucursal.nombre == 'OFICINAS') && folio == command.folio }
         
         Compra res = q.find()
 
@@ -84,6 +84,16 @@ class RecepcionDeCompraController extends  RestfulController{
         }
         // respond res, status: 200
         forward controller: 'compra', action: 'show', id: res.id
+    }
+
+    def recibir(Compra compra) {
+        if (compra == null) {
+            notFound()
+            return
+        }
+        log.debug('Generando recepcion autormatica de compra: {}', compra.folio)
+        RecepcionDeCompra com = recepcionDeCompraService.recibir(compra, getPrincipal().username)
+        respond com
     }
 
     def print() {
