@@ -132,6 +132,20 @@ class ExistenciaService {
             mes == mes }.find()
     }
 
+    @Subscriber('inventarioEliminado')
+    def onInventarioEliminado(Inventario inventario){
+        log.debug('Eliminacion de reg de Inventario detectada Actualizando existencia para: {}', inventario.producto.clave);
+        def ejercicio = inventario.fecha[Calendar.YEAR]
+        def mes = inventario.fecha[Calendar.MONTH]
+        def prod = inventario.producto
+        Existencia.withNewSession {
+            recalcular(prod, ejercicio, mes)
+        }
+    }
+
+
+
+
     private Sucursal sucursal
 
     Sucursal getSucursal() {

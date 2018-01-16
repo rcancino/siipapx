@@ -1,5 +1,6 @@
 package sx.inventario
 
+import grails.events.EventPublisher
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import sx.core.Inventario
@@ -7,7 +8,7 @@ import sx.core.Venta
 import sx.core.VentaDet
 
 @Transactional
-class InventarioService {
+class InventarioService implements EventPublisher{
 
     // @Subscriber
     def onFacturar(Venta venta){
@@ -42,8 +43,18 @@ class InventarioService {
         }
     }
 
-    @Subscriber
-    def onCancelarFactura(Map result){
-        log.debug('Detectando factura cancelada {}', result.factura);
+    def afectarInventariosPorCancelacionDeFacturar(Venta factura){
+        log.debug('AFECTANDO inventario por factura cancelada: {} ', factura.statusInfo())
+        factura.partidas.each { VentaDet det ->
+            Inventario inventario = det.inventario
+            if (inventario) {
+                det.inventario = null
+                inventario.delete flush: true
+                notify('inventarioEliminado', inventario)
+                log.debug('Inventario generado: {}', inventario)
+            }
+        }
     }
+
+
 }

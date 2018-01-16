@@ -24,7 +24,7 @@ class V33PdfGenerator {
 
     final static SimpleDateFormat CFDI_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
-    static getReportData(Cfdi cfdi){
+    static getReportData(Cfdi cfdi, envio = false){
 
         File xmlFile = FileUtils.toFile(cfdi.url)
         Comprobante comprobante = CfdiUtils.read(xmlFile)
@@ -78,16 +78,14 @@ class V33PdfGenerator {
             }
             return res
         }
-        def params = getParametros(cfdi, comprobante, xmlFile)
+        def params = getParametros(cfdi, comprobante, xmlFile, envio)
         def data = [:]
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
         return data
     }
 
-    static getParametros(Cfdi cfdi, Comprobante comprobante, File xmlFile){
-
-
+    static getParametros(Cfdi cfdi, Comprobante comprobante, File xmlFile, boolean envio){
         def params=[:]
         params["VERSION"] = comprobante.version
         params["SERIE"] = comprobante.getSerie()
@@ -100,12 +98,9 @@ class V33PdfGenerator {
         params["IVA"] = (comprobante?.getImpuestos()?.getTotalImpuestosTrasladados()?: 0.0) as String
         params["TOTAL"] = comprobante.getTotal() as String
         params["RECEPTOR_DIRECCION"] = 'ND'
-
-
         params.put("METODO_PAGO", 		comprobante.metodoPago.toString());
         params.put("FORMA_PAGO", 		comprobante.formaPago);
         params.put("IMP_CON_LETRA", 	ImporteALetra.aLetra(comprobante.getTotal()));
-
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['PINT_IVA']='16 '
         params["DESCUENTOS"] = comprobante.getDescuento() as String
@@ -122,16 +117,13 @@ class V33PdfGenerator {
         def emisor=comprobante.getEmisor();
         params.put("EMISOR_NOMBRE", 	emisor.getNombre());
         params.put("EMISOR_RFC", 		emisor.getRfc())
-
         params["EMISOR_DIRECCION"] = ' '
         params["REGIMEN"] = comprobante.emisor.regimenFiscal
         params["LUGAR_EXPEDICION"] = comprobante.lugarExpedicion
-
         def relacionados = comprobante.cfdiRelacionados
         if(relacionados){
             params.put('RelacionUUID',relacionados.cfdiRelacionado.get(0).UUID)
         }
-
         if(cfdi.uuid!=null){
             def img = generarQR(cfdi)
             params.put("QR_CODE",img);
@@ -144,14 +136,8 @@ class V33PdfGenerator {
             params.put("RfcProvCertif", timbre.rfcProvCertif)
         }
         params.FECHA = comprobante.fecha
-        cargarParametrosAdicionales(cfdi, params)
+        cargarParametrosAdicionales(cfdi, params, envio)
         return params;
-    }
-
-
-
-    static String format(def d){
-        return """${d.calle}, ${d.noExterior}, ${d.noInterior?:''}, ${d.colonia},${d.codigoPostal}, ${d.municipio}, ${d.localidad},${d.estado}, ${d.pais} """;
     }
 
     public static  generarQR(Cfdi cfdi) {
@@ -162,15 +148,15 @@ class V33PdfGenerator {
 
     }
 
-    public static cargarParametrosAdicionales(Cfdi cfdi, Map parametros){
+    public static cargarParametrosAdicionales(Cfdi cfdi, Map parametros, boolean envio){
         switch (cfdi.origen) {
             case 'VENTA':
-                parametrosAdicionalesVenta(cfdi, parametros)
+                parametrosAdicionalesVenta(cfdi, parametros, envio)
                 break
         }
     }
 
-    public static parametrosAdicionalesVenta(Cfdi cfdi, Map parametros) {
+    public static parametrosAdicionalesVenta(Cfdi cfdi, Map parametros, boolean envio ) {
         Venta venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
 
         assert venta, 'No existe la venta origen del CFDI: ' + cfdi.id
@@ -192,9 +178,11 @@ class V33PdfGenerator {
         parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'
         parametros.ELAB_VTA = venta.updateUser ?: 'ND'
 
-        parametros.IMPRESO = venta.impreso
-        parametros.FPAGO = venta.cuentaPorCobrar.formaDePago
+        if(envio){
+            parametros.IMPRESO = venta.impreso
+        }
 
+        parametros.FPAGO = venta.cuentaPorCobrar.formaDePago
         parametros.ENVIO = "LOCAL"
 
         if (venta.envio) {
@@ -220,6 +208,10 @@ class V33PdfGenerator {
         if(venta.socio) {
             parametros.SOCIO = venta.socio.nombre
         }
+    }
+
+    static String format(def d){
+        return """${d.calle}, ${d.noExterior}, ${d.noInterior?:''}, ${d.colonia},${d.codigoPostal}, ${d.municipio}, ${d.localidad},${d.estado}, ${d.pais} """;
     }
 
 }

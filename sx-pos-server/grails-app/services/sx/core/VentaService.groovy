@@ -246,6 +246,7 @@ class VentaService implements  EventPublisher{
         // 2o Eliminar la cuenta por cobrar sus aplicaciones y cancelar su CFDI
         eliminarAplicaciones(cxc)
         cancelarCuentaPorCobrar(cxc, username, motivo)
+        inventarioService.afectarInventariosPorCancelacionDeFacturar(factura)
 
         // 3o Cancelar el CFDI
         if( cfdi && cfdi.uuid) {
@@ -298,5 +299,7 @@ class VentaService implements  EventPublisher{
         }
         return cxc
     }
+
+
 
 }
