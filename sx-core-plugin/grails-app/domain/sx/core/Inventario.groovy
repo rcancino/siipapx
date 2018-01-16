@@ -50,6 +50,12 @@ class Inventario {
 
     String updateUser
 
+    String clave
+
+    String descripcion
+
+    String sucursalNombre
+
 
     static constraints = {
         tipo nullable: true
@@ -61,6 +67,9 @@ class Inventario {
         lastUpdated nullable: true
         createUser nullable: true
         updateUser nullable: true
+        clave nullable: true, maxSize:30
+        descripcion nullable: true
+        sucursalNombre nullable: true, maxSize:40
     }
 
     static mapping ={
@@ -72,6 +81,29 @@ class Inventario {
 
 
     def afterInsert() {
+        // def factor = this.producto.unidad == 'MIL' ? 1000 : 1;
+        //  this.kilos = (this.cantidad / factor) * this.producto.kilos
+    }
+
+    def beforeInsert() {
+        updateDatos()
+        updateKilos()
+    }
+
+    def beforeUpdate() {
+        if(this.clave == null) {
+            updateDatos()
+            updateKilos()
+        }
+    }
+
+    def updateDatos() {
+        this.clave = this.producto.clave
+        this.descripcion = this.producto.descripcion
+        this.sucursalNombre = this.sucursal.nombre
+    }
+
+    def updateKilos(){
         def factor = this.producto.unidad == 'MIL' ? 1000 : 1;
         this.kilos = (this.cantidad / factor) * this.producto.kilos
     }

@@ -12,6 +12,8 @@ class ExistenciaController extends RestfulController {
 
     static responseFormats = ['json']
 
+    ExistenciaService existenciaService
+
     ExistenciaController() {
         super(Existencia)
     }
@@ -78,6 +80,19 @@ class ExistenciaController extends RestfulController {
             mes == command.month}
             .list()
         respond existencias
+    }
+
+    def recalcular(){
+        Date hoy = new Date()
+        def ejercicio = hoy[Calendar.YEAR]
+        def mes = hoy[Calendar.MONTH] + 1
+        Producto producto = params.producto ? Producto.get(params.producto) : null
+        log.debug('Recalculando existencias: Ejercicio: {}  Mes: {} Para: {}', ejercicio, mes, producto? producto.clave: 'Todos los productos')
+        if (producto)
+            existenciaService.recalcular(producto, ejercicio, mes)
+        else
+            existenciaService.recalcular(ejercicio, mes)
+        respond [:]
     }
 
     protected addPeriodo(Map params){

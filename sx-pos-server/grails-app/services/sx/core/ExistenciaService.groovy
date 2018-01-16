@@ -1,7 +1,9 @@
 package sx.core
 
 import grails.events.annotation.Subscriber
+import grails.gorm.transactions.NotTransactional
 import grails.gorm.transactions.Transactional
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.inventario.Traslado
 
 @Transactional
@@ -92,7 +94,37 @@ class ExistenciaService {
         }
     }
 
-    Existencia findExitencia(Producto producto, Long ejercicio, Long mes) {
+    @NotTransactional
+    def recalcular(def ejercicio, def mes) {
+        def existencias = Existencia.where{anio == ejercicio && mes == mes && sucursal == getSucursal()}.list()
+        existencias.each { Existencia exis ->
+            try{
+                recalcular(exis.producto,ejercicio, mes)
+            } catch (Exception ex) {
+                String msg = ExceptionUtils.getRootCauseMessage(ex)
+                log.error("Error recalculando existencia {} para el periodo {} - {} ", exis.producto.clave, ejercicio, mes)
+            }
+        }
+        log.debug('Recalculo global terminado para {} - {}', ejercicio, mes)
+    }
+
+    @NotTransactional
+    def recalcular(Producto producto, def ejercicio, def mes){
+        //log.debug('Recalculandi existencia del {} Eje:{} Mes:{}', producto.clave, ejercicio, mes)
+        Existencia exis = findExitencia(producto, ejercicio, mes)
+        def movs = Inventario.executeQuery(
+                "select sum(i.cantidad) " +
+                        " from Inventario i " +
+                        " where i.producto = ? " +
+                        "  and i.sucursal=? " +
+                        "  and year(fecha) = ? " +
+                        "  and month(i.fecha)=?",
+                [exis.producto, getSucursal(), exis.anio.toInteger(), exis.mes.toInteger()])[0]?:0.0
+        exis.cantidad = exis.existenciaInicial + movs
+        exis.save flush: true
+    }
+
+    Existencia findExitencia(Producto producto, def ejercicio, def mes) {
         return Existencia.where {
             sucursal == getSucursal() &&
             producto == producto &&

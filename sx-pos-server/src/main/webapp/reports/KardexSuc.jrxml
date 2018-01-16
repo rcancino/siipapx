@@ -37,12 +37,12 @@ CASE WHEN P.ANCHO=0 THEN "" ELSE CONCAT(P.ANCHO,'X',P.LARGO) END AS MEDIDA
 ,MONTH(I.FECHA) AS MES,YEAR(I.FECHA) AS YEAR,S.CLAVE AS SUC , S.NOMBRE AS SUCURSAL,P.UNIDAD,I.TIPO,I.DOCUMENTO,i.RENGLON,I.FECHA AS FECHA1,I.FECHA AS FECHA,0 AS KILOS
 ,CASE WHEN MONTH(i.FECHA)-1=0 THEN 12 ELSE MONTH(i.FECHA)-1 END AS MES_INI
 ,CASE WHEN MONTH(i.FECHA)-1=0 THEN YEAR(i.FECHA)-1 ELSE YEAR(i.FECHA) END AS YEAR_INI
-,IFNULL((SELECT E.CANTIDAD FROM existencia E WHERE E.producto_id=i.producto_id AND S.ID=E.SUCURSAL_ID AND E.MES=(CASE WHEN MONTH(i.FECHA)-1=0 THEN 12 ELSE MONTH(i.FECHA)-1 END) 
-AND E.ANIO=(CASE WHEN MONTH(i.FECHA)-1=0 THEN YEAR(i.FECHA)-1 ELSE YEAR(i.FECHA) END)),0) AS SALDO_INI
+,IFNULL((SELECT E.EXISTENCIA_INICIAL FROM existencia E WHERE E.producto_id=i.producto_id AND S.ID=E.SUCURSAL_ID AND E.MES=MONTH(i.FECHA) 
+AND E.ANIO=YEAR(i.FECHA)),0) AS SALDO_INI
 ,(SELECT E.CANTIDAD FROM existencia E WHERE  E.producto_id=i.producto_id AND E.SUCURSAL_ID=S.ID AND E.MES = MONTH(i.FECHA) AND E.ANIo=YEAR(i.FECHA)) AS SALDO_FIN
-,IFNULL((SELECT SUM(CANTIDAD) FROM inventario X WHERE X.FECHA >= CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01)  AND X.FECHA < ( $P{FECHA_FIN}) AND X.PRODUCTO_ID=I.PRODUCTO_ID
+,IFNULL((SELECT SUM(CANTIDAD) FROM inventario X WHERE X.FECHA >= CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01)  AND X.FECHA < ( $P{FECHA_INI}) AND X.PRODUCTO_ID=I.PRODUCTO_ID
 AND X.SUCURSAL_ID=I.SUCURSAL_ID),0) AS INI_INV
-,IFNULL((SELECT SUM(CANTIDAD) FROM inventario X WHERE X.FECHA >$P{FECHA_INI}  AND X.FECHA <=  CONCAT(YEAR( $P{FECHA_FIN}),'/',MONTH( $P{FECHA_FIN}),'/',31)  AND X.PRODUCTO_ID=I.PRODUCTO_ID
+,IFNULL((SELECT SUM(CANTIDAD) FROM inventario X WHERE DATE(X.FECHA) >$P{FECHA_FIN}  AND X.FECHA <=  CONCAT(YEAR( $P{FECHA_FIN}),'/',MONTH( $P{FECHA_FIN}),'/',31)  AND X.PRODUCTO_ID=I.PRODUCTO_ID
 AND X.SUCURSAL_ID=I.SUCURSAL_ID),0) AS FIN_INV
 FROM  inventario i join  producto p on (p.id=i.producto_id) join sucursal s on (s.id=i.sucursal_id)
 WHERE I.producto_id=$P{PRODUCTO} and DATE(i.fecha) BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} AND S.ID=$P{SUCURSAL}
@@ -253,11 +253,11 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="37"  isSplitAllowed="true" >
+			<band height="94"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="380"
-						y="14"
+						y="29"
 						width="86"
 						height="12"
 						key="textField"/>
@@ -271,7 +271,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 					<reportElement
 						mode="Opaque"
 						x="271"
-						y="25"
+						y="53"
 						width="109"
 						height="12"
 						forecolor="#000000"
@@ -285,22 +285,8 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[FINAL:  ]]></text>
+				<text><![CDATA[FINAL TEORICO:  ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="380"
-						y="3"
-						width="61"
-						height="12"
-						forecolor="#FFFFFF"
-						key="textField-16"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SALDO_FIN}.subtract( $F{FIN_INV} )]]></textFieldExpression>
-				</textField>
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
@@ -315,7 +301,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="271"
-						y="14"
+						y="29"
 						width="109"
 						height="12"
 						key="textField-17"/>
@@ -328,9 +314,9 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="380"
-						y="26"
+						y="53"
 						width="86"
-						height="11"
+						height="12"
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
@@ -338,6 +324,78 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SALDO_FIN}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="41"
+						width="86"
+						height="12"
+						key="textField-19">
+							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true 
+&& $F{MES}.longValue()!=13)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SALDO_ACUMXMES}.add($F{SALDO_INI}).add($F{INI_INV}).add($F{FIN_INV})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="272"
+						y="41"
+						width="109"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-73"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FINAL CALCULADO:   ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="17"
+						width="86"
+						height="12"
+						key="textField-20">
+							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true 
+&& $F{MES}.longValue()!=13)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SALDO_ACUMXMES}.add($F{SALDO_INI}).add($F{INI_INV})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="272"
+						y="17"
+						width="109"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-74"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FINAL :]]></text>
+				</staticText>
 			</band>
 			</groupFooter>
 		</group>
