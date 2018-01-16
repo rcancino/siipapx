@@ -39,7 +39,10 @@ a.documento AS docto
 ,0 AS anticipo_aplicado
 ,a.documento as nfiscal,tipo as ORIGEN,S.NOMBRE,S.CLAVE
 ,(SELECT v.kilos FROM venta v where v.cuenta_por_cobrar_id=a.id )as KILOS
-,(CASE WHEN CFDI_ID IS NULL THEN 'S/T*' ELSE '' END) AS TIMBRADA
+,(CASE 	WHEN CFDI_ID IS NULL AND (SELECT v.documento FROM venta v where v.cuenta_por_cobrar_id=a.id) IS NULL THEN 'S/VyT'
+		WHEN CFDI_ID IS NULL THEN 'S/T*' 
+		WHEN (SELECT v.documento FROM venta v where v.cuenta_por_cobrar_id=a.id) is null THEN 'S/V=' 
+		ELSE '' END) AS TIMBRADA
 ,S.NOMBRE AS SUC
 ,(CASE WHEN A.CANCELADA IS NOT NULL THEN 'C' ELSE '' END) AS CANCELADA
 FROM  cuenta_por_cobrar A  JOIN sucursal S ON(A.SUCURSAL_ID=S.ID)  JOIN cliente B ON (A.CLIENTE_ID=B.ID)

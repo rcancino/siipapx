@@ -26,7 +26,7 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="DEVOLUCION" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT D.ID AS DEVO_ID,D.documento AS FOLIO,D.COMENTARIO
 ,(select max(c.nombre) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as NOMBRE
@@ -44,7 +44,7 @@ FROM devolucion_de_venta D
 JOIN devolucion_de_venta_det a ON(A.devolucion_de_venta_id=D.ID)
 join producto p on (p.id=a.producto_id)
 join sucursal b on (d.sucursal_id=b.ID) 
-WHERE D.ID=$P{DEVOLUCION} AND B.ID=$P{SUCURSAL}]]></queryString>
+WHERE D.ID=$P{ID} AND B.ID=$P{SUCURSAL}]]></queryString>
 
 	<field name="DEVO_ID" class="java.lang.String"/>
 	<field name="FOLIO" class="java.lang.Long"/>

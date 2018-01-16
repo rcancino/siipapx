@@ -96,9 +96,10 @@ class RecepcionDeCompraController extends  RestfulController{
         respond com
     }
 
-    def print() {
-        // log.debug('Imprimiendo movimiento: {}', params.ID)
-        def pdf =  reportService.run('MovGenerico.jrxml', params)
+    def print(RecepcionDeCompra com) {
+        params.ENTRADA = com.id
+        params.SUCURSAL = com.sucursal.id
+        def pdf =  reportService.run('EntradaPorCompra.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
 }

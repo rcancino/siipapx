@@ -12,21 +12,31 @@ import sx.core.Producto
 class RecepcionDeCompraService {
 
     def recibir(Compra compra, String username){
-        log.debug('Generando COM a de comra {} con {} partidas', compra.folio, compra.partidas.size())
+        List<CompraDet> pendientes = compra.pendientes()
+        log.debug('Generando COM automatico de compra {} con {} partidas pendientes', compra.folio, pendientes.size())
+
+        if(!pendientes) {
+            log.debug('Compra sin pendientes por recibir')
+            //compra.pendiente = false
+            //compra.save flush: true
+            return null
+        }
 
         RecepcionDeCompra com = new RecepcionDeCompra()
         com.sucursal = compra.sucursal
         com.fecha = new Date()
         com.compra = compra
+        com.remision = compra.folio
+        com.comentario = compra.comentario
         com.proveedor = compra.proveedor
-        compra.partidas.each { CompraDet item ->
-            log.debug('Procesando partida: {}', item)
+        pendientes.each { CompraDet item ->
             if (item.getPorRecibir() > 0) {
                 RecepcionDeCompraDet det = new RecepcionDeCompraDet()
                 det.producto = item.producto
                 det.cantidad = item.getPorRecibir()
                 det.compraDet = item
                 com.addToPartidas(det)
+                log.debug('Partida agregada de: {}', item)
             }
         }
         return this.save(com, username)
@@ -47,6 +57,7 @@ class RecepcionDeCompraService {
         resource = resource.save failOnError: true, flush: true
         return resource
     }
+
 
     @Publisher
     def afectarInventario( RecepcionDeCompra com) {

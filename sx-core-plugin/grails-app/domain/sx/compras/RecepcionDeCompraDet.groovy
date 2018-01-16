@@ -1,10 +1,14 @@
 package sx.compras
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Inventario
 import sx.core.Producto
 import sx.core.Sucursal
 import sx.compras.RecepcionDeCompra
 
+@ToString(includes = 'producto,cantidad', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'id')
 class RecepcionDeCompraDet {
 
     String id

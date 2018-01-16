@@ -92,7 +92,17 @@ class Compra {
 
     def actualizarStatus() {
         this.pendiente = this.partidas.find {it.getPorRecibir() > 0 } ?: false
+        // this.pendiente = this.isPendiente()
     }
+
+    def pendientes() {
+        return this.partidas.findAll{ CompraDet det -> det.getPorRecibir() > 0}
+    }
+    /*
+    def isPendiente() {
+        return this.partidas.find {it.getPorRecibir() > 0 } ?: false
+    }
+    */
 
 }
 
