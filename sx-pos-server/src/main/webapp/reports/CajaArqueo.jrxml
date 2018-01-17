@@ -34,8 +34,8 @@
 	<queryString><![CDATA[SELECT A.documento,A.clase,A.descripcion,A.tipo,A.fecha,A.corte,A.deposito,A.comentario,A.cortes_acumulado,A.pagos_registrados,A.fecha_deposito,A.cambios_de_cheques
 ,ifnull((select SUM(x.importe) from morralla x where fecha<$P{FECHA}),0) as morralla
 ,ifnull((select SUM(x.importe) from fondo_fijo x where fecha<$P{FECHA}),0) as saldoFF 
-,ifnull((select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is not null),0) as solicitadoReembolso
-,ifnull((select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitud is null),0) as gastoPendiente
+,ifnull((select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitado is not null and fondo_id is null   AND date(FECHA)<=$P{FECHA}),0) as solicitadoReembolso
+,ifnull((select SUM(x.importe*-1) from fondo_fijo x where x.rembolso is false and solicitado is null and fondo_id is null   AND date(FECHA)<=$P{FECHA}),0) as gastoPendiente
 ,(select s.nombre from sucursal s where s.id=a.sucursal_id) as sucursal
 ,(select s.clave from sucursal s where s.id=a.sucursal_id) as clavSuc
 FROM (
@@ -711,7 +711,7 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="450"
+						x="418"
 						y="47"
 						width="45"
 						height="11"
@@ -730,13 +730,13 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="495"
+						x="463"
 						y="47"
-						width="54"
+						width="70"
 						height="11"
 						key="textField-34"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Left">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
@@ -775,11 +775,11 @@ FROM morralla where sucursal_id = $P{SUCURSAL} AND date(FECHA)=$P{FECHA}
 		</columnHeader>
 		<detail>
 			<band height="14"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="295"
+						x="303"
 						y="2"
-						width="238"
+						width="230"
 						height="11"
 						key="textField-19">
 							<printWhenExpression><![CDATA[new Boolean($F{clase}.startsWith( "FONDO FIJO" )

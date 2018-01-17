@@ -436,7 +436,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CAR_TOTAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{IMPORTE}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
