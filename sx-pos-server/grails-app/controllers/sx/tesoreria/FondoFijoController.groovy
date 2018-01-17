@@ -27,7 +27,16 @@ class FondoFijoController extends RestfulController {
         params.sort = 'fecha'
         params.order = 'asc'
         params.max = 100
-        def list = FondoFijo.executeQuery("from FondoFijo f where date(f.fecha)=? and f.fondo is null", command.fecha)
+        def list = FondoFijo.executeQuery("from FondoFijo f where date(f.fecha)=? ", command.fecha)
+        respond list
+    }
+
+    def pendientes() {
+        log.debug('FondosFijos pendientes',)
+        params.sort = 'fecha'
+        params.order = 'asc'
+        params.max = 100
+        def list = FondoFijo.executeQuery("from FondoFijo f where f.fondo is null and rembolso = false")
         respond list
     }
 

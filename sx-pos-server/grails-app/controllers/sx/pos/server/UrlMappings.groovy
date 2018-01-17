@@ -88,6 +88,7 @@ class UrlMappings {
         "/api/tesoreria/corteCobranza/corteChequeInfo"(controller:"corteCobranza", action: 'corteChequeInfo', method: 'GET')
         "/api/tesoreria/fondoFijo"(resources:"fondoFijo")
         "/api/tesoreria/fondoFijo/fondos"(controller:"fondoFijo", action: "fondos", method: "GET")
+        "/api/tesoreria/fondoFijo/pendientes"(controller:"fondoFijo", action: "pendientes", method: "GET")
         "/api/tesoreria/fondoFijo/prepararRembolso"(controller:"fondoFijo", action: "prepararRembolso", method: "GET")
 
         "/api/tesoreria/fondoFijo/solicitarRembolso"(controller:"fondoFijo", action:'solicitarRembolso', method: 'PUT')
