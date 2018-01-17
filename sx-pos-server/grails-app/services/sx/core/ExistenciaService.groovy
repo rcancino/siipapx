@@ -4,6 +4,7 @@ import grails.events.annotation.Subscriber
 import grails.gorm.transactions.NotTransactional
 import grails.gorm.transactions.Transactional
 import org.apache.commons.lang3.exception.ExceptionUtils
+import sx.inventario.InventarioService
 import sx.inventario.Traslado
 
 @Transactional
@@ -17,7 +18,7 @@ class ExistenciaService {
     @Subscriber
     def onFacturar(Venta factura) {
         if( factura.cuentaPorCobrar) {
-            actualizarExistenciasPorFactura(factura)
+            // actualizarExistenciasPorFactura(factura)
         }
     }
 
@@ -27,14 +28,15 @@ class ExistenciaService {
         def year = hoy[Calendar.YEAR]
         Existencia.withNewTransaction {
             Venta factura = Venta.get(venta.id)
-            // log.debug("Actualizando existencias por ${factura.statusInfo()}")
+            log.debug("Actualizando existencias por ${factura.statusInfo()}")
             factura.partidas.each { VentaDet det ->
-                Existencia exis = Existencia.where{ producto == det.producto && anio == year && mes== month}.find()
-               // assert exis, "No existe existencia ${year} - ${month} Para ${det.producto.clave}"
-                if(exis) {
-                    exis.venta = exis.venta - det.cantidad
-                    exis.save()
-                    log.debug('Existencia actualizada: {}', exis)
+                if (det.inventario) {
+                    Existencia exis = Existencia.where{ producto == det.producto && anio == year && mes== month}.find()
+                    if(exis) {
+                        exis.venta = exis.venta - det.cantidad
+                        exis.save flush: true
+                        log.debug('Existencia actualizada: {} {}', exis.producto.clave, exis.cantidad)
+                    }
                 }
             }
         }
@@ -132,14 +134,34 @@ class ExistenciaService {
             mes == mes }.find()
     }
 
+    @Subscriber('inventarioGenerado')
+    def onInventarioGenerado(Inventario inventario){
+        log.debug('Alta  de Inventario detectada Actualizando existencia para: {}', inventario.producto.clave);
+        def ejercicio = inventario.fecha[Calendar.YEAR]
+        def mes = inventario.fecha[Calendar.MONTH] + 1
+        def prod = inventario.producto
+        Existencia.withNewSession {
+            Existencia exis = Existencia.where{sucursal == inventario.sucursal && producto == prod && anio == ejercicio && mes == mes}.find()
+            if (exis){
+                exis.cantidad = exis.cantidad + inventario.cantidad
+                exis.save flush:true
+            }
+        }
+    }
+
     @Subscriber('inventarioEliminado')
     def onInventarioEliminado(Inventario inventario){
         log.debug('Eliminacion de reg de Inventario detectada Actualizando existencia para: {}', inventario.producto.clave);
         def ejercicio = inventario.fecha[Calendar.YEAR]
-        def mes = inventario.fecha[Calendar.MONTH]
+        def mes = inventario.fecha[Calendar.MONTH] + 1
         def prod = inventario.producto
         Existencia.withNewSession {
-            recalcular(prod, ejercicio, mes)
+            Existencia exis = Existencia.where{sucursal == inventario.sucursal && producto == prod && anio == ejercicio && mes == mes}.find()
+            if (exis){
+                exis.cantidad = exis.cantidad - inventario.cantidad.abs()
+                exis.save flush:true
+            }
+
         }
     }
 

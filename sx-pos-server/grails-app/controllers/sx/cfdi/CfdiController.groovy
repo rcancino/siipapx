@@ -43,9 +43,9 @@ class CfdiController extends RestfulController{
         //render [:]
     }
 
-    private generarImpresionV33( Cfdi cfdi) {
+    private generarImpresionV33( Cfdi cfdi, boolean envio = false) {
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
-        def data = V33PdfGenerator.getReportData(cfdi, true)
+        def data = V33PdfGenerator.getReportData(cfdi, envio)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
@@ -71,7 +71,7 @@ class CfdiController extends RestfulController{
 
         if (targetEmail) {
             def xml = cfdi.getUrl().getBytes()
-            def pdf = generarImpresionV33(cfdi).toByteArray()
+            def pdf = generarImpresionV33(cfdi, true).toByteArray()
             sendMail {
                 multipart false
                 to targetEmail
