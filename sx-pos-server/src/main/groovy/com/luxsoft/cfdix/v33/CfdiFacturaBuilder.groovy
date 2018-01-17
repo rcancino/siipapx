@@ -6,6 +6,8 @@ import org.bouncycastle.util.encoders.Base64
 
 import sx.core.Empresa
 import sx.core.Venta
+import sx.cxc.AplicacionDeCobro
+import sx.cxc.Cobro
 import sx.cxc.CuentaPorCobrar
 
 
@@ -157,6 +159,42 @@ class CfdiFacturaBuilder {
         }
         comprobante.condicionesDePago = this.venta.tipo == 'CON' ? 'Contado' : 'Credito'
         return this
+    }
+
+    def ajustarFormaDePago(){
+        if (this.venta.tipo != 'CRE' ) {
+            def max  = AplicacionDeCobro
+                    .executeQuery("select a.cobro from AplicacionDeCobro a where a.cuentaPorCobrar.id = ? order by a.importe desc" ,
+                    [venta.cuentaPorCobrar.id ])[0]
+            if(max) {
+                switch (max.cobro.formaDePago) {
+                    case 'EFECTIVO':
+                    case 'DEPOSITO_EFECTIVO':
+                        comprobante.formaPago = '01'
+                        break
+                    case 'CHEQUE':
+                    case 'DEPOSITO_CHEQUE':
+                        comprobante.formaPago = '02'
+                        break
+                    case 'TRANSFERENCIA':
+                        comprobante.formaPago = '03'
+                        break
+                    case 'TARJETA_CREDITO':
+                        comprobante.formaPago = '04'
+                        break
+                    case 'TARJETA_DEBITO':
+                        comprobante.formaPago = '28'
+                        break
+                    case 'BONIFICACION':
+                    case 'DEVOLUCION':
+                        comprobante.formaPago = '17'
+                        break
+                    default:
+                        comprobante.formaPago = '99'
+                }
+            }
+
+        }
     }
 
     def buildConceptos(){

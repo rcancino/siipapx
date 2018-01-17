@@ -2,8 +2,11 @@ package sx.cfdi
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.gorm.transactions.Transactional
+import groovy.xml.XmlUtil
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
+import org.apache.commons.lang3.StringEscapeUtils
+import org.apache.commons.lang3.StringUtils
 import org.grails.core.io.ResourceLocator
 import sx.core.AppConfig
 import sx.core.Venta
@@ -110,34 +113,50 @@ class CfdiService {
         }
     }
 
-    def enviarFacturaEmail(Venta factura, String targetEmail) {
-
-        assert factura.cuentaPorCobrar, "La venta ${factura.statusInfo()} no se ha facturado"
-        assert factura.cuentaPorCobrar.cfdi.uuid, "La factura ${factura.statusInfo()} no se ha timbrado"
-
-        Cfdi cfdi = factura.cuentaPorCobrar.cfdi
-
-        if (targetEmail) {
-            // def xml = cfdi.getUrl().getBytes()
-            // def pdf = generarImpresionV33(cfdi)
-            sendMail {
-                multipart false
-                from "facturacion.papelsa@papelsa.com.mx"
-                to targetEmail
-                subject "Correo de prueba"
-                text "Correo de prueba"
-                // attach("${cfdi.uuid}.xml", 'text/xml', xml)
-                // attach("${cfdi.uuid}.pdf", 'text/xml', pdf)
+    def enviar(Cfdi cfdi, String targetEmail) {
+        assert !cfdi.cancelado, "CFDI ${cfdi.serie} ${cfdi.folio}  cancelado no se puede enviar por correo"
+        assert cfdi.uuid, "El CFDI ${cfdi.serie} ${cfdi.folio} no se ha timbrado"
+        if (cfdi.origen == 'VENTA') {
+            Venta venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
+            assert venta, "No existe la venta origen del cfdi: ${cfdi.id}"
+            String email = targetEmail ?: venta.cliente.getCfdiMail()
+            if (!email) {
+                cfdi.comentario = "CLIENTE ${venta.cliente.getCfdiMail()} SIN CORREO PARA ENVIO DE EMAIL "
+                cfdi.save flush: true
+                return cfdi
             }
-            cfdi.enviado = new Date()
-            cfdi.email = targetEmail
+            return enviarFacturaEmail(cfdi, venta, email)
         }
-        log.debug('CFDI: {} enviado a: {}', cfdi.uuid, targetEmail)
+    }
+
+    def enviarFacturaEmail(Cfdi cfdi, Venta factura, String targetEmail) {
+        log.debug('Enviando cfdi {} {} al correo: {}', cfdi.serie,cfdi.folio, targetEmail)
+
+        def xml = cfdi.getUrl().getBytes()
+        def pdf = generarImpresionV33(cfdi, true).toByteArray()
+
+        String message = """Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra. Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración 
+            la puede dirigir a: servicioaclientes@papelsa.com.mx 
+        """
+
+        sendMail {
+            multipart false
+            from "noreplay@papelsa.com.mx"
+            to targetEmail
+            // to 'rubencancino6@gmail.com'
+            subject "Envio de CFDI Serie: ${cfdi.serie} Folio: ${cfdi.folio}"
+            html "<p>${message}</p> "
+            attach("${cfdi.uuid}.xml", 'text/xml', xml)
+            attach("${cfdi.uuid}.pdf", 'application/pdf', pdf)
+        }
+        cfdi.enviado = new Date()
+        cfdi.email = targetEmail
+        cfdi.save flush: true
     }
 
     private generarImpresionV33( Cfdi cfdi) {
         def realPath = resourceLocator.findResourceForURI('/reports')
-        def data = V33PdfGenerator.getReportData(cfdi)
+        def data = V33PdfGenerator.getReportData(cfdi, true)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'

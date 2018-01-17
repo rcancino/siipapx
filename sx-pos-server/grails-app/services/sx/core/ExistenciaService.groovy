@@ -15,7 +15,7 @@ class ExistenciaService {
      * @param factura
      * @return
      */
-    @Subscriber
+    // @Subscriber
     def onFacturar(Venta factura) {
         if( factura.cuentaPorCobrar) {
             // actualizarExistenciasPorFactura(factura)
@@ -135,33 +135,42 @@ class ExistenciaService {
     }
 
     @Subscriber('inventarioGenerado')
-    def onInventarioGenerado(Inventario inventario){
-        log.debug('Alta  de Inventario detectada Actualizando existencia para: {}', inventario.producto.clave);
-        def ejercicio = inventario.fecha[Calendar.YEAR]
-        def mes = inventario.fecha[Calendar.MONTH] + 1
-        def prod = inventario.producto
-        Existencia.withNewSession {
+    def onInventarioGenerado(Inventario source){
+        Inventario.withNewSession {
+            Inventario inventario = Inventario.get(source.id)
+            log.debug('Alta  de Inventario detectada Actualizando existencia para: {}', inventario.producto.clave);
+            def ejercicio = inventario.fecha[Calendar.YEAR]
+            def mes = inventario.fecha[Calendar.MONTH] + 1
+            def prod = inventario.producto
             Existencia exis = Existencia.where{sucursal == inventario.sucursal && producto == prod && anio == ejercicio && mes == mes}.find()
             if (exis){
                 exis.cantidad = exis.cantidad + inventario.cantidad
-                exis.save flush:true
+                log.debug('Existencia actualizada: {}: {} ID: {} ', exis.clave, exis.cantidad, exis.id)
             }
         }
     }
 
-    @Subscriber('inventarioEliminado')
-    def onInventarioEliminado(Inventario inventario){
-        log.debug('Eliminacion de reg de Inventario detectada Actualizando existencia para: {}', inventario.producto.clave);
+    def afectarExistenciaEnAlta(Inventario inventario){
         def ejercicio = inventario.fecha[Calendar.YEAR]
         def mes = inventario.fecha[Calendar.MONTH] + 1
         def prod = inventario.producto
-        Existencia.withNewSession {
-            Existencia exis = Existencia.where{sucursal == inventario.sucursal && producto == prod && anio == ejercicio && mes == mes}.find()
-            if (exis){
-                exis.cantidad = exis.cantidad - inventario.cantidad.abs()
-                exis.save flush:true
-            }
+        Existencia exis = Existencia.where{sucursal == inventario.sucursal && producto == prod && anio == ejercicio && mes == mes}.find()
+        if (exis){
+            exis.cantidad = exis.cantidad + inventario.cantidad
+            exis.save()
+            log.debug('Existencia actualizada: {}: {} ID: {} ', exis.clave, exis.cantidad, exis.id)
+        }
+    }
 
+    def afectarExistenciaEnBaja(Inventario inventario){
+        def ejercicio = inventario.fecha[Calendar.YEAR]
+        def mes = inventario.fecha[Calendar.MONTH] + 1
+        def prod = inventario.producto
+        Existencia exis = Existencia.where{sucursal == inventario.sucursal && producto == prod && anio == ejercicio && mes == mes}.find()
+        if (exis){
+            exis.cantidad = exis.cantidad - inventario.cantidad.abs()
+            exis.save()
+            log.debug('Existencia actualizada: {}: {} ID: {} ', exis.clave, exis.cantidad, exis.id)
         }
     }
 

@@ -11,6 +11,8 @@ class AppConfig {
 
     Sucursal sucursal
 
+    Boolean envioDeCorreosActivo = false
+
     String cfdiLocation
 
     Date dateCreated
@@ -19,6 +21,7 @@ class AppConfig {
 
     static constraints = {
         cfdiLocation nullable: true
+        envioDeCorreosActivo nullable: true
     }
 
     static mapping = {

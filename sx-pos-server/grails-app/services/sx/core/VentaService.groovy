@@ -288,9 +288,12 @@ class VentaService implements  EventPublisher{
         aplicaciones.each { AplicacionDeCobro a ->
             Cobro cobro = a.cobro
             if(cobro.aplicaciones.size() == 1 ){
-                if (cxc.formaDePago == 'TRANSFERENCIA' || !cxc.formaDePago.startsWith("DEPOSITO")) {
-                    log.debug('Eliminando cobro {}', cobro)
+                if (cxc.formaDePago != 'TRANSFERENCIA' && !cxc.formaDePago.startsWith("DEPOSITO")) {
+                    log.debug('Eliminando cobro {} {}', cobro.formaDePago, cobro)
                     cobro.delete flush:true;
+                } else {
+                    cobro.removeFromAplicaciones(a)
+                    cobro.save()
                 }
             } else {
                 cobro.removeFromAplicaciones(a)

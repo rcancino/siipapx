@@ -52,8 +52,10 @@ class Cfdi {
     String status
 
     String email
+
     Date enviado
 
+    String comentario
 
     static constraints = {
         emisorRfc minSize: 12, maxSize:13
@@ -71,6 +73,7 @@ class Cfdi {
         status nullable: true
         email nullable: true
         enviado nullable: true
+        comentario nullable: true
     }
 
     static  mapping={

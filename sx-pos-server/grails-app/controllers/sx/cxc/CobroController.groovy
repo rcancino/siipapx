@@ -79,6 +79,7 @@ class CobroController extends RestfulController{
         return super.saveResource(resource)
     }
 
+
     @Transactional
     def cobroContado(CobroContado res) {
         if (res == null) {

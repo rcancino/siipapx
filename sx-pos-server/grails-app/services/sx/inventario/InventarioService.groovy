@@ -3,12 +3,15 @@ package sx.inventario
 import grails.events.EventPublisher
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
+import sx.core.ExistenciaService
 import sx.core.Inventario
 import sx.core.Venta
 import sx.core.VentaDet
 
 @Transactional
 class InventarioService implements EventPublisher{
+
+    ExistenciaService existenciaService
 
     // @Subscriber
     def onFacturar(Venta venta){
@@ -39,8 +42,9 @@ class InventarioService implements EventPublisher{
                 inventario.renglon = renglon
                 det.inventario = inventario
                 inventario.save(failOnError: true, flush:true)
-                notify('inventarioGenerado', inventario)
+                // notify('inventarioGenerado', inventario)
                 log.debug('Inventario generado: {}', inventario)
+                existenciaService.afectarExistenciaEnAlta(inventario)
                 renglon++
             }
         }
@@ -53,8 +57,10 @@ class InventarioService implements EventPublisher{
             if (inventario) {
                 det.inventario = null
                 inventario.delete flush: true
-                notify('inventarioEliminado', inventario)
-                log.debug('Inventario generado: {}', inventario)
+                // notify('inventarioEliminado', inventario)
+                log.debug('Inventario eliminado: {}', inventario)
+                existenciaService.afectarExistenciaEnBaja(inventario)
+
             }
         }
     }
