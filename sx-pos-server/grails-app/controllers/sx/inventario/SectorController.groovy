@@ -1,19 +1,18 @@
 package sx.inventario
 
-
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 
-
-import grails.transaction.Transactional
-
 import sx.core.Folio
+import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
 class SectorController extends RestfulController {
 
     static responseFormats = ['json']
+
+    ReportService reportService
 
     SectorController() {
         super(Sector)
@@ -49,6 +48,13 @@ class SectorController extends RestfulController {
         def username = getPrincipal().username
         resource.updateUser = username
         return super.updateResource(resource)
+    }
+
+    def print() {
+        params.SECTOR = params.id
+        def pdf = this.reportService.run('SectorAlmacen', params)
+        def fileName = "SectorAlmacen.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
 
 }
