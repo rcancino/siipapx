@@ -6,6 +6,7 @@ import grails.plugins.jasper.JasperReportDef
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
+import sx.core.AppConfig
 import sx.core.Sucursal
 import sx.reports.ReportService
 
@@ -102,6 +103,14 @@ class VentasController {
         repParams['SUCURSAL'] = params.SUCURSAL
         def pdf = reportService.run('ventas_diariasCHE', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "VentasDiariasCheques.pdf")
+    }
+
+    def clientesNuevos(PorFechaCommand command){
+        Map repParams = [:]
+        repParams.FECHA = command.fecha
+        repParams['SUCURSAL'] = AppConfig.first().sucursal.nombre
+        def pdf = reportService.run('ClientesNuevos', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "ClientesNuevos'.pdf")
     }
 
 

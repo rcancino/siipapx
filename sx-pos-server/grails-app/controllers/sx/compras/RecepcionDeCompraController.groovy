@@ -2,12 +2,14 @@ package sx.compras
 
 import grails.rest.RestfulController
 import groovy.transform.ToString
+import sx.core.AppConfig
 import sx.core.Existencia
 import sx.core.Proveedor
 import sx.core.Sucursal
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Folio
 import sx.core.Inventario
+import sx.reportes.PorFechaCommand
 import sx.reports.ReportService
 
 
@@ -101,6 +103,14 @@ class RecepcionDeCompraController extends  RestfulController{
         params.SUCURSAL = com.sucursal.id
         def pdf =  reportService.run('EntradaPorCompra.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
+    }
+
+    def recepcionDeMercancia(PorFechaCommand command) {
+        params.FECHA_ENT = command.fecha
+        params.SUCURSAL = AppConfig.first().sucursal.id
+        def pdf = this.reportService.run('RecepDeMercancia', params)
+        def fileName = "RecepDeMercancia.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
 }
 

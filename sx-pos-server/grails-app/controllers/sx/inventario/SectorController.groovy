@@ -3,7 +3,7 @@ package sx.inventario
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
-
+import sx.core.AppConfig
 import sx.core.Folio
 import sx.reports.ReportService
 
@@ -56,6 +56,8 @@ class SectorController extends RestfulController {
         def fileName = "SectorAlmacen.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
+
+
 
 }
 

@@ -53,6 +53,7 @@ class UrlMappings {
         "/api/compras/recibir/$id"(controller: 'recepcionDeCompra', action: 'recibir', method: 'PUT')
         "/api/compras/recepciones/print/$id"(controller: 'recepcionDeCompra', action: 'print', method: 'GET')
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
+        "/api/compras/recepciones/recepcionDeMercancia"(controller: "recepcionDeCompra", action: 'recepcionDeMercancia', method: 'GET')
 
 
         // Ventas
@@ -71,6 +72,7 @@ class UrlMappings {
         "/api/ventas/cancelar/$id"( controller: 'venta', action: 'cancelar')
         "/api/ventas/print/$id"(controller: "venta", action: 'print', method: 'GET')
         "/api/ventas/cambioDeCliente/$id"( controller: 'venta', action: 'cambioDeCliente', method: 'PUT')
+
 
 
         "/api/preciosPorCliente"(resources: 'preciosPorCliente')
@@ -154,6 +156,7 @@ class UrlMappings {
         "/api/inventario/sectores"(resources: "sector")
         "/api/inventario/sectores/print/$id"(controller: "sector", action: 'print', method: 'GET')
 
+
         // Conteos
         "/api/inventario/conteos"(resources: "conteo")
         "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
@@ -191,6 +194,7 @@ class UrlMappings {
         "/api/report/facturasPendientesCod"(controller: 'ventas', action: 'facturasPendientesCod', method: 'GET')
         "/api/report/facturasPendientesCodEmbarques"(controller: 'ventas', action: 'facturasPendientesCodEmbarques', method: 'GET')
         "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
+        "/api/report/clientesNuevos"(controller: 'ventas', action: 'clientesNuevos', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")
