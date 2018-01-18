@@ -1511,7 +1511,7 @@
 					<reportElement
 						x="27"
 						y="52"
-						width="53"
+						width="61"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1552,15 +1552,15 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="121"
+						x="126"
 						y="52"
-						width="24"
+						width="19"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-170"/>
 					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{REGIMEN}]]></textFieldExpression>
@@ -1580,13 +1580,13 @@
 				</staticText>
 				<staticText>
 					<reportElement
-						x="80"
+						x="85"
 						y="52"
-						width="38"
+						width="41"
 						height="10"
 						key="staticText-220"/>
 					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false"/>
 					</textElement>
 				<text><![CDATA[REGIMEN : ]]></text>
@@ -1814,8 +1814,8 @@ C.P. 02870  TEL/FAX: 5342-7166]]></text>
 				<rectangle>
 					<reportElement
 						mode="Transparent"
-						x="3"
-						y="0"
+						x="2"
+						y="1"
 						width="144"
 						height="85"
 						key="rectangle-11"
