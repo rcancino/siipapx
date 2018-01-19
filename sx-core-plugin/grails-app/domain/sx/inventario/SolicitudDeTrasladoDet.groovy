@@ -7,7 +7,7 @@ import sx.core.Producto
 
 @GrailsCompileStatic
 @ToString(includes = 'producto,solicitado, recibido', includeNames = true, includePackage = false)
-@EqualsAndHashCode(includes = 'producto, cantidad')
+@EqualsAndHashCode(includes = 'id, producto, cantidad, comentario')
 class SolicitudDeTrasladoDet {
 
     String	id
