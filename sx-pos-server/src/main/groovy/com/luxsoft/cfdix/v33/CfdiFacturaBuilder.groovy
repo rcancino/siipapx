@@ -53,7 +53,7 @@ class CfdiFacturaBuilder {
         // assert empresa, 'La empresa no esta registrada...'
         buildComprobante()
                 .buildFormaDePago()
-            .ajustarFormaDePago()
+            //.ajustarFormaDePago()
                 .buildEmisor()
                 .buildReceptor()
                 .buildConceptos()

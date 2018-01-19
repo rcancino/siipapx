@@ -25,7 +25,7 @@ class EnvioDeCfdisJob {
     }
 
     private doEnviar(){
-        Date dia = new Date() - 1
+        Date dia = new Date()
         def cfdis = buscarCfdisPendientes(dia)
         if (cfdis) {
             log.debug('Enviando CFDIs {} pendientes ', cfdis.size());
