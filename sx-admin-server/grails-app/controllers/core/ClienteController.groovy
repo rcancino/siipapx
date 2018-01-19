@@ -19,7 +19,7 @@ class ClienteController extends RestfulController{
         def query = Cliente.where {}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-
+        params.tipo = params.tipo ?: 'CREDITO'
         if(params.term){
             def search = '%' + params.term + '%'
             //query = query.where { clave =~ search || nombre =~ search}
@@ -28,6 +28,10 @@ class ClienteController extends RestfulController{
         if(params.activo){
             query = query.where { activo == params.activo}
         }
+        if(params.tipo == 'CREDITO'){
+            query = query.where{credito != null}
+        }
+
         return query.list(params)
     }
 
