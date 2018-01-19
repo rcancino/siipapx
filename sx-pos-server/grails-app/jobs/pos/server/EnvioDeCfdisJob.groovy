@@ -11,11 +11,12 @@ class EnvioDeCfdisJob {
     CfdiService cfdiService
 
     static triggers = {
-      simple repeatInterval: 60000l * 5 // execute job once in 5 seconds
+        // simple repeatInterval: 60000l // execute job once in 5 seconds
+        simple name:'envioDeCfdi', startDelay: 10000, repeatInterval: 120000
     }
 
     def execute() {
-        // log.debug('Buscando cfdis para enviar por email')
+        log.debug('Buscando cfdis para enviar por email')
         if (Environment.current == Environment.PRODUCTION) {
             AppConfig config = AppConfig.first()
             if(config.envioDeCorreosActivo) {
