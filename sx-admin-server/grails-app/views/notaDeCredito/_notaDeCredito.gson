@@ -4,12 +4,11 @@ model {
     NotaDeCredito notaDeCredito
 }
 
-json g.render(notaDeCredito, [excludes:['dateCreated','lastUpdated','moneda','cliente'] ]){
-    modificado notaDeCredito.lastUpdated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
-    creado notaDeCredito.dateCreated.format('yyyy-MM-dd\'T\'HH:mm:ssZ')
+json g.render(notaDeCredito, [excludes:['moneda','cliente'] ]){
     moneda notaDeCredito.moneda.currencyCode
     cliente {
         id notaDeCredito.cliente.id
         nombre notaDeCredito.cliente.nombre
     }
+    disponible notaDeCredito.cobro.disponible
 }

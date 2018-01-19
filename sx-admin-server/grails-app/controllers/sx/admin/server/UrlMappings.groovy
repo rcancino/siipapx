@@ -50,6 +50,7 @@ class UrlMappings {
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
+        "/api/cxc/notas"(resources: "notaDeCredito")
         "/api/cxc/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
 

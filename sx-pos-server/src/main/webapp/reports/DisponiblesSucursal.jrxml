@@ -36,20 +36,18 @@ A.ID AS ABONO_ID,A.FECHA ,
 A.forma_de_pago AS REFERENCIA
 ,A.forma_de_pago TIPO_PAGO
 ,L.CLAVE,L.NOMBRE,A.IMPORTE AS ABONO,A.DIFERENCIA
+,(SELECT X.TIPO FROM aplicacion_de_cobro B JOIN CUENTA_POR_COBRAR X ON(X.ID=CUENTA_POR_COBRAR_ID) WHERE A.ID=B.COBRO_ID AND B.FECHA<=$P{FECHA} ORDER BY B.DATE_CREATED ASC) AS TIPO_VTA
 ,IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE A.ID=B.COBRO_ID AND B.FECHA<=$P{FECHA}),0) AS APLICADO
 ,(A.IMPORTE-A.DIFERENCIA-(IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE A.ID=B.COBRO_ID AND B.FECHA<=$P{FECHA}),0))) AS SALDO
 ,S.CLAVE AS SUC,S.NOMBRE AS SUCURSAL
 ,A.SUCURSAL_ID AS ID_SUC
 ,'' AS AUTDEP
 FROM cobro A 
-JOIN SUCURSAL S ON (A.SUCURSAL_ID=S.ID) 
+JOIN SUCURSAL S ON (A.SUCURSAL_ID=S.ID) left join cobro_cheque x on(x.cobro_id=A.id and x.cambio_por_efectivo = true)
 join cliente l on (l.id=a.cliente_id)
- WHERE 
-A.tipo IN ('CON','COD') 
+ WHERE A.tipo IN ('CON','COD') AND date(A.PRIMERA_APLICACION) =$P{FECHA} AND A.SUCURSAL_ID=$P{SUCURSAL}
 AND (A.IMPORTE-A.DIFERENCIA-(IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE A.ID=B.COBRO_ID AND B.FECHA<=$P{FECHA}),0)))>0 
-AND date(A.PRIMERA_APLICACION) =$P{FECHA}
-AND A.SUCURSAL_ID=$P{SUCURSAL}
-AND A.PRIMERA_APLICACION IS NOT NULL]]></queryString>
+AND A.PRIMERA_APLICACION IS NOT NULL and x.id is null]]></queryString>
 
 	<field name="ABONO_ID" class="java.lang.String"/>
 	<field name="FECHA" class="java.sql.Date"/>
@@ -59,6 +57,7 @@ AND A.PRIMERA_APLICACION IS NOT NULL]]></queryString>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="ABONO" class="java.math.BigDecimal"/>
 	<field name="DIFERENCIA" class="java.math.BigDecimal"/>
+	<field name="TIPO_VTA" class="java.lang.String"/>
 	<field name="APLICADO" class="java.math.BigDecimal"/>
 	<field name="SALDO" class="java.math.BigDecimal"/>
 	<field name="SUC" class="java.lang.String"/>
@@ -75,6 +74,31 @@ AND A.PRIMERA_APLICACION IS NOT NULL]]></queryString>
 	<variable name="TOTAL_SALDO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{SALDO}]]></variableExpression>
 	</variable>
+
+		<group  name="TIPO_VTA" >
+			<groupExpression><![CDATA[$F{TIPO_VTA}]]></groupExpression>
+			<groupHeader>
+			<band height="50"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="7"
+						y="16"
+						width="103"
+						height="11"
+						key="textField-8"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TIPO DE VENTA :  ".concat($F{TIPO_VTA})]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>

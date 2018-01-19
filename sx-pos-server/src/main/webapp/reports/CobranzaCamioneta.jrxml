@@ -31,30 +31,36 @@
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SALDOAFAVOR" isForPrompting="true" class="java.math.BigDecimal"/>
 	<queryString><![CDATA[SELECT (select s.nombre from sucursal s where s.id=c.sucursal_id) as sucursal
 ,(select s.clave from sucursal s where s.id=c.sucursal_id) as clavSuc
 ,a.id as id,C.documento AS DOCTO,C.FECHA AS FECHA,l.CLAVE,l.NOMBRE
 ,o.forma_de_pago as ABN_DESCRIPCION,c.TOTAL AS VENTA,a.IMPORTE AS COBRADO
 ,C.total-A.IMPORTE-IFNULL((SELECT diferencia FROM otros_productos T WHERE T.cobro_id=O.ID),0) AS DIFERENCIA
-,CASE WHEN date(o.primera_aplicacion) <> a.FECHA THEN 'SALDO A FAVOR'
-	WHEN SUBSTR(o.forma_de_pago,1,8)='DEPOSITO' THEN 'DEPOSITO'
-	WHEN o.anticipo is true then 'ANTICIPO' ELSE   o.forma_de_pago  END AS TIPO
+,CASE 	WHEN o.anticipo is true then 'ANTICIPO'
+	WHEN date(o.primera_aplicacion) <> a.FECHA THEN 'SALDO_A_FAVOR'		
+	 ELSE   o.forma_de_pago  END AS TIPO
 ,o.forma_de_pago TIPO_PAGO
 ,CASE   WHEN o.forma_de_pago='EFECTIVO' THEN 1
         WHEN o.forma_de_pago='CHEQUE'  THEN 2
         WHEN o.forma_de_pago='TRANSFERENCIA' THEN 3
-        WHEN SUBSTR(o.forma_de_pago,1,8)='DEPOSITO' THEN 4
+        WHEN SUBSTR(o.forma_de_pago,1,17)='DEPOSITO_EFECTIVO' THEN 4.1
+        WHEN SUBSTR(o.forma_de_pago,1,15)='DEPOSITO_CHEQUE' THEN 4.2
         WHEN o.forma_de_pago='TARJETA' THEN 5
         WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5
         WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
         WHEN ANTICIPO IS TRUE THEN 6
-        WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7
-        WHEN o.forma_de_pago='NOTA_DEVOLUCION'  THEN 8
-	   WHEN o.forma_de_pago='NOTA_BONIFICACION'  THEN 9
+        WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
+        WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
+        WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
+	   WHEN o.forma_de_pago='BONIFICACION'  THEN 9
  ELSE 10 END AS ORDEN_PAGO
+,(SELECT SUM(O.IMPORTE) 
+	FROM  aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON (C.id=A.cuenta_por_cobrar_id ) left JOIN cobro O ON( O.ID= A.cobro_id) join cliente l on (c.cliente_id=l.id)
+	WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) ='2018/01/09'
+	AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO') AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE
+		) AS SALDO_A_FAVOR
 FROM  aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON (C.id=A.cuenta_por_cobrar_id ) left JOIN cobro O ON( O.ID= A.cobro_id) join cliente l on (c.cliente_id=l.id)
-WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO') AND  o.forma_de_pago<> 'PAGO_DIF']]></queryString>
+WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')]]></queryString>
 
 	<field name="sucursal" class="java.lang.String"/>
 	<field name="clavSuc" class="java.lang.String"/>
@@ -69,7 +75,8 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 	<field name="DIFERENCIA" class="java.math.BigDecimal"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="TIPO_PAGO" class="java.lang.String"/>
-	<field name="ORDEN_PAGO" class="java.lang.Long"/>
+	<field name="ORDEN_PAGO" class="java.math.BigDecimal"/>
+	<field name="SALDO_A_FAVOR" class="java.math.BigDecimal"/>
 
 	<sortField name="ORDEN_PAGO" />
 	<sortField name="DOCTO" />
@@ -82,13 +89,13 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 	</variable>
 	<variable name="TOTALDIFERENCIAG" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[
-new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0 )]]></variableExpression>
+( $F{TIPO} .equals( "PAGO_DIF" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="COBRADO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{COBRADO}]]></variableExpression>
 	</variable>
-	<variable name="DIFERENCIA" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
-		<variableExpression><![CDATA[$F{DIFERENCIA}]]></variableExpression>
+	<variable name="DIFERENCIA" class="java.lang.Double" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{DIFERENCIA}.doubleValue()<0 ? $F{DIFERENCIA}.doubleValue() : 0)]]></variableExpression>
 	</variable>
 	<variable name="TOT_TAR_C" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA_CREDITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
@@ -100,10 +107,10 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "CHEQUE" ) && !$F{TIPO_PAGO}.equals( "ANTICIPO FACTURADO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEP" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEPOSITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "DEPOSITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEVOL" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "NOTA_DEVOLUCION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEVOLUCION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOTALDIFERENCIAP" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[new BigDecimal($F{DIFERENCIA}.doubleValue()<0 ? $F{DIFERENCIA}.doubleValue() : 0 )]]></variableExpression>
@@ -127,13 +134,10 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "SALDO_A_FAVOR" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_BONIF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "NOTA_BONIFICACION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "BONIFICACION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_NODEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[$V{TOT_SAF}.add( $V{TOT_DEVOL} ).add( $V{TOTALDIFERENCIAP} ).add($V{TOTALDIFERENCIAG} ).add( $V{TOT_ANT} ).add($V{TOT_ESP} ).add($V{TOT_BONIF})]]></variableExpression>
-	</variable>
-	<variable name="ANTFAC" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{TIPO_PAGO}.equals( new String("ANTICIPO FACTURADO") )?$F{COBRADO}: new BigDecimal (0)]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[$V{TOT_EFEC}
@@ -143,12 +147,11 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 .add( $V{TOT_TAR_C} )
 .add($V{TOT_TAR_D} )
 .add($V{TOT_TAR_A} )
-.add($P{SALDOAFAVOR} )
-.add($V{ANTFAC} )]]></variableExpression>
+]]></variableExpression>
 	</variable>
 
 		<group  name="TIPO" >
-			<groupExpression><![CDATA[$F{TIPO_PAGO}]]></groupExpression>
+			<groupExpression><![CDATA[$F{TIPO}]]></groupExpression>
 			<groupHeader>
 			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
@@ -162,7 +165,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement>
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO_PAGO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}.equals("PAGO_DIF") ? "PAGO DIF (OTROS GASTOS)" : $F{TIPO}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
@@ -211,13 +214,13 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{DIFERENCIA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{DIFERENCIA}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
 		</group>
 		<background>
-			<band height="147"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</background>
 		<title>
@@ -570,7 +573,9 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 						y="2"
 						width="26"
 						height="13"
-						key="textField"/>
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean($F{DIFERENCIA}.doubleValue()<0)]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
@@ -589,6 +594,21 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ABN_DESCRIPCION}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="548"
+						y="0"
+						width="19"
+						height="15"
+						key="textField-32">
+							<printWhenExpression><![CDATA[new Boolean($F{DIFERENCIA}.doubleValue()>0)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DIFERENCIA}.doubleValue()>0 ? "*" : ""]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -848,24 +868,6 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{COBRADO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="545"
-						y="5"
-						width="32"
-						height="14"
-						key="textField"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTALDIFERENCIAG}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						x="321"
@@ -881,22 +883,9 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<staticText>
 					<reportElement
-						x="522"
-						y="5"
-						width="23"
-						height="14"
-						key="staticText-38"/>
-					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[OTG]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
 						mode="Opaque"
-						x="50"
-						y="54"
+						x="40"
+						y="50"
 						width="77"
 						height="11"
 						forecolor="#000000"
@@ -915,8 +904,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="51"
-						y="65"
+						x="41"
+						y="61"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -935,8 +924,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="50"
-						y="21"
+						x="40"
+						y="17"
 						width="77"
 						height="11"
 						forecolor="#000000"
@@ -955,8 +944,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="50"
-						y="32"
+						x="40"
+						y="28"
 						width="77"
 						height="11"
 						forecolor="#000000"
@@ -975,8 +964,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="50"
-						y="43"
+						x="40"
+						y="39"
 						width="77"
 						height="11"
 						forecolor="#000000"
@@ -1015,9 +1004,9 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="227"
+						x="216"
 						y="32"
-						width="135"
+						width="146"
 						height="11"
 						forecolor="#000000"
 						key="staticText-45"
@@ -1034,8 +1023,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="32"
+						x="117"
+						y="28"
 						width="84"
 						height="11"
 						key="textField-10"/>
@@ -1047,8 +1036,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="21"
+						x="117"
+						y="17"
 						width="84"
 						height="11"
 						key="textField-11"/>
@@ -1081,8 +1070,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="51"
-						y="76"
+						x="41"
+						y="72"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1100,8 +1089,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="43"
+						x="117"
+						y="39"
 						width="84"
 						height="11"
 						key="textField-12"/>
@@ -1113,8 +1102,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="54"
+						x="117"
+						y="50"
 						width="84"
 						height="11"
 						key="textField-13"/>
@@ -1126,8 +1115,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="65"
+						x="117"
+						y="61"
 						width="84"
 						height="11"
 						key="textField-14"/>
@@ -1139,8 +1128,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="76"
+						x="117"
+						y="72"
 						width="84"
 						height="11"
 						key="textField-15"/>
@@ -1187,12 +1176,12 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTALDIFERENCIAP}.add( $V{TOTALDIFERENCIAG} )]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOTALDIFERENCIAG}.doubleValue()+$V{TOTALDIFERENCIAP}.doubleValue())]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="119"
+						x="117"
+						y="108"
 						width="84"
 						height="11"
 						key="textField-19"/>
@@ -1201,13 +1190,15 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEPOSITABLE}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SALDO_A_FAVOR}
+
+]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="28"
-						y="119"
+						x="18"
+						y="108"
 						width="99"
 						height="11"
 						forecolor="#000000"
@@ -1246,8 +1237,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="51"
-						y="76"
+						x="41"
+						y="72"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1266,8 +1257,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="51"
-						y="87"
+						x="41"
+						y="83"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1285,8 +1276,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="127"
-						y="87"
+						x="117"
+						y="83"
 						width="84"
 						height="11"
 						key="textField-20"/>
@@ -1299,8 +1290,8 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="51"
-						y="87"
+						x="41"
+						y="83"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1421,12 +1412,12 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="545"
-						y="19"
+						y="5"
 						width="32"
 						height="14"
 						key="textField-26"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
-					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1439,7 +1430,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						x="522"
-						y="19"
+						y="5"
 						width="23"
 						height="14"
 						key="staticText-56"/>
@@ -1449,39 +1440,6 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					</textElement>
 				<text><![CDATA[OTP]]></text>
 				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="51"
-						y="98"
-						width="76"
-						height="11"
-						forecolor="#000000"
-						key="staticText-57"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[SALDO A FAVOR :]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="127"
-						y="98"
-						width="84"
-						height="11"
-						key="textField-27"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{SALDOAFAVOR}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="362"
@@ -1503,9 +1461,9 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="227"
+						x="216"
 						y="43"
-						width="135"
+						width="146"
 						height="11"
 						forecolor="#000000"
 						key="staticText-59"
@@ -1515,7 +1473,7 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[PAGO C/NOTA DE BONIFICACION:]]></text>
@@ -1533,25 +1491,12 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_BONIF}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="127"
-						y="107"
-						width="84"
-						height="11"
-						key="textField-31"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{ANTFAC}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="23"
-						y="107"
-						width="104"
+						x="40"
+						y="94"
+						width="76"
 						height="11"
 						forecolor="#000000"
 						key="staticText-60"
@@ -1564,7 +1509,40 @@ new BigDecimal($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[ANTICIPO FACTURADO:]]></text>
+				<text><![CDATA[TARJETA DE DEBITO :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="116"
+						y="94"
+						width="84"
+						height="11"
+						key="textField-33"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{SALDO_A_FAVOR}.doubleValue()-$V{TOT_DEPOSITABLE}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="27"
+						y="94"
+						width="89"
+						height="11"
+						forecolor="#000000"
+						key="staticText-61"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SALDO A FAVOR:]]></text>
 				</staticText>
 			</band>
 		</summary>
