@@ -42,8 +42,8 @@ class CobroController extends RestfulController{
      * Regresa las ventas de contado pendientes de factura
      */
     def ventasFacturables(PorFacturarCommand command){
-        log.debug('Buscando ventas pendientes de facturar {}', params)
-        log.debug('Buscando ventas pendientes de facturar command {}', command)
+        // log.debug('Buscando ventas pendientes de facturar {}', params)
+        //log.debug('Buscando ventas pendientes de facturar command {}', command)
 
         if (command == null){
             notFound()

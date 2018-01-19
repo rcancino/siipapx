@@ -27,6 +27,7 @@ class TrasladoController extends RestfulController {
         params.max = 100;
         params.sort = 'lastUpdated'
         params.order = 'desc'
+        log.debug('Buscando traslados: {}',params)
         def query = Traslado.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}
@@ -34,7 +35,26 @@ class TrasladoController extends RestfulController {
         if(params.tipo) {
             query = query.where {tipo == params.tipo}
         }
-        return query.list(params)
+        if(params.term){
+            String term = params.term
+            // log.debug('Buscando: {}', term)
+            if(term.isInteger()) {
+                log.debug('Buscando por documento {}', term)
+                query = query.where{documento == term.toInteger()}
+            } else {
+                def search = "${term}%"
+                if (params.tipo == 'TPE') {
+                    log.debug('Buscando {}s por sucursal Atiende {}', params.tipo, search)
+                    query = query.where { solicitudDeTraslado.sucursalAtiende.nombre =~ search }
+                } else {
+                    // query = query.where { solicitudDeTraslado.sucursalSolicita.nombre =~ term }
+                }
+
+            }
+        }
+        def list = query.list(params)
+        log.debug('Registros localizados: {}', list.size())
+        return list
     }
 
     def salida(Traslado tps){
