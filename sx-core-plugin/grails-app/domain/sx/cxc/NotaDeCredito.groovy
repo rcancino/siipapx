@@ -6,11 +6,12 @@ import sx.cfdi.Cfdi
 import sx.core.Autorizacion
 import sx.core.Cliente
 import sx.core.Sucursal
+import sx.inventario.DevolucionDeVenta
 import sx.utils.MonedaUtils
 
 
 @ToString(includeNames=true,includePackage=false, includes = ['folio', 'serie','fecha','total','cfdi','nombre','partidas'])
-@EqualsAndHashCode(includeFields = true,includes = ['serie','folio'])
+@EqualsAndHashCode(includeFields = true,includes = ['id, serie','folio'])
 class NotaDeCredito {
 
     String id
@@ -51,6 +52,8 @@ class NotaDeCredito {
 
     BigDecimal descuento = 0.0
 
+    Boolean financiero
+
     Cobro cobro
 
     String sw2
@@ -59,6 +62,12 @@ class NotaDeCredito {
 
     Date lastUpdated
 
+    String usoDeCfdi
+
+    String formaDePago
+
+    DevolucionDeVenta devolucionDeVenta
+
     String createUser
     String updateUser
 
@@ -66,8 +75,8 @@ class NotaDeCredito {
         serie maxSize: 20
         folio unique:'serie'
         tipoCartera minSize:3, maxSize: 3
-        tipo(nullable:false,inList:['BONIFICACION','DEVOLUCION'])
-        tc(scale:4,validator:{ val,obj ->
+        tipo(nullable:false,inList:['BONIFICACION', 'DEVOLUCION','DESCUENTOS_GLOBALES'])
+        tc(scale:6,validator:{ val,obj ->
             if(obj.moneda!=MonedaUtils.PESOS && val <= 1.0)
                 return "tipoDeCambioError"
             else
@@ -79,6 +88,9 @@ class NotaDeCredito {
         sw2 nullable: true
         createUser nullable: true
         updateUser nullable: true
+        devolucionDeVenta nullable: true
+        usoDeCfdi nullable: true, maxSize:3
+        formaDePago nullable: true, maxSize: 40
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]

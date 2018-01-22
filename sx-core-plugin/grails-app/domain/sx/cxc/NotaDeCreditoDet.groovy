@@ -27,7 +27,13 @@ class NotaDeCreditoDet {
 
     String	concepto
 
-    BigDecimal	descuento	 = 0
+    BigDecimal	descuento = 0.0
+
+    String claveProdServ = '84111506'
+
+    String claveProdDesc = 'servicios de facturación'
+
+    String claveUnidadSat = 'ACT'
 
     Date dateCreated
 
@@ -43,6 +49,9 @@ class NotaDeCreditoDet {
         numeroDeIdentificacion maxSize:50
         comentario nullable:true
         cuentaPorCobrar nullable:  true
+        claveProdDesc nullable: true, maxSize: 250
+        claveProdServ nullable: true, maxSize: 100
+        claveUnidadSat nullable: true, maxSize: 50
     }
 
     static mapping={
