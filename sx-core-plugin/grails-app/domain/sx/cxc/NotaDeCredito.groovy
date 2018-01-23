@@ -66,7 +66,11 @@ class NotaDeCredito {
 
     String formaDePago
 
-    DevolucionDeVenta devolucionDeVenta
+    Long rmd
+
+    String rmdSucursal
+
+    Boolean sinReferencia = false
 
     String createUser
     String updateUser
@@ -88,9 +92,10 @@ class NotaDeCredito {
         sw2 nullable: true
         createUser nullable: true
         updateUser nullable: true
-        devolucionDeVenta nullable: true
         usoDeCfdi nullable: true, maxSize:3
         formaDePago nullable: true, maxSize: 40
+        rmd nullable: true
+        rmdSucursal nullable: true, maxSize: 30
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]
