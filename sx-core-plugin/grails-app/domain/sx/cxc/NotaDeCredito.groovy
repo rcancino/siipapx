@@ -3,10 +3,8 @@ package sx.cxc
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import sx.cfdi.Cfdi
-import sx.core.Autorizacion
 import sx.core.Cliente
 import sx.core.Sucursal
-import sx.inventario.DevolucionDeVenta
 import sx.utils.MonedaUtils
 
 
@@ -28,7 +26,7 @@ class NotaDeCredito {
 
     String tipoCartera
 
-    Date fecha
+    Date fecha = new Date()
 
     Currency moneda = Currency.getInstance('MXN')
 
@@ -52,7 +50,7 @@ class NotaDeCredito {
 
     BigDecimal descuento = 0.0
 
-    Boolean financiero
+    Boolean financiero = false
 
     Cobro cobro
 
@@ -79,7 +77,7 @@ class NotaDeCredito {
         serie maxSize: 20
         folio unique:'serie'
         tipoCartera minSize:3, maxSize: 3
-        tipo(nullable:false,inList:['BONIFICACION', 'DEVOLUCION','DESCUENTOS_GLOBALES'])
+        tipo(nullable:false,inList:['BON', 'DEV'])
         tc(scale:6,validator:{ val,obj ->
             if(obj.moneda!=MonedaUtils.PESOS && val <= 1.0)
                 return "tipoDeCambioError"
@@ -96,6 +94,7 @@ class NotaDeCredito {
         formaDePago nullable: true, maxSize: 40
         rmd nullable: true
         rmdSucursal nullable: true, maxSize: 30
+        nombre nullable: true
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]
@@ -106,40 +105,17 @@ class NotaDeCredito {
         fecha type: 'date'
     }
 
-
     BigDecimal getTotalMN(String property){
         return "${property}"*tc
-
     }
 
-    def actualizarImportes() {
-        if(!partidas) partidas = [];
-        def imp = partidas.sum 0.0 , {det ->
-            def sub = det.cantidad * det.valorUnitario  * tc
-            sub = MonedaUtils.round(sub)
+    def beforeInsert() {
+        updateNombre();
+    }
+
+    def updateNombre() {
+        if(!this.nombre && this.cliente) {
+            this.nombre = this.cliente.nombre;
         }
-        def iva = MonedaUtils.round( (imp * impuestoTasa) , 2)
-        this.importe = imp
-        this.impuesto = iva
-        this.total = this.importe + this.impuesto
     }
-
-    /*
-    def beforeValidate(){
-        if(!nombre) nombre = this.cliente.nombre
-        if(!folio) folio = 0
-    }
-
-
-    def beforeUpdate() {
-        actualizarImportes()
-    }
-    */
-
-    def beforeValidate(){
-        if(!nombre)
-            nombre = this.cliente.nombre
-    }
-
-
 }

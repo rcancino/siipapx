@@ -39,11 +39,6 @@ class NotaDeCreditoDet {
 
     Date lastUpdated
 
-
-
-
-
-
     static constraints = {
         unidad maxSize:100
         numeroDeIdentificacion maxSize:50

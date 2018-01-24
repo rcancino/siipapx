@@ -51,6 +51,7 @@ class UrlMappings {
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/notas"(resources: "notaDeCredito")
+        "/api/cxc/notas/buscarRmd"(controller: "notaDeCredito", action: 'buscarRmd', method: 'GET')
         "/api/cxc/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
 

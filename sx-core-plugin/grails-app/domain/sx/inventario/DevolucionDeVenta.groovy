@@ -3,7 +3,6 @@ package sx.inventario
 import sx.core.Sucursal
 import sx.core.Venta
 import sx.cxc.Cobro
-import sx.cxc.NotaDeCredito
 
 class DevolucionDeVenta {
 
@@ -45,6 +44,8 @@ class DevolucionDeVenta {
 
     Date asignado
 
+    Boolean parcial = false
+
     static  hasMany = [partidas:DevolucionDeVentaDet]
 
     static constraints = {
@@ -57,6 +58,7 @@ class DevolucionDeVenta {
         cobro nullable: true
         fechaInventario nullable: true
         asignado nullable: true
+        parcial nullable: true
     }
 
     static  mapping ={
