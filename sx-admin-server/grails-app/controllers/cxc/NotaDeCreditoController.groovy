@@ -1,5 +1,6 @@
 package sx.cxc
 
+import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 
 import grails.plugin.springsecurity.annotation.Secured
@@ -29,6 +30,7 @@ class NotaDeCreditoController extends RestfulController{
         Sucursal sucursal = Sucursal.where { nombre == 'OFICINAS'}.find()
         nota.sucursal = sucursal
         nota.serie = nota.tipo
+        log.debug('Nota preparada: {} ', nota.properties.entrySet())
         return nota
     }
 
@@ -57,13 +59,22 @@ class NotaDeCreditoController extends RestfulController{
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         def cliente = params.cliente
-        def query = DevolucionDeVenta.where{ venta.cliente.id == cliente}
+        def query = DevolucionDeVenta.where{ }
         if(params.term) {
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}
             }
         }
         respond query.list(params)
+    }
+
+    @Transactional
+    def generarConRmd(DevolucionDeVenta rmd){
+        log.debug('Generando nota de credito para RMD: {}' , rmd)
+        NotaDeCredito nota = new NotaDeCredito()
+        nota.tipoCartera = params.cartera
+        nota =  notaDeCreditoService.generarNotaDeDevolucion(nota, rmd)
+        respond nota
     }
 
     def handleNotaDeCreditoException(NotaDeCreditoException sx) {

@@ -11,4 +11,5 @@ json g.render(notaDeCredito, [excludes:['moneda','cliente','cobro'] ]){
         nombre notaDeCredito.cliente.nombre
     }
     cobro g.render(notaDeCredito.cobro)
+
 }

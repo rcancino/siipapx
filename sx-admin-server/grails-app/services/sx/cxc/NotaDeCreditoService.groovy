@@ -15,18 +15,20 @@ class NotaDeCreditoService {
         }
         assert rmd.cobro == null, "RMD ${rmd.documento} ${rmd.sucursal} Ya tiene nota de credito generada"
         log.debug('Generando nota de credito de devolucion para el rmd {}', rmd)
+        nota.cliente = rmd.venta.cliente
         nota.sucursal = rmd.sucursal
+        nota.tipo = 'DEVOLUCION'
         nota.serie = 'DEV'
         nota.importe = rmd.importe
         nota.impuesto = rmd.impuesto
         nota.total = rmd.total
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
 
-
         Cobro cobro = generarCobro(nota)
         nota.save failOnError: true, flush: true
         rmd.cobro = cobro
         rmd.save flush: true
+        return nota
     }
 
 
