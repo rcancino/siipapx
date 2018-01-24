@@ -42,16 +42,6 @@ class NotaDeCreditoController extends RestfulController{
         return super.listAllResources(params)
     }
 
-    @Override
-    protected Object saveResource(Object resource) {
-        log.debug('Salvando nota de credito: {}', resource)
-        if (params.devolucion) {
-            DevolucionDeVenta devolucion = DevolucionDeVenta.get(params.devolucion)
-            return notaDeCreditoService.generarNotaDeDevolucion(resource, devolucion)
-        } else {
-            throw new IllegalArgumentException('Pendiente de implementar')
-        }
-    }
 
     def buscarRmd() {
        // log.debug('Localizando rmd {}', params)
@@ -60,6 +50,11 @@ class NotaDeCreditoController extends RestfulController{
         params.order = params.order ?:'desc'
         def cliente = params.cliente
         def query = DevolucionDeVenta.where{ }
+        if(params.boolean('pendientes')) {
+            query = query.where{cobro == null}
+        } else if (!params.boolean('pendientes')) {
+            query = query.where{cobro != null}
+        }
         if(params.term) {
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}

@@ -30,15 +30,18 @@ class NotaBuilder {
     private NotaDeCredito nota
     private DevolucionDeVenta rmd
 
-    private BigDecimal subTotal = 0.0
+    private BigDecimal subTotalAcumulado = 0.0
+    private BigDecimal descuentoAcumulado = 0.0
+    private BigDecimal totalImpuestosTrasladados = 0.0
 
-    private BigDecimal totalImpuestosTrasladados
 
     CfdiSellador33 sellador
 
     def build(NotaDeCredito nota){
         this.nota = nota
         this.empresa = Empresa.first()
+        subTotalAcumulado = 0.0
+        descuentoAcumulado = 0.0
         if (nota.tipo.startsWith('DEV')){
             rmd = DevolucionDeVenta.where{ cobro == this.nota.cobro}.find()
         }
@@ -99,7 +102,7 @@ class NotaBuilder {
     }
 
     def buildConceptos() {
-        if (this.nota.tipo == 'DEV') {
+        if (this.nota.tipo.startsWith('DEV')) {
             buildConceptosDevolucion()
         }
     }
@@ -110,59 +113,66 @@ class NotaBuilder {
         Comprobante.Conceptos conceptos = factory.createComprobanteConceptos()
         this.rmd.partidas.each { DevolucionDeVentaDet item ->
             VentaDet det = item.ventaDet
-
             Comprobante.Conceptos.Concepto concepto = factory.createComprobanteConceptosConcepto()
-
             def factor = det.producto.unidad == 'MIL' ? 1000 : 1
+
             def importe = (item.cantidad/factor * det.precio)
+            importe = MonedaUtils.round(importe)
+
             def descuento = (det.descuento / 100) * importe
-            def subTot = importe - descto
-            def impuesto = MonedaUtils.calcularImpuesto(subTot)
-            this.subTotal = this.subTotal + subTot
+            descuento = MonedaUtils.round(descuento)
 
-            concepto.with {
-                claveProdServ = '84111506'
-                claveUnidad = 'ACT'
-                String desc = det.producto.descripcion
-                noIdentificacion = det.producto.clave
-                cantidad = MonedaUtils.round(item.cantidad / factor,3)
-                unidad = det.producto.unidad
-                descripcion = desc
-                valorUnitario = MonedaUtils.round(det.precio, 2)
-                importe = MonedaUtils.round(importe, 2)
-                descuento = MonedaUtils.round(descuento, 2)
+            def subTot =  importe - descuento
 
-                // Impuestos del concepto
-                concepto.impuestos = factory.createComprobanteConceptosConceptoImpuestos()
-                concepto.impuestos.traslados = factory.createComprobanteConceptosConceptoImpuestosTraslados()
-                Comprobante.Conceptos.Concepto.Impuestos.Traslados.Traslado traslado1
-                traslado1 = factory.createComprobanteConceptosConceptoImpuestosTrasladosTraslado()
-                traslado1.base =  det.subtotal
-                traslado1.impuesto = '002'
-                traslado1.tipoFactor = CTipoFactor.TASA
-                traslado1.tasaOCuota = '0.160000'
-                traslado1.importe = impuesto
+            def impuesto = subTot * MonedaUtils.IVA
+            impuesto = MonedaUtils.round(impuesto)
 
-                this.totalImpuestosTrasladados += traslado1.importe
-                concepto.impuestos.traslados.traslado.add(traslado1)
-                conceptos.concepto.add(concepto)
+            // this.descuentoAcumulado = this.descuentoAcumulado + descuento
+            concepto.descuento = descuento
+            concepto.claveProdServ = '84111506'
+            concepto.claveUnidad = 'ACT'
+            concepto.noIdentificacion = det.producto.clave
+            concepto.cantidad = MonedaUtils.round(item.cantidad / factor,3)
+            concepto.unidad = det.producto.unidad
+            concepto.descripcion = det.producto.descripcion
+            concepto.valorUnitario = MonedaUtils.round(det.precio, 2)
+            concepto.importe = importe
 
-                comprobante.conceptos = conceptos
-            }
+            concepto.impuestos = factory.createComprobanteConceptosConceptoImpuestos()
+            concepto.impuestos.traslados = factory.createComprobanteConceptosConceptoImpuestosTraslados()
+
+            Comprobante.Conceptos.Concepto.Impuestos.Traslados.Traslado traslado1
+            traslado1 = factory.createComprobanteConceptosConceptoImpuestosTrasladosTraslado()
+            traslado1.base =  subTot
+            traslado1.impuesto = '002'
+            traslado1.tipoFactor = CTipoFactor.TASA
+            traslado1.tasaOCuota = '0.160000'
+            traslado1.importe = impuesto
+
+
+            concepto.impuestos.traslados.traslado.add(traslado1)
+            conceptos.concepto.add(concepto)
+
+            // Acumulados
+            this.totalImpuestosTrasladados += traslado1.importe
+            this.subTotalAcumulado = this.subTotalAcumulado + subTot
+            this.descuentoAcumulado = this.descuentoAcumulado + descuento
+
         }
+        comprobante.conceptos = conceptos
         return this
     }
 
     def buildImpuestos(){
         Comprobante.Impuestos impuestos = factory.createComprobanteImpuestos()
-        impuestos.setTotalImpuestosTrasladados(this.totalImpuestosTrasladados)
+        impuestos.setTotalImpuestosTrasladados(MonedaUtils.round(this.totalImpuestosTrasladados))
         Comprobante.Impuestos.Traslados traslados = factory.createComprobanteImpuestosTraslados()
         Comprobante.Impuestos.Traslados.Traslado traslado = factory.createComprobanteImpuestosTrasladosTraslado()
         traslado.impuesto = '002'
         traslado.tipoFactor = CTipoFactor.TASA
         traslado.tasaOCuota = '0.160000'
 
-        traslado.importe = this.totalImpuestosTrasladados
+        traslado.importe = MonedaUtils.round(this.totalImpuestosTrasladados)
         traslados.traslado.add(traslado)
         impuestos.traslados = traslados
         comprobante.setImpuestos(impuestos)
@@ -170,10 +180,11 @@ class NotaBuilder {
     }
 
     def buildTotales(){
-        def total = MonedaUtils.calcularTotal(this.subTotal)
-        comprobante.subTotal = MonedaUtils.round(this.subTotal, 2) //.setScale(2, RoundingMode.CEILING)
-        comprobante.total = MonedaUtils.round(total,2)
-        comprobante.descuento = MonedaUtils.round(venta.descuentoImporte, 2)
+
+        comprobante.descuento = this.descuentoAcumulado
+        comprobante.subTotal = this.subTotalAcumulado
+        comprobante.total = this.subTotalAcumulado + this.totalImpuestosTrasladados
+
         return this
     }
 

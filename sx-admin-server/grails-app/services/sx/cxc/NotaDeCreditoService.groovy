@@ -1,6 +1,10 @@
 package sx.cxc
 
+import com.luxsoft.cfdix.CFDIXUtils
+import com.luxsoft.cfdix.v33.NotaBuilder
 import grails.gorm.transactions.Transactional
+import lx.cfdi.v33.CfdiUtils
+import lx.cfdi.v33.Comprobante
 import sx.core.Folio
 import sx.core.Sucursal
 import sx.inventario.DevolucionDeVenta
@@ -8,6 +12,7 @@ import sx.inventario.DevolucionDeVenta
 @Transactional
 class NotaDeCreditoService {
 
+    NotaBuilder notaBuilder
 
     def generarNotaDeDevolucion(NotaDeCredito nota, DevolucionDeVenta rmd) {
         if (rmd.cobro) {
@@ -29,6 +34,12 @@ class NotaDeCreditoService {
         rmd.cobro = cobro
         rmd.save flush: true
         return nota
+    }
+
+    def generarCfdi(NotaBuilder nota) {
+        Comprobante comprobante = notaBuilder.build(nota);
+        CfdiUtils.serialize(comprobante)
+        CFDIXUtils.parse()
     }
 
 

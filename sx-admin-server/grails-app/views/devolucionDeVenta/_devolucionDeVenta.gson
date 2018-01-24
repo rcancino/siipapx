@@ -1,3 +1,4 @@
+import sx.cxc.NotaDeCredito
 import sx.inventario.DevolucionDeVenta
 
 model{
@@ -20,4 +21,5 @@ json g.render(devolucionDeVenta){
         }
     }
     factura devolucionDeVenta.venta.cuentaPorCobrar.documento
+    nota g.render(devolucionDeVenta.findNota())
 }

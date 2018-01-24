@@ -118,4 +118,6 @@ class NotaDeCredito {
             this.nombre = this.cliente.nombre;
         }
     }
+
+
 }
