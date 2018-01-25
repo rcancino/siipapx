@@ -30,20 +30,18 @@
 		<defaultValueExpression ><![CDATA["ORDEN DE COMPRA No. "]]></defaultValueExpression>
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select
-a.id,
-a.forma_de_pago as TIPO_ID,0 as folio,a.fecha,0 as numero,l.clave,l.nombre,A.importe as total,'' as comentario,A.id as abono_id,A.tipo as ORIGEN,
-S.CLAVE AS SUC_CLAVE,S.NOMBRE AS SUC_NOMBRE 
-,'' AS REF
-,A.importe -ifnull((SELECT SUM(P.IMPORTE) FROM aplicacion_de_cobro P WHERE P.cobro_id=A.ID ),0) AS SALDO_ANTICIPO
-,(SELECT SUM(P.IMPORTE) FROM aplicacion_de_cobro P WHERE P.cobro_id=A.ID ) AS SALDO_APLICADO
+	<queryString><![CDATA[select a.id,a.forma_de_pago as TIPO_ID,a.referencia as folio,a.fecha,0 as numero
+,l.clave,l.nombre,A.importe as total,'' as comentario,A.id as abono_id,A.tipo as ORIGEN,
+S.CLAVE AS SUC_CLAVE,S.NOMBRE AS SUC_NOMBRE ,'' AS REF
+,A.importe -ifnull((SELECT SUM(P.IMPORTE) FROM aplicacion_de_cobro P WHERE P.cobro_id=A.ID and p.fecha=a.fecha ),0) AS SALDO_ANTICIPO
+,ifnull((SELECT SUM(P.IMPORTE) FROM aplicacion_de_cobro P WHERE P.cobro_id=A.ID  and p.fecha=a.fecha ),0) AS SALDO_APLICADO
 ,'' as banco
 FROM cobro A join cliente l on (a.cliente_id=l.id) JOIN sucursal S ON (A.SUCURSAL_ID=S.ID)
 where a.anticipo is true and a.id=$P{ID}]]></queryString>
 
 	<field name="id" class="java.lang.String"/>
 	<field name="TIPO_ID" class="java.lang.String"/>
-	<field name="folio" class="java.lang.Long"/>
+	<field name="folio" class="java.lang.String"/>
 	<field name="fecha" class="java.sql.Date"/>
 	<field name="numero" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
@@ -179,7 +177,7 @@ where a.anticipo is true and a.id=$P{ID}]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ORIGEN}.equals("CRE")?"Crédito":"Camioneta"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ORIGEN}.equals("CRE")?"Crédito":"Contado"]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
@@ -240,7 +238,7 @@ where a.anticipo is true and a.id=$P{ID}]]></queryString>
 					<textElement verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{folio}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{folio}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -642,7 +640,7 @@ where a.anticipo is true and a.id=$P{ID}]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP WIN EX]]></text>
+				<text><![CDATA[SIIPAP Sx-rx]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -746,7 +744,7 @@ where a.anticipo is true and a.id=$P{ID}]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP WIN EX]]></text>
+				<text><![CDATA[SIIPAP Sx-rx]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
