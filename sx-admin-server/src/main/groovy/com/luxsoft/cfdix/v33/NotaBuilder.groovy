@@ -193,9 +193,20 @@ class NotaBuilder {
         Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
         relacionados.tipoRelacion = '01'
         if (this.rmd) {
+            relacionados.tipoRelacion = '03'
             Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
-            assert rmd.venta?.cuentaPorCobrar?.cfdi?.uuid, 'RMD de venta no timbrada'
-            relacionado.UUID = rmd.venta.cuentaPorCobrar.cfdi.uuid
+            assert rmd.venta.cuentaPorCobrar, 'RMD sin CxC timbrada'
+            def cxc = rmd.venta.cuentaPorCobrar
+            def uuid = null
+            if (cxc.cfdi) {
+                assert cxc.cfdi.uuid, 'Cuenta por cobrar CFDI sin  timbrar'
+                uuid = cxc.uuid
+            } else {
+                assert cxc.uuid, 'Cuenta por cobrar sin  timbrar'
+                uuid = cxc.uuid
+            }
+            assert uuid, 'No existe UUID origen para la devolucion'
+            relacionado.UUID = uuid
             relacionados.cfdiRelacionado.add(relacionado)
 
         }

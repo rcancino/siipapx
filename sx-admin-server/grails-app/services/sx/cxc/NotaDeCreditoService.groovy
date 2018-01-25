@@ -21,6 +21,16 @@ class NotaDeCreditoService {
 
     CfdiTimbradoService cfdiTimbradoService
 
+    def generarNotaBonificacion(NotaDeCredito nota) {
+        log.debug('Presistiendo nota de devolucion {}', nota)
+        nota.tipo = 'BONIFICACION'
+        nota.serie = 'BON'
+        nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
+        Cobro cobro = generarCobro(nota)
+        nota.save failOnError: true, flush: true
+        return nota
+    }
+
     def generarNotaDeDevolucion(NotaDeCredito nota, DevolucionDeVenta rmd) {
         if (rmd.cobro) {
             throw new NotaDeCreditoException("RMD ${rmd.documento} ${rmd.sucursal} Ya tiene nota de credito generada")
@@ -56,7 +66,7 @@ class NotaDeCreditoService {
         }
         def cfdi = nota.cfdi
         cfdi = cfdiTimbradoService.timbrar(cfdi)
-        return cfdi
+        return nota
     }
 
 

@@ -15,5 +15,6 @@ json g.render(notaDeCredito, [excludes:['moneda','cobro'] ]){
         id notaDeCredito.cobro.id
         fecha notaDeCredito.cobro.fecha
     }
+    cfdi g.render(notaDeCredito.cfdi)
 }
 

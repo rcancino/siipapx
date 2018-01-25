@@ -8,7 +8,7 @@ import sx.core.Sucursal
 import sx.utils.MonedaUtils
 
 
-@ToString(includeNames=true,includePackage=false, includes = ['folio', 'serie','fecha','total','cfdi','nombre','partidas'])
+@ToString(includeNames=true,includePackage=false, excludes = ['id, version, partidas'])
 @EqualsAndHashCode(includeFields = true,includes = ['id, serie','folio'])
 class NotaDeCredito {
 
