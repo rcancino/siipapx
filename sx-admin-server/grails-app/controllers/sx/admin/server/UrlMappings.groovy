@@ -53,6 +53,7 @@ class UrlMappings {
         "/api/cxc/notas"(resources: "notaDeCredito")
         "/api/cxc/notas/buscarRmd"(controller: "notaDeCredito", action: 'buscarRmd', method: 'GET')
         "/api/cxc/notas/generarConRmd/$id"(controller: 'notaDeCredito', action: 'generarConRmd', method: 'POST')
+        "/api/cxc/notas/timbrar/$id"(controller: 'notaDeCredito', action: 'timbrar', method: 'POST')
         "/api/cxc/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
 

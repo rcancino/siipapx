@@ -46,13 +46,14 @@ class NotaBuilder {
             rmd = DevolucionDeVenta.where{ cobro == this.nota.cobro}.find()
         }
         buildComprobante()
-                .buildEmisor()
-                .buildReceptor()
-                .buildFormaDePago()
-                .buildConceptos()
-                .buildImpuestos()
-                .buildTotales()
-                .buildCertificado()
+            .buildEmisor()
+            .buildReceptor()
+            .buildFormaDePago()
+            .buildConceptos()
+            .buildImpuestos()
+            .buildTotales()
+            .buildCertificado()
+            .buildRelacionados()
         comprobante = sellador.sellar(comprobante, empresa)
         return comprobante
     }
@@ -155,7 +156,7 @@ class NotaBuilder {
 
             // Acumulados
             this.totalImpuestosTrasladados += traslado1.importe
-            this.subTotalAcumulado = this.subTotalAcumulado + subTot
+            this.subTotalAcumulado = this.subTotalAcumulado + importe
             this.descuentoAcumulado = this.descuentoAcumulado + descuento
 
         }
@@ -183,9 +184,22 @@ class NotaBuilder {
 
         comprobante.descuento = this.descuentoAcumulado
         comprobante.subTotal = this.subTotalAcumulado
-        comprobante.total = this.subTotalAcumulado + this.totalImpuestosTrasladados
+        comprobante.total = comprobante.subTotal - comprobante.descuento + this.totalImpuestosTrasladados
 
         return this
+    }
+
+    def buildRelacionados() {
+        Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
+        relacionados.tipoRelacion = '01'
+        if (this.rmd) {
+            Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
+            assert rmd.venta?.cuentaPorCobrar?.cfdi?.uuid, 'RMD de venta no timbrada'
+            relacionado.UUID = rmd.venta.cuentaPorCobrar.cfdi.uuid
+            relacionados.cfdiRelacionado.add(relacionado)
+
+        }
+        comprobante.cfdiRelacionados = relacionados
     }
 
     def buildCertificado(){
