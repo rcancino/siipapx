@@ -52,6 +52,7 @@ class NotaPdfGenerator {
         def data = [:]
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
+
         return data
     }
 
@@ -108,6 +109,10 @@ class NotaPdfGenerator {
         params.IMPORTE_BRUTO = (comprobante.getSubTotal() - descuento) as String
         params['PINT_IVA']='16 '
         params["IVA"] = (comprobante?.getImpuestos()?.getTotalImpuestosTrasladados()?: 0.0) as String
+
+        String relacionados = comprobante.cfdiRelacionados.cfdiRelacionado.collect{it.UUID}.join(', ')
+        println 'RELACIONADOS: '+ relacionados
+        params['RelacionUUID'] = relacionados
         // Adiconales
         return params;
     }
