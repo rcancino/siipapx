@@ -31,7 +31,7 @@
 	</parameter>
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT A.ID AS ABONO_ID,A.FECHA,A.REFERENCIA,A.FORMA_DE_PAGO,L.CLAVE,L.NOMBRE,S.CLAVE AS SUC,S.NOMBRE AS SUCURSAL,A.SUCURSAL_ID AS ID_SUC,'' AS AUTDEP
+	<queryString><![CDATA[SELECT A.ID AS ABONO_ID,A.FECHA,A.REFERENCIA,A.FORMA_DE_PAGO,L.CLAVE,L.NOMBRE,S.CLAVE AS SUC,S.NOMBRE AS SUCURSAL,A.SUCURSAL_ID AS ID_SUC,'' AS AUTDEP,A.PRIMERA_APLICACION
 ,(case when a.anticipo is true then "ANTICIPO" else ifnull((SELECT min(X.TIPO) FROM aplicacion_de_cobro B JOIN CUENTA_POR_COBRAR X ON(X.ID=CUENTA_POR_COBRAR_ID) WHERE A.ID=B.COBRO_ID  AND A.SUCURSAL_ID=$P{SUCURSAL} AND B.FECHA<=$P{FECHA} ORDER BY B.DATE_CREATED ASC),"ND") end) AS TIPO_VTA
 ,A.IMPORTE AS ABONO,A.DIFERENCIA,IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE A.ID=B.COBRO_ID AND B.FECHA<=$P{FECHA}),0) AS APLICADO
 ,(A.IMPORTE-A.DIFERENCIA-(IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE A.ID=B.COBRO_ID  AND A.SUCURSAL_ID=$P{SUCURSAL} AND B.FECHA<=$P{FECHA}),0))) AS SALDO
@@ -50,6 +50,7 @@ FROM cobro A JOIN SUCURSAL S ON (A.SUCURSAL_ID=S.ID) left join cobro_cheque x on
 	<field name="SUCURSAL" class="java.lang.String"/>
 	<field name="ID_SUC" class="java.lang.String"/>
 	<field name="AUTDEP" class="java.lang.String"/>
+	<field name="PRIMERA_APLICACION" class="java.sql.Timestamp"/>
 	<field name="TIPO_VTA" class="java.lang.String"/>
 	<field name="ABONO" class="java.math.BigDecimal"/>
 	<field name="DIFERENCIA" class="java.math.BigDecimal"/>
@@ -196,7 +197,7 @@ $F{TIPO_VTA}.equals("COD") ? " CONTRA ENTREGA" : "N/D"
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{FECHA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
@@ -320,7 +321,7 @@ $F{TIPO_VTA}.equals("COD") ? " CONTRA ENTREGA" : "N/D"
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[ABONO]]></text>
+				<text><![CDATA[COBRO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement

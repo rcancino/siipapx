@@ -8,10 +8,10 @@
 		 orientation="Portrait"
 		 pageWidth="612"
 		 pageHeight="792"
-		 columnWidth="552"
+		 columnWidth="580"
 		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
+		 leftMargin="16"
+		 rightMargin="16"
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="NoPages"
@@ -62,9 +62,9 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="0"
+						x="3"
 						y="4"
-						width="50"
+						width="68"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -75,9 +75,9 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="50"
+						x="71"
 						y="4"
-						width="201"
+						width="203"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -88,7 +88,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="365"
+						x="388"
 						y="4"
 						width="139"
 						height="11"
@@ -101,7 +101,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="251"
+						x="274"
 						y="4"
 						width="69"
 						height="11"
@@ -114,7 +114,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="504"
+						x="527"
 						y="4"
 						width="46"
 						height="11"
@@ -141,7 +141,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 			</band>
 		</title>
 		<pageHeader>
-			<band height="65"  isSplitAllowed="true" >
+			<band height="62"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="219"
@@ -234,9 +234,9 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="0"
+						x="3"
 						y="5"
-						width="51"
+						width="69"
 						height="11"
 						forecolor="#000000"
 						key="staticText-8"
@@ -255,7 +255,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 					<reportElement
 						x="0"
 						y="2"
-						width="552"
+						width="580"
 						height="2"
 						forecolor="#666666"
 						key="line-5"/>
@@ -265,7 +265,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 					<reportElement
 						x="0"
 						y="17"
-						width="552"
+						width="580"
 						height="2"
 						forecolor="#666666"
 						key="line-6"/>
@@ -274,9 +274,9 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="51"
+						x="72"
 						y="5"
-						width="200"
+						width="202"
 						height="11"
 						forecolor="#000000"
 						key="staticText-22"
@@ -294,7 +294,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="251"
+						x="274"
 						y="5"
 						width="69"
 						height="11"
@@ -314,7 +314,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="365"
+						x="388"
 						y="5"
 						width="139"
 						height="11"
@@ -334,7 +334,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="320"
+						x="343"
 						y="5"
 						width="45"
 						height="11"
@@ -354,7 +354,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="504"
+						x="527"
 						y="5"
 						width="46"
 						height="11"
@@ -377,7 +377,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 			<band height="12"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="320"
+						x="343"
 						y="1"
 						width="97"
 						height="11"
@@ -401,7 +401,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 						mode="Opaque"
 						x="0"
 						y="2"
-						width="551"
+						width="580"
 						height="0"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -431,7 +431,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="226"
+						x="249"
 						y="4"
 						width="48"
 						height="10"
@@ -451,7 +451,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="279"
+						x="302"
 						y="4"
 						width="31"
 						height="11"
@@ -471,7 +471,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="377"
+						x="400"
 						y="4"
 						width="75"
 						height="12"
@@ -491,7 +491,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="467"
+						x="490"
 						y="4"
 						width="84"
 						height="12"
@@ -504,7 +504,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -535,9 +535,9 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="-1"
+						x="0"
 						y="2"
-						width="551"
+						width="580"
 						height="0"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -547,7 +547,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="225"
+						x="248"
 						y="4"
 						width="48"
 						height="10"
@@ -567,7 +567,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="278"
+						x="301"
 						y="4"
 						width="31"
 						height="11"
@@ -587,7 +587,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="376"
+						x="399"
 						y="4"
 						width="75"
 						height="12"
@@ -607,7 +607,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="466"
+						x="489"
 						y="4"
 						width="84"
 						height="12"
@@ -620,7 +620,7 @@ ORDER BY CLAVE,CORREO_CFD DESC]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
