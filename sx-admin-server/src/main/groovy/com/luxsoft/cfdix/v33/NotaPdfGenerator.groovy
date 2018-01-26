@@ -102,8 +102,10 @@ class NotaPdfGenerator {
             params.put("TIPO_DE_COMPROBANTE", "E (Egreso)")
         }
         params.FECHA = comprobante.fecha
-        params.DESCUENTOS = comprobante.getDescuento() as String
-        params.IMPORTE_BRUTO = (comprobante.getSubTotal() - comprobante.getDescuento()) as String
+        BigDecimal descuento = comprobante.getDescuento() ?: 0.0
+
+        params.DESCUENTOS = descuento as String
+        params.IMPORTE_BRUTO = (comprobante.getSubTotal() - descuento) as String
         params['PINT_IVA']='16 '
         params["IVA"] = (comprobante?.getImpuestos()?.getTotalImpuestosTrasladados()?: 0.0) as String
         // Adiconales
