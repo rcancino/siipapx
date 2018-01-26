@@ -36,19 +36,30 @@ class NotaDeCreditoController extends RestfulController{
         bindData nota, getObjectToBind()
         Sucursal sucursal = Sucursal.where { nombre == 'OFICINAS'}.find()
         nota.sucursal = sucursal
-        List facturas = nota.partidas.collect { it.cuentaPorCobrar }
-        log.debug('Facturas: {}', facturas.size())
-        nota = notaDeCreditoService.generarBonificacion(nota, facturas)
+        // List facturas = nota.partidas.collect { it.cuentaPorCobrar }
+        //log.debug('Facturas: {}', facturas.size())
+        nota = notaDeCreditoService.generarBonificacion(nota)
+        log.debug('Nota generada: {}', nota)
         respond nota
 
     }
 
     @Override
     protected List listAllResources(Map params) {
-        params.max = 15
+        params.max = 10
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        return super.listAllResources(params)
+        log.debug('Buscando notas: {}',params)
+        def query = NotaDeCredito.where{ }
+        if(params.tipo) {
+            query = query.where{tipo == params.tipo}
+        }
+        if(params.term) {
+            if(params.term.isInteger()) {
+                query = query.where{folio == params.term.toLong()}
+            }
+        }
+        respond query.list(params)
     }
 
     def buscarRmd() {
@@ -82,7 +93,7 @@ class NotaDeCreditoController extends RestfulController{
             if(params.term.isInteger()) {
                 log.info('Buscando factura: {}', params.term.toLong())
                 facturas = CuentaPorCobrar.findAll(
-                        "from CuentaPorCobrar c where c.cliente.id = ? and c.tipo = ? and c.documento > ?",
+                        "from CuentaPorCobrar c where c.cliente.id = ? and c.tipo = ? and c.documento >= ?",
                         [cliente,'CRE', params.term.toLong()],params)
             }
         } else {
@@ -112,6 +123,12 @@ class NotaDeCreditoController extends RestfulController{
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
         def pdf  = reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'NotaDeCredito.pdf')
+    }
+
+    def timbrar(NotaDeCredito nota) {
+        assert !nota.cfdi, 'Nota ya timbrada'
+        nota = notaDeCreditoService.timbrar(nota)
+        respond nota
     }
 
     def handleNotaDeCreditoException(NotaDeCreditoException sx) {

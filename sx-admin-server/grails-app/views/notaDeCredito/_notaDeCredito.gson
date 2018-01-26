@@ -4,17 +4,14 @@ model {
     NotaDeCredito notaDeCredito
 }
 
-json g.render(notaDeCredito, [excludes:['moneda','cobro'] ]){
+json g.render(notaDeCredito, [excludes:['moneda','cobro','cliente'] ]){
     moneda notaDeCredito.moneda.currencyCode
     cliente {
         id notaDeCredito.cliente.id
         nombre notaDeCredito.cliente.nombre
         clave notaDeCredito.cliente.clave
     }
-    cobro {
-        id notaDeCredito.cobro.id
-        fecha notaDeCredito.cobro.fecha
-    }
+    cfdi g.render(notaDeCredito.cobro)
     cfdi g.render(notaDeCredito.cfdi)
 }
 

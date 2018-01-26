@@ -10,7 +10,7 @@ import lx.cfdi.v33.CTipoFactor
 import lx.cfdi.v33.CUsoCFDI
 import lx.cfdi.v33.Comprobante
 import lx.cfdi.v33.ObjectFactory
-
+import sx.cxc.NotaDeCreditoDet
 import sx.utils.MonedaUtils
 import sx.core.Empresa
 import sx.core.VentaDet
@@ -105,6 +105,8 @@ class NotaBuilder {
     def buildConceptos() {
         if (this.nota.tipo.startsWith('DEV')) {
             buildConceptosDevolucion()
+        } else {
+            buildConceptosBonoificacion()
         }
     }
 
@@ -164,6 +166,52 @@ class NotaBuilder {
         return this
     }
 
+    def buildConceptosBonoificacion(){
+        /** Conceptos ***/
+        this.totalImpuestosTrasladados = 0.0
+        Comprobante.Conceptos conceptos = factory.createComprobanteConceptos()
+        this.nota.partidas.each { NotaDeCreditoDet item ->
+
+            Comprobante.Conceptos.Concepto concepto = factory.createComprobanteConceptosConcepto()
+            def importe = MonedaUtils.calcularImporteDelTotal(item.importe)
+
+            def impuesto = importe * MonedaUtils.IVA
+            impuesto = MonedaUtils.round(impuesto)
+
+            concepto.claveProdServ = '84111506'
+            concepto.claveUnidad = 'ACT'
+            concepto.noIdentificacion = 'BONIFICACION'
+            concepto.cantidad = 1
+            concepto.unidad = 'ACT'
+            concepto.descripcion = "Bonificación de: ${item.tipoDeDocumento} - ${item.documento}"
+            concepto.valorUnitario = importe
+            concepto.importe = importe
+
+            concepto.impuestos = factory.createComprobanteConceptosConceptoImpuestos()
+            concepto.impuestos.traslados = factory.createComprobanteConceptosConceptoImpuestosTraslados()
+
+            Comprobante.Conceptos.Concepto.Impuestos.Traslados.Traslado traslado1
+            traslado1 = factory.createComprobanteConceptosConceptoImpuestosTrasladosTraslado()
+            traslado1.base =  importe
+            traslado1.impuesto = '002'
+            traslado1.tipoFactor = CTipoFactor.TASA
+            traslado1.tasaOCuota = '0.160000'
+            traslado1.importe = impuesto
+
+
+            concepto.impuestos.traslados.traslado.add(traslado1)
+            conceptos.concepto.add(concepto)
+
+            // Acumulados
+            this.totalImpuestosTrasladados += traslado1.importe
+            this.subTotalAcumulado = this.subTotalAcumulado + importe
+            this.descuentoAcumulado = 0
+
+        }
+        comprobante.conceptos = conceptos
+        return this
+    }
+
     def buildImpuestos(){
         Comprobante.Impuestos impuestos = factory.createComprobanteImpuestos()
         impuestos.setTotalImpuestosTrasladados(MonedaUtils.round(this.totalImpuestosTrasladados))
@@ -181,10 +229,11 @@ class NotaBuilder {
     }
 
     def buildTotales(){
-
-        comprobante.descuento = this.descuentoAcumulado
+        if(this.descuentoAcumulado > 0) {
+            comprobante.descuento = this.descuentoAcumulado
+        }
         comprobante.subTotal = this.subTotalAcumulado
-        comprobante.total = comprobante.subTotal - comprobante.descuento + this.totalImpuestosTrasladados
+        comprobante.total = comprobante.subTotal - this.descuentoAcumulado + this.totalImpuestosTrasladados
 
         return this
     }
@@ -209,6 +258,16 @@ class NotaBuilder {
             relacionado.UUID = uuid
             relacionados.cfdiRelacionado.add(relacionado)
 
+        } else {
+            relacionados.tipoRelacion = '01'
+            this.nota.partidas.each { NotaDeCreditoDet det ->
+                Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
+                def cxc = det.cuentaPorCobrar
+                def uuid = cxc.uuid
+                assert uuid, 'No existe UUID origen para la cxc :' + cxc.id
+                relacionado.UUID = uuid
+                relacionados.cfdiRelacionado.add(relacionado)
+            }
         }
         comprobante.cfdiRelacionados = relacionados
     }
