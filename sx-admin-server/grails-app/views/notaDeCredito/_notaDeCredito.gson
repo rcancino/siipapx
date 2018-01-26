@@ -10,6 +10,7 @@ json g.render(notaDeCredito, [excludes:['moneda','cobro','cliente'] ]){
         id notaDeCredito.cliente.id
         nombre notaDeCredito.cliente.nombre
         clave notaDeCredito.cliente.clave
+        cfdiMail notaDeCredito.cliente.getCfdiMail()
     }
     cfdi g.render(notaDeCredito.cobro)
     cfdi g.render(notaDeCredito.cfdi)

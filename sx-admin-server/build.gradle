@@ -23,4 +23,5 @@ dependencies {
     // Temporal
     compile "org.grails.plugins:gsp"
     runtime 'org.grails.plugins:grails-console:2.1.1'
+    compile 'org.grails.plugins:mail:2.0.0'
 }

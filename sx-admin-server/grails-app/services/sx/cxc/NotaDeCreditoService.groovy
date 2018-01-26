@@ -31,13 +31,18 @@ class NotaDeCreditoService {
             if (nota.total <= 0.0) {
                 throw new NotaDeCreditoException('Nota de credito por bonificacion con prorrateo requiere de un total')
             }
-            // generarProrrateo(nota, facturas)
             nota = calcularProrrateo(nota)
             nota.save failOnError: true, flush: true
             return nota
 
+        } else {
+            if (nota.descuento <= 0.0) {
+                throw new NotaDeCreditoException('Nota de credito por bonificacion por porcentaje requiere de un descuento')
+            }
+            nota = calcularPorentaje(nota)
+            nota.save failOnError: true, flush: true
+            return nota
         }
-        return nota
     }
 
     def calcularProrrateo(NotaDeCredito nota) {
@@ -71,6 +76,36 @@ class NotaDeCreditoService {
         }
         // println 'Acu: '+acu
         nota.total = importe
+        nota.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
+        nota.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
+        log.debug('Partidas totales de la nota: {}', nota.partidas.size())
+        return nota
+    }
+
+    def calcularPorentaje(NotaDeCredito nota) {
+        log.debug('Generando bonificaion del {}%', nota.descuento)
+        def acu = 0.0
+        def descuento = nota.descuento / 100
+        boolean sobreSaldo = nota.baseDelCalculo == 'Saldo' ? true : false
+        nota.partidas.each {  NotaDeCreditoDet det ->
+            CuentaPorCobrar cxc = det.cuentaPorCobrar
+
+            def monto = sobreSaldo ? det.cuentaPorCobrar.getSaldo() : det.cuentaPorCobrar.getTotal()
+            def asignado = MonedaUtils.round(monto * descuento)
+
+            log.debug('Procesando factura {} Asignando {} a NotaDet', cxc.documento, asignado)
+            acu = acu + asignado
+            det.cuentaPorCobrar = cxc
+            det.tipoDeDocumento = cxc.tipo
+            det.fechaDocumento = cxc.fecha
+            det.documento = cxc.documento
+            det.sucursal = cxc.sucursal.nombre
+            det.importe = asignado
+            det.totalDocumento = cxc.total
+            det.saldoDocumento = cxc.getSaldo()
+            log.debug('Asignando partida {}', cxc.documento)
+        }
+        nota.total = acu
         nota.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
         nota.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
         log.debug('Partidas totales de la nota: {}', nota.partidas.size())
@@ -134,6 +169,58 @@ class NotaDeCreditoService {
         cobro.sucursal = nota.sucursal
         cobro.formaDePago = nota.tipo == 'BON' ? 'BONIFICACION' : 'DEVOLUCION'
         nota.cobro = cobro
+    }
+
+    def aplicar(NotaDeCredito nota) {
+        if (!nota.cobro) {
+            generarCobro(nota)
+        }
+        Cobro cobro = nota.cobro
+        if(cobro.disponible <= 0.0) {
+            throw new NotaDeCreditoException("Nota sin disponible no se puede aplicar")
+        }
+        if(nota.tipo.startsWith('BON')){
+            this.aplicarCobroDeBonificacion(nota)
+        } else {
+            this.aplicarCobroDeDevolucion(nota)
+        }
+        cobro.save()
+    }
+
+    protected aplicarCobroDeBonificacion(NotaDeCredito nota) {
+        Cobro cobro = nota.cobro
+        nota.partidas.each { NotaDeCreditoDet det ->
+            CuentaPorCobrar cxc = det.cuentaPorCobrar
+            def saldo = cxc.saldo
+            if(det.importe <= saldo){
+                def aplicacion = new AplicacionDeCobro()
+                aplicacion.cuentaPorCobrar = cxc
+                aplicacion.fecha = new Date()
+                aplicacion.importe = importe
+                cobro.addToAplicaciones(aplicacion)
+                if(!cobro.primeraAplicacion) {
+                    cobro.primeraAplicacion = aplicacion.fecha
+                }
+            }
+        }
+    }
+
+    protected aplicarCobroDeDevolucion(NotaDeCredito nota) {
+        Cobro cobro = nota.cobro
+        DevolucionDeVenta rmd = DevolucionDeVenta.where{ cobro == cobro}
+        CuentaPorCobrar cxc = rmd.venta.cuentaPorCobrar
+        BigDecimal saldo = cxc.saldo
+        if(saldo > 0) {
+            def importe = cobro.disponible <= saldo ? cobro.disponible : saldo
+            def aplicacion = new AplicacionDeCobro()
+            aplicacion.cuentaPorCobrar = cxc
+            aplicacion.fecha = new Date()
+            aplicacion.importe = importe
+            cobro.addToAplicaciones(aplicacion)
+            if(!cobro.primeraAplicacion) {
+                cobro.primeraAplicacion = aplicacion.fecha
+            }
+        }
     }
 
     def eliminar(NotaDeCredito nota) {

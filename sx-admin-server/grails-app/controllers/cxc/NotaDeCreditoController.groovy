@@ -131,6 +131,11 @@ class NotaDeCreditoController extends RestfulController{
         respond nota
     }
 
+    def aplicar(NotaDeCredito nota){
+        nota = notaDeCreditoService.aplicar(nota)
+        respond nota
+    }
+
     def handleNotaDeCreditoException(NotaDeCreditoException sx) {
         respond ([message: sx.message], status: 422)
     }

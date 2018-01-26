@@ -1,10 +1,13 @@
 package sx.cfdi
 
+import com.luxsoft.cfdix.v33.NotaPdfGenerator
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.rest.RestfulController
+import sx.core.Cliente
+import sx.cxc.NotaDeCredito
 import sx.reports.ReportService
 
 
@@ -42,6 +45,15 @@ class CfdiController extends RestfulController{
     }
 
     private generarImpresionV33( Cfdi cfdi) {
+        if (cfdi.tipoDeComprobante == 'I'){
+            return generarPdfFactura()
+        } else {
+            return generarPdfNota(cfdi)
+        }
+
+    }
+
+    private generarPdfFactura(Cfdi cfdi){
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def data = V33PdfGenerator.getReportData(cfdi)
         Map parametros = data['PARAMETROS']
@@ -51,7 +63,46 @@ class CfdiController extends RestfulController{
         return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 
-    private generarImpresionV32( Cfdi cfdi) {
+    private generarPdfNota( Cfdi cfdi) {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        NotaDeCredito nota = NotaDeCredito.where{cfdi == cfdi}.find()
+        def data = NotaPdfGenerator.getReportData(nota)
+        Map parametros = data['PARAMETROS']
+        parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        return reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+    }
+
+    def enviarEmail(Cfdi cfdi) {
+
+        String targetEmail = params.target
+        if(!targetEmail) {
+            Cliente cliente = Cliente.where {rfc == cfdi.receptorRfc}.find()
+            if (cliente) {
+                targetEmail = cliente.getCfdiMail()
+            }
+        }
+
+        if (targetEmail) {
+            String message = """Apreciable cliente por este medio le hacemos llegar un comprobante fiscal digital (CFDI) . Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración
+                la puede dirigir a: servicioaclientes@papelsa.com.mx
+            """
+            def xml = cfdi.getUrl().getBytes()
+            def pdf = generarImpresionV33(cfdi).toByteArray()
+            sendMail {
+                multipart false
+                to targetEmail
+                subject "CFDI ${cfdi.serie}-${cfdi.folio}"
+                text message
+                attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
+                attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
+            }
+            cfdi.enviado = new Date()
+            cfdi.email = targetEmail
+            cfdi.save flush: true
+            log.debug('CFDI: {} enviado a: {}', cfdi.uuid, targetEmail)
+
+        }
+        respond cfdi
     }
 
 }
