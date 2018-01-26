@@ -26,6 +26,10 @@ class NotaDeCredito {
 
     String tipoCartera
 
+    String tipoDeCalculo = 'PORCENTAJE'
+
+    String baseDelCalculo = 'Saldo'
+
     Date fecha = new Date()
 
     Currency moneda = Currency.getInstance('MXN')
@@ -95,6 +99,8 @@ class NotaDeCredito {
         rmd nullable: true
         rmdSucursal nullable: true, maxSize: 30
         nombre nullable: true
+        tipoDeCalculo nullable: true, maxSize: 20
+        baseDelCalculo nullable: true, maxSize: 20
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]

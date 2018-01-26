@@ -27,22 +27,20 @@ class NotaDeCreditoController extends RestfulController{
         super(NotaDeCredito)
     }
 
-    // @Override
-    protected Object saveResource(NotaDeCredito nota) {
-        assert nota.tipo.startsWith('BON'), 'Debe ser nota de bonificacion: ' + nota
-        nota = notaDeCreditoService.generarNotaBonificacion(nota)
-        return nota
-    }
-
-    @Override
-    protected Object createResource() {
-        log.debug('Preprando persistencia de nota de crediot params: {}', params)
+    @Transactional
+    def save() {
+        if(handleReadOnly()) {
+            return
+        }
         NotaDeCredito nota = new NotaDeCredito()
         bindData nota, getObjectToBind()
         Sucursal sucursal = Sucursal.where { nombre == 'OFICINAS'}.find()
         nota.sucursal = sucursal
-        log.debug('Nota preparada: {} ', nota.properties.entrySet())
-        return nota
+        List facturas = nota.partidas.collect { it.cuentaPorCobrar }
+        log.debug('Facturas: {}', facturas.size())
+        nota = notaDeCreditoService.generarBonificacion(nota, facturas)
+        respond nota
+
     }
 
     @Override
@@ -52,7 +50,6 @@ class NotaDeCreditoController extends RestfulController{
         params.order = 'desc'
         return super.listAllResources(params)
     }
-
 
     def buscarRmd() {
        // log.debug('Localizando rmd {}', params)
@@ -73,8 +70,9 @@ class NotaDeCreditoController extends RestfulController{
         }
         respond query.list(params)
     }
+
     def buscarFacturasPendientes() {
-        log.debug('Buscando facturas {}', params)
+        // log.debug('Buscando facturas {}', params)
         params.max = 500
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -93,7 +91,7 @@ class NotaDeCreditoController extends RestfulController{
                     [cliente,'CRE'],params)
         }
 
-        log.debug('Facturas localizadas: ', facturas.size())
+        // log.debug('Facturas localizadas: ', facturas.size())
         respond facturas
     }
 

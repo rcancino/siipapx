@@ -7,5 +7,7 @@ json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','
     cliente g.render(cuentaPorCobrar.cliente, [includes: ['id', 'nombre', 'rfc']])
     moneda cuentaPorCobrar.moneda.currencyCode
     saldo cuentaPorCobrar.total - cuentaPorCobrar.pagos
+    cfdi g.render(cuentaPorCobrar.cfdi)
+    sucursal cuentaPorCobrar.sucursal.nombre
 }
 

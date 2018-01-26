@@ -11,6 +11,7 @@ import sx.cfdi.Cfdi
 import sx.inventario.DevolucionDeVenta
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
+import com.luxsoft.utils.MonedaUtils
 
 @Transactional
 class NotaDeCreditoService {
@@ -21,12 +22,19 @@ class NotaDeCreditoService {
 
     CfdiTimbradoService cfdiTimbradoService
 
-    def generarNotaBonificacion(NotaDeCredito nota) {
-        log.debug('Presistiendo nota de devolucion {}', nota)
+    def generarBonificacion(NotaDeCredito nota, List facturas) {
+        nota.partidas = new ArrayList()
+        log.debug('Generando bonificaion por {} facturas', facturas.size())
         nota.tipo = 'BONIFICACION'
         nota.serie = 'BON'
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
-        Cobro cobro = generarCobro(nota)
+        if(nota.tipoDeCalculo == 'PRORRATEO') {
+            if (nota.total <= 0.0) {
+                throw new NotaDeCreditoException('Nota de credito por bonificacion con prorrateo requiere de un total')
+            }
+            generarProrrateo(nota, facturas)
+        }
+        // Cobro cobro = generarCobro(nota)
         nota.save failOnError: true, flush: true
         return nota
     }
@@ -95,6 +103,15 @@ class NotaDeCreditoService {
             nota.cfdi = null
             cfdi.delete flush: true
         }
+        // Eliminar el cobro
+        Cobro cobro = nota.cobro
+        if(cobro.aplicaciones.size() > 0) {
+            throw new NotaDeCreditoException('Nota de credito parcialmente aplicada no se puede eliminar')
+        }
+        nota.cobro = null
+
+        cobro.delete flush: true
+
         nota.delete flush:true
     }
 
@@ -105,6 +122,41 @@ class NotaDeCreditoService {
         cfdiTimbradorService.cancelar(cfdi)
         nota.comentario = 'CANCELADA'
         nota.save flush: true
+    }
+
+    def generarProrrateo(NotaDeCredito nota, List facturas) {
+        BigDecimal importe = nota.total
+        boolean sobreSaldo = nota.baseDelCalculo == 'Saldo' ? true : false
+        BigDecimal base = facturas.sum 0.0,{ item-> sobreSaldo ? item.getSaldo() : item.getTotal()}
+        log.debug("Importe a prorratear: ${importe} Base del prorrateo ${base}")
+        def acu = 0.0
+        facturas.each { CuentaPorCobrar cxc ->
+
+            def monto = sobreSaldo ? cxc.getSaldo(): cxc.total
+            def por = monto/base
+            def asignado = MonedaUtils.round(importe * por)
+
+            log.debug('Procesando factura {} Asignando {} a NotaDet', cxc.documento, asignado)
+
+            acu = acu + asignado
+            NotaDeCreditoDet det  = new NotaDeCreditoDet()
+            det.cuentaPorCobrar = cxc
+            det.tipoDeDocumento = cxc.tipo
+            det.fechaDocumento = cxc.fecha
+            det.documento = cxc.documento
+            det.sucursal = cxc.sucursal.nombre
+            det.importe = asignado
+            det.totalDocumento = cxc.total
+            det.saldoDocumento = cxc.getSaldo()
+            log.debug('Asignando partida {}', cxc.documento)
+            nota.addToPartidas(det)
+        }
+        // println 'Acu: '+acu
+        nota.total = importe
+        nota.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
+        nota.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
+        log.debug('Partidas totales de la nota: {}', nota.partidas.size())
+        return nota
     }
 
 
