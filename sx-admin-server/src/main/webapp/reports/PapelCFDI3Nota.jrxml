@@ -664,7 +664,7 @@
 					</textElement>
 				<text><![CDATA[   UUID   RELACIONADOS    : ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="79"
 						y="5"
@@ -682,7 +682,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RfcProvCertif}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{COMENTARIOS}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -801,7 +801,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ClaveUnidad}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="136"
 						y="12"
