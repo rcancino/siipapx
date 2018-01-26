@@ -82,6 +82,7 @@
 	<parameter name="RelacionUUID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="TIPO_DE_COMPROBANTE" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="LOGO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="COMENTARIOS" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.math.BigDecimal"/>
@@ -116,7 +117,7 @@
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="253"  isSplitAllowed="true" >
+			<band height="279"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="506"
@@ -514,7 +515,7 @@
 						x="1"
 						y="232"
 						width="583"
-						height="21"
+						height="24"
 						key="textField-154"/>
 					<box>					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -627,6 +628,82 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO_DE_COMPROBANTE}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="271"
+						width="579"
+						height="8"
+						key="textField-198"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RelacionUUID}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="1"
+						y="256"
+						width="108"
+						height="15"
+						key="staticText-247"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Times-Roman" size="8"/>
+					</textElement>
+				<text><![CDATA[   UUID   RELACIONADOS    : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="79"
+						y="5"
+						width="307"
+						height="20"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-201"/>
+					<box>					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RfcProvCertif}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="5"
+						y="5"
+						width="74"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-248"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[COMENTARIOS :  ]]></text>
+				</staticText>
 			</band>
 			</groupFooter>
 		</group>
@@ -637,14 +714,14 @@
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="29"  isSplitAllowed="true" >
+			<band height="23"  isSplitAllowed="true" >
 				<rectangle>
 					<reportElement
 						mode="Transparent"
 						x="1"
 						y="-1"
 						width="579"
-						height="30"
+						height="24"
 						forecolor="#999999"
 						key="rectangle-10"
 						positionType="FixRelativeToBottom"/>
@@ -939,44 +1016,6 @@
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{TrasladoImporte}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="245"
-						y="20"
-						width="164"
-						height="8"
-						key="textField-198"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Left">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RelacionUUID}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="169"
-						y="20"
-						width="77"
-						height="8"
-						key="textField-199">
-							<printWhenExpression><![CDATA[$P{RelacionUUID}!=null]]></printWhenExpression>
-						</reportElement>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Left">
-						<font size="7"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["UUID Relacionado :   "]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
@@ -1552,7 +1591,7 @@
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="15"
-						y="3"
+						y="4"
 						width="221"
 						height="60"
 						key="image-2"/>
