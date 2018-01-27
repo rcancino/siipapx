@@ -32,7 +32,9 @@ class NotaDeCreditoService {
                 throw new NotaDeCreditoException('Nota de credito por bonificacion con prorrateo requiere de un total')
             }
             nota = calcularProrrateo(nota)
+            Cobro cobro = generarCobro(nota)
             nota.save failOnError: true, flush: true
+            cobro.save flush: true
             return nota
 
         } else {
@@ -40,7 +42,9 @@ class NotaDeCreditoService {
                 throw new NotaDeCreditoException('Nota de credito por bonificacion por porcentaje requiere de un descuento')
             }
             nota = calcularPorentaje(nota)
+            Cobro cobro = generarCobro(nota)
             nota.save failOnError: true, flush: true
+            cobro.save flush: true
             return nota
         }
     }
