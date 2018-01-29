@@ -199,6 +199,8 @@ class VentaService implements  EventPublisher{
             cfdi = generarCfdi(venta)
         }
         cfdi = cfdiTimbradoService.timbrar(cfdi)
+        venta.cuentaPorCobrar.uuid = cfdi.uuid
+        venta.save flush:true
         return cfdi;
     }
 

@@ -35,6 +35,7 @@ class UrlMappings {
         "/api/cfdis"(resources: "cfdi")
         "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
         "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
+        "/api/cfdis/enviarEmail/$id?"(controller:"cfdi", action:"enviarEmail")
 
         // Compras
         "/api/compras"(resources: "compra")
@@ -51,6 +52,12 @@ class UrlMappings {
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/notas"(resources: "notaDeCredito")
+        "/api/cxc/notas/buscarRmd"(controller: "notaDeCredito", action: 'buscarRmd', method: 'GET')
+        "/api/cxc/notas/buscarFacturasPendientes"(controller: "notaDeCredito", action: 'buscarFacturasPendientes', method: 'GET')
+        "/api/cxc/notas/generarConRmd/$id"(controller: 'notaDeCredito', action: 'generarConRmd', method: 'POST')
+        "/api/cxc/notas/timbrar/$id"(controller: 'notaDeCredito', action: 'timbrar', method: 'POST')
+
+        "/api/cxc/notas/print/$id"(controller: 'notaDeCredito', action: 'print', method: 'GET')
         "/api/cxc/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
 

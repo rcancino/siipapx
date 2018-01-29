@@ -38,8 +38,9 @@
 ,p.plazo as PLAZO,a.clave as PROD_CLAVE,a.DESCRIPCION,a.kilos as KXM,a.GRAMOS,(SELECT Y.clave_proveedor FROM proveedor_producto Y WHERE D.PRODUCTO_ID=Y.PRODUCTO_ID AND P.ID=Y.PROVEEDOR_ID) AS CLAVEPROV
 ,(SELECT Y.descripcion_proveedor FROM proveedor_producto Y WHERE a.id=Y.PRODUCTO_ID  AND p.id=Y.PROVEEDOR_ID) AS DESCRIPROV,sum(d.SOLICITADO) AS SOLICITADO
 ,A.UNIDAD,(D.COSTO)AS PRECIO_UNITARIO,SUM(D.importe_neto) AS IMPORTE,c.COMENTARIO,d.comentario as COMENT_DET,CONCAT(P.DIRECCION_CALLE,', ',P.DIRECCION_COLONIA,', ',P.DIRECCION_CODIGO_POSTAL,',',P.DIRECCION_MUNICIPIO ) AS DIRECCION
-,CONCAT(p.telefono1,'   ',p.telefono2,'  ',p.telefono3) AS TELEFONO
-,c.importe_neto as SUBTOTAL,c.IMPUESTOS,c.TOTAL,'NO' as IMPRIMIR_COSTO,(CASE WHEN C.CONSOLIDADA is true THEN 'SI' ELSE 'NO' END) AS CONSOLIDADA
+,CONCAT(p.telefono1,'   ',p.telefono2,'  ',p.telefono3) AS TELEFONO,c.importe_neto as SUBTOTAL,c.IMPUESTOS,c.TOTAL
+,(SELECT (CASE when X.IMPRIMIR_COSTO is true then 'SI' else 'NO' end) FROM proveedor_compras X WHERE X.PROVEEDOR_ID=P.ID ) as IMPRIMIR_COSTO
+,(CASE WHEN C.CONSOLIDADA is true THEN 'SI' ELSE 'NO' END) AS CONSOLIDADA
 FROM compra c
 JOIN compra_det d ON (c.id=d.compra_id) 
 join producto a ON(a.id=d.producto_id)

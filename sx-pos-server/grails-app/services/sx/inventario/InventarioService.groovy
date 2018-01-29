@@ -35,6 +35,9 @@ class InventarioService implements EventPublisher{
                 inventario.cantidad = det.cantidad.abs() * -1
                 inventario.kilos = det.kilos;
                 inventario.comentario = det.comentario
+                if (det.corte) {
+                    inventario.comentario = "${det.corte.instruccion} ${det.comentario}"
+                }
                 inventario.fecha = factura.cuentaPorCobrar.fecha
                 inventario.producto = det.producto
                 inventario.tipo = 'FAC'

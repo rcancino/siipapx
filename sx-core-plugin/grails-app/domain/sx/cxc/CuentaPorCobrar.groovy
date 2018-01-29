@@ -96,7 +96,6 @@ class CuentaPorCobrar {
         cliente index: 'CXC_IDX3'
         cancelada type: 'date'
         pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
-
     }
 
     static transients = ['saldo','folio']

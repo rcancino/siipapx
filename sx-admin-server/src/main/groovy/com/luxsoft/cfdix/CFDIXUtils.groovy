@@ -25,10 +25,10 @@ class CFDIXUtils {
 		cfdi.folio = xml.attributes()['folio']
 		cfdi.fecha = CFDI_DATE_FORMAT.parse(xml.attributes()['fecha'])
 	    cfdi.total = xml.attributes()['total'] as BigDecimal
-	    cfdi.tipo = xml.attributes()['tipoDeComprobante'].toUpperCase()
+	    cfdi.tipoDeComprobante = xml.attributes()['tipoDeComprobante'].toUpperCase()
 	    def emisor = xml.breadthFirst().find { it.name() == 'Receptor'}
 		cfdi.emisor = emisor.attributes()['nombre']
-		cfdi.rfc = emisor.attributes()['rfc']
+		cfdi.emisorRfc = emisor.attributes()['rfc']
 	    
 	    def receptor = xml.breadthFirst().find { it.name() == 'Receptor'}
 		cfdi.receptor = receptor.attributes()['nombre']

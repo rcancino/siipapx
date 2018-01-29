@@ -12,4 +12,6 @@ json g.render(compraDet, [excludes:['compra','sucursal','producto']]){
         descripcion compraDet.producto.descripcion
         kilos compraDet.producto.kilos
     }
+    clave compraDet.producto.clave
+    descripcion compraDet.producto.descripcion
 }

@@ -2,6 +2,7 @@ package sx.inventario
 
 import sx.core.Sucursal
 import sx.core.Venta
+import sx.cxc.Cobro
 import sx.cxc.NotaDeCredito
 
 class DevolucionDeVenta {
@@ -10,7 +11,7 @@ class DevolucionDeVenta {
 
     Venta venta
 
-    NotaDeCredito notaDeCredito
+    Cobro cobro
 
     Long	documento	 = 0
 
@@ -44,9 +45,9 @@ class DevolucionDeVenta {
 
     Date asignado
 
+    Boolean parcial = false
 
     static  hasMany = [partidas:DevolucionDeVentaDet]
-
 
     static constraints = {
         comentario nullable: true
@@ -55,14 +56,21 @@ class DevolucionDeVenta {
         lastUpdated nullable: true
         createUser nullable: true
         updateUser nullable: true
-        notaDeCredito nullable: true
+        cobro nullable: true
         fechaInventario nullable: true
         asignado nullable: true
+        parcial nullable: true
     }
 
     static  mapping ={
         id generator:'uuid'
         sucursal index: 'SUCURSAL_IDX'
         fecha index: 'FECHA_IDX'
+    }
+
+    def findNota() {
+        if (cobro) {
+            return NotaDeCredito.where{cobro == this.cobro}.find()
+        }
     }
 }

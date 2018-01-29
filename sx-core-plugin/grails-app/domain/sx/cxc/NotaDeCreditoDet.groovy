@@ -3,50 +3,38 @@ package sx.cxc
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-@ToString(includeNames=true,includePackage=false, excludes = ['cargo','id','version'])
-@EqualsAndHashCode(includeFields = true)
+@EqualsAndHashCode(includeFields = true,includes = ['id','cuentaPorCobrar'])
 class NotaDeCreditoDet {
 
     String id
 
-    BigDecimal cantidad
-
-    String unidad
-
-    String numeroDeIdentificacion
-
-    String descripcion
-
-    BigDecimal valorUnitario
+    CuentaPorCobrar	cuentaPorCobrar
 
     BigDecimal importe
 
+    Long documento = 0
+
+    String tipoDeDocumento
+
+    Date fechaDocumento
+
+    BigDecimal totalDocumento = 0.0
+
+    BigDecimal saldoDocumento = 0.0
+
+    String sucursal
+
     String comentario
 
-    CuentaPorCobrar	cuentaPorCobrar
-
-    String	concepto
-
-    BigDecimal	descuento	 = 0
-
-    Date dateCreated
-
-    Date lastUpdated
-
-
-
-
-
-
     static constraints = {
-        unidad maxSize:100
-        numeroDeIdentificacion maxSize:50
         comentario nullable:true
-        cuentaPorCobrar nullable:  true
     }
 
     static mapping={
         id generator:'uuid'
+        fechaDocumento type: 'date'
+        tipoDeDocumento maxSize:10
+        sucursal maxSize: 20
     }
 
     static belongsTo =[nota:NotaDeCredito]

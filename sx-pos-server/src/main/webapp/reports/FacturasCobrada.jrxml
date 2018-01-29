@@ -8,10 +8,10 @@
 		 orientation="Portrait"
 		 pageWidth="612"
 		 pageHeight="792"
-		 columnWidth="552"
+		 columnWidth="582"
 		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
+		 leftMargin="15"
+		 rightMargin="15"
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="NoPages"
@@ -38,18 +38,20 @@
 ,C.TOTAL * O.tipo_de_cambio AS VENTA
 ,A.IMPORTE * O.tipo_de_cambio AS COBRADO
 ,O.tipo_de_cambio AS TC
-,C.total-A.IMPORTE-IFNULL((SELECT diferencia FROM otros_productos T WHERE T.cobro_id=O.ID),0) AS DIFERENCIA
-,(SELECT case 
-when o.anticipo is true then 'ANTICIPO'
-WHEN date(o.primera_aplicacion) <> a.FECHA  THEN 'SALDO A FAVOR'
-when date(o.primera_aplicacion) = a.FECHA  THEN o.forma_de_pago
-END )AS TIPO
+,(C.total-A.IMPORTE-o.diferencia)  * O.tipo_de_cambio AS DIFERENCIA
+,(CASE when o.anticipo is true then 'ANTICIPO' WHEN date(o.primera_aplicacion) <> a.FECHA  THEN 'SALDO A FAVOR'
+	  ELSE o.forma_de_pago END )AS TIPO
 ,ifnull((select sum(total) from cuenta_por_cobrar v  where V.fecha=$P{FECHA} and V.SUCURSAL_ID=$P{SUCURSAL} and tipo_documento='VENTA' and tipo='CON'),0) as 'VTA TOTAL'
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS CHEQUE
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
+,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
+WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
+,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
+WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
 FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_id=C.ID) JOIN cobro O ON (O.ID=A.cobro_id) JOIN cliente L ON (L.ID=C.CLIENTE_ID)
 WHERE A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.sucursal_id=$P{SUCURSAL}
-and o.forma_de_pago<>'PAGO_DIF'
 UNION
 SELECT (select s.nombre from sucursal s where s.id=o.sucursal_id) as sucursal
 ,(select s.clave from sucursal s where s.id=o.sucursal_id) as clavSuc
@@ -62,6 +64,12 @@ SELECT (select s.nombre from sucursal s where s.id=o.sucursal_id) as sucursal
 ,ifnull((select sum(total) from cuenta_por_cobrar v  where V.fecha=$P{FECHA} and V.SUCURSAL_ID=$P{SUCURSAL} and tipo_documento='VENTA' and tipo='CON'),0) as 'VTA TOTAL'
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS CHEQUE
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
+,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
+WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
+,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
+WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
 where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
@@ -79,6 +87,8 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<field name="VTA TOTAL" class="java.math.BigDecimal"/>
 	<field name="CHEQUE" class="java.math.BigDecimal"/>
 	<field name="EFECTIVO" class="java.math.BigDecimal"/>
+	<field name="DEPOSITABLE" class="java.math.BigDecimal"/>
+	<field name="DIF" class="java.math.BigDecimal"/>
 
 	<sortField name="TIPO" order="Descending" />
 	<sortField name="DOCTO" />
@@ -89,8 +99,8 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<variable name="TOTALCOBRADO" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
 		<variableExpression><![CDATA[$F{COBRADO}]]></variableExpression>
 	</variable>
-	<variable name="TOTALDIFERENCIAG" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{DIFERENCIA}.doubleValue()<0 ? $F{DIFERENCIA}.doubleValue() : 0 )]]></variableExpression>
+	<variable name="TOT_BONIF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "BONIFICACION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="VENTA" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{VENTA}]]></variableExpression>
@@ -98,11 +108,11 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<variable name="COBRADO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{TIPO}.equals( new String("CHEQUE POR EFECTIVO") )? new BigDecimal (0):$F{COBRADO}]]></variableExpression>
 	</variable>
-	<variable name="DIFERENCIA" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
-		<variableExpression><![CDATA[$F{DIFERENCIA}]]></variableExpression>
+	<variable name="TOT_PAGO_DIF" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "PAGO_DIF" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_TARJETA" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "TARJETA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA_CREDITO" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_EFECTIVO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "EFECTIVO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
@@ -120,19 +130,51 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 		<variableExpression><![CDATA[$V{TOT_CHEQUE}.add( $V{TOT CHEEFE} )]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEPOSITO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "DEPOSITO" ) || $F{TIPO}.startsWith( "TRANSFERENCIA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "DEPOSITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_RMD" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "RMD" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEVOLUCION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
-	<variable name="TOTALDIFERENCIAP" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{DIFERENCIA}.doubleValue()>0 ? $F{DIFERENCIA}.doubleValue() : 0 )]]></variableExpression>
+	<variable name="TOT_DEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$V{TOT_EFECTIVO}
+.add( $V{TOT_CHEQUE} )
+.add( $V{TOT_DEPOSITO} )
+.add($V{TOT_TRANSF} )
+.add( $V{TOT_TARJETA} )
+.add($V{TOT_TAR_D} )
+.add($V{TOT_TAR_A} )
+]]></variableExpression>
 	</variable>
 	<variable name="TOT_SAF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "SALDO A FAVOR" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_ANTICIPO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "ANTICIPO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	</variable>
+	<variable name="TOT_TRANSF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "TRANSFERENCIA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	</variable>
+	<variable name="TOT_TAR_D" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA_DEBITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	</variable>
+	<variable name="TOT_TAR_A" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	</variable>
+	<variable name="TOT_ESP" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "ESPECIE" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_NODEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$V{TOT_SAF}.add( $V{TOT_RMD} )
+.add($V{TOT_PAGO_DIF} )
+.add( $V{TOT_ANTICIPO} )
+.add($V{TOT_ESP} )
+.add($V{TOT_BONIF})]]></variableExpression>
+	</variable>
+	<variable name="DIFERENCIA" class="java.lang.Double" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{DIFERENCIA}.doubleValue()<0 ? $F{DIFERENCIA}.doubleValue() : 0)]]></variableExpression>
+	</variable>
+	<variable name="NO_DEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$V{TOT_SAF}]]></variableExpression>
 	</variable>
 
 		<group  name="TIPO" >
@@ -141,7 +183,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="0"
+						x="14"
 						y="2"
 						width="240"
 						height="14"
@@ -158,7 +200,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="395"
+						x="409"
 						y="1"
 						width="57"
 						height="13"
@@ -172,7 +214,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<staticText>
 					<reportElement
-						x="255"
+						x="269"
 						y="1"
 						width="77"
 						height="14"
@@ -185,11 +227,11 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="510"
+						x="532"
 						y="1"
-						width="40"
+						width="31"
 						height="14"
-						key="textField-8"/>
+						key="textField-14"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid"/>
@@ -199,7 +241,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{DIFERENCIA}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{DIFERENCIA}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
@@ -229,7 +271,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="262"
+						x="276"
 						y="39"
 						width="232"
 						height="15"
@@ -243,7 +285,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="8"
+						x="22"
 						y="39"
 						width="62"
 						height="15"
@@ -262,7 +304,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="70"
+						x="84"
 						y="39"
 						width="52"
 						height="15"
@@ -275,7 +317,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="496"
+						x="510"
 						y="39"
 						width="55"
 						height="15"
@@ -293,7 +335,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="0"
+						x="14"
 						y="5"
 						width="57"
 						height="11"
@@ -312,7 +354,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
-						x="0"
+						x="14"
 						y="2"
 						width="552"
 						height="2"
@@ -322,7 +364,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="0"
+						x="14"
 						y="17"
 						width="552"
 						height="2"
@@ -333,7 +375,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="58"
+						x="72"
 						y="5"
 						width="52"
 						height="11"
@@ -353,7 +395,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="111"
+						x="125"
 						y="5"
 						width="46"
 						height="11"
@@ -373,7 +415,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="158"
+						x="172"
 						y="5"
 						width="183"
 						height="11"
@@ -393,7 +435,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="395"
+						x="409"
 						y="5"
 						width="57"
 						height="11"
@@ -413,7 +455,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="344"
+						x="358"
 						y="5"
 						width="51"
 						height="11"
@@ -433,7 +475,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="496"
+						x="510"
 						y="5"
 						width="55"
 						height="11"
@@ -453,7 +495,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="452"
+						x="466"
 						y="5"
 						width="42"
 						height="11"
@@ -476,7 +518,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="0"
+						x="14"
 						y="2"
 						width="56"
 						height="13"
@@ -489,7 +531,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="59"
+						x="73"
 						y="2"
 						width="52"
 						height="13"
@@ -502,7 +544,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="113"
+						x="127"
 						y="2"
 						width="41"
 						height="13"
@@ -515,7 +557,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="157"
+						x="171"
 						y="2"
 						width="183"
 						height="13"
@@ -528,7 +570,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="344"
+						x="358"
 						y="2"
 						width="51"
 						height="13"
@@ -541,7 +583,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="395"
+						x="409"
 						y="1"
 						width="57"
 						height="14"
@@ -552,24 +594,11 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{COBRADO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="510"
-						y="2"
-						width="40"
-						height="13"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIFERENCIA}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="474"
+						x="485"
 						y="2"
-						width="36"
+						width="29"
 						height="11"
 						key="textField">
 							<printWhenExpression><![CDATA[new Boolean(!$F{TC}.equals( new BigDecimal(1.0000)))]]></printWhenExpression>
@@ -583,9 +612,9 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="452"
+						x="466"
 						y="2"
-						width="22"
+						width="19"
 						height="11"
 						forecolor="#000000"
 						key="staticText-42"
@@ -602,6 +631,36 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					</textElement>
 				<text><![CDATA[TC]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="532"
+						y="2"
+						width="31"
+						height="13"
+						key="textField-12">
+							<printWhenExpression><![CDATA[new Boolean($F{DIFERENCIA}.doubleValue()<0)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIFERENCIA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="529"
+						y="0"
+						width="24"
+						height="15"
+						key="textField-13">
+							<printWhenExpression><![CDATA[new Boolean($F{DIFERENCIA}.doubleValue()>0)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font pdfFontName="Helvetica-Bold" size="11" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DIFERENCIA}.doubleValue()>0 ? "*" : ""]]></textFieldExpression>
+				</textField>
 			</band>
 		</detail>
 		<columnFooter>
@@ -613,7 +672,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="0"
+						x="14"
 						y="2"
 						width="551"
 						height="0"
@@ -625,7 +684,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="1"
+						x="15"
 						y="4"
 						width="75"
 						height="12"
@@ -645,7 +704,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="226"
+						x="240"
 						y="4"
 						width="48"
 						height="10"
@@ -665,7 +724,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="279"
+						x="293"
 						y="4"
 						width="31"
 						height="11"
@@ -685,7 +744,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="377"
+						x="391"
 						y="4"
 						width="75"
 						height="12"
@@ -705,7 +764,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="467"
+						x="481"
 						y="4"
 						width="84"
 						height="12"
@@ -729,7 +788,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="0"
+						x="14"
 						y="4"
 						width="75"
 						height="12"
@@ -749,7 +808,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="-1"
+						x="13"
 						y="2"
 						width="551"
 						height="0"
@@ -761,7 +820,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="225"
+						x="239"
 						y="4"
 						width="48"
 						height="10"
@@ -781,7 +840,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="278"
+						x="292"
 						y="4"
 						width="31"
 						height="11"
@@ -801,7 +860,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="376"
+						x="390"
 						y="4"
 						width="75"
 						height="12"
@@ -821,7 +880,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="466"
+						x="480"
 						y="4"
 						width="84"
 						height="12"
@@ -841,10 +900,10 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="199"  isSplitAllowed="true" >
+			<band height="158"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="395"
+						x="409"
 						y="5"
 						width="57"
 						height="14"
@@ -860,147 +919,22 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{COBRADO}.subtract( $F{CHEQUE} )]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="487"
-						y="5"
-						width="63"
-						height="14"
-						key="textField"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTALDIFERENCIAP}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
-						x="255"
+						x="288"
 						y="5"
-						width="55"
+						width="58"
 						height="14"
 						key="staticText-29"/>
 					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[Total ]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="274"
-						y="35"
-						width="276"
-						height="11"
-						key="staticText-30"/>
-					<box></box>
-					<textElement textAlignment="Justified">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[CONCENTRADO  DE TOTALES]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="274"
-						y="71"
-						width="226"
-						height="14"
-						key="staticText-31"/>
-					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[TARJETA DE CREDITO]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="501"
-						y="71"
-						width="49"
-						height="14"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TARJETA}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="274"
-						y="88"
-						width="226"
-						height="14"
-						key="staticText-32"/>
-					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[EFECTIVO Menos (-) CAMBIO DE CHEQUE POR EFECTIVO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="274"
-						y="106"
-						width="226"
-						height="14"
-						key="staticText-33"/>
-					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[CHEQUES Mas (+) CAMBIO DE CHEQUE POR EFECTIVO]]></text>
-				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="274"
-						y="32"
-						width="275"
-						height="0"
-						forecolor="#666666"
-						backcolor="#FFFFFF"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch" fill="Solid" />
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="273"
-						y="46"
-						width="276"
-						height="0"
-						forecolor="#666666"
-						backcolor="#FFFFFF"
-						key="line-8"/>
-					<graphicElement stretchType="NoStretch" fill="Solid" />
-				</line>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="500"
-						y="168"
-						width="49"
-						height="14"
-						key="textField"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
-					<topPen lineWidth="1.0" lineStyle="Double" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Double" lineColor="#000000"/>
-</box>
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{COBRADO}.subtract( $F{CHEQUE} )]]></textFieldExpression>
-				</textField>
+				<text><![CDATA[TOTAL :  ]]></text>
+				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="332"
+						x="346"
 						y="5"
 						width="63"
 						height="14"
@@ -1018,11 +952,11 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="499"
-						y="184"
-						width="51"
+						x="532"
+						y="5"
+						width="32"
 						height="14"
-						key="textField"/>
+						key="textField-16"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1032,108 +966,710 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CHEQUE}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIF}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<staticText>
 					<reportElement
-						x="501"
-						y="88"
-						width="50"
+						x="502"
+						y="5"
+						width="30"
 						height="14"
-						key="textField"/>
+						key="staticText-44"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font size="8"/>
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{EFESINCHE}.subtract( $F{EFECTIVO} )]]></textFieldExpression>
-				</textField>
+				<text><![CDATA[OTP :  ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="21"
+						y="78"
+						width="77"
+						height="11"
+						forecolor="#000000"
+						key="staticText-46"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TRANSFERENCIA :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="22"
+						y="89"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-47"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA DE CRE :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="21"
+						y="45"
+						width="77"
+						height="11"
+						forecolor="#000000"
+						key="staticText-48"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[EFECTIVO :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="21"
+						y="56"
+						width="77"
+						height="11"
+						forecolor="#000000"
+						key="staticText-49"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[CHEQUE :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="21"
+						y="67"
+						width="77"
+						height="11"
+						forecolor="#000000"
+						key="staticText-50"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[ORDEN DE PAGO :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="275"
+						y="45"
+						width="126"
+						height="11"
+						forecolor="#000000"
+						key="staticText-51"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PAGO CON SALDO A FAVOR :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="255"
+						y="56"
+						width="146"
+						height="11"
+						forecolor="#000000"
+						key="staticText-52"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PAGO C/NOTA POR DEVOLUCION:]]></text>
+				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="501"
-						y="106"
-						width="51"
-						height="14"
-						key="textField"/>
+						x="98"
+						y="56"
+						width="60"
+						height="11"
+						key="textField-19"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font size="8"/>
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{CHE+CHEFE}.add( $F{CHEQUE} )]]></textFieldExpression>
 				</textField>
-				<staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="273"
-						y="184"
-						width="225"
-						height="14"
-						key="staticText-34"/>
+						x="98"
+						y="45"
+						width="60"
+						height="11"
+						key="textField-20"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[TOTAL CAMBIO DE CHEQUE POR EFECTIVO]]></text>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{EFESINCHE}.subtract( $F{EFECTIVO} )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="287"
+						y="78"
+						width="114"
+						height="11"
+						forecolor="#000000"
+						key="staticText-53"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[OTROS GASTOS :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="22"
+						y="100"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-54"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA DE DEBITO :]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="501"
-						y="54"
-						width="49"
-						height="14"
-						key="textField"/>
+						x="98"
+						y="67"
+						width="60"
+						height="11"
+						key="textField-21"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEPOSITO}]]></textFieldExpression>
 				</textField>
-				<staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="273"
-						y="54"
-						width="226"
-						height="14"
-						key="staticText-35"/>
-					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<text><![CDATA[DEPOSITO]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="501"
-						y="121"
-						width="51"
-						height="13"
-						key="textField"/>
+						x="98"
+						y="78"
+						width="60"
+						height="11"
+						key="textField-22"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font size="8"/>
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TRANSF}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="98"
+						y="89"
+						width="60"
+						height="11"
+						key="textField-23"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TARJETA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="98"
+						y="100"
+						width="60"
+						height="11"
+						key="textField-24"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TAR_D}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="45"
+						width="65"
+						height="11"
+						key="textField-25"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_SAF}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="56"
+						width="65"
+						height="11"
+						key="textField-26"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_RMD}]]></textFieldExpression>
 				</textField>
-				<staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="274"
-						y="121"
-						width="226"
-						height="14"
-						key="staticText-36"/>
+						x="401"
+						y="78"
+						width="65"
+						height="11"
+						key="textField-27"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[RMD]]></text>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_PAGO_DIF}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="98"
+						y="146"
+						width="60"
+						height="11"
+						key="textField-28"/>
+					<box>					<topPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEPOSITABLE}
+]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="3"
+						y="146"
+						width="95"
+						height="11"
+						forecolor="#000000"
+						key="staticText-55"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TOTAL DEPOSITABLE:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="287"
+						y="116"
+						width="114"
+						height="11"
+						forecolor="#000000"
+						key="staticText-56"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TOTAL NO DEPOSITABLE:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="22"
+						y="100"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-57"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA DE DEB:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="22"
+						y="111"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-58"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA DE DEBITO :]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="487"
-						y="19"
-						width="63"
+						x="98"
+						y="111"
+						width="60"
+						height="11"
+						key="textField-29"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TAR_A}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="22"
+						y="111"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-59"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA AMEX:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="286"
+						y="137"
+						width="114"
+						height="20"
+						forecolor="#000000"
+						key="staticText-60"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TOTAL COBRANZA :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="400"
+						y="137"
+						width="65"
+						height="20"
+						key="textField-30"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEPOSITABLE}.add($V{TOT_SAF})
+.add( $V{TOT_RMD} )
+.add($V{TOT_PAGO_DIF} )
+.add( $V{TOT_ANTICIPO} )
+.add($V{TOT_ESP} )
+.add($V{TOT_BONIF})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="287"
+						y="89"
+						width="114"
+						height="11"
+						forecolor="#000000"
+						key="staticText-61"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PAGO CON ANTICIPO :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="89"
+						width="65"
+						height="11"
+						key="textField-31"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_ANTICIPO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="287"
+						y="100"
+						width="114"
+						height="11"
+						forecolor="#000000"
+						key="staticText-62"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PAGO EN ESPECIE :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="100"
+						width="65"
+						height="11"
+						key="textField-32"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_ESP}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="116"
+						width="65"
+						height="11"
+						key="textField-34"/>
+					<box>					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_SAF}.add( $V{TOT_RMD} )
+.add($V{TOT_PAGO_DIF} )
+.add( $V{TOT_ANTICIPO} )
+.add($V{TOT_ESP} )
+.add($V{TOT_BONIF})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="255"
+						y="67"
+						width="146"
+						height="11"
+						forecolor="#000000"
+						key="staticText-64"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PAGO C/NOTA DE BONIFICACION:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="401"
+						y="67"
+						width="65"
+						height="11"
+						key="textField-35"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_BONIF}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="21"
+						y="122"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-65"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA DE DEBITO :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="97"
+						y="122"
+						width="60"
+						height="11"
+						key="textField-36"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIF}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="8"
+						y="122"
+						width="89"
+						height="11"
+						forecolor="#000000"
+						key="staticText-66"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[OTROS PRODUCTOS:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="21"
+						y="133"
+						width="76"
+						height="11"
+						forecolor="#000000"
+						key="staticText-67"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TARJETA DE DEBITO :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="8"
+						y="133"
+						width="89"
+						height="11"
+						forecolor="#000000"
+						key="staticText-68"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SALDO A FAVOR:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="549"
+						y="116"
+						width="32"
 						height="14"
-						key="textField-9"/>
+						key="textField-38"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
-					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1141,86 +1677,156 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTALDIFERENCIAG}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOT_PAGO_DIF}.doubleValue()-$F{DIF}.doubleValue())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="487"
-						y="19"
-						width="23"
+						x="476"
+						y="116"
+						width="73"
 						height="14"
-						key="staticText-37"/>
+						key="staticText-69"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[OTP]]></text>
+				<text><![CDATA[DIF(PROD-GST) : ]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="166"
+						y="29"
+						width="51"
+						height="14"
+						key="textField-39"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CHEQUE}]]></textFieldExpression>
+				</textField>
 				<staticText>
 					<reportElement
-						x="487"
-						y="5"
-						width="23"
+						x="4"
+						y="29"
+						width="154"
 						height="14"
-						key="staticText-38"/>
+						key="staticText-70"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[OTG]]></text>
+				<text><![CDATA[CAMBIO DE CHEQUE POR EFECTIVO :  ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="501"
-						y="135"
+						x="166"
+						y="45"
+						width="50"
+						height="11"
+						key="textField-40"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_EFECTIVO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="166"
+						y="57"
 						width="51"
-						height="13"
-						key="textField-10"/>
+						height="14"
+						key="textField-41"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_SAF}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_CHEQUE}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="274"
-						y="135"
-						width="226"
-						height="14"
-						key="staticText-39"/>
-					<box></box>
-					<textElement>
+						x="166"
+						y="4"
+						width="53"
+						height="23"
+						key="staticText-71"/>
+					<box>					<bottomPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Center">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[SAF]]></text>
+				<text><![CDATA[CAMBIO
+CHEQxEFEC]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<staticText>
 					<reportElement
-						x="500"
-						y="149"
-						width="51"
-						height="13"
-						key="textField-11"/>
+						mode="Opaque"
+						x="161"
+						y="55"
+						width="11"
+						height="11"
+						forecolor="#000000"
+						key="staticText-72"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[(-)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="162"
+						y="44"
+						width="11"
+						height="11"
+						forecolor="#000000"
+						key="staticText-73"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[(+)]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="97"
+						y="133"
+						width="60"
+						height="11"
+						key="textField-43"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_ANTICIPO}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="273"
-						y="149"
-						width="226"
-						height="14"
-						key="staticText-40"/>
-					<box></box>
-					<textElement>
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[ANTICIPO]]></text>
-				</staticText>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(
+$F{DEPOSITABLE}.doubleValue()
+-$F{DIF}.doubleValue()
+-$V{TOT_EFECTIVO}.doubleValue()
+-$V{TOT_CHEQUE}.doubleValue()
+-$V{TOT_DEPOSITO}.doubleValue()
+-$V{TOT_TRANSF}.doubleValue()
+-$V{TOT_TARJETA}.doubleValue()
+-$V{TOT_TAR_D}.doubleValue()
+-$V{TOT_TAR_A}.doubleValue()
+)]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>
