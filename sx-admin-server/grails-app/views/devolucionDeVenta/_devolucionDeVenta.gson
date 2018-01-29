@@ -12,7 +12,7 @@ json g.render(devolucionDeVenta){
     }
     venta {
         id devolucionDeVenta.venta.id
-        documento devolucionDeVenta.venta.documento
+        documento devolucionDeVenta?.venta?.documento
         fecha devolucionDeVenta.venta.fecha
         tipo devolucionDeVenta.venta.tipo
         cliente {
@@ -20,6 +20,6 @@ json g.render(devolucionDeVenta){
             nombre devolucionDeVenta.venta.cliente.nombre
         }
     }
-    factura devolucionDeVenta.venta.cuentaPorCobrar.documento
+    factura devolucionDeVenta?.venta?.cuentaPorCobrar?.documento
     nota g.render(devolucionDeVenta.findNota())
 }
