@@ -73,6 +73,7 @@ class CfdiController extends RestfulController{
             def xml = cfdi.getUrl().getBytes()
             def pdf = generarImpresionV33(cfdi, true).toByteArray()
             sendMail {
+
                 multipart false
                 to targetEmail
                 subject "Envio de CFDI ${cfdi.uuid}"

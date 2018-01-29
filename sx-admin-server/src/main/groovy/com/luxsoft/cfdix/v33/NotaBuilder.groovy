@@ -246,15 +246,13 @@ class NotaBuilder {
             Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
             assert rmd.venta.cuentaPorCobrar, 'RMD sin CxC timbrada'
             def cxc = rmd.venta.cuentaPorCobrar
-            def uuid = null
-            if (cxc.cfdi) {
-                assert cxc.cfdi.uuid, 'Cuenta por cobrar CFDI sin  timbrar'
-                uuid = cxc.uuid
-            } else {
-                assert cxc.uuid, 'Cuenta por cobrar sin  timbrar'
-                uuid = cxc.uuid
+            def uuid = cxc.uuid
+            if(uuid == null) {
+                if (cxc.cfdi) {
+                    uuid = cxc.cfdi.uuid
+                }
             }
-            assert uuid, 'No existe UUID origen para la devolucion'
+            assert uuid, "Cuenta por cobrar ${cxc.tipoDocumento} - ${cxc.documento} sin UUID"
             relacionado.UUID = uuid
             relacionados.cfdiRelacionado.add(relacionado)
 
