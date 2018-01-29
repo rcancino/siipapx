@@ -4,16 +4,19 @@ package sx.inventario
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
-
+import sx.core.AppConfig
 import sx.core.Folio
 import sx.core.Inventario
 import sx.core.Sucursal
 import sx.core.Venta
+import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
 class DevolucionDeVentaController extends RestfulController {
 
     static responseFormats = ['json']
+
+    ReportService reportService
 
     DevolucionDeVentaController() {
         super(DevolucionDeVenta)
@@ -85,6 +88,14 @@ class DevolucionDeVentaController extends RestfulController {
             resource.fechaInventario = new Date()
         }
         return super.updateResource(resource)
+    }
+
+    def print() {
+        // log.debug('Imprimiendo SolicitudDeTraslado.jrxml: ID:{}', params.ID)
+        Sucursal sucursal = AppConfig.first().sucursal
+        params.SUCURSAL = sucursal.id
+        def pdf =  reportService.run('Devoluciones.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'DevolucionDeVenta.pdf')
     }
 
 }

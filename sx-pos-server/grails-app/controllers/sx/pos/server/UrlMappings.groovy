@@ -128,6 +128,7 @@ class UrlMappings {
         "/api/inventario/transformaciones/print"(controller: "transformacion", action: 'print', method: 'GET')
         "/api/inventario/devoluciones"(resources: "devolucionDeVenta")
         "/api/inventario/devoluciones/buscarVenta"(controller: 'devolucionDeVenta', action: 'buscarVenta', method: 'GET')
+        "/api/inventario/devoluciones/print"(controller: "devolucionDeVenta", action: 'print', method: 'GET')
         "/api/inventario/recalcular"(controller: 'existencia', action: 'recalcular', method: 'GET')
 
         // Decs

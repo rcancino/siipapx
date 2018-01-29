@@ -27,7 +27,7 @@ class ProveedorController extends RestfulController{
             query = query.where {nacional == params.nacional}
         }
         if(params.term){
-            def search = params.term + '%'
+            def search = '%' + params.term + '%'
             query = query.where { nombre =~ search}
             params.max = 50
             return query.list(params)
