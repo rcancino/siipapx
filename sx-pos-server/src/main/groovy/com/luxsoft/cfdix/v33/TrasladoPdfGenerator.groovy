@@ -42,6 +42,7 @@ class TrasladoPdfGenerator {
         def data = [:]
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
+        params.SOLICITUD = tps.solicitudDeTraslado.documento
         return data
     }
 

@@ -31,7 +31,7 @@
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="PRODUCTO" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT 
-i.tipo as GP,''as ORIGEN,
+i.tipo as GP,i.tipo_venta as ORIGEN,
 CASE WHEN P.ANCHO=0 THEN "" ELSE CONCAT(P.ANCHO,'X',P.LARGO) END AS MEDIDA
 ,p.CLAVE,p.DESCRIPCION,i.CANTIDAD,i.FECHA,i.COMENTARIO
 ,MONTH(I.FECHA) AS MES,YEAR(I.FECHA) AS YEAR,S.CLAVE AS SUC , S.NOMBRE AS SUCURSAL,P.UNIDAD,I.TIPO,I.DOCUMENTO,i.RENGLON,I.FECHA AS FECHA1,I.FECHA AS FECHA,0 AS KILOS
@@ -991,7 +991,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENTARIO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="2"
 						y="2"

@@ -7,36 +7,35 @@ import groovy.transform.ToString
 @EqualsAndHashCode(includes = 'id')
 class Inventario {
 
-
     String	id
 
-    Sucursal	sucursal
+    Sucursal sucursal
 
-    Producto	producto
+    Producto producto
 
-    Date	fecha
+    Date fecha
 
-    Long	documento	 = 0
+    Long documento = 0
 
-    String	tipo
+    String tipo
 
     String tipoVenta
 
-    BigDecimal	cantidad	 = 0
+    BigDecimal cantidad = 0
 
-    BigDecimal	kilos	 = 0
+    BigDecimal kilos = 0
 
-    Boolean	nacional	 = true
+    Boolean	nacional = true
 
-    BigDecimal	costo	 = 0
+    BigDecimal costo = 0
 
-    BigDecimal	costoPromedio	 = 0
+    BigDecimal costoPromedio = 0.0
 
-    BigDecimal	costoUltimaCompra	 = 0
+    BigDecimal costoUltimaCompra = 0.0
 
-    BigDecimal	costoReposicion	 = 0
+    BigDecimal costoReposicion = 0.0
 
-    String	comentario
+    String comentario
 
     String sw2
 
@@ -55,7 +54,6 @@ class Inventario {
     String descripcion
 
     String sucursalNombre
-
 
     static constraints = {
         tipo nullable: true
@@ -78,7 +76,6 @@ class Inventario {
         sucursal index:'SUCURSAL_IDX'
         fecha index: 'FECHA_IDX'
     }
-
 
     def afterInsert() {
         // def factor = this.producto.unidad == 'MIL' ? 1000 : 1;

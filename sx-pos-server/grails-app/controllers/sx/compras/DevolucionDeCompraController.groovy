@@ -42,8 +42,8 @@ class DevolucionDeCompraController extends RestfulController {
         resource.partidas.each {
             it.comentario = resource.comentario
         }
-        resource.referencia = resource.recepcionDeCompra.remision
-        resource.fechaReferencia = resource.recepcionDeCompra.fechaRemision
+        // resource.referencia = resource.recepcionDeCompra.remision
+        // resource.fechaReferencia = resource.recepcionDeCompra.fechaRemision
         resource.updateUser = username
         return super.saveResource(resource)
     }

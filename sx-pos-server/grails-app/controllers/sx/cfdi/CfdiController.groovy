@@ -78,8 +78,8 @@ class CfdiController extends RestfulController{
                 to targetEmail
                 subject "Envio de CFDI ${cfdi.uuid}"
                 text "Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra"
-                attach("${cfdi.uuid}.xml", 'text/xml', xml)
-                attach("${cfdi.uuid}.pdf", 'application/pdf', pdf)
+                attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
+                attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
             }
             cfdi.enviado = new Date()
             cfdi.email = targetEmail

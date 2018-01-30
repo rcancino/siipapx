@@ -146,8 +146,8 @@ class CfdiService {
             // to 'rubencancino6@gmail.com'
             subject "Envio de CFDI Serie: ${cfdi.serie} Folio: ${cfdi.folio}"
             html "<p>${message}</p> "
-            attach("${cfdi.uuid}.xml", 'text/xml', xml)
-            attach("${cfdi.uuid}.pdf", 'application/pdf', pdf)
+            attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
+            attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
         }
         cfdi.enviado = new Date()
         cfdi.email = targetEmail

@@ -81,12 +81,15 @@ class EmbarqueController extends RestfulController {
                     it.valor = venta.subtotal
                 } else {
                     // log.debug(' Calculando valor de envio PARCIAL ')
+                    def kilos = 0.0
                     it.partidas.each { EnvioDet det ->
                         def factor = det.ventaDet.producto.unidad == 'MIL' ? 1000 : 1
                         def rv  = (det.cantidad * det.ventaDet.precio)/ factor
                         def valDet = ( (100 - det.ventaDet.descuento) * rv ) /  100
                         det.valor = MonedaUtils.round(valDet, 2)
+                        det.kilos = (det.cantidad * det.ventaDet.producto.kilos)/ factor
                     }
+                    it.kilos = it.partidas.sum(0.0, { EnvioDet rr -> rr.kilos})
                     it.valor = it.partidas.sum(0.0, { EnvioDet rr -> rr.valor})
                 }
             }
