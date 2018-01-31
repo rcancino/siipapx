@@ -16,8 +16,9 @@ class EnvioDeCfdisJob {
     }
 
     def execute() {
-        log.debug('Buscando cfdis para enviar por email')
+
         if (Environment.current == Environment.PRODUCTION) {
+            log.debug('Buscando cfdis para enviar por email')
             AppConfig config = AppConfig.first()
             if(config.envioDeCorreosActivo) {
                 doEnviar()

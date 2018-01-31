@@ -19,8 +19,6 @@ class CfdiCancelado {
 
     byte[] aka
 
-    byte[] message
-
     String statusSat
 
     Date dateCreated
@@ -39,7 +37,6 @@ class CfdiCancelado {
         uuid unique:true
         comentario nullable:true
         aka maxSize:(1024 * 512)  // 50kb para almacenar el xml
-        message nullable:true, maxSize:(1024 * 512)  // 50kb para almacenar el xml
         createUser nullable: true
         updateUser nullable: true
         statusSat maxSize: 10

@@ -12,31 +12,15 @@ import wslite.soap.SOAPResponse
 @CompileStatic
 class CancelacionService {
 
-    String url = 'http://ec.europa.eu/taxation_customs/vies/services/checkVatService'
-    SOAPClient client = new SOAPClient("${url}.wsdl")
-
-    @CompileDynamic
-    Boolean validateVat(String memberStateCode, String vatNumberCode) {
-        SOAPResponse response = client.send(SOAPAction: url) {
-            body('xmlns': 'urn:ec.europa.eu:taxud:vies:services:checkVat:types') {
-                checkVat {
-                    countryCode(memberStateCode)
-                    vatNumber(vatNumberCode)
-                }
-            }
-        }
-        response.checkVatResponse.valid.text() == 'true'
-        // Base64.encode()
-    }
+    SOAPClient client = new SOAPClient("https://cfdiws.sedeb2b.com/EdiwinWS/services/CFDi?wsdl")
 
     @CompileDynamic
     def cancelar(Cfdi cfdi){
+        CfdiCancelado found = CfdiCancelado.where{uuid == cfdi.uuid}.find()
+        assert found == null, "UUID: ${cfdi.uuid} ya cancelado"
         Empresa empresa = Empresa.first()
         String url = 'http://cfdi.service.ediwinws.edicom.com'
-        String url2 = 'https://cfdiws.sedeb2b.com/EdiwinWS/services/CFDi?wsdl'
-        SOAPClient client = new SOAPClient("https://cfdiws.sedeb2b.com/EdiwinWS/services/CFDi?wsdl")
-
-        SOAPResponse response = client.send(SOAPAction: url){
+        SOAPResponse response = client.send(SOAPAction: url, sslTrustAllCerts:true){
             body('xmlns:cfdi': 'http://cfdi.service.ediwinws.edicom.com') {
                 cancelaCFDi {
                     user(empresa.usuarioPac)
@@ -48,8 +32,6 @@ class CancelacionService {
                 }
             }
         }
-
-
         def res = response.cancelaCFDiResponse
         def xml = new XmlSlurper().parseText(XmlUtil.serialize(res))
         String xmlString = new String(xml.cancelaCFDiReturn.ack.decodeBase64())
@@ -65,16 +47,14 @@ class CancelacionService {
             cancelacion.uuid = cfdi.uuid
             cancelacion.serie = cfdi.serie
             cancelacion.folio = cfdi.folio
-            cancelacion.message = 'CANCELACION '
             cancelacion.aka = xmlString.bytes
             cancelacion.statusSat = folios.EstatusUUID
-
             cancelacion.save failOnError: true, flush: true
-
             cfdi.cancelado = true
-            cfdi.status = 'CANCELADO'
+            cfdi.status = 'CANCELADO EN EL SAT'
             cfdi.save flush: true
             cancelacion.save failOnError: true, flush: true
+            return cancelacion
         }
     }
 

@@ -80,13 +80,9 @@ grails.plugin.console.enabled = true
 
 grails {
     mail {
-        host = "smtp.gmail.com"
-        port = 465
-        username = "credito.papelsa14@gmail.com"
-        password = "Creditopapel"
-        props = ["mail.smtp.auth":"true",
-                 "mail.smtp.socketFactory.port":"465",
-                 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
-                 "mail.smtp.socketFactory.fallback":"false"]
+        host = "smtp.mailgun.com"
+        username = "postmaster@papelsa.movi"
+        password = "c846660d4dcd2663a20b1dac5d618c6d"
+        props = ["mail.smtp.auth":"true"]
     }
 }
