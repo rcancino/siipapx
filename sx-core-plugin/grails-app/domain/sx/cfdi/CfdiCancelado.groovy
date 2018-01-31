@@ -21,6 +21,8 @@ class CfdiCancelado {
 
     byte[] message
 
+    String statusSat
+
     Date dateCreated
 
     Date lastUpdated
@@ -40,6 +42,7 @@ class CfdiCancelado {
         message nullable:true, maxSize:(1024 * 512)  // 50kb para almacenar el xml
         createUser nullable: true
         updateUser nullable: true
+        statusSat maxSize: 10
     }
 
     static  mapping={
