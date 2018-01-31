@@ -34,7 +34,7 @@
 i.tipo as GP,i.tipo_venta as ORIGEN,
 CASE WHEN P.ANCHO=0 THEN "" ELSE CONCAT(P.ANCHO,'X',P.LARGO) END AS MEDIDA,P.ANCHO,P.LARGO
 ,p.CLAVE,p.DESCRIPCION,i.CANTIDAD,i.FECHA,i.COMENTARIO
-,MONTH(I.FECHA) AS MES,YEAR(I.FECHA) AS YEAR,S.CLAVE AS SUC , S.NOMBRE AS SUCURSAL,P.UNIDAD,I.TIPO,I.DOCUMENTO,i.RENGLON,I.FECHA AS FECHA1,I.FECHA AS FECHA,0 AS KILOS
+,MONTH(I.FECHA) AS MES,YEAR(I.FECHA) AS YEAR,S.CLAVE AS SUC , S.NOMBRE AS SUCURSAL,P.UNIDAD,I.TIPO,I.DOCUMENTO,i.RENGLON,I.FECHA AS FECHA1,I.FECHA AS FECHA,I.KILOS
 ,CASE WHEN MONTH(i.FECHA)-1=0 THEN 12 ELSE MONTH(i.FECHA)-1 END AS MES_INI
 ,CASE WHEN MONTH(i.FECHA)-1=0 THEN YEAR(i.FECHA)-1 ELSE YEAR(i.FECHA) END AS YEAR_INI
 ,IFNULL((SELECT E.EXISTENCIA_INICIAL FROM existencia E WHERE E.producto_id=i.producto_id AND S.ID=E.SUCURSAL_ID AND E.MES=MONTH(i.FECHA) 
@@ -67,7 +67,7 @@ order by fecha asc]]></queryString>
 	<field name="DOCUMENTO" class="java.lang.Long"/>
 	<field name="RENGLON" class="java.lang.Integer"/>
 	<field name="FECHA1" class="java.sql.Timestamp"/>
-	<field name="KILOS" class="java.lang.Long"/>
+	<field name="KILOS" class="java.math.BigDecimal"/>
 	<field name="MES_INI" class="java.lang.Long"/>
 	<field name="YEAR_INI" class="java.lang.Long"/>
 	<field name="SALDO_INI" class="java.math.BigDecimal"/>
@@ -932,9 +932,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="50"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Left">
 						<font size="8"/>
@@ -947,9 +945,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="33"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font size="8"/>
@@ -962,9 +958,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="52"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font size="8"/>
@@ -977,9 +971,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="76"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
@@ -992,14 +984,12 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="53"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{KILOS}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{KILOS}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1007,10 +997,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="61"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true 
-&& $F{MES}.longValue()!=13)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
@@ -1023,9 +1010,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="1"
 						width="34"
 						height="14"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font size="8"/>
@@ -1038,9 +1023,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="104"
 						height="11"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Left">
 						<font size="8"/>
@@ -1053,9 +1036,7 @@ $F{MES}.equals(new Long(13))?"SOLICITUDES" :
 						y="2"
 						width="23"
 						height="12"
-						key="textField">
-							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals (new String("EXI"))? false : true)]]></printWhenExpression>
-						</reportElement>
+						key="textField"/>
 					<box></box>
 					<textElement>
 						<font size="8"/>
