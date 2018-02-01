@@ -54,6 +54,8 @@ class NotaDeCredito {
 
     BigDecimal descuento = 0.0
 
+    BigDecimal descuento2 = 0.0
+
     Boolean financiero = false
 
     Cobro cobro
