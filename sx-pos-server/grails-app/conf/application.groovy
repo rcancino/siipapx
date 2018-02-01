@@ -79,10 +79,16 @@ cxf {
 grails.plugin.console.enabled = true
 
 grails {
-    mail {
-        host = "smtp.mailgun.com"
-        username = "postmaster@papelsa.movi"
-        password = "c846660d4dcd2663a20b1dac5d618c6d"
-        props = ["mail.smtp.auth":"true"]
+    mail{
+        port= 465
+        host= "smtp.mailgun.com"
+        username= "postmaster@papelsa.mobi"
+        password="c846660d4dcd2663a20b1dac5d618c6d"
+        props= ["mail.smtp.auth":"true",
+                "mail.smtp.socketFactory.port":"465",
+                "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                "mail.smtp.socketFactory.fallback":"false",
+                "mail.smtp.ssl.trust":"smtp.mailgun.com"
+        ]
     }
 }
