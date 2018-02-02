@@ -2,6 +2,7 @@ package sx.cfdi
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.gorm.transactions.Transactional
+import grails.web.context.ServletContextHolder
 import groovy.xml.XmlUtil
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
@@ -154,7 +155,7 @@ class CfdiService {
         cfdi.email = targetEmail
         cfdi.save()
     }
-
+    /*
     private generarImpresionV33( Cfdi cfdi) {
         def realPath = grailsResourceLocator.findResourceForURI('/reports').file.getPath()
         // resourceLocator.findResourceForURI('/reports').getFile().getPath()
@@ -163,6 +164,15 @@ class CfdiService {
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
         parametros.FACTURA_USD = realPath + '/facUSD.jpg'
+        return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+    }
+    */
+
+    private generarImpresionV33( Cfdi cfdi) {
+        def logoPath = ServletContextHolder.getServletContext().getRealPath("reports/PAPEL_CFDI_LOGO.jpg")
+        def data = V33PdfGenerator.getReportData(cfdi, true)
+        Map parametros = data['PARAMETROS']
+        parametros.PAPELSA = logoPath
         return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 

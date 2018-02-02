@@ -79,6 +79,7 @@ cxf {
 grails.plugin.console.enabled = true
 
 grails {
+
     mail{
         port= 465
         host= "smtp.mailgun.com"
