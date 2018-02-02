@@ -52,6 +52,7 @@ class DevolucionDeVentaService {
             cobro.formaDePago = 'DEVOLUCION'
             rmd.cobro = cobro
             cobro.save()
+            rmd.save()
         }
     }
 
