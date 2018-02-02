@@ -16,14 +16,13 @@ class EnvioDeCfdisJob {
     }
 
     def execute() {
-
         if (Environment.current == Environment.PRODUCTION) {
-            log.debug('Buscando cfdis para enviar por email')
             AppConfig config = AppConfig.first()
             if(config.envioDeCorreosActivo) {
                 doEnviar()
             }
         }
+
     }
 
     private doEnviar(){
@@ -35,14 +34,18 @@ class EnvioDeCfdisJob {
                 Cfdi cfdi = Cfdi.get(it)
                 Venta venta = Venta.where{cuentaPorCobrar.cfdi == cfdi}.find()
                 if (venta) {
-                    // log.debug('Enviando cfdi venta: {}', venta.statusInfo())
+                    log.debug('Enviando cfdi venta: {}', venta.statusInfo())
                     cfdiService.enviarFacturaEmail(cfdi, venta, venta.cliente.getCfdiMail())
+                    // cfdiService.enviarFacturaEmail(cfdi, venta, 'lquintanillab@gmail.com')
                 } else {
+                    /*
                     log.debug('No existe la venta origen del CFDI: {}', cfdi.id)
                     cfdi.comentario = "No existe la venta origen del CFDI"
                     cfdi.enviado = new Date();
                     cfdi.email = "NO ENVIADO"
                     cfdi.save flush: true
+                    */
+
                 }
             }
         }
@@ -52,5 +55,6 @@ class EnvioDeCfdisJob {
         def cfdis = Cfdi.executeQuery("select c.id from Cfdi c where date(c.fecha) = ? " +
                 "and c.cancelado = false and enviado = null", [dia])
         return cfdis
+
     }
 }

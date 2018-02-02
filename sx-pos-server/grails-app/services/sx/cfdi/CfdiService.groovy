@@ -21,6 +21,8 @@ class CfdiService {
 
     ResourceLocator resourceLocator
 
+    def grailsResourceLocator
+
     Cfdi generarCfdi(Comprobante comprobante, String tipo) {
         Cfdi cfdi = new Cfdi()
         cfdi.tipoDeComprobante = tipo
@@ -133,7 +135,7 @@ class CfdiService {
         log.debug('Enviando cfdi {} {} al correo: {}', cfdi.serie,cfdi.folio, targetEmail)
 
         def xml = cfdi.getUrl().getBytes()
-        def pdf = generarImpresionV33(cfdi, true).toByteArray()
+        def pdf = generarImpresionV33(cfdi).toByteArray()
 
         String message = """Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra. Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración 
             la puede dirigir a: servicioaclientes@papelsa.com.mx 
@@ -141,21 +143,21 @@ class CfdiService {
 
         sendMail {
             multipart false
-            from "credito.papelsa14@gmail.com"
             to targetEmail
-            // to 'rubencancino6@gmail.com'
-            subject "Envio de CFDI Serie: ${cfdi.serie} Folio: ${cfdi.folio}"
-            html "<p>${message}</p> "
+            from 'credito.papelsa14@gmail.com'
+            subject "Envio de CFDI ${cfdi.serie} ${cfdi.folio}"
+            text message
             attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
             attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
         }
         cfdi.enviado = new Date()
         cfdi.email = targetEmail
-        cfdi.save flush: true
+        cfdi.save()
     }
 
     private generarImpresionV33( Cfdi cfdi) {
-        def realPath = resourceLocator.findResourceForURI('/reports')
+        def realPath = grailsResourceLocator.findResourceForURI('/reports').file.getPath()
+        // resourceLocator.findResourceForURI('/reports').getFile().getPath()
         def data = V33PdfGenerator.getReportData(cfdi, true)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
