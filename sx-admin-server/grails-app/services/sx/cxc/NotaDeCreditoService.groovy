@@ -177,6 +177,7 @@ class NotaDeCreditoService {
         cobro.createUser = nota.createUser
         cobro.updateUser = nota.updateUser
         cobro.sucursal = nota.sucursal
+        cobro.referencia = nota.folio.toString()
         cobro.formaDePago = nota.tipo == 'BON' ? 'BONIFICACION' : 'DEVOLUCION'
         nota.cobro = cobro
     }

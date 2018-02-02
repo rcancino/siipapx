@@ -48,7 +48,7 @@ class DevolucionDeVentaController extends RestfulController {
             resource.createUser = username
         }
         resource.updateUser = username
-        return super.saveResource(resource)
+        return this.devolucionDeVentaService.save(resource)
     }
 
     protected actualizarRmd(DevolucionDeVenta rmd){
