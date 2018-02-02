@@ -1,8 +1,10 @@
 package sx.cfdi
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
+import grails.core.GrailsApplication
 import grails.gorm.transactions.Transactional
 import grails.util.Environment
+import grails.web.context.ServletContextHolder
 import groovy.xml.XmlUtil
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
@@ -20,7 +22,7 @@ class CfdiService {
 
     ReportService reportService
 
-    ResourceLocator resourceLocator
+    def grailsApplication
 
     Cfdi generarCfdi(Comprobante comprobante, String tipo) {
         Cfdi cfdi = new Cfdi()
@@ -137,19 +139,16 @@ class CfdiService {
 
     def enviarFacturaEmail(Cfdi cfdi, Venta factura, String targetEmail) {
         log.debug('Enviando cfdi {} {} al correo: {}', cfdi.serie,cfdi.folio, targetEmail)
-
         def xml = cfdi.getUrl().getBytes()
         def pdf = generarImpresionV33(cfdi, true).toByteArray()
 
         String message = """Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra. Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración 
             la puede dirigir a: servicioaclientes@papelsa.com.mx 
         """
-
         sendMail {
             multipart false
             from "noreplay@papelsa.com.mx"
             to targetEmail
-            // to 'rubencancino6@gmail.com'
             subject "Envio de CFDI Serie: ${cfdi.serie} Folio: ${cfdi.folio}"
             html "<p>${message}</p> "
             attach("${cfdi.uuid}.xml", 'text/xml', xml)
@@ -161,12 +160,10 @@ class CfdiService {
     }
 
     private generarImpresionV33( Cfdi cfdi) {
-        def realPath = resourceLocator.findResourceForURI('/reports')
+        def logoPath = ServletContextHolder.getServletContext().getRealPath("reports/PAPEL_CFDI_LOGO.jpg")
         def data = V33PdfGenerator.getReportData(cfdi, true)
         Map parametros = data['PARAMETROS']
-        parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
-        parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
-        parametros.FACTURA_USD = realPath + '/facUSD.jpg'
+        parametros.PAPELSA = logoPath
         return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 
