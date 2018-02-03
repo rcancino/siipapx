@@ -37,7 +37,7 @@ class DevolucionDeVentaService {
     }
 
     def generarCobro(DevolucionDeVenta rmd){
-        if (rmd.fechaInventario) {
+        if (rmd.fechaInventario && rmd.venta.tipo != 'CRE') {
             Cobro cobro = new Cobro()
             cobro.setCliente(rmd.venta.cliente)
             cobro.setFecha(new Date())
