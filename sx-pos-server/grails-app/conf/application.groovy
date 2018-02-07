@@ -84,7 +84,7 @@ grails {
         port= 465
         host= "smtp.mailgun.com"
         username= "postmaster@papelsa.mobi"
-        password="c846660d4dcd2663a20b1dac5d618c6d"
+        password="Pap315a@ma1L"
         props= ["mail.smtp.auth":"true",
                 "mail.smtp.socketFactory.port":"465",
                 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",

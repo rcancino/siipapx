@@ -41,6 +41,10 @@ class EnvioDeCfdisJob {
                     }catch (Exception ex) {
                         String c = ExceptionUtils.getRootCauseMessage(ex)
                         log.debug('Error enviando correo Fac: {} Error: {}', venta.statusInfo(), c)
+                        cfdi.enviado = new Date()
+                        cfdi.email = venta.cliente.getCfdiMail()
+                        cfdi.comentario = "Error en evio: ${c}"
+                        cfdi.save flush:true
                     }
                 }
             }
