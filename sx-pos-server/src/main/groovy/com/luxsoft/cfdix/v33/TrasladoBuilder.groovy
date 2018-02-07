@@ -58,7 +58,7 @@ class TrasladoBuilder {
         this.comprobante = factory.createComprobante()
         comprobante.version = "3.3"
         comprobante.tipoDeComprobante = CTipoDeComprobante.T
-        comprobante.serie = "${tps.sucursal.nombre.substring(0,2)}_CFDI_TPS"
+        comprobante.serie = "${tps.sucursal.nombre.substring(0,2)}_TPS"
         comprobante.folio = tps.documento.toString()
         comprobante.setFecha(DateUtils.getCfdiDate(new Date()))
         comprobante.moneda =  CMoneda.MXN

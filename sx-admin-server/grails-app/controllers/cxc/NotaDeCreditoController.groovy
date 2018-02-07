@@ -5,7 +5,7 @@ import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 
 import grails.plugin.springsecurity.annotation.Secured
-
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.reports.ReportService
 import sx.core.Sucursal
 import sx.inventario.DevolucionDeVenta
@@ -137,6 +137,7 @@ class NotaDeCreditoController extends RestfulController{
     }
 
     def handleNotaDeCreditoException(NotaDeCreditoException sx) {
+        String msg = ExceptionUtils.getRootCauseMessage(sx)
         respond ([message: sx.message], status: 422)
     }
 

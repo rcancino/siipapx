@@ -1,6 +1,6 @@
 package sx.inventario
 
-
+import com.luxsoft.utils.MonedaUtils
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
@@ -17,6 +17,8 @@ class DevolucionDeVentaController extends RestfulController {
     static responseFormats = ['json']
 
     ReportService reportService
+
+    DevolucionDeVentaService devolucionDeVentaService
 
     DevolucionDeVentaController() {
         super(DevolucionDeVenta)
@@ -43,12 +45,25 @@ class DevolucionDeVentaController extends RestfulController {
     protected DevolucionDeVenta saveResource(DevolucionDeVenta resource) {
         def username = getPrincipal().username
         if(resource.id == null) {
-            def serie = resource.sucursal.clave
-            resource.documento = Folio.nextFolio('RMD',serie)
             resource.createUser = username
         }
         resource.updateUser = username
-        return super.saveResource(resource)
+        return this.devolucionDeVentaService.save(resource)
+    }
+
+    protected actualizarRmd(DevolucionDeVenta rmd){
+        def importeNeto = 0.0
+        rmd.partidas.each {
+            def cantidad = it.cantidad
+            def factor = it.producto.unidad == 'MIL' ? 1000 : 1
+            def precio = it.ventaDet.precio
+            def subtotal = (cantidad/factor) * precio
+            def descuento = it.ventaDet.descuento/100
+            def descuentoImporte = subtotal * descuento
+            def importe = MonedaUtils.round(subtotal - descuentoImporte)
+            importeNeto = importeNeto + importe
+            println "Importe en ventaDet ${it.ventaDet.subtotal} En rmd: ${importe}"
+        }
     }
 
 

@@ -5,7 +5,6 @@ import sx.core.VentaDet
 
 class EnvioDet {
 
-
     String	id
 
     Envio	envio
@@ -16,22 +15,20 @@ class EnvioDet {
 
     Producto producto
 
-    BigDecimal	cantidad	 = 0
+    BigDecimal cantidad	 = 0.0
 
-    BigDecimal	valor	 = 0
+    BigDecimal valor = 0.0
 
-    String	instruccionEntregaParcial
+    BigDecimal kilos = 0.0
+
+    String instruccionEntregaParcial
 
     Date dateCreated
 
     Date lastUpdated
 
-
-
-
     static  mapping ={
         id generator:'uuid'
-
     }
 
     static constraints = {

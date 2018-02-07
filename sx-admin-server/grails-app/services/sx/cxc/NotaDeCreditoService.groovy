@@ -1,13 +1,12 @@
 package sx.cxc
 
-import com.luxsoft.cfdix.CFDIXUtils
-import com.luxsoft.cfdix.v33.NotaBuilder
 import grails.gorm.transactions.Transactional
-import lx.cfdi.v33.CfdiUtils
-import lx.cfdi.v33.Comprobante
 import org.apache.commons.lang3.exception.ExceptionUtils
-import sx.core.Folio
 
+import lx.cfdi.v33.Comprobante
+import com.luxsoft.cfdix.v33.NotaBuilder
+
+import sx.core.Folio
 import sx.cfdi.Cfdi
 import sx.inventario.DevolucionDeVenta
 import sx.cfdi.CfdiService
@@ -90,10 +89,16 @@ class NotaDeCreditoService {
         log.debug('Generando bonificaion del {}%', nota.descuento)
         def acu = 0.0
         def descuento = nota.descuento / 100
+        if ( nota.descuento2 > 0 ){
+            def descuento2 = nota.descuento2;
+            def r = 1.00 - descuento;
+            def r2 = (descuento2 * r)/100
+            def neto = descuento + r2;
+            descuento = neto;
+        }
         boolean sobreSaldo = nota.baseDelCalculo == 'Saldo' ? true : false
         nota.partidas.each {  NotaDeCreditoDet det ->
             CuentaPorCobrar cxc = det.cuentaPorCobrar
-
             def monto = sobreSaldo ? det.cuentaPorCobrar.getSaldo() : det.cuentaPorCobrar.getTotal()
             def asignado = MonedaUtils.round(monto * descuento)
 
@@ -132,6 +137,7 @@ class NotaDeCreditoService {
 
         Cobro cobro = generarCobro(nota)
         nota.save failOnError: true, flush: true
+        aplicar(nota)
         rmd.cobro = cobro
         rmd.save flush: true
         return nota
@@ -171,6 +177,7 @@ class NotaDeCreditoService {
         cobro.createUser = nota.createUser
         cobro.updateUser = nota.updateUser
         cobro.sucursal = nota.sucursal
+        cobro.referencia = nota.folio.toString()
         cobro.formaDePago = nota.tipo == 'BON' ? 'BONIFICACION' : 'DEVOLUCION'
         nota.cobro = cobro
     }
@@ -180,6 +187,7 @@ class NotaDeCreditoService {
             generarCobro(nota)
         }
         Cobro cobro = nota.cobro
+        log.debug('Aplicando cobro con disponible:{}', cobro.disponible)
         if(cobro.disponible <= 0.0) {
             throw new NotaDeCreditoException("Nota sin disponible no se puede aplicar")
         }
@@ -189,18 +197,24 @@ class NotaDeCreditoService {
             this.aplicarCobroDeDevolucion(nota)
         }
         cobro.save()
+        return nota
     }
 
     protected aplicarCobroDeBonificacion(NotaDeCredito nota) {
         Cobro cobro = nota.cobro
+        BigDecimal disponible = cobro.getDisponible()
+        BigDecimal porAplicar = nota.partidas.sum 0.0, { it.importe}
+        if(disponible < porAplicar) {
+            throw new NotaDeCreditoException("Nota inconsistente para a plicar a sus relacionados " +
+                    "Disponible:${disponible} Monto por aplicar: ${porAplicar}")
+        }
         nota.partidas.each { NotaDeCreditoDet det ->
             CuentaPorCobrar cxc = det.cuentaPorCobrar
-            def saldo = cxc.saldo
-            if(det.importe <= saldo){
+            if (cxc.saldo >= det.importe) {
                 def aplicacion = new AplicacionDeCobro()
                 aplicacion.cuentaPorCobrar = cxc
                 aplicacion.fecha = new Date()
-                aplicacion.importe = importe
+                aplicacion.importe = det.importe
                 cobro.addToAplicaciones(aplicacion)
                 if(!cobro.primeraAplicacion) {
                     cobro.primeraAplicacion = aplicacion.fecha
@@ -230,21 +244,14 @@ class NotaDeCreditoService {
     def eliminar(NotaDeCredito nota) {
         if(nota.cfdi ){
             Cfdi cfdi = nota.cfdi
-            if (cfdi.uuid) {
+            if (cfdi) {
                 throw new NotaDeCreditoException('Nota de credito timbrada no se puede eliminar')
             }
-            nota.cfdi = null
-            cfdi.delete flush: true
         }
         // Eliminar el cobro
         Cobro cobro = nota.cobro
-        if(cobro.aplicaciones.size() > 0) {
-            throw new NotaDeCreditoException('Nota de credito parcialmente aplicada no se puede eliminar')
-        }
         nota.cobro = null
-
         cobro.delete flush: true
-
         nota.delete flush:true
     }
 
@@ -256,6 +263,8 @@ class NotaDeCreditoService {
         nota.comentario = 'CANCELADA'
         nota.save flush: true
     }
+
+
 
 
 }

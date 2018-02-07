@@ -13,4 +13,5 @@ json {
     clave inventario.producto.clave
     descripcion inventario.producto.descripcion
     cantidad  inventario.cantidad
+    kilos inventario.kilos
 }

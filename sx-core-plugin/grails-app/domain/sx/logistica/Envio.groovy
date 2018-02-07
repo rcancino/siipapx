@@ -101,7 +101,7 @@ class Envio {
     }
 
     def afterDelete() {
-        println 'Eliminando envio...... debe actualizar CondicionDeEnvio'
+
     }
 
     def beforeUpdate() {
@@ -121,7 +121,5 @@ class Envio {
         }
         */
     }
-
-
 
 }

@@ -29,8 +29,8 @@
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT D.ID AS DEVO_ID,D.documento AS FOLIO,D.COMENTARIO
-,(select max(c.nombre) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as NOMBRE
-,(select max(clave) from VENTA V join cliente c WHERE V.ID=D.VENTA_ID )as CLAV_CLIENTE
+,(select max(c.nombre) from VENTA V join cliente c on(c.id=v.cliente_id) WHERE V.ID=D.VENTA_ID )as NOMBRE
+,(select max(clave) from VENTA V join cliente c on(c.id=v.cliente_id) WHERE V.ID=D.VENTA_ID )as CLAV_CLIENTE
 ,(select max(x.documento) from VENTA V JOIN cuenta_por_cobrar x on(x.id=v.cuenta_por_cobrar_id) join cliente c WHERE V.ID=D.VENTA_ID ) AS FACTURA
 ,b.clave as sucursal_id,b.nombre as sucursal
 ,(case when p.unidad='MIL' then a.CANTIDAD/1000 else a.CANTIDAD end) AS CANTIDAD

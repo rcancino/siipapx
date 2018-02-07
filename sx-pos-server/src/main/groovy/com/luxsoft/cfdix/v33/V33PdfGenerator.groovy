@@ -66,8 +66,7 @@ class V33PdfGenerator {
                 VentaDet partida = venta.partidas.get(index++)
                 if (partida) {
                     if (partida.corte) {
-                        // println 'INSTR CORTE: ' + "${partida.corte.tipo} ${partida.corte.instruccion}"
-                        String ic = "${partida.corte.tipo ? '' : ''} ${partida.corte.instruccion}"
+                        String ic = "${partida.corte.tipo ?: ''} ${partida.corte.instruccion ?: ''}"
                         res['InstruccionDeCorte'] = ic
                     }
                     res['COMENTARIO'] = partida.comentario
