@@ -39,6 +39,7 @@ class EnvioDeCfdisJob {
                         log.debug('Enviando cfdi venta: {}', venta.statusInfo())
                         cfdiService.enviarFacturaEmail(cfdi, venta, venta.cliente.getCfdiMail())
                     }catch (Exception ex) {
+                        ex.printStackTrace()
                         String c = ExceptionUtils.getRootCauseMessage(ex)
                         log.debug('Error enviando correo Fac: {} Error: {}', venta.statusInfo(), c)
                         cfdi.enviado = new Date()
