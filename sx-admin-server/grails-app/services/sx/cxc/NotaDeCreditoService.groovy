@@ -225,18 +225,23 @@ class NotaDeCreditoService {
 
     protected aplicarCobroDeDevolucion(NotaDeCredito nota) {
         Cobro cobro = nota.cobro
-        DevolucionDeVenta rmd = DevolucionDeVenta.where{ cobro == cobro}
-        CuentaPorCobrar cxc = rmd.venta.cuentaPorCobrar
-        BigDecimal saldo = cxc.saldo
-        if(saldo > 0) {
-            def importe = cobro.disponible <= saldo ? cobro.disponible : saldo
-            def aplicacion = new AplicacionDeCobro()
-            aplicacion.cuentaPorCobrar = cxc
-            aplicacion.fecha = new Date()
-            aplicacion.importe = importe
-            cobro.addToAplicaciones(aplicacion)
-            if(!cobro.primeraAplicacion) {
-                cobro.primeraAplicacion = aplicacion.fecha
+        DevolucionDeVenta rmd = DevolucionDeVenta.where{ cobro == cobro}.find()
+        if (rmd == null) {
+            return
+        }
+        CuentaPorCobrar cxc = rmd.venta?.cuentaPorCobrar
+        if (cxc) {
+            BigDecimal saldo = cxc.saldo
+            if(saldo > 0) {
+                def importe = cobro.disponible <= saldo ? cobro.disponible : saldo
+                def aplicacion = new AplicacionDeCobro()
+                aplicacion.cuentaPorCobrar = cxc
+                aplicacion.fecha = new Date()
+                aplicacion.importe = importe
+                cobro.addToAplicaciones(aplicacion)
+                if(!cobro.primeraAplicacion) {
+                    cobro.primeraAplicacion = aplicacion.fecha
+                }
             }
         }
     }

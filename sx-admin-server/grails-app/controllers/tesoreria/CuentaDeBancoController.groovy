@@ -17,8 +17,8 @@ class CuentaDeBancoController extends RestfulController {
     @Override
     protected List listAllResources(Map params) {
 
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
+        params.sort = 'descripcion'
+        params.order = 'asc'
         params.max = 100
         def query = CuentaDeBanco.where {}
         if(params.disponibleEnVenta){

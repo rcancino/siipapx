@@ -20,7 +20,8 @@ class ClienteController extends RestfulController{
         def query = Cliente.where {}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-        if(params.cartera == 'CRE'){
+
+        if(params.cartera &&  params.cartera.startsWith('CRE') ){
             // log.debug('Clientes de credito')
             query = query.where {credito.lineaDeCredito != null}
         }

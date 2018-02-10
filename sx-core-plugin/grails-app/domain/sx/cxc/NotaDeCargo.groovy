@@ -7,41 +7,41 @@ import sx.core.Cliente
 /**
  * Created by rcancino on 23/03/17.
  */
-@ToString( includes = "cliente,total",includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = ['id'])
+@ToString( includes = "cliente, fecha, total", includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = ['id','documento', 'fecha'])
 class NotaDeCargo {
 
     String	id
 
     Cliente	cliente
 
-    Date	fecha
+    Date fecha = new Date()
 
-    Long	documento	 = 0
+    Long documento
 
-    BigDecimal	importe	 = 0
+    BigDecimal importe
 
-    BigDecimal	impuesto	 = 0
+    BigDecimal impuesto
 
-    BigDecimal	total	 = 0
+    BigDecimal total
 
-    String	formaDePago
+    String formaDePago
 
     Currency moneda = Currency.getInstance('MXN')
 
-    BigDecimal	tipoDeCambio	 = 1
+    BigDecimal tipoDeCambio = 1.0
 
-    String	comentario
+    String comentario
 
     CuentaPorCobrar cuentaPorCobrar
 
     List partidas = []
 
-    String	tipoDeDocumento
+    String tipo
 
-    BigDecimal	cargo	 = 0
+    BigDecimal cargo = 0.0
 
-    String	sw2
+    String	sw2 = ""
 
     Date dateCreated
 
@@ -56,8 +56,7 @@ class NotaDeCargo {
         tipoDeCambio(scale:6)
         comentario nullable:true
         sw2 nullable:true
-        cuentaPorCobrar nullable: true
-        tipoDeDocumento nullable: true
+
     }
 
     static hasMany =[partidas:NotaDeCargoDet]

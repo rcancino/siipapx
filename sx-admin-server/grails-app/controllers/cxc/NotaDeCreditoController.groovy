@@ -36,8 +36,6 @@ class NotaDeCreditoController extends RestfulController{
         bindData nota, getObjectToBind()
         Sucursal sucursal = Sucursal.where { nombre == 'OFICINAS'}.find()
         nota.sucursal = sucursal
-        // List facturas = nota.partidas.collect { it.cuentaPorCobrar }
-        //log.debug('Facturas: {}', facturas.size())
         nota = notaDeCreditoService.generarBonificacion(nota)
         log.debug('Nota generada: {}', nota)
         respond nota
@@ -46,40 +44,76 @@ class NotaDeCreditoController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
+        log.debug('Buscando notas {}', params)
         params.max = 10
         params.sort = 'lastUpdated'
         params.order = 'desc'
         // log.debug('Buscando notas: {}',params)
         def query = NotaDeCredito.where{ }
+        if(params.cartera) {
+            String cartera = params.cartera
+            query = query.where{tipoCartera == cartera}
+        }
         if(params.tipo) {
             query = query.where{tipo == params.tipo}
         }
+
         if(params.term) {
+            def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
-                query = query.where{folio == params.term.toLong()}
+                query = query.where { folio == params.term.toInteger() }
+            } else {
+                log.debug('Cliente nombre like {}', search)
+                query = query.where { cliente.nombre =~ search}
             }
         }
         respond query.list(params)
     }
 
     def buscarRmd() {
-       // log.debug('Localizando rmd {}', params)
-        params.max = 10
+        log.debug('Localizando RMD {}', params)
+        params.max = 20
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-        def cliente = params.cliente
+
         def query = DevolucionDeVenta.where{ }
-        if(params.boolean('pendientes')) {
-            query = query.where{cobro == null}
-        } else if (!params.boolean('pendientes')) {
-            query = query.where{cobro != null}
+
+        if (params.cartera != null) {
+            log.debug('Filtrando por cartera {}', params.cartera)
+            def cartera = params.cartera
+            query = query.where{venta.tipo == cartera}
+
+            if(params.boolean('pendientes') && cartera == 'CRE') {
+                query = query.where{cobro == null}
+            } else if (!params.boolean('pendientes') && cartera == 'CRE') {
+                query = query.where{cobro != null}
+            } else if (params.boolean('pendientes') && cartera != 'CRE') {
+                respond buscarRmdsPendientesContado(params)
+                return
+            }
         }
+
+
         if(params.term) {
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}
             }
         }
+
         respond query.list(params)
+    }
+
+    def buscarRmdsPendientesContado(params){
+        def hql = " from DevolucionDeVenta d where d.venta.tipo != 'CRE' " +
+                "and d.cobro not in (select n.cobro from NotaDeCredito n where n.tipo = d.venta.tipo)"
+        if (params.term) {
+            hql  = hql + " and d.venta.cliente.nombre like ? "
+            def pendientes = DevolucionDeVenta.findAll(hql, [params.term])
+            return pendientes
+        }
+        def pendientes = DevolucionDeVenta.findAll(hql)
+        return pendientes
+
     }
 
     def buscarFacturasPendientes() {
