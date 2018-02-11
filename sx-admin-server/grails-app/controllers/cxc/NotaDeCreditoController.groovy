@@ -52,22 +52,25 @@ class NotaDeCreditoController extends RestfulController{
         def query = NotaDeCredito.where{ }
         if(params.cartera) {
             String cartera = params.cartera
-            query = query.where{tipoCartera == cartera}
+            // query = query.where{tipoCartera == cartera}
         }
         if(params.tipo) {
-            query = query.where{tipo == params.tipo}
+            // query = query.where{tipo == params.tipo}
         }
 
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
+                log.debug('Documento: {}', params.term.toInteger())
                 query = query.where { folio == params.term.toInteger() }
             } else {
                 log.debug('Cliente nombre like {}', search)
                 query = query.where { cliente.nombre =~ search}
             }
         }
-        respond query.list(params)
+        def list = query.list(params)
+        log.debug('Found: {}', list.size())
+        respond list
     }
 
     def buscarRmd() {
