@@ -52,10 +52,11 @@ class NotaDeCreditoController extends RestfulController{
         def query = NotaDeCredito.where{ }
         if(params.cartera) {
             String cartera = params.cartera
-            // query = query.where{tipoCartera == cartera}
+            query = query.where{tipoCartera == cartera}
         }
         if(params.tipo) {
-            // query = query.where{tipo == params.tipo}
+            String tipo = params.tipo
+            query = query.where{tipo == tipo}
         }
 
         if(params.term) {
@@ -74,7 +75,7 @@ class NotaDeCreditoController extends RestfulController{
     }
 
     def buscarRmd() {
-        log.debug('Localizando RMD {}', params)
+        // log.debug('Localizando RMD {}', params)
         params.max = 20
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -82,24 +83,30 @@ class NotaDeCreditoController extends RestfulController{
         def query = DevolucionDeVenta.where{ }
 
         if (params.cartera != null) {
-            log.debug('Filtrando por cartera {}', params.cartera)
+
             def cartera = params.cartera
             query = query.where{venta.tipo == cartera}
 
             if(params.boolean('pendientes') && cartera == 'CRE') {
                 query = query.where{cobro == null}
+                log.debug('Filtrando RMDs pendientes cartera {}', params.cartera)
             } else if (!params.boolean('pendientes') && cartera == 'CRE') {
                 query = query.where{cobro != null}
+                log.debug('Filtrando RMDs atendidos cartera {}', params.cartera)
             } else if (params.boolean('pendientes') && cartera != 'CRE') {
+                log.debug('Filtrando RMDs atendidos cartera {}', params.cartera)
                 respond buscarRmdsPendientesContado(params)
                 return
             }
         }
 
-
         if(params.term) {
+            log.debug('Term: {}', params.term)
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}
+            } else {
+                def search = '%' + params.term + '%'
+                query = query.where { venta.cliente.nombre =~ search}
             }
         }
 
@@ -107,6 +114,7 @@ class NotaDeCreditoController extends RestfulController{
     }
 
     def buscarRmdsPendientesContado(params){
+        log.debug('Buscando RMDs de contado pendientes {}', params)
         def hql = " from DevolucionDeVenta d where d.venta.tipo != 'CRE' " +
                 "and d.cobro not in (select n.cobro from NotaDeCredito n where n.tipo = d.venta.tipo)"
         if (params.term) {
