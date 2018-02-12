@@ -97,11 +97,18 @@ class SolicitudDeDepositoController extends RestfulController{
                 // def usuario = "%${parts[1]}%"
                 String total = parts[1]
                 if(total.isBigDecimal()) {
-                    query = query.where { total == total.toBigDecimal()}
+                    query = query.where { total >= total.toBigDecimal()}
                 }
             }
             if (parts.length == 3) {
-                def banco = "%${parts[2]}%"
+                // def usuario = "%${parts[1]}%"
+                String total = parts[2]
+                if(total.isBigDecimal()) {
+                    query = query.where { total <= total.toBigDecimal()}
+                }
+            }
+            if (parts.length == 4) {
+                def banco = "%${parts[3]}%"
                 query = query.where { banco.nombre =~ banco}
             }
         }
