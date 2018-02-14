@@ -1599,6 +1599,26 @@
 					<graphicElement stretchType="NoStretch"/>
 					<imageExpression class="java.awt.Image"><![CDATA[$P{LOGO}]]></imageExpression>
 				</image>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="136"
+						y="69"
+						width="107"
+						height="15"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-202"/>
+					<box>					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SERIE}.equals( "CAR" ) ? "NOTA DE CARGO" : "NOTA DE CREDITO"]]></textFieldExpression>
+				</textField>
 			</band>
 		</columnHeader>
 		<detail>
