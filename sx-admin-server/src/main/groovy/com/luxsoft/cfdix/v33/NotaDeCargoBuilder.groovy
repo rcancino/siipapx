@@ -135,6 +135,15 @@ class NotaDeCargoBuilder {
 
     def buildConceptos(){
         /** Conceptos ***/
+        String claveProdServ = '84101700'
+        String noIdentificacion = 'CARGO'
+        String claveUnidad = 'ACT'
+        String unidad = 'ACT'
+
+        if (nota.tipo == 'CHE') {
+            claveProdServ = '84101704'
+        }
+
         this.totalImpuestosTrasladados = 0.0
         Comprobante.Conceptos conceptos = factory.createComprobanteConceptos()
         this.nota.partidas.each { NotaDeCargoDet item ->
@@ -145,11 +154,11 @@ class NotaDeCargoBuilder {
             def impuesto = importe * MonedaUtils.IVA
             impuesto = MonedaUtils.round(impuesto)
 
-            concepto.claveProdServ = '84111506'
-            concepto.claveUnidad = 'ACT'
-            concepto.noIdentificacion = 'CARGO'
+            concepto.claveProdServ = claveProdServ
+            concepto.claveUnidad = claveUnidad
+            concepto.noIdentificacion = noIdentificacion
             concepto.cantidad = 1
-            concepto.unidad = 'ACT'
+            concepto.unidad = unidad
             concepto.descripcion = "${item.cuentaPorCobrar.tipoDocumento} :  ${item.documento} ${nota.tipo} (${item.documentoFecha}) ${item.sucursal}"
             concepto.valorUnitario = importe
             concepto.importe = importe

@@ -31,9 +31,11 @@ class SolicitudDeDepositoController extends RestfulController{
             query = query.where { tipo == params.cartera}
         }
         if (params.pendientes) {
-            if (params.boolean('pendientes'))
+            if (params.boolean('pendientes')){
+                log.debug('Buscando solicitudes pendientes')
                 query = query.where {cobro == null}
-            else {
+            } else {
+                log.debug('Buscando solicitudes atendidas')
                 query = query.where {cobro != null}
             }
         }
@@ -42,7 +44,7 @@ class SolicitudDeDepositoController extends RestfulController{
             if(params.term.isInteger()) {
                 query = query.where { folio == params.term.toInteger() }
             } else {
-                query = query.where { sucursal.nombre =~ search || banco.nombre =~ search  }
+                query = query.where { cliente.nombre =~ search || banco.nombre =~ search  }
             }
         }
         return query.list(params)
