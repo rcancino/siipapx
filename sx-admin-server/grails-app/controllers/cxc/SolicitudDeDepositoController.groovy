@@ -64,7 +64,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     def autorizadas() {
         log.debug('Buscando solicitudes autorizadas {}', params)
-        params.max = 20
+        params.max = 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
@@ -75,12 +75,43 @@ class SolicitudDeDepositoController extends RestfulController{
             query = query.where { tipo == params.cartera}
         }
         if(params.term) {
-            def search = '%' + params.term + '%'
-            if(params.term.isInteger()) {
-                // log.debug('Buscando por folio: {} o total: {}', params.term.toInteger(), params.term.toBigDecimal())
-                query = query.where { folio == params.term.toInteger() }
+
+            String term = params.term
+            String[] parts = term.split(',')
+            //def search = '%' + parts[0] + '%'
+            def search = parts[0]
+
+            if( parts.length == 1 ){
+                if(term.endsWith(',')) {
+                    search = parts[0]
+                }
+            }
+
+            if(search.isInteger()) {
+                query = query.where { folio == search.toInteger() }
             } else {
-                query = query.where { sucursal.nombre =~ search || banco.nombre =~ search  }
+                search = '%' + parts[0] + '%'
+                query = query.where { sucursal.nombre =~ search || cliente.nombre =~ search  }
+            }
+            if (parts.length == 2) {
+                // def usuario = "%${parts[1]}%"
+                String total = parts[1]
+                if(total.isBigDecimal()) {
+                    query = query.where { total == total.toBigDecimal()}
+                }
+            }
+            /*
+            if (parts.length == 3) {
+                // def usuario = "%${parts[1]}%"
+                String total = parts[2]
+                if(total.isBigDecimal()) {
+                    query = query.where { total <= total.toBigDecimal()}
+                }
+            }
+            */
+            if (parts.length == 3) {
+                def banco = "%${parts[2]}%"
+                query = query.where { banco.nombre =~ banco}
             }
         }
         def list = query.list(params)

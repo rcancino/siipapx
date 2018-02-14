@@ -1,17 +1,76 @@
 package sx.cxc
 
-
+import com.luxsoft.utils.MonedaUtils
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
+import grails.web.http.HttpHeaders
+
+import static org.springframework.http.HttpStatus.CREATED
+import static org.springframework.http.HttpStatus.OK
 
 @Secured("hasRole('ROLE_CXC_USER')")
 class NotaDeCargoController extends RestfulController {
     
     static responseFormats = ['json']
 
+    NotaDeCargoService notaDeCargoService
+
     NotaDeCargoController() {
         super(NotaDeCargo)
+    }
+
+    @Override
+    Object save() {
+        NotaDeCargo nota = createResource()
+
+        nota.validate(['cliente','total'])
+        if (nota.hasErrors()) {
+            transactionStatus.setRollbackOnly()
+            respond nota.errors, view:'create' // STATUS CODE 422
+            return
+        }
+        nota = notaDeCargoService.save(nota);
+        respond nota, [status: CREATED, view:'show']
+    }
+    /*
+    @Override
+    Object update() {
+        NotaDeCargo nota = NotaDeCargo.get(params.id)
+        if (nota == null) {
+            transactionStatus.setRollbackOnly()
+            notFound()
+            return
+        }
+        nota.properties = getObjectToBind()
+        if (nota.hasErrors()) {
+            transactionStatus.setRollbackOnly()
+            respond nota.errors, view:'edit' // STATUS CODE 422
+            return
+        }
+        nota = notaDeCargoService.save(nota)
+        respond nota, [status: OK]
+    }
+    */
+
+    @Override
+    protected Object updateResource(Object resource) {
+        notaDeCargoService.save(resource)
+    }
+
+    @Override
+    protected Object createResource() {
+        NotaDeCargo instance = new NotaDeCargo()
+        bindData instance, getObjectToBind()
+        instance.serie = 'CAR'
+        instance.impuesto = 0.0
+        instance.total = 0.0
+        return instance
+    }
+
+    @Override
+    protected void deleteResource(Object resource) {
+        notaDeCargoService.delete(resource)
     }
 
     @Override
@@ -25,6 +84,7 @@ class NotaDeCargoController extends RestfulController {
             query = query.where { tipo == params.cartera}
         }
         if(params.term) {
+            log.debug('Buscando por term {}', params.term)
             def search = '%' + params.term + '%'
             query = query.where { cliente.nombre =~ search  }
         }
