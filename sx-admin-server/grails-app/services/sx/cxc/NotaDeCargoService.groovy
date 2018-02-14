@@ -50,8 +50,8 @@ class NotaDeCargoService {
                 det.documentoTipo= cxc.tipo
                 det.documentoTotal = cxc.total
                 det.documentoSaldo = cxc.saldo
+                det.sucursal = cxc.sucursal.nombre
             }
-            det.sucursal = nota.sucursal.nombre
             det.comentario = nota.comentario
         }
     }

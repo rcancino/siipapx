@@ -139,9 +139,11 @@ class NotaDeCargoBuilder {
         String noIdentificacion = 'CARGO'
         String claveUnidad = 'ACT'
         String unidad = 'ACT'
+        String prefix = 'Intereses de fac: '
 
         if (nota.tipo == 'CHE') {
             claveProdServ = '84101704'
+            prefix = 'Comisión por cheque devuelto'
         }
 
         this.totalImpuestosTrasladados = 0.0
@@ -159,7 +161,7 @@ class NotaDeCargoBuilder {
             concepto.noIdentificacion = noIdentificacion
             concepto.cantidad = 1
             concepto.unidad = unidad
-            concepto.descripcion = "${item.cuentaPorCobrar.tipoDocumento} :  ${item.documento} ${nota.tipo} (${item.documentoFecha}) ${item.sucursal}"
+            concepto.descripcion = "${prefix} ${nota.tipo} ${item.documento}  (${item.documentoFecha.format('dd/MM/yyyy')}) ${item.sucursal}"
             concepto.valorUnitario = importe
             concepto.importe = importe
 
