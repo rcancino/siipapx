@@ -10,5 +10,6 @@ json g.render(notaDeCargo, [deep: false, excludes:['moneda','partidas']]) {
     moneda notaDeCargo.moneda.currencyCode
     partidas g.render(notaDeCargo.partidas, [deep:true, excludes:['nota']] )
     cuentaPorCobrar g.render(notaDeCargo.cuentaPorCobrar)
+    cfdi g.render(notaDeCargo.cfdi)
 }
 

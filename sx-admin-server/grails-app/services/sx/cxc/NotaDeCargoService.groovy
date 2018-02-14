@@ -1,12 +1,24 @@
 package sx.cxc
 
+import com.luxsoft.cfdix.v33.NotaDeCargoBuilder
 import com.luxsoft.utils.MonedaUtils
 import grails.gorm.transactions.Transactional
+import lx.cfdi.v33.Comprobante
+import org.apache.commons.lang3.exception.ExceptionUtils
+import sx.cfdi.Cfdi
+import sx.cfdi.CfdiService
+import sx.cfdi.CfdiTimbradoService
 import sx.core.AppConfig
 import sx.core.Folio
 
 @Transactional
 class NotaDeCargoService {
+
+    CfdiTimbradoService cfdiTimbradoService
+
+    CfdiService cfdiService
+
+    NotaDeCargoBuilder notaDeCargoBuilder
 
     NotaDeCargo save(NotaDeCargo nota){
         if (!nota.id){
@@ -115,6 +127,28 @@ class NotaDeCargoService {
         nota.cuentaPorCobrar = null
         nota.delete flush: true
         cxc.delete flush: true
+    }
+
+    def generarCfdi(NotaDeCargo nota) {
+        Comprobante comprobante = this.notaDeCargoBuilder.build(nota);
+        Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'E')
+        nota.cfdi = cfdi
+        nota.save flush: true
+        return nota
+    }
+
+    def timbrar(NotaDeCargo nota){
+        try {
+            if(!nota.cfdi) {
+                nota = generarCfdi(nota)
+            }
+            def cfdi = nota.cfdi
+            cfdi = cfdiTimbradoService.timbrar(cfdi)
+            return nota
+        } catch (Throwable ex){
+            ex.printStackTrace()
+            throw  new NotaDeCargoException(ExceptionUtils.getRootCauseMessage(ex))
+        }
     }
 
 }

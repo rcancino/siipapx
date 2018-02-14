@@ -6,20 +6,20 @@ import lx.cfdi.v33.Comprobante
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 import org.apache.commons.io.FileUtils
+
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiTimbre
-import sx.cxc.NotaDeCredito
+import sx.cxc.NotaDeCargo
 
 
 import java.text.MessageFormat
 
-
 /**
- * Created by Luis on 24/01/18.
+ *
  */
-class NotaPdfGenerator {
+class NotaDeCargoPdfGenerator {
 
-    static getReportData(NotaDeCredito nota){
+    static getReportData(NotaDeCargo nota){
         assert nota.cfdi
         Cfdi cfdi = nota.cfdi
         File xmlFile = FileUtils.toFile(cfdi.url)
@@ -39,7 +39,7 @@ class NotaPdfGenerator {
                     'Importe':cc.importe,
                     'ClaveProdServ': cc.claveProdServ,
                     'ClaveUnidad': cc.claveUnidad,
-                    'Descuento': cc.descuento.toString(),
+                    'Descuento': '0.0',
                     'Impuesto': traslado.impuesto.toString(),
                     'TasaOCuota': traslado.tasaOCuota.toString(),
                     'TipoFactor': traslado.tipoFactor.value().toString(),
@@ -64,7 +64,7 @@ class NotaPdfGenerator {
 
     }
 
-    static getParametros(NotaDeCredito nota, Cfdi cfdi, Comprobante comprobante, File xmlFile){
+    static getParametros(NotaDeCargo nota, Cfdi cfdi, Comprobante comprobante, File xmlFile){
         def params=[:]
         params["VERSION"] = comprobante.version
         params["SERIE"] = comprobante.getSerie()
@@ -100,7 +100,7 @@ class NotaPdfGenerator {
             params.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
             params.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
             params.put("RfcProvCertif", timbre.rfcProvCertif)
-            params.put("TIPO_DE_COMPROBANTE", "E (Egreso)")
+            params.put("TIPO_DE_COMPROBANTE", "I (Ingreso)")
         }
         params.FECHA = comprobante.fecha
         BigDecimal descuento = comprobante.getDescuento() ?: 0.0
