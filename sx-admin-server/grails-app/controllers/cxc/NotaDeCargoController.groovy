@@ -1,10 +1,12 @@
 package sx.cxc
 
+import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.utils.MonedaUtils
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 import grails.web.http.HttpHeaders
+import sx.reports.ReportService
 
 import static org.springframework.http.HttpStatus.CREATED
 import static org.springframework.http.HttpStatus.OK
@@ -15,6 +17,8 @@ class NotaDeCargoController extends RestfulController {
     static responseFormats = ['json']
 
     NotaDeCargoService notaDeCargoService
+
+    ReportService reportService
 
     NotaDeCargoController() {
         super(NotaDeCargo)
@@ -84,10 +88,32 @@ class NotaDeCargoController extends RestfulController {
             query = query.where { tipo == params.cartera}
         }
         if(params.term) {
-            log.debug('Buscando por term {}', params.term)
-            def search = '%' + params.term + '%'
-            query = query.where { cliente.nombre =~ search  }
+            log.debug('Term: {}', params.term)
+            if(params.term.isInteger()) {
+                query = query.where{folio == params.term.toInteger()}
+            } else {
+                def search = '%' + params.term + '%'
+                query = query.where { cliente.nombre =~ search}
+            }
         }
         return query.list(params)
+    }
+
+
+    def print(NotaDeCargo nota) {
+        assert nota.cfdi, 'Nota sin timbrar: ' + nota.id
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def data = NotaDeCargoPdfGenerator.getReportData(nota)
+        Map parametros = data['PARAMETROS']
+        parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        def pdf  = reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'NotaDeCredito.pdf')
+    }
+
+
+    def timbrar(NotaDeCargo nota) {
+        assert !nota.cfdi, 'Nota ya timbrada'
+        nota = notaDeCargoService.timbrar(nota)
+        respond nota
     }
 }
