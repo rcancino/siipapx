@@ -2,7 +2,7 @@ package sx.cxc
 
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
-
+import sx.core.AppConfig
 import sx.reports.ReportService
 import sx.core.Sucursal
 
@@ -44,6 +44,31 @@ class CobroController extends RestfulController{
     }
 
 
+    protected Object createResource() {
+        log.debug('Generando cobro: {}', params)
+        Cobro cobro =  new Cobro()
+        bindData cobro, getObjectToBind()
+        cobro.sucursal = AppConfig.first().sucursal
+        return cobro
+    }
+
+    def cobrosMonetariosEnCredito() {
+        log.debug('Cobros monetarios CRE {}', params)
+
+        params.max = 100
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+
+        def query = Cobro.where { sucursal == AppConfig.first().sucursal }
+
+        query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'TRANSFERENCIA' || formaDePago == 'TARJETA_DEBITO'}
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            query = query.where { cliente.nombre =~ search  || referencia =~search}
+        }
+
+        respond query.list(params)
+    }
 }
 
 
