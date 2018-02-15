@@ -1,8 +1,12 @@
 package sx.core
 
+import grails.compiler.GrailsCompileStatic
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
+@GrailsCompileStatic
 @ToString(includes = 'cantidad,precio,instruccion', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'id,ventaDet')
 class InstruccionCorte {
 
     String id
