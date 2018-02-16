@@ -37,9 +37,7 @@ class TransformacionController extends RestfulController {
                 query = query.where { comentario =~ search}
             }
         }
-        def list = query.list(params)
-        log.debug('Res: {}', list.size())
-        return list
+        return query.list(params)
     }
 
     // @Override
