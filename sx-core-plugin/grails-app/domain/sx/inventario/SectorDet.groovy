@@ -1,7 +1,11 @@
 package sx.inventario
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import sx.core.Producto
 
+@ToString(includes = 'cantidad,indice,producto', includeNames = true, includePackage = false)
+@EqualsAndHashCode(includes = 'id, indice,cantidad, producto, sector, comentario')
 class SectorDet {
 
     String id

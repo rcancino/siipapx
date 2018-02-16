@@ -91,6 +91,8 @@ class Existencia {
 
     Date lastUpdated
 
+    Date fecha
+
     BigDecimal recorte = 0
     String recorteComentario
     Date recorteFecha
@@ -112,6 +114,7 @@ class Existencia {
         recorte nullable: true
         recorteComentario nullable: true
         recorteFecha nullable: true
+        fecha nullable: true
     }
 
     static mapping={
@@ -121,6 +124,7 @@ class Existencia {
         mes index: 'MES_IDX'
         disponible formula:'cantidad - recorte + entrada_compra + devolucion_compra + venta + devolucion_venta + transformacion + traslado + movimiento_almacen'
         recorteFecha type: 'date'
+        fecha type: 'date'
     }
 
     def beforeInsert() {
