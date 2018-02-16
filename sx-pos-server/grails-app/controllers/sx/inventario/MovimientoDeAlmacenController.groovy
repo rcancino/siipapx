@@ -4,7 +4,8 @@ package sx.inventario
 
 import grails.rest.*
 import grails.plugin.springsecurity.annotation.Secured
-
+import sx.core.AppConfig
+import sx.core.ExistenciaService
 import sx.core.Folio
 import sx.core.Inventario
 import sx.reports.ReportService
@@ -16,6 +17,8 @@ class MovimientoDeAlmacenController extends RestfulController {
 
     ReportService reportService
 
+    ExistenciaService existenciaService
+
     MovimientoDeAlmacenController() {
         super(MovimientoDeAlmacen)
     }
@@ -24,16 +27,20 @@ class MovimientoDeAlmacenController extends RestfulController {
     protected List listAllResources(Map params) {
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        def query = MovimientoDeAlmacen.where {}
-        if(params.sucursal){
-            query = query.where {sucursal.id ==  params.sucursal}   
-        }
-        if(params.documento) {
-            def documento = params.int('documento')
+        def query = MovimientoDeAlmacen.where {sucursal == AppConfig.first().sucursal}
 
-            query = query.where {documento ==  documento}
+        if(params.boolean('pendientes')) {
+            query = query {fechaInventario == null}
         }
-        
+
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where { documento == params.term.toInteger() }
+            } else {
+                query = query.where { comentario =~ search}
+            }
+        }
         return query.list(params)
     }
 
@@ -64,6 +71,7 @@ class MovimientoDeAlmacenController extends RestfulController {
                 inventario.tipo = resource.tipo
                 inventario.renglon = renglon
                 det.inventario = inventario
+                existenciaService.afectarExistenciaEnAlta(inventario)
                 renglon++
             }
             resource.fechaInventario = new Date()

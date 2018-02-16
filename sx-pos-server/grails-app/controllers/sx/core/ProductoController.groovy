@@ -17,17 +17,10 @@ class ProductoController extends RestfulController{
         def query = Producto.where {}
         params.sort = params.sort ?:'clave'
         params.order = params.order ?:'desc'
-        params.max = params.max ?: 20
-
-
-
+        params.max = 50
         if(params.term){
-
             def search = '%' + params.term + '%'
             query = query.where { clave =~ search || descripcion =~ search}
-            // query = query.where {deLinea == true }
-            // query = query.where {activo == true }
-
         }
         if(params.activos){
             query = query.where {activo == true}
@@ -35,7 +28,8 @@ class ProductoController extends RestfulController{
         if(params.deLinea) {
             query = query.where {deLinea == true}
         }
-        return query.list(params)
+        def list = query.list(params)
+        return list
     }
 
     

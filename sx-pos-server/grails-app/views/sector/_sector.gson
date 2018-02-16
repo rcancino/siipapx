@@ -4,7 +4,7 @@ model{
     Sector sector
 }
 
-json g.render(sector){
+json g.render(sector,[excludes: ['sucursal']]){
     sucursal {
         id sector.sucursal.id
         nombre sector.sucursal.nombre

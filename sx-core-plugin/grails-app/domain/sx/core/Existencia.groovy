@@ -91,6 +91,10 @@ class Existencia {
 
     Date lastUpdated
 
+    BigDecimal recorte = 0
+    String recorteComentario
+    Date recorteFecha
+
     static constraints = {
         pedidosPendiente nullable: true
         entradaCompra nullable: true
@@ -105,6 +109,9 @@ class Existencia {
         sucursalNombre nullable: true
         dateCreated nullable: true
         lastUpdated nullable: true
+        recorte nullable: true
+        recorteComentario nullable: true
+        recorteFecha nullable: true
     }
 
     static mapping={
@@ -113,6 +120,7 @@ class Existencia {
         anio index: 'YEAR_IDX'
         mes index: 'MES_IDX'
         disponible formula:'cantidad + entrada_compra + devolucion_compra + venta + devolucion_venta + transformacion + traslado + movimiento_almacen'
+        recorteFecha type: 'date'
     }
 
     def beforeInsert() {

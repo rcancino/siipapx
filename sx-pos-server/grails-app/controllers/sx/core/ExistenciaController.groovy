@@ -4,6 +4,7 @@ package sx.core
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
+import sx.reports.ReportService
 
 
 // @Secured("ROLE_INVENTARIO_USER")
@@ -13,6 +14,8 @@ class ExistenciaController extends RestfulController {
     static responseFormats = ['json']
 
     ExistenciaService existenciaService
+
+    ReportService reportService
 
     ExistenciaController() {
         super(Existencia)
@@ -44,11 +47,21 @@ class ExistenciaController extends RestfulController {
         def res = Existencia.where{ sucursal}
     }
 
+    @Override
+    protected Object updateResource(Object resource) {
+        def res = resource.save failOnError: true, flush:true
+        log.debug('Actualizando existencia: {}', res)
+        log.debug('Recorte: ', res.recorte);
+        return res
+
+        // return super.updateResource(resource)
+    }
 
     @Override
     protected List listAllResources(Map params) {
         addPeriodo(params)
-        params.max = params.max ?: 20
+        log.debug('Exis: {}', params)
+        params.max = params.max ?: 40
         def query = Existencia.where {anio == params.year && mes == params.mes}
         if( params.ejercicio) {
             query = query.where { anio == params.int('ejercicio')}
@@ -100,6 +113,19 @@ class ExistenciaController extends RestfulController {
         params.year = params.year ?: today[Calendar.YEAR]
         params.mes  = params.mes ?: today[Calendar.MONTH] + 1
     }
+
+    def reporteDeDiscrepancias() {
+        params.SUCURSAL = AppConfig.first().sucursal.id.toString()
+        def pdf =  reportService.run('DiscrepanciasDeInv', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'DiscrepanciasDeInv.pdf')
+    }
+
+    def recortePorDetalle() {
+        params.SUCURSAL = AppConfig.first().sucursal.id.toString()
+        def pdf =  reportService.run('RecortePorDetalle', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RecortePorDetalle.pdf')
+    }
+
 }
 
 class ExistenciaFilter {

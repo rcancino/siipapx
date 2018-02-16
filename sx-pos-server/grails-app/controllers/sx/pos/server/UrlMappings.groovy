@@ -119,6 +119,9 @@ class UrlMappings {
             }
         }
         "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
+        "/api/existencias/reporteDeDiscrepancias"(controller: 'existencia', action: 'reporteDeDiscrepancias')
+        "/api/existencias/recortePorDetalle"(controller: 'existencia', action: 'recortePorDetalle')
+
 
         //Inventario
         "/api/inventario"(resources: "inventario")
@@ -156,6 +159,7 @@ class UrlMappings {
         // Sectores
         "/api/inventario/sectores"(resources: "sector")
         "/api/inventario/sectores/print/$id"(controller: "sector", action: 'print', method: 'GET')
+        "/api/inventario/sectores/productosSinSector"(controller: "sector", action: 'productosSinSector', method: 'GET')
 
 
         // Conteos

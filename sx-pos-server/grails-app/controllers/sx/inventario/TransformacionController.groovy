@@ -4,16 +4,20 @@ package sx.inventario
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
-
+import sx.core.AppConfig
+import sx.core.ExistenciaService
 import sx.core.Folio
 import sx.core.Inventario
+import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
 class TransformacionController extends RestfulController {
 
     static responseFormats = ['json']
 
-    def reporteService
+    ReportService reportService
+
+    ExistenciaService existenciaService
 
     TransformacionController() {
         super(Transformacion)
@@ -24,13 +28,14 @@ class TransformacionController extends RestfulController {
         log.debug('Buscando transformaciones: {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        def query = Transformacion.where {}
-        if(params.sucursal){
-            query = query.where {sucursal.id ==  params.sucursal}   
-        }
-        if(params.documento) {
-            def documento = params.int('documento')
-            query = query.where {documento >=  documento}
+        def query = Transformacion.where { sucursal == AppConfig.first().sucursal && tipo == params.tipo}
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where { documento == params.term.toInteger() }
+            } else {
+                query = query.where { comentario =~ search}
+            }
         }
         return query.list(params)
     }
@@ -62,12 +67,14 @@ class TransformacionController extends RestfulController {
                 inventario.producto = det.producto
                 inventario.tipo = resource.tipo
                 det.inventario = inventario
+                existenciaService.afectarExistenciaEnAlta(inventario)
             }
             resource.fechaInventario = new Date()
 
         }
-
-        return super.updateResource(resource)
+        resource.save flush:true
+        return resource
+        // return super.updateResource(resource)
     }
 
     def inventariar(Transformacion trs){
@@ -76,7 +83,7 @@ class TransformacionController extends RestfulController {
 
     def print() {
         println 'Generando impresion para trs: '+ params
-        def pdf = this.reporteService.run('Transformacion', params)
+        def pdf = this.reportService.run('Transformacion', params)
         def fileName = "Transformacion.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
         

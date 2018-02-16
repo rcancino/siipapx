@@ -24,36 +24,42 @@ class TrasladoController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        params.max = 100;
+        log.debug('Buscando trasaldos {}', params)
+        params.max = 50;
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        log.debug('Buscando traslados: {}',params)
-        def query = Traslado.where {}
+
+        def query = Traslado.where { }
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}
         }
         if(params.tipo) {
             query = query.where {tipo == params.tipo}
         }
+        if (params.boolean('pendientes')) {
+            params.sort = 'documento'
+            params.order = 'asc'
+            query = query.where {fechaInventario == null}
+        }
         if(params.term){
-            String term = params.term
-            // log.debug('Buscando: {}', term)
-            if(term.isInteger()) {
+
+            if(params.term.isInteger()) {
+                String term = params.term
                 log.debug('Buscando por documento {}', term)
                 query = query.where{documento == term.toInteger()}
             } else {
-                def search = "${term}%"
+                def search = "${params.term}%"
+                log.debug('Buscando: {}', search)
                 if (params.tipo == 'TPE') {
-                    log.debug('Buscando {}s por sucursal Atiende {}', params.tipo, search)
-                    query = query.where { solicitudDeTraslado.sucursalAtiende.nombre =~ search }
+                    log.debug('Buscando {} por sucursal Atiende {}', params.tipo, search)
                 } else {
-                    // query = query.where { solicitudDeTraslado.sucursalSolicita.nombre =~ term }
+                    log.debug('Buscando {} por sucursal Atiende {}', params.tipo, search)
+                    query = query.where { solicitudDeTraslado.sucursalAtiende.nombre =~ search }
                 }
 
             }
         }
         def list = query.list(params)
-        log.debug('Registros localizados: {}', list.size())
         return list
     }
 
