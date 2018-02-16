@@ -11,7 +11,5 @@ json g.render(existencia, [excludes:['producto','sucursal']]){
         nombre existencia.sucursal.nombre
     }
     producto g.render(existencia.producto)
-    recorte 0
-    
     
 }

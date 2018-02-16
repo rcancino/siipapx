@@ -119,7 +119,7 @@ class Existencia {
         sucursal index: 'SUCURSAL_IDX'
         anio index: 'YEAR_IDX'
         mes index: 'MES_IDX'
-        disponible formula:'cantidad + entrada_compra + devolucion_compra + venta + devolucion_venta + transformacion + traslado + movimiento_almacen'
+        disponible formula:'cantidad - recorte + entrada_compra + devolucion_compra + venta + devolucion_venta + transformacion + traslado + movimiento_almacen'
         recorteFecha type: 'date'
     }
 

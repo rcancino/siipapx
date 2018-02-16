@@ -47,11 +47,18 @@ class ExistenciaController extends RestfulController {
         def res = Existencia.where{ sucursal}
     }
 
+    def acutlizarRecorte(RecorteCommand command){
+        log.debug('Actualizando recorte: {} ', command);
+        Existencia exis = command.existencia;
+
+    }
+
     @Override
     protected Object updateResource(Object resource) {
+        log.debug('Actualizando exis recorte: {} Recorte F: {} Rec com: {}', resource.recorte, resource.recorteFecha, resource.recorteComentario);
         def res = resource.save failOnError: true, flush:true
         log.debug('Actualizando existencia: {}', res)
-        log.debug('Recorte: ', res.recorte);
+        log.debug('Recorte: {} Recorte F: {} Rec com: {}', res.recorte, res.recorteFecha, res.recorteComentario);
         return res
 
         // return super.updateResource(resource)
@@ -60,8 +67,10 @@ class ExistenciaController extends RestfulController {
     @Override
     protected List listAllResources(Map params) {
         addPeriodo(params)
-        log.debug('Exis: {}', params)
+        // log.debug('Exis: {}', params)
         params.max = params.max ?: 40
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
         def query = Existencia.where {anio == params.year && mes == params.mes}
         if( params.ejercicio) {
             query = query.where { anio == params.int('ejercicio')}
@@ -162,4 +171,10 @@ class BuscarExistenciasCommand {
     String toString(){
         return "$producto $year $month"
     }
+}
+
+class RecorteCommand {
+    Existencia existencia
+    BigDecimal cantidad
+    String comentario
 }
