@@ -28,7 +28,7 @@ class TransformacionController extends RestfulController {
         log.debug('Buscando transformaciones: {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        def query = Transformacion.where { sucursal == AppConfig.first().sucursal && tipo == params.tipo}
+        def query = Transformacion.where { sucursal == AppConfig.first().sucursal }
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
@@ -37,7 +37,9 @@ class TransformacionController extends RestfulController {
                 query = query.where { comentario =~ search}
             }
         }
-        return query.list(params)
+        def list = query.list(params)
+        log.debug('Res: {}', list.size())
+        return list
     }
 
     // @Override
