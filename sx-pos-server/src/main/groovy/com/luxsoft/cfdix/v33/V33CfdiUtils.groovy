@@ -24,6 +24,11 @@ class V33CfdiUtils {
     return comprobante
 	}
 
+    static List getPartidas(Cfdi cfdi) {
+        Comprobante comprobante = CfdiUtils.read(cfdi.url.bytes)
+        comprobante.getConceptos().concepto
+    }
+
   static String parse(byte[] xmlData){
     ByteArrayInputStream is=new ByteArrayInputStream(xmlData)
     GPathResult xmlResult = new XmlSlurper().parse(is)

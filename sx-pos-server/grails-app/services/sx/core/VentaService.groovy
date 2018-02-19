@@ -169,7 +169,7 @@ class VentaService implements  EventPublisher{
         cxc.createUser = pedido.createUser
         cxc.updateUser = pedido.updateUser
         cxc.chequePostFechado = pedido.chequePostFechado
-        cxc.comentario = 'GENERACION AUTOMATICA'
+        cxc.comentario = pedido.comentario
         pedido.cuentaPorCobrar = cxc
         cxc.save failOnError: true
         log.debug('Cuenta por cobrar generada: {}', cxc)

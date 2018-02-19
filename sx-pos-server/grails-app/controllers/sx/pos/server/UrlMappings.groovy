@@ -106,6 +106,9 @@ class UrlMappings {
         "/api/cxc/cobro/buscarDisponibles/$id"(controller: 'cobro', action: 'buscarDisponibles')
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/cuentasPorCobrar/buscarVenta/$id"(controller: 'cuentaPorCobrar', action: 'buscarVenta', method: 'GET')
+        "/api/cuentasPorCobrar/getPartidas/$id"(controller: 'cuentaPorCobrar', action: 'buscarPartidas', method: 'GET')
+
         "/api/cuentasPorCobrar/pendientesCod/$id"( controller: 'cuentaPorCobrar', action: 'pendientesCod')
         "/api/cxc/canceladas/$id"(controller: "cuentaPorCobrar", action: 'canceladas', method: 'GET')
 

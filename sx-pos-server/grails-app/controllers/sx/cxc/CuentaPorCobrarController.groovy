@@ -1,5 +1,6 @@
 package sx.cxc
 
+import com.luxsoft.cfdix.v33.V33CfdiUtils
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -17,15 +18,12 @@ class CuentaPorCobrarController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-      println 'Cxcx para ' + params
         def query = CuentaPorCobrar.where {}
-        params.sort = params.sort ?:'lastUpdated'
+        params.sort = params.sort ?:'documento'
         params.order = params.order ?:'desc'
-
-        // if(params.term){
-        //     def search = '%' + params.term + '%'
-        //     query = query.where { cliente.nombre =~ search && documento.toString() == search}
-        // }
+        if(params.boolean('canceladas')){
+            query = query.where {cancelada != null}
+        }
         if(params.documento){
           int documento = params.int('documento')
           query = query.where { documento >= documento }
@@ -33,7 +31,15 @@ class CuentaPorCobrarController extends RestfulController{
         if(params.cliente){
             query = query.where { cliente.id == params.cliente}
         }
-
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where{documento == params.term.toInteger()}
+            } else {
+                log.debug(' Buscando por cliente: {}', search)
+                query = query.where { cliente.nombre =~ search }
+            }
+        }
         return query.list(params)
     }
 
@@ -59,7 +65,7 @@ class CuentaPorCobrarController extends RestfulController{
         params.order = params.order ?:'desc'
         def query = CuentaPorCobrar.where{ sucursal == sucursal && cancelada != null}
         if(params.term) {
-            def search = '% ' + params.term + ' %'
+            def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}
             } else {
@@ -67,6 +73,22 @@ class CuentaPorCobrarController extends RestfulController{
             }
         }
         respond query.list(params)
+    }
+
+    def buscarVenta(CuentaPorCobrar cxc) {
+        // log.debug('Buscando venta origen {}', cxc)
+        if (cxc== null) {
+            notFound()
+            return
+        }
+        def venta = Venta.where {cuentaPorCobrar == cxc}.find()
+        respond venta
+    }
+
+    def buscarPartidas(CuentaPorCobrar cxc){
+        log.debug('Buscando partidas originales {}', params)
+        assert cxc.cfdi, 'No esta timbrada'
+        respond V33CfdiUtils.getPartidas(cxc.cfdi)
     }
 
 }

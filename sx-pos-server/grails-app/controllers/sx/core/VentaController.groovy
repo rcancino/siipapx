@@ -7,6 +7,7 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.http.HttpStatus
+import sx.cxc.CuentaPorCobrar
 import sx.logistica.CondicionDeEnvio
 import sx.logistica.Envio
 import sx.reports.ReportService
@@ -152,14 +153,19 @@ class VentaController extends RestfulController{
 
 
     def facturados(Sucursal sucursal) {
+        log.debug('Buscando facturas {}', params )
         if (sucursal == null) {
             notFound()
             return
         }
         params.max = params.registros ?:100
-        params.sort = params.sort ?:'lastUpdated'
+        params.sort = params.sort ?:'documento'
         params.order = params.order ?:'desc'
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}
+        if(params.boolean('canceladas')) {
+            log.debug('Facturas canceladas {}', params)
+            query = query.where {cuentaPorCobrar.cancelada != null}
+        }
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {

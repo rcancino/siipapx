@@ -19,16 +19,21 @@ import sx.utils.MonedaUtils
 class V33CfdiUtils {
 
 	static Comprobante toComprobante(Cfdi cfdi){
-    File file = FileUtils.toFile(cfdi.url)
-    Comprobante comprobante = CfdiUtils.read(file.bytes)
-    return comprobante
+        File file = FileUtils.toFile(cfdi.url)
+        Comprobante comprobante = CfdiUtils.read(file.bytes)
+        return comprobante
 	}
 
-  static String parse(byte[] xmlData){
-    ByteArrayInputStream is=new ByteArrayInputStream(xmlData)
-    GPathResult xmlResult = new XmlSlurper().parse(is)
-    return XmlUtil.serialize(xmlResult)
-  }
+    static List getPartidas(Cfdi cfdi) {
+        Comprobante comprobante = CfdiUtils.read(cfdi.url.bytes)
+        comprobante.getConceptos().concepto
+    }
+
+    static String parse(byte[] xmlData){
+        ByteArrayInputStream is=new ByteArrayInputStream(xmlData)
+        GPathResult xmlResult = new XmlSlurper().parse(is)
+        return XmlUtil.serialize(xmlResult)
+    }
 
 	static getMonedaCode(Currency moneda){
 		if(moneda == MonedaUtils.PESOS) 
