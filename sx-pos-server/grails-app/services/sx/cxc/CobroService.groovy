@@ -18,6 +18,13 @@ class CobroService {
                 aplicacion.fecha = new Date()
                 aplicacion.importe = importe
                 cobro.addToAplicaciones(aplicacion)
+
+                // Saldos <= 1 peso
+                def saldoNuevo = saldo - importe
+                if (saldoNuevo <= 1.0) {
+                 generarCobroDeDiferencia(cxc, saldoNuevo, cobro)
+                }
+
                 if(!cobro.primeraAplicacion) {
                     cobro.primeraAplicacion = aplicacion.fecha
                 }
@@ -27,6 +34,7 @@ class CobroService {
                     cobro.diferencia = disponible
                     cobro.diferenciaFecha = new Date()
                 }
+
                 setComisiones(cobro)
                 cobro.tipo = cxc.tipo
                 cobro.save()  //failOnError: true, flush: true
@@ -46,6 +54,30 @@ class CobroService {
                 cobro.tarjeta.comision = 3.80
             }
         }
+    }
+
+    private generarCobroDeDiferencia( CuentaPorCobrar cxc, BigDecimal saldoNuevo, Cobro cobro) {
+        assert saldoNuevo <= 1.0, 'No es Diferencia'
+        Cobro cobroDif = new Cobro()
+        cobroDif.cliente = cobro.cliente
+        cobroDif.fecha = new Date()
+        cobroDif.sucursal = cxc.sucursal
+        cobroDif.importe = saldoNuevo
+        cobroDif.comentario = 'COBRO AUTOMATICO'
+        cobroDif.formaDePago = 'PAGO_DIF'
+        cobroDif.tipo = cxc.tipo
+        cobroDif.updateUser = cobro.updateUser
+        cobroDif.createUser = cobro.updateUser
+        cobroDif.primeraAplicacion = new Date()
+
+        def aplicacion = new AplicacionDeCobro()
+        aplicacion.cuentaPorCobrar = cxc
+        aplicacion.fecha = new Date()
+        aplicacion.importe = saldoNuevo
+        cobroDif.addToAplicaciones(aplicacion)
+        cobroDif.save()
+
+
     }
 
 
