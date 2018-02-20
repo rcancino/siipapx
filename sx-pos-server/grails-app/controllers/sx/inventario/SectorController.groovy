@@ -106,13 +106,13 @@ class SectorController extends RestfulController {
                 repParams.EXISTENCIA = ' '
                 break;
             case 'POSITIVOS':
-                repParams.EXISTENCIA = ' AND CANTIDAD > 0'
+                repParams.EXISTENCIA = ' AND E.CANTIDAD > 0'
                 break;
             case 'NEGATIVOS':
-                repParams.EXISTENCIA = ' AND CANTIDAD < 0'
+                repParams.EXISTENCIA = ' AND E.CANTIDAD < 0'
                 break;
             case 'EN_CERO':
-                repParams.EXISTENCIA = ' AND CANTIDAD == 0'
+                repParams.EXISTENCIA = ' AND E.CANTIDAD == 0'
                 break;
         }
         // params.SUCURSAL = AppConfig.first().sucursal.id
