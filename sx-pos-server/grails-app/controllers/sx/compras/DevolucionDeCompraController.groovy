@@ -4,14 +4,18 @@ package sx.compras
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
+import sx.core.AppConfig
 import sx.core.Folio
 import sx.core.Inventario
 import sx.core.Sucursal
+import sx.reports.ReportService
 
 @Secured("ROLE_INVENTARIO_USER")
 class DevolucionDeCompraController extends RestfulController {
 
     static responseFormats = ['json']
+
+    ReportService reportService
 
     DevolucionDeCompraController() {
         super(DevolucionDeCompra)
@@ -86,6 +90,13 @@ class DevolucionDeCompraController extends RestfulController {
         }
         // respond res, status: 200
         forward controller: 'recepcionDeCompra', action: 'show', id: res.id
+    }
+
+    def print() {
+        params.ID = params.ID
+        params.SUCURSAL = AppConfig.first().sucursal.id
+        def pdf =  reportService.run('DevolucionDeCompra.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
 
 

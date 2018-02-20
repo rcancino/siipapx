@@ -53,6 +53,7 @@ class UrlMappings {
         "/api/compras/recibir/$id"(controller: 'recepcionDeCompra', action: 'recibir', method: 'PUT')
         "/api/compras/recepciones/print/$id"(controller: 'recepcionDeCompra', action: 'print', method: 'GET')
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
+
         "/api/compras/recepciones/recepcionDeMercancia"(controller: "recepcionDeCompra", action: 'recepcionDeMercancia', method: 'GET')
 
 
@@ -140,6 +141,9 @@ class UrlMappings {
         // Decs
         "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/decs/buscarCom"(controller: 'devolucionDeCompra', action: 'buscarCom', method: 'GET')
+        // "/api/inventario/decs/print/$id"(controller: "devolucionDeCompra", action: 'print', method: 'GET')
+        "/api/inventario/decs/print"(controller: 'devolucionDeCompra', action: 'print', method: 'GET')
+        // "/api/inventario/decs/print/$id"(controller: 'devolucionDeCompra', action: 'print', methid: 'GET')
 
         // Sols
         "/api/inventario/sols"(resources: "solicitudDeTraslado")
