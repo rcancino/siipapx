@@ -55,7 +55,7 @@ class DevolucionDeCompraController extends RestfulController {
                 Inventario inventario = new Inventario()
                 inventario.sucursal = resource.sucursal
                 inventario.documento = resource.documento
-                inventario.cantidad = det.cantidad
+                inventario.cantidad = det.cantidad * -1
                 inventario.comentario = det.comentario
                 inventario.fecha = resource.fecha
                 inventario.producto = det.producto

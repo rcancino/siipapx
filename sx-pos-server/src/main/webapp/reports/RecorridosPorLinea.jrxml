@@ -42,7 +42,7 @@ JOIN linea L ON (L.ID=P.LINEA_ID)
 JOIN clase C ON (C.ID=P.CLASE_ID) 
 JOIN sectoR S ON (S.ID=D.SECTOR_ID)
 join sucursal j on(j.id=e.sucursal_id)
-where e.MES=MONTH(CURRENT_DATE) AND e.anio=YEAR(CURRENT_DATE)  AND j.ID=$P{SUCURSAL}
+where e.MES=MONTH(CURRENT_DATE) AND e.anio=YEAR(CURRENT_DATE)  AND j.ID=(SELECT sucursal_id FROM app_config)
 AND l.linea like $P{LINEA} AND C.clase LIKE $P{CLASE} 
 $P!{ACTIVO} $P!{DELINEA} $P!{EXISTENCIA}
 ORDER BY L.linea,C.clase,P.CLAVE]]></queryString>
