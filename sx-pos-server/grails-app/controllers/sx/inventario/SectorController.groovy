@@ -116,6 +116,9 @@ class SectorController extends RestfulController {
                 break;
         }
         // params.SUCURSAL = AppConfig.first().sucursal.id
+        if (!params.clase) {
+            repParams.CLASE = '%'
+        }
 
         def pdf = this.reportService.run('RecorridosPorLinea', repParams)
         def fileName = "ProductosSinSector.pdf"
