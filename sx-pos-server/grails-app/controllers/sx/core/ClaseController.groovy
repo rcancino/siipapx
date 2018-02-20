@@ -16,6 +16,8 @@ class ClaseController extends RestfulController{
     @Override
     protected List listAllResources(Map params) {
         params.max = 500
+        params.sort = 'clase'
+        params.order = 'asc'
         return super.listAllResources(params)
     }
 

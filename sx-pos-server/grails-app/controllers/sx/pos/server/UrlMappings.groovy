@@ -163,7 +163,7 @@ class UrlMappings {
         "/api/inventario/sectores"(resources: "sector")
         "/api/inventario/sectores/print/$id"(controller: "sector", action: 'print', method: 'GET')
         "/api/inventario/sectores/productosSinSector"(controller: "sector", action: 'productosSinSector', method: 'GET')
-
+        "/api/inventario/sectores/recorridosPorLinea"(controller: "sector", action: 'recorridosPorLinea', method: 'GET')
 
         // Conteos
         "/api/inventario/conteos"(resources: "conteo")

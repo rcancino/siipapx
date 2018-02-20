@@ -71,6 +71,57 @@ class SectorController extends RestfulController {
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
     }
 
+    def recorridosPorLinea() {
+        log.debug('Params: {}', params)
+        def repParams = [:]
+        repParams.LINEA = params.linea
+        repParams.CLASE = params.clase
+        // Estado
+        switch (params.estado) {
+            case 'TODOS':
+                repParams.ACTIVO = ' '
+                break;
+            case 'ACTIVOS':
+                repParams.ACTIVO = ' AND ACTIVO IS TRUE'
+                break;
+            case 'INACTIVOS':
+                repParams.ACTIVO = ' AND ACTIVO IS FALSE'
+                break;
+        }
+        // Tipo
+        switch (params.tipo) {
+            case 'TODOS':
+                repParams.DELINEA = ' '
+                break;
+            case 'DELINEA':
+                repParams.DELINEA = ' AND DE_LINEA IS TRUE'
+                break;
+            case 'ESPECIALES':
+                repParams.DELINEA = ' AND DE_LINEA IS FALSE'
+                break;
+        }
+        //existencia = ['TODOS', 'POSITIVOS', 'DEGATIVOS', 'EN_CERO'];
+        switch (params.existencia) {
+            case 'TODOS':
+                repParams.EXISTENCIA = ' '
+                break;
+            case 'POSITIVOS':
+                repParams.EXISTENCIA = ' AND CANTIDAD > 0'
+                break;
+            case 'NEGATIVOS':
+                repParams.EXISTENCIA = ' AND CANTIDAD < 0'
+                break;
+            case 'EN_CERO':
+                repParams.EXISTENCIA = ' AND CANTIDAD == 0'
+                break;
+        }
+        // params.SUCURSAL = AppConfig.first().sucursal.id
+
+        def pdf = this.reportService.run('ProductosSinSector', repParams)
+        def fileName = "ProductosSinSector.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
 
 
 }

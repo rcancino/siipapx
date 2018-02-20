@@ -15,6 +15,8 @@ class MarcaController extends RestfulController{
     @Override
     protected List listAllResources(Map params) {
         params.max = 500
+        params.sort = 'marca'
+        params.order = 'asc'
         return super.listAllResources(params)
     }
 }

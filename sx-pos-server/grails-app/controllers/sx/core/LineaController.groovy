@@ -15,6 +15,8 @@ class LineaController extends RestfulController{
 
     protected List listAllResources(Map params) {
         params.max = 500
+        params.sort = 'linea'
+        params.order = 'asc'
         resource.list()
     }
 
