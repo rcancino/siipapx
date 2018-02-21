@@ -7,5 +7,7 @@ json g.render(cobro, [excludes:['moneda','cliente']]){
     cliente g.render(cobro.cliente, [includes: ['id', 'nombre', 'rfc']])
     moneda cobro.moneda.currencyCode
     disponible cobro.getDisponible()
+    transferencia g.render(cobro.transferencia)
+    deposito g.render(cobro.deposito)
 }
 

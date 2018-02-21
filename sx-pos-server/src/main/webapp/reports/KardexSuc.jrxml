@@ -54,7 +54,7 @@ union
 SELECT e.anio,e.mes,e.sucursal_nombre,p.clave,p.descripcion,p.unidad,'' as tipo_venta,'ZZZ' as tipo,0 as documento,1 as renglon,CONCAT($P{FECHA_FIN},' 23:00:00.0') as fecha,e.kilos,0 AS CANTIDAD,e.cantidad AS SALDO,'FINAL  :  ' as comentario,P.ANCHO,P.LARGO
 FROM existencia e join  producto p on (p.id=e.producto_id)
 where e.producto_id =$P{PRODUCTO}  AND e.sucursal_id=(SELECT sucursal_id FROM app_config) 
-and  e.fecha BETWEEN CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01) and ($P{FECHA_FIN}) ]]></queryString>
+and  e.fecha BETWEEN CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01) and ($P{FECHA_FIN})]]></queryString>
 
 	<field name="YEAR" class="java.lang.Long"/>
 	<field name="MES" class="java.lang.Long"/>
@@ -76,8 +76,8 @@ and  e.fecha BETWEEN CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01)
 
 	<sortField name="YEAR" />
 	<sortField name="MES" />
-	<sortField name="TIPO" />
 	<sortField name="FECHA" />
+	<sortField name="TIPO" />
 
 	<variable name="SALDO_ACUMXMES" class="java.math.BigDecimal" resetType="Group" resetGroup="MES" calculation="Sum">
 		<variableExpression><![CDATA[$F{TIPO}.equals( "SOL" ) ? new BigDecimal(0) : $F{CANTIDAD}]]></variableExpression>
