@@ -21,10 +21,9 @@ class CobroService {
 
                 // Saldos <= 1 peso
                 def saldoNuevo = saldo - importe
-                if (saldoNuevo <= 1.0) {
-                 generarCobroDeDiferencia(cxc, saldoNuevo, cobro)
+                if (saldoNuevo > 0 && saldoNuevo <= 1.0) {
+                    generarCobroDeDiferencia(cxc, saldoNuevo, cobro)
                 }
-
                 if(!cobro.primeraAplicacion) {
                     cobro.primeraAplicacion = aplicacion.fecha
                 }
