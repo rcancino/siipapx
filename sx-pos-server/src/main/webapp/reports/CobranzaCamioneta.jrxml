@@ -155,7 +155,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 ]]></variableExpression>
 	</variable>
 	<variable name="TOT_PAGO_DIF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "PAGO_dIF" )? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "PAGO_DIF" )? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEP_EFE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEPOSITO_EFECTIVO" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>

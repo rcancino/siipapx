@@ -108,7 +108,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<variable name="COBRADO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{TIPO}.equals( new String("CHEQUE POR EFECTIVO") )? new BigDecimal (0):$F{COBRADO}]]></variableExpression>
 	</variable>
-	<variable name="TOT_PAGO_DIF" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
+	<variable name="TOT_PAGO_DIF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "PAGO_DIF" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_TARJETA" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
@@ -195,7 +195,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement>
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}.equals("PAGO_DIF") ? "PAGO DIF (OTROS GASTOS)" : $F{TIPO}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
