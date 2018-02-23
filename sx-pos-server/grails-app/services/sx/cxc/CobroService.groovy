@@ -36,6 +36,12 @@ class CobroService {
 
                 setComisiones(cobro)
                 cobro.tipo = cxc.tipo
+                if(cobro.cheque) {
+                    cobro.referencia = cobro.cheque.numero.toString()
+                }
+                if(cobro.tarjeta) {
+                    cobro.referencia = cobro.tarjeta.validacion
+                }
                 cobro.save()  //failOnError: true, flush: true
                 saldo = saldo - importe
             }
