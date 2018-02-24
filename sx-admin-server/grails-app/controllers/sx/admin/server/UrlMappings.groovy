@@ -20,7 +20,9 @@ class UrlMappings {
         "/api/proveedores"(resources: "proveedor"){
             "/productos"(resources:'proveedorProducto')
         }
-        "/api/clientes"(resources: "cliente")
+        "/api/clientes"(resources: "cliente"){
+            "/credito"(resources: 'clienteCredito')
+        }
         "/api/clientes/actualizarCfdiMail/$id"(controller: "cliente", action: 'actualizarCfdiMail', method: 'PUT')
 
         // SAT

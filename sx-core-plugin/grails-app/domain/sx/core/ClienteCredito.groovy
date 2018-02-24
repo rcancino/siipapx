@@ -1,8 +1,10 @@
 package sx.core
 
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
 @EqualsAndHashCode(includes='id')
+@ToString(includeNames=true,includePackage=false)
 class ClienteCredito {
 
     String	id
