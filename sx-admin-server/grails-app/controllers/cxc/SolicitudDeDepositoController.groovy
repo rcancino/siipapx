@@ -78,23 +78,27 @@ class SolicitudDeDepositoController extends RestfulController{
         }
         if(params.term) {
 
-            String term = params.term
-            String[] parts = term.split(',')
+            String search = params.term
+            // String[] parts = term.split(',')
             //def search = '%' + parts[0] + '%'
-            def search = parts[0]
-
+            // def search = parts[0]
+            /*
             if( parts.length == 1 ){
                 if(term.endsWith(',')) {
                     search = parts[0]
                 }
             }
+            */
 
-            if(search.isInteger()) {
+            if(search.isInteger() ) {
                 query = query.where { folio == search.toInteger() }
-            } else {
+            } else if (search.isBigDecimal() ) {
+                query = query.where { total == search.toBigDecimal()}
+            }else {
                 search = '%' + parts[0] + '%'
                 query = query.where { sucursal.nombre =~ search || cliente.nombre =~ search  }
-            }
+            } 
+            /*
             if (parts.length == 2) {
                 // def usuario = "%${parts[1]}%"
                 String total = parts[1]
@@ -102,19 +106,13 @@ class SolicitudDeDepositoController extends RestfulController{
                     query = query.where { total == total.toBigDecimal()}
                 }
             }
-            /*
-            if (parts.length == 3) {
-                // def usuario = "%${parts[1]}%"
-                String total = parts[2]
-                if(total.isBigDecimal()) {
-                    query = query.where { total <= total.toBigDecimal()}
-                }
-            }
             */
+            /*
             if (parts.length == 3) {
                 def banco = "%${parts[2]}%"
                 query = query.where { banco.nombre =~ banco}
             }
+            */
         }
         def list = query.list(params)
         respond list
