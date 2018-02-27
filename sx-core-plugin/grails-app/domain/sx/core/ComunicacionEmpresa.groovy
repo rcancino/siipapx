@@ -23,6 +23,7 @@ class ComunicacionEmpresa {
 
     Cliente cliente
 
+    Boolean validado = false;
 
 
     static constraints = {
@@ -30,6 +31,7 @@ class ComunicacionEmpresa {
         descripcion nullable:true
         comentario  nullable:true
         sw2 nullable: true
+        validado nullable: true
 
     }
     static  mapping={

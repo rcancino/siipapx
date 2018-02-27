@@ -5,6 +5,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.core.AppConfig
+import sx.core.Cliente
+import sx.core.ComunicacionEmpresa
 import sx.core.Venta
 
 class EnvioDeCfdisJob {
@@ -37,7 +39,20 @@ class EnvioDeCfdisJob {
                 if (venta) {
                     try{
                         log.debug('Enviando cfdi venta: {}', venta.statusInfo())
-                        cfdiService.enviarFacturaEmail(cfdi, venta, venta.cliente.getCfdiMail())
+                        // Credito
+                        if (venta.tipo == 'CRE'){
+                            cfdiService.enviarFacturaEmail(cfdi, venta, venta.cliente.getCfdiMail())
+                        } else {
+                            Cliente cliente = venta.cliente
+                            if (cliente.clave != '1'){
+                                ComunicacionEmpresa medio = cliente.medios.find{ it.tipo == 'MAIL' && it.cfdi}
+                                if (medio && medio.validado) {
+                                    String mail = medio.descripcion
+                                    cfdiService.enviarFacturaEmail(cfdi, venta, mail)
+                                }
+                            }
+                        }
+
                     }catch (Exception ex) {
                         ex.printStackTrace()
                         String c = ExceptionUtils.getRootCauseMessage(ex)

@@ -7,6 +7,8 @@ import grails.plugin.springsecurity.annotation.Secured
 import sx.core.AppConfig
 import sx.core.Folio
 import sx.core.Sucursal
+import sx.tesoreria.Banco
+import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.SolicitudDeDepositoService
 
 
@@ -23,7 +25,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        log.debug('List: {}', params)
+        // log.debug('List: {}', params)
         params.max = params.registros ?:1000
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -66,8 +68,8 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def autorizadas(SolicitudFilter filter) {
-        log.debug('Buscando solicitudes autorizadas {}', params)
-        log.debug('Filter: {}', filter)
+        // log.debug('Buscando solicitudes autorizadas {}', params)
+        // log.debug('Filter: {}', filter)
         params.max = 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -80,30 +82,34 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if( params.folio && params.folio.isInteger()){
-            log.debug('Buscando por Folio: ', params.folio.toInteger())
+            // log.debug('Buscando por Folio: ', params.folio.toInteger())
             query = query.where { folio == params.folio.toInteger() }
         }
 
         if( params.total && params.total.isBigDecimal()){
-            log.debug('Buscando por total: ', params.total.toBigDecimal())
+            // log.debug('Buscando por total: ', params.total.toBigDecimal())
             query = query.where { total == params.total.toBigDecimal() }
         }
 
         if(filter.fechaDeposito) {
-            log.debug('Buscando por fecha: {}', filter.fechaDeposito)
+            // log.debug('Buscando por fecha: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
         }
 
         if (params.cliente) {
-            log.debug('Filtrando por cliente')
+            // log.debug('Filtrando por cliente')
             String search = '%' + params.cliente + '%'
             query = query.where { cliente.nombre =~ search  }
         }
 
         if (params.sucursal) {
-            log.debug('Filtrando por sucursal: {}', params.sucursal)
+            // log.debug('Filtrando por sucursal: {}', params.sucursal)
             String search = '%' + params.sucursal + '%'
             query = query.where { sucursal.nombre =~ search  }
+        }
+        if (params.banco) {
+            String search = '%' + params.banco+ '%'
+            query = query.where { cuenta.descripcion =~ search  }
         }
 
 
@@ -112,14 +118,14 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def transito(SolicitudFilter filter) {
-        log.debug('Buscando solicitudes transito {}', params)
-        log.debug('Filter: {}', filter)
+        // log.debug('Buscando solicitudes transito {}', params)
+        // log.debug('Filter: {}', filter)
         params.max = 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
         def query = SolicitudDeDeposito.where {
-            cobro != null && comentario != null
+            cobro == null && comentario != null
         }
 
         if( params.folio && params.folio.isInteger()){
@@ -133,18 +139,18 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if(filter.fechaDeposito) {
-            log.debug('Buscando por fecha: {}', filter.fechaDeposito)
+            // log.debug('Buscando por fecha: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
         }
 
         if (params.cliente) {
-            log.debug('Filtrando por cliente')
+            // log.debug('Filtrando por cliente')
             String search = '%' + params.cliente + '%'
             query = query.where { cliente.nombre =~ search  }
         }
 
         if (params.sucursal) {
-            log.debug('Filtrando por sucursal: {}', params.sucursal)
+            // log.debug('Filtrando por sucursal: {}', params.sucursal)
             String search = '%' + params.sucursal + '%'
             query = query.where { sucursal.nombre =~ search  }
         }
@@ -154,8 +160,8 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def canceladas(SolicitudFilter filter) {
-        log.debug('Buscando solicitudes transito {}', params)
-        log.debug('Filter: {}', filter)
+        // log.debug('Buscando solicitudes transito {}', params)
+        // log.debug('Filter: {}', filter)
         params.max = 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -165,28 +171,28 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if( params.folio && params.folio.isInteger()){
-            log.debug('Buscando por Folio: ', params.folio.toInteger())
+            // log.debug('Buscando por Folio: ', params.folio.toInteger())
             query = query.where { folio == params.folio.toInteger() }
         }
 
         if( params.total && params.total.isBigDecimal()){
-            log.debug('Buscando por total: ', params.total.toBigDecimal())
+            // log.debug('Buscando por total: ', params.total.toBigDecimal())
             query = query.where { total == params.total.toBigDecimal() }
         }
 
         if(filter.fechaDeposito) {
-            log.debug('Buscando por fecha: {}', filter.fechaDeposito)
+            // log.debug('Buscando por fecha: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
         }
 
         if (params.cliente) {
-            log.debug('Filtrando por cliente')
+            // log.debug('Filtrando por cliente')
             String search = '%' + params.cliente + '%'
             query = query.where { cliente.nombre =~ search  }
         }
 
         if (params.sucursal) {
-            log.debug('Filtrando por sucursal: {}', params.sucursal)
+            // log.debug('Filtrando por sucursal: {}', params.sucursal)
             String search = '%' + params.sucursal + '%'
             query = query.where { sucursal.nombre =~ search  }
         }
@@ -197,7 +203,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     @Transactional
     def autorizar(SolicitudDeDeposito sol) {
-        log.debug('Autorizando solicitud de deposito {}', params.id)
+        // log.debug('Autorizando solicitud de deposito {}', params.id)
         def res = solicitudDeDepositoService.autorizar(sol)
         respond res;
     }
@@ -244,6 +250,19 @@ class SolicitudDeDepositoController extends RestfulController{
         }
         return super.saveResource(resource)
     }
+
+    def buscarDuplicada(SolicitudDeDeposito instance){
+        //log.debug('Buscando posible solicitud duplicada {}', instance.folio)
+
+        def duplicada = SolicitudDeDeposito.where{
+            id!= instance.id && total == instance.total && banco == instance.banco && cuenta == instance.cuenta && fechaDeposito == instance.fechaDeposito
+        }.find()
+        // log.debug('Duplicada: ', duplicada)
+
+        respond duplicada?: ['OK']
+    }
+
+
 }
 
 @ToString(includeNames=true,includePackage=false)
@@ -255,3 +274,4 @@ class SolicitudFilter {
     }
 
 }
+
