@@ -64,6 +64,7 @@ class SolicitudDeDeposito {
 
     static mapping={
         id generator: 'uuid'
+        fechaDeposito type: 'date'
     }
 
     static constraints = {
