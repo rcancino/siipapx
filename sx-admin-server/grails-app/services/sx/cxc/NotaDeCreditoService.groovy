@@ -122,7 +122,7 @@ class NotaDeCreditoService {
     }
 
     def generarNotaDeDevolucion(NotaDeCredito nota, DevolucionDeVenta rmd) {
-        if (rmd.cobro) {
+        if (rmd.cobro && nota.tipoCartera == 'CRE') {
             throw new NotaDeCreditoException("RMD ${rmd.documento} ${rmd.sucursal} Ya tiene nota de credito generada")
         }
         log.debug('Generando nota de credito de devolucion para el rmd {}', rmd)
@@ -134,13 +134,20 @@ class NotaDeCreditoService {
         nota.impuesto = rmd.impuesto
         nota.total = rmd.total
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
+        if (nota.tipoCartera == 'CRE'){
+            Cobro cobro = generarCobro(nota)
+            nota.save failOnError: true, flush: true
+            aplicar(nota)
+            rmd.cobro = cobro
+            rmd.save flush: true
+            return nota
+        } else {
+            nota.cobro = rmd.cobro
+            nota.save failOnError: true, flush: true
+            //aplicar(nota)
+            return nota
+        }
 
-        Cobro cobro = generarCobro(nota)
-        nota.save failOnError: true, flush: true
-        aplicar(nota)
-        rmd.cobro = cobro
-        rmd.save flush: true
-        return nota
     }
 
     def generarCfdi(NotaDeCredito nota) {

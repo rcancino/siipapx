@@ -175,7 +175,7 @@ class NotaDeCreditoController extends RestfulController{
 
     @Transactional
     def generarConRmd(DevolucionDeVenta rmd){
-        log.debug('Generando nota de credito para RMD: {}' , rmd)
+        log.debug('Generando nota de credito para RMD: {} params: {}' , rmd, params)
         NotaDeCredito nota = new NotaDeCredito()
         nota.tipoCartera = params.cartera
         nota =  notaDeCreditoService.generarNotaDeDevolucion(nota, rmd)
