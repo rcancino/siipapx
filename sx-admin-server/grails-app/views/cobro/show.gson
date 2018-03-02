@@ -12,6 +12,7 @@ json g.render(cobro, [deep:true,excludes:['cliente','sucursal','aplicaciones','m
     cliente g.render(cobro.cliente, [includes: ['id', 'nombre', 'rfc']])
     moneda cobro.moneda.currencyCode
     disponible cobro.getDisponible()
+    aplicaciones g.render(cobro.aplicaciones)
 
 }
 

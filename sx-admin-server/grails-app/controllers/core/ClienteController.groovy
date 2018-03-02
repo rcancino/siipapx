@@ -4,6 +4,8 @@ import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
+import sx.cxc.Cobro
+import sx.cxc.CuentaPorCobrar
 
 @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class ClienteController extends RestfulController{
@@ -33,6 +35,29 @@ class ClienteController extends RestfulController{
         }
         return query.list(params)
     }
+
+
+    /**** Finders ****/
+    def facturas(Cliente cliente){
+        params.max = 100
+        params.sort = 'fecha'
+        params.order = 'desc'
+        respond CuentaPorCobrar.where {cliente == cliente}.list(params)
+
+    }
+    def cxc(Cliente cliente){
+        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
+        respond rows
+    }
+
+    def cobros(Cliente cliente){
+        params.max = 100
+        params.sort = 'fecha'
+        params.order = 'desc'
+        def rows = Cobro.where {cliente == cliente}.list(params)
+        respond rows
+    }
+
 
 
 }

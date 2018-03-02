@@ -54,7 +54,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def pendientes() {
-        log.debug('Buscando solicitudes pendientes2 {}', params)
+        // log.debug('Buscando solicitudes pendientes2 {}', params)
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
@@ -210,7 +210,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     @Transactional
     def posponer(SolicitudDeDeposito sol) {
-        log.debug('Posponiendo sol: ', sol);
+        // log.debug('Posponiendo sol: ', sol);
         sol.sw2 = new Date().toString();
         sol.save flush:true
         respond sol
@@ -243,7 +243,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     protected SolicitudDeDeposito saveResource(SolicitudDeDeposito resource) {
         resource.total = resource.cheque + resource.efectivo + resource.transferencia
-        log.debug('Salvando solicitud: {}', resource)
+        // log.debug('Salvando solicitud: {}', resource)
         if(resource.id == null) {
             def serie = resource.sucursal.nombre
             resource.folio = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)

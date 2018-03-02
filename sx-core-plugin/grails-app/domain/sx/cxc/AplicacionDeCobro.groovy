@@ -18,6 +18,8 @@ class AplicacionDeCobro {
 
     BigDecimal	importe	 = 0
 
+    String formaDePago
+
     String	sw2
 
     Date dateCreated
@@ -33,6 +35,7 @@ class AplicacionDeCobro {
         cobro nullable: true
         createUser nullable: true
         updateUser nullable: true
+        formaDePago nullable: true
     }
 
     static mapping = {

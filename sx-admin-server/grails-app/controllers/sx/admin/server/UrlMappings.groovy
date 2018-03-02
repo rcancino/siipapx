@@ -24,6 +24,10 @@ class UrlMappings {
             "/credito"(resources: 'clienteCredito')
         }
         "/api/clientes/actualizarCfdiMail/$id"(controller: "cliente", action: 'actualizarCfdiMail', method: 'PUT')
+        "/api/clientes/$id/facturas"(controller: 'cliente', action: 'facturas', method: 'GET')
+        "/api/clientes/$id/cxc"(controller: 'cliente', action: 'cxc', method: 'GET')
+        "/api/clientes/$id/cobros"(controller: 'cliente', action: 'cobros', method: 'GET')
+
 
         // SAT
         "/api/sat/bancos"(resources: "SatBanco")
@@ -59,8 +63,9 @@ class UrlMappings {
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
-        "/api/cxc/cobro/cobrosMonetariosEnCredito"(controller: "cobro", action: 'cobrosMonetariosEnCredito', method: 'GET')
+        "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')
         "/api/cxc/cobro/reporteDeComisionesTarjeta"(controller: 'cobro', action: 'reporteDeComisionesTarjeta', method: 'GET')
+        "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
 
 
         "/api/cxc/notas"(resources: "notaDeCredito")
@@ -77,6 +82,8 @@ class UrlMappings {
 
 
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/cuentasPorCobrar/pendientes/$id"(controller: 'cuentaPorCobrar', action: 'pendientes', method: 'GET')
+
 
 
         //Existencias

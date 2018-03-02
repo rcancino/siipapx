@@ -17,6 +17,7 @@ class CobroService {
                 aplicacion.cuentaPorCobrar = cxc
                 aplicacion.fecha = new Date()
                 aplicacion.importe = importe
+                aplicacion.formaDePago = cobro.formaDePago
                 cobro.addToAplicaciones(aplicacion)
 
                 // Saldos <= 1 peso
@@ -79,6 +80,7 @@ class CobroService {
         aplicacion.cuentaPorCobrar = cxc
         aplicacion.fecha = new Date()
         aplicacion.importe = saldoNuevo
+        aplicacion.formaDePago = cobroDif.formaDePago
         cobroDif.addToAplicaciones(aplicacion)
         cobroDif.save()
 

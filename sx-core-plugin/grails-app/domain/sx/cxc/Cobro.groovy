@@ -57,6 +57,8 @@ class  Cobro {
 
     String comentario
 
+    List<CuentaPorCobrar> pendientesDeAplicar = []
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static hasMany =[aplicaciones: AplicacionDeCobro]
@@ -82,6 +84,7 @@ class  Cobro {
     static mapping={
         id generator:'uuid'
         fecha type:'date' ,index: 'COBRO_IDX1'
+        primeraAplicacion type: 'date'
         cliente index: 'COBRO_IDX2'
         formaDePago index: 'COBRO_IDX3'
         aplicaciones cascade: "all-delete-orphan"
@@ -89,7 +92,7 @@ class  Cobro {
         diferenciaFecha type: 'date'
     }
 
-    static transients = ['disponible']
+    static transients = ['disponible', 'pendientesDeAplicar']
 
     BigDecimal getDisponible(){
         return this.importe - this.aplicado

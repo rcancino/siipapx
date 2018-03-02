@@ -1,0 +1,9 @@
+import sx.cxc.AplicacionDeCobro
+
+model {
+    AplicacionDeCobro aplicacionDeCobro
+}
+json g.render(aplicacionDeCobro, [excludes:['cuentaPorCobrar']]){
+    cuentaPorCobrar g.render(aplicacionDeCobro.cuentaPorCobrar)
+}
+

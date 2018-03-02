@@ -30,6 +30,31 @@ class CobroService {
         return cxc
     }
 
+    def registrarAplicacion(Cobro cobro){
+
+        def disponible = cobro.disponible
+        if (disponible <= 0)
+            return cobro
+        def pendientes = cobro.pendientesDeAplicar
+        pendientes.each { cxc ->
+            def saldo = cxc.saldo
+            if (disponible > 0) {
+                def importe = saldo <= disponible ? saldo : disponible
+                AplicacionDeCobro aplicacion = new AplicacionDeCobro()
+                aplicacion.importe = importe
+                aplicacion.formaDePago = cobro.formaDePago
+                aplicacion.cuentaPorCobrar = cxc
+                aplicacion.fecha = new Date()
+                cobro.addToAplicaciones(aplicacion)
+                if(cobro.primeraAplicacion == null)
+                    cobro.primeraAplicacion = new Date()
+                disponible = disponible - importe
+            }
+        }
+        cobro.save()
+        return cobro
+    }
+
     private setComisiones(Cobro cobro) {
         if (cobro.tarjeta) {
             if(cobro.tarjeta.debitoCredito) {

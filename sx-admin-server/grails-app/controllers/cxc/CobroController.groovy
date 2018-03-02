@@ -1,7 +1,10 @@
 package sx.cxc
 
+import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
+import grails.web.databinding.WebDataBinding
+import org.apache.commons.lang.builder.ToStringBuilder
 import sx.core.AppConfig
 import sx.reports.ReportService
 import sx.core.Sucursal
@@ -10,7 +13,7 @@ import sx.core.Sucursal
 @Secured("hasRole('ROLE_CXC_USER')")
 class CobroController extends RestfulController{
 
-    def cobroService
+    CobroService cobroService
 
     def ventaService
 
@@ -37,8 +40,9 @@ class CobroController extends RestfulController{
         }
         if(params.term) {
             def search = '%' + params.term + '%'
-            query = query.where { cliente.nombre =~ search  }
+            query = query.where { cliente.nombre =~ search || formaDePago =~ search }
         }
+
         String hql = "from Cobro c where c where "
         return query.list(params)
     }
@@ -52,14 +56,18 @@ class CobroController extends RestfulController{
         return cobro
     }
 
-    def cobrosMonetariosEnCredito() {
-        log.debug('Cobros monetarios CRE {}', params)
+    def cobrosMonetarios() {
+        log.debug('Cobros monetarios{}', params)
 
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
         def query = Cobro.where { sucursal == AppConfig.first().sucursal }
+
+        if(params.cartera) {
+            query = query.where { tipo == params.cartera}
+        }
 
         query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'TRANSFERENCIA' || formaDePago == 'TARJETA_DEBITO'}
         if(params.term) {
@@ -76,6 +84,36 @@ class CobroController extends RestfulController{
         def repParams = [FECHA_CORTE: command.fecha, SUCURSAL: command.sucursal.id]
         def pdf  = reportService.run('ComisionTarjetas.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ComisionTarjetas.pdf')
+    }
+
+    // @Override
+    protected Object updateResource(Cobro resource) {
+        if (resource.pendientesDeAplicar) {
+            // log.debug('Facturas por aplicar : {}', resource.pendientesDeAplicar)
+            return cobroService.registrarAplicacion(resource)
+        }
+        return super.updateResource(resource)
+    }
+
+    @Transactional
+    def aplicar() {
+        Cobro cobro = Cobro.get(params.id)
+        cobro.properties = getObjectToBind()
+        responde cobro
+        /*
+        log.debug('Aplicando cobro {}', params)
+        Cobro cobro = Cobro.get(params.id)
+        cobro.refresh()
+        CuentaPorCobrar cxc = CuentaPorCobrar.get(params.cxc)
+        assert cobro.getDisponible() > 0.0, 'El cobro no tiene disponible'
+        assert cxc, 'No existe la cuenta por cobrar '
+
+        log.debug('Pagando cxc con saldo {} con disponible: {}', cxc.saldo, cobro.disponible)
+        if (cxc.saldo > 0 ){
+            cobro = cobroService.registrarAplicacion(cobro, cxc)
+        }
+        respond cobro
+        */
     }
 }
 

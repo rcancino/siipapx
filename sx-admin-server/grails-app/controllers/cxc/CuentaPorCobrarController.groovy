@@ -2,7 +2,7 @@ package sx.cxc
 
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
-
+import sx.core.Cliente
 import sx.core.Sucursal
 import sx.core.Venta
 
@@ -37,15 +37,15 @@ class CuentaPorCobrarController extends RestfulController{
         return query.list(params)
     }
 
-    def pendientesCod(Sucursal sucursal) {
-        if (sucursal == null) {
+    def pendientes(Cliente cliente) {
+        if (cliente == null) {
             notFound()
             return
         }
-        params.max = 100
-        params.sort = params.sort ?:'lastUpdated'
-        params.order = params.order ?:'desc'
-        def rows = Venta.findAll("from Venta c  where c.cuentaPorCobrar.total - c.cuentaPorCobrar.pagos > 0 and c.cuentaPorCobrar.tipo = ? order by c.dateCreated desc ", ['COD'])
+        // params.max = 100
+        params.sort = params.sort ?:'fecha'
+        params.order = params.order ?:'asc'
+        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
         respond rows
     }
 
