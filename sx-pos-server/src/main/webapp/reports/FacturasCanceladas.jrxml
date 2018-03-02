@@ -35,6 +35,7 @@
 ,CONCAT(' ',V.forma_de_pago,' - ',V.CANCELACION_MOTIVO) AS MOTI_CANCE,V.CANCELACION_USUARIO AS USU_CANCE
 ,CASE WHEN V.TIPO IN('COD','CON') THEN 'CONTADO' WHEN V.TIPO='CRE' THEN 'CREDITO' ELSE 'SIN CLASIF' END AS ORIGEN
 , V.FECHA AS FECHA_FAC,V.forma_de_pago AS FPAGO,(SELECT X.total FROM CFDI X WHERE X.ID=V.CFDI_ID) AS IMPORTE
+,(SELECT X.STATUS_SAT FROM CFDI F JOIN cfdi_cancelado X ON(X.UUID=F.UUID) WHERE F.ID=V.CFDI_ID) AS STATUS_SAT
 FROM cuenta_por_cobrar V 
 JOIN SUCURSAL S ON (S.ID=V.SUCURSAL_ID) 
 join cliente l on  (v.cliente_id=l.id)
@@ -55,6 +56,7 @@ order by V.TIPO,V.DOCUMENTO]]></queryString>
 	<field name="FECHA_FAC" class="java.sql.Date"/>
 	<field name="FPAGO" class="java.lang.String"/>
 	<field name="IMPORTE" class="java.math.BigDecimal"/>
+	<field name="STATUS_SAT" class="java.lang.String"/>
 
 	<sortField name="TIPO" order="Descending" />
 
@@ -420,9 +422,9 @@ order by V.TIPO,V.DOCUMENTO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="478"
+						x="509"
 						y="2"
-						width="249"
+						width="218"
 						height="13"
 						key="textField"/>
 					<box></box>
@@ -469,6 +471,19 @@ order by V.TIPO,V.DOCUMENTO]]></queryString>
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="478"
+						y="2"
+						width="31"
+						height="13"
+						key="textField-10"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{STATUS_SAT}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
