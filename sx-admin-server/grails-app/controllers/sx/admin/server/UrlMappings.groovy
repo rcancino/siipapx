@@ -66,6 +66,7 @@ class UrlMappings {
         "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')
         "/api/cxc/cobro/reporteDeComisionesTarjeta"(controller: 'cobro', action: 'reporteDeComisionesTarjeta', method: 'GET')
         "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
+        "/api/cxc/cobro/reporteDeCobranza"(controller: "cobro", action: 'reporteDeCobranza', method: 'GET')
 
 
         "/api/cxc/notas"(resources: "notaDeCredito")

@@ -36,7 +36,7 @@
 ,0 AS APLICADO,A.IMPORTE*A.tipo_de_cambio AS ANTICIPO,0 AS TOT_APLIC,0 AS CTE_APLIC,0 AS DEPOSITO,0 AS CTE_DEP,0 AS TOTAL_DEPOSITO,0 AS DIS,A.TIPO AS CAR_ORIGEN,A.ID AS ABONO,'' AS POSTFECHADO
 ,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
 FROM  cobro A JOIN cliente X ON(X.ID=A.cliente_id) JOIN sucursal S ON(S.ID=A.sucursal_id)
-WHERE A.ANTICIPO IS TRUE  AND DATE(A.FECHA) = $P{FECHA} AND  A.TIPO=$P{ORIGEN} AND X.CLAVE LIKE $P{CLIENTE} 
+WHERE A.ANTICIPO IS TRUE  AND DATE(A.FECHA) = $P{FECHA} AND  A.TIPO=$P{ORIGEN}
 UNION
 SELECT X.CLAVE,X.NOMBRE,C.DOCUMENTO AS NUMERO,A.TIPO_DE_CAMBIO as TC,A.MONEDA,C.TOTAL,CASE WHEN X.NOMBRE="CALLE 4" THEN 'CA4' ELSE SUBSTR(S.NOMBRE,1,3) END AS SUCURSAL
 ,CASE WHEN a.anticipo is true then 'APL ANT' WHEN date(a.primera_aplicacion) <> B.FECHA THEN 'APL SAF' ELSE ''  END AS DESCFORMADEPAGO,a.forma_de_pago AS DESCFORMADEPAGO1,ifnull(A.REFERENCIA,'') as REFERENCIA
@@ -49,7 +49,7 @@ SELECT X.CLAVE,X.NOMBRE,C.DOCUMENTO AS NUMERO,A.TIPO_DE_CAMBIO as TC,A.MONEDA,C.
 ,B.IMPORTE AS DIS,C.TIPO AS CAR_ORIGEN,A.ID AS ABONO,IFNULL((SELECT '*' FROM cliente_credito P WHERE P.CLIENTE_ID=X.ID AND P.POSTFECHADO IS TRUE),'') AS POSTFECHADO
 ,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
 FROM  aplicacion_de_cobro  B JOIN cobro A ON(A.ID=B.COBRO_ID) JOIN cuenta_por_cobrar C ON(C.ID=B.cuenta_por_cobrar_id) JOIN cliente X ON(X.ID=C.cliente_id) JOIN sucursal S ON(S.ID=C.sucursal_id)
-WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGEN} AND X.CLAVE LIKE $P{CLIENTE}   AND A.FORMA_DE_PAGO NOT IN('DEVOLUCION','BONIFICACION','PAGO_DIF','ESPECIE')
+WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGEN}   AND A.FORMA_DE_PAGO NOT IN('DEVOLUCION','BONIFICACION','PAGO_DIF','ESPECIE')
 ]]></queryString>
 
 	<field name="CLAVE" class="java.lang.String"/>
@@ -803,7 +803,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -912,7 +912,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
