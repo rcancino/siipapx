@@ -3,6 +3,7 @@ import com.luxsoft.cfdix.v33.CfdiCadenaBuilder33
 import com.luxsoft.cfdix.v33.CfdiSellador33
 import com.luxsoft.cfdix.v33.NotaBuilder
 import com.luxsoft.cfdix.v33.NotaDeCargoBuilder
+import org.springframework.web.servlet.i18n.FixedLocaleResolver
 
 // Place your Spring DSL code here
 beans = {
@@ -22,5 +23,10 @@ beans = {
     }
     notaDeCargoBuilder(NotaDeCargoBuilder){
         sellador = ref('cfdiSellador')
+    }
+
+    localeResolver(FixedLocaleResolver, Locale.US){
+        defaultLocale = new Locale('ex', 'mx')
+        Locale.setDefault(defaultLocale)
     }
 }

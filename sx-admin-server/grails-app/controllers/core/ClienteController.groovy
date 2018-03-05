@@ -4,13 +4,18 @@ import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
+import sx.cxc.CobranzaPorFechaCommand
 import sx.cxc.Cobro
 import sx.cxc.CuentaPorCobrar
+import sx.cxc.NotaDeCredito
+import sx.reports.ReportService
 
 @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class ClienteController extends RestfulController{
 
     static responseFormats = ['json']
+
+    ReportService reportService
 
     ClienteController(){
         super(Cliente)
@@ -50,12 +55,32 @@ class ClienteController extends RestfulController{
         respond rows
     }
 
+    def notas(Cliente cliente){
+        params.max = 20
+        params.sort = 'fecha'
+        params.order = 'desc'
+        def query = NotaDeCredito.where {cliente == cliente}
+        if(params.tipo) {
+            def tipo = params.tipo
+            query = query.where {tipo == tipo}
+        }
+        respond query.list(params)
+    }
+
     def cobros(Cliente cliente){
         params.max = 100
         params.sort = 'fecha'
         params.order = 'desc'
         def rows = Cobro.where {cliente == cliente}.list(params)
         respond rows
+    }
+
+    def estadoDeCuenta(CobranzaPorFechaCommand command){
+        def repParams = [FECHA: command.fecha]
+        repParams.ORIGEN = params.cartera
+        repParams.CLIENTE = params.cliente
+        def pdf =  reportService.run('EstadoDeCuentaCte.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CobranzaCxc.pdf')
     }
 
 

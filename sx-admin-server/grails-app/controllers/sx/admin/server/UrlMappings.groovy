@@ -27,7 +27,8 @@ class UrlMappings {
         "/api/clientes/$id/facturas"(controller: 'cliente', action: 'facturas', method: 'GET')
         "/api/clientes/$id/cxc"(controller: 'cliente', action: 'cxc', method: 'GET')
         "/api/clientes/$id/cobros"(controller: 'cliente', action: 'cobros', method: 'GET')
-
+        "/api/clientes/$id/notas"(controller: 'cliente', action: 'notas', method: 'GET')
+        "/api/clientes/estadoDeCuenta"(controller: "cliente", action: 'estadoDeCuenta', method: 'GET')
 
         // SAT
         "/api/sat/bancos"(resources: "SatBanco")
@@ -67,6 +68,7 @@ class UrlMappings {
         "/api/cxc/cobro/reporteDeComisionesTarjeta"(controller: 'cobro', action: 'reporteDeComisionesTarjeta', method: 'GET')
         "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
         "/api/cxc/cobro/reporteDeCobranza"(controller: "cobro", action: 'reporteDeCobranza', method: 'GET')
+
 
 
         "/api/cxc/notas"(resources: "notaDeCredito")

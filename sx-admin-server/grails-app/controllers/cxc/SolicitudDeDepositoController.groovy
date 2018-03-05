@@ -33,6 +33,10 @@ class SolicitudDeDepositoController extends RestfulController{
         if (params.cartera) {
             query = query.where { tipo == params.cartera}
         }
+        if (params.sucursal) {
+            Sucursal suc = Sucursal.get(params.sucursal)
+            query = query.where { sucursal == suc}
+        }
         if (params.pendientes) {
             if (params.boolean('pendientes')){
                 log.debug('Buscando solicitudes pendientes')
@@ -54,7 +58,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def pendientes() {
-        // log.debug('Buscando solicitudes pendientes2 {}', params)
+        log.debug('Buscando solicitudes pendientes2 {}', params)
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
@@ -63,7 +67,7 @@ class SolicitudDeDepositoController extends RestfulController{
             cobro == null && comentario == null && cancelacion == null
         }
         def list = query.list(params)
-        // log.debug('Solicitudes pendientes: {}', list.size())
+        log.debug('Solicitudes pendientes: {}', list.size())
         respond list
     }
 
@@ -249,6 +253,13 @@ class SolicitudDeDepositoController extends RestfulController{
             resource.folio = Folio.nextFolio('SOLICITUDES_DEPOSITO',serie)
         }
         return super.saveResource(resource)
+    }
+
+    @Override
+    protected Object updateResource(Object resource) {
+        // log.debug('Actualizando solicitud: {} ', resource)
+        resource.total = resource.cheque + resource.efectivo + resource.transferencia
+        return super.updateResource(resource)
     }
 
     def buscarDuplicada(SolicitudDeDeposito instance){

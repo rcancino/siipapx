@@ -117,7 +117,8 @@ class CobroController extends RestfulController{
     }
 
     def reporteDeCobranza(CobranzaPorFechaCommand command){
-        def repParams = [fecha: command.fecha]
+        def repParams = [FECHA: command.fecha]
+        repParams.ORIGEN = params.cartera
         def pdf =  reportService.run('CobranzaCxc.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CobranzaCxc.pdf')
     }
