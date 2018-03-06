@@ -68,7 +68,7 @@ class NotaDeCargoController extends RestfulController {
         bindData instance, getObjectToBind()
         instance.serie = 'CAR'
         instance.impuesto = 0.0
-        instance.total = 0.0
+        // instance.total = 0.0
         return instance
     }
 

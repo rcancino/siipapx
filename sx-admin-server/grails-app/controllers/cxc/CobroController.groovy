@@ -69,7 +69,7 @@ class CobroController extends RestfulController{
             query = query.where { tipo == params.cartera}
         }
 
-        query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'TRANSFERENCIA' || formaDePago == 'TARJETA_DEBITO'}
+        query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'EFECTIVO' || formaDePago == 'TARJETA_DEBITO'}
         if(params.term) {
             def search = '%' + params.term + '%'
             query = query.where { cliente.nombre =~ search  || referencia =~search}

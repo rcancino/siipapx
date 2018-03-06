@@ -57,6 +57,7 @@ class NotaDeCargoService {
     }
 
     def calcularProrrateo(NotaDeCargo nota) {
+        assert nota.total >0 , 'Nota de cargo requiere total para proceder Total registrado: ' + nota.total
         nota.cargo = 0.0;
         BigDecimal importe = nota.total
         boolean sobreSaldo = 'saldo'
@@ -72,9 +73,9 @@ class NotaDeCargoService {
             def monto = sobreSaldo ? cxc.getSaldo(): cxc.total
             def por = monto / base
             def asignado = MonedaUtils.round(importe * por)
-            det.importe = asignado
-            det.impuesto = MonedaUtils.calcularImpuesto(asignado)
-            det.total = asignado + det.impuesto
+            det.importe = MonedaUtils.calcularImporteDelTotal(asignado)
+            det.impuesto = MonedaUtils.calcularImpuesto(det.importe)
+            det.total = det.importe + det.impuesto
         }
         return nota
     }
