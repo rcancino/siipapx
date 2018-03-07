@@ -37,6 +37,8 @@ class UrlMappings {
         // Tesoreria
         "/api/tesoreria/bancos"(resources: "banco")
         "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
+        "/api/tesoreria/fichas"(resources: "ficha")
+        "/api/tesoreria/fichas/generar"(controller: "ficha", action: 'generar', method: 'GET')
 
         //Comprobantes fiscales de proveedores CFDI's
         "/api/cfdis"(resources: "cfdi")
@@ -65,9 +67,12 @@ class UrlMappings {
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')
+        "/api/cxc/cobro/disponibles"(controller: "cobro", action: 'disponibles', method: 'GET')
         "/api/cxc/cobro/reporteDeComisionesTarjeta"(controller: 'cobro', action: 'reporteDeComisionesTarjeta', method: 'GET')
         "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
         "/api/cxc/cobro/reporteDeCobranza"(controller: "cobro", action: 'reporteDeCobranza', method: 'GET')
+        "/api/cxc/cobro/reporteDeRelacionDePagos"(controller: "cobro", action: 'reporteDeRelacionDePagos', method: 'GET')
+
 
 
 

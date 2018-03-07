@@ -13,6 +13,10 @@ json g.render(cobro, [deep:true,excludes:['cliente','sucursal','aplicaciones','m
     moneda cobro.moneda.currencyCode
     disponible cobro.getDisponible()
     aplicaciones g.render(cobro.aplicaciones)
+    if(cobro.cheque) {
+        cheque g.render(cobro.cheque)
+        bancoOrigen cobro.cheque.bancoOrigen.nombre
+    }
 
 }
 

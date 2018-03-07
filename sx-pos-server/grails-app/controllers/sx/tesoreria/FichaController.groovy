@@ -32,3 +32,4 @@ class FichaController extends RestfulController {
         return query.list(params)
     }
 }
+

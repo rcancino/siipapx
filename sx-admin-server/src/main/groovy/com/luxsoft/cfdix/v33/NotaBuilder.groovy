@@ -96,7 +96,32 @@ class NotaBuilder {
         if (nota.tipoCartera == 'CRE') {
             comprobante.formaPago = '99'
         } else {
-            // Buscar el cfdi de la devolucion
+            def formaDePago = this.rmd.venta.formaDePago
+            switch (formaDePago) {
+                case 'EFECTIVO':
+                case 'DEPOSITO_EFECTIVO':
+                    comprobante.formaPago = '01'
+                    break
+                case 'CHEQUE':
+                case 'DEPOSITO_CHEQUE':
+                    comprobante.formaPago = '02'
+                    break
+                case 'TRANSFERENCIA':
+                    comprobante.formaPago = '03'
+                    break
+                case 'TARJETA_CREDITO':
+                    comprobante.formaPago = '04'
+                    break
+                case 'TARJETA_DEBITO':
+                    comprobante.formaPago = '28'
+                    break
+                case 'BONIFICACION':
+                case 'DEVOLUCION':
+                    comprobante.formaPago = '17'
+                    break
+                default:
+                    comprobante.formaPago = '99'
+            }
         }
         //comprobante.condicionesDePago = this.venta.tipo == 'CON' ? 'Contado' : 'Credito'
         return this

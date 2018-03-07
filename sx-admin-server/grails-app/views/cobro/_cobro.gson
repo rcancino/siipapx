@@ -11,5 +11,9 @@ json g.render(cobro, [excludes:['moneda','cliente', 'sucursal']]){
         id cobro.sucursal.id
         nombre cobro.sucursal.nombre
     }
+    if(cobro.cheque) {
+        cheque g.render(cobro.cheque)
+        bancoOrigen cobro.cheque.bancoOrigen.nombre
+    }
 }
 

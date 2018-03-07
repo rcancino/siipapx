@@ -36,6 +36,7 @@ class CobroService {
         if (disponible <= 0)
             return cobro
         def pendientes = cobro.pendientesDeAplicar
+        def fecha = cobro.fechaDeAplicacion ?: new Date()
         pendientes.each { cxc ->
             def saldo = cxc.saldo
             if (disponible > 0) {
@@ -44,10 +45,10 @@ class CobroService {
                 aplicacion.importe = importe
                 aplicacion.formaDePago = cobro.formaDePago
                 aplicacion.cuentaPorCobrar = cxc
-                aplicacion.fecha = new Date()
+                aplicacion.fecha = fecha
                 cobro.addToAplicaciones(aplicacion)
                 if(cobro.primeraAplicacion == null)
-                    cobro.primeraAplicacion = new Date()
+                    cobro.primeraAplicacion = fecha
                 disponible = disponible - importe
             }
         }

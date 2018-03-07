@@ -59,6 +59,8 @@ class  Cobro {
 
     List<CuentaPorCobrar> pendientesDeAplicar = []
 
+    Date fechaDeAplicacion
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static hasMany =[aplicaciones: AplicacionDeCobro]
@@ -92,10 +94,10 @@ class  Cobro {
         diferenciaFecha type: 'date'
     }
 
-    static transients = ['disponible', 'pendientesDeAplicar']
+    static transients = ['disponible', 'pendientesDeAplicar', 'fechaDeAplicacion']
 
     BigDecimal getDisponible(){
-        return this.importe - this.aplicado
+        return this.importe - this.aplicado - this.diferencia
     }
 
 }

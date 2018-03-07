@@ -47,6 +47,24 @@ class CobroController extends RestfulController{
         return query.list(params)
     }
 
+    def disponibles() {
+        log.debug('Disponibles {}', params)
+        String hql = 'from Cobro c where c.importe - c.aplicado > 0  and tipo like ? order by fecha asc'
+        params.max = 100
+        String cartera = params.cartera ?: '%'
+
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            hql = 'from Cobro c where c.importe - c.aplicado > 0  and tipo like ? ' +
+                    ' and c.cliente.nombre like ? ' +
+                    ' order by fecha asc'
+            respond Cobro.findAll(hql, [cartera, search], params)
+        } else {
+            respond Cobro.findAll(hql, [cartera], params)
+        }
+
+    }
+
 
     protected Object createResource() {
         log.debug('Generando cobro: {}', params)
@@ -121,6 +139,13 @@ class CobroController extends RestfulController{
         repParams.ORIGEN = params.cartera
         def pdf =  reportService.run('CobranzaCxc.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CobranzaCxc.pdf')
+    }
+
+    def reporteDeRelacionDePagos(CobranzaPorFechaCommand command){
+        def repParams = [FECHA: command.fecha]
+        repParams.ORIGEN = params.cartera
+        def pdf =  reportService.run('RelacionDePagos.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RelacionDePagos.pdf')
     }
 }
 
