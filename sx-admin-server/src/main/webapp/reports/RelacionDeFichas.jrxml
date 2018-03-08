@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="RelacionDeFichasCaja"
+		 name="RelacionDeFichas"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -209,9 +209,9 @@ WHERE F.FECHA=$P{FECHA}  AND S.ID=$P{SUCURSAL} AND ORIGEN=$P{ORIGEN}]]></querySt
 				</staticText>
 				<staticText>
 					<reportElement
-						x="217"
+						x="186"
 						y="19"
-						width="222"
+						width="245"
 						height="17"
 						forecolor="#000000"
 						key="staticText-56"/>
@@ -332,9 +332,9 @@ WHERE F.FECHA=$P{FECHA}  AND S.ID=$P{SUCURSAL} AND ORIGEN=$P{ORIGEN}]]></querySt
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="439"
+						x="431"
 						y="19"
-						width="107"
+						width="115"
 						height="17"
 						forecolor="#000000"
 						key="textField-18"/>
@@ -342,7 +342,11 @@ WHERE F.FECHA=$P{FECHA}  AND S.ID=$P{SUCURSAL} AND ORIGEN=$P{ORIGEN}]]></querySt
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-BoldOblique" size="10" isBold="true" isItalic="true" isUnderline="true" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORIGEN}.equals( new String("COD") )?"CONTRA ENTREGA" :$P{ORIGEN}.equals( new String("CON") )?"CONTADO":""]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORIGEN}.equals( new String("COD") )?"CONTRA ENTREGA" :
+$P{ORIGEN}.equals( new String("CON") )?"CONTADO":
+$P{ORIGEN}.equals( new String("CRE") )?"CREDITO":
+$P{ORIGEN}.equals( new String("CHE") )?"CHEQUE DEVUELTO":
+$P{ORIGEN}.equals( new String("JUR") )?"JURIDICO":""]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
