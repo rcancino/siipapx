@@ -133,9 +133,11 @@ class CobroController extends RestfulController{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CobranzaCxc.pdf')
     }
 
-    def reporteDeRelacionDePagos(CobranzaPorFechaCommand command){
+    def reporteDeRelacionDePagos(RelacionPagosCommand command){
+        log.debug('Rep: {}', params)
         def repParams = [FECHA: command.fecha]
-        repParams.ORIGEN = params.cartera
+        repParams.ORIGEN = params.origen
+        repParams.COBRADOR = command.cobrador == 0 ? '%': command.cobrador.toString()
         def pdf =  reportService.run('RelacionDePagos.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RelacionDePagos.pdf')
     }
@@ -148,6 +150,12 @@ class PorSucursalFechaRepCommand {
 
 class CobranzaPorFechaCommand {
     Date fecha
+}
+
+class RelacionPagosCommand {
+    Date fecha
+    String origen
+    Integer cobrador
 }
 
 

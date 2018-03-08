@@ -47,7 +47,15 @@ class ClienteController extends RestfulController{
         params.max = 100
         params.sort = 'fecha'
         params.order = 'desc'
-        respond CuentaPorCobrar.where {cliente == cliente}.list(params)
+        def query = CuentaPorCobrar.where {cliente == cliente}
+        if(params.term) {
+            def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where { documento == params.term.toInteger() }
+            }
+        }
+        List res = query.list(params)
+        respond res
 
     }
     def cxc(Cliente cliente){

@@ -71,6 +71,7 @@ class CobroService {
     def saldar(Cobro cobro){
         if(cobro.disponible <= 100.00 && cobro.disponible > 0.00) {
             cobro.diferencia = cobro.disponible;
+            cobro.diferenciaFecha = new Date()
             cobro.save flush: true
         }
         return cobro
