@@ -34,7 +34,8 @@
 	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT X.CLAVE,X.NOMBRE,0 AS NUMERO,A.TIPO_DE_CAMBIO as TC,A.MONEDA,0 AS TOTAL,'OFI' AS SUCURSAL,'ANTICIPO' AS DESCFORMADEPAGO,a.forma_de_pago AS DESCFORMADEPAGO1,ifnull(A.REFERENCIA,'') as REFERENCIA
 ,0 AS APLICADO,A.IMPORTE*A.tipo_de_cambio AS ANTICIPO,0 AS TOT_APLIC,0 AS CTE_APLIC,0 AS DEPOSITO,0 AS CTE_DEP,0 AS TOTAL_DEPOSITO,0 AS DIS,A.TIPO AS CAR_ORIGEN,A.ID AS ABONO,'' AS POSTFECHADO
-,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
+,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','ESPECIE','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
+,IFNULL(ROUND((SELECT SUM(X.IMPORTE*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago  IN('PAGO_DIF') AND  DATE(X.PRIMERA_APLICACION)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS PAGO_DIF
 FROM  cobro A JOIN cliente X ON(X.ID=A.cliente_id) JOIN sucursal S ON(S.ID=A.sucursal_id)
 WHERE A.ANTICIPO IS TRUE  AND DATE(A.FECHA) = $P{FECHA} AND  A.TIPO=$P{ORIGEN}
 UNION
@@ -42,12 +43,13 @@ SELECT X.CLAVE,X.NOMBRE,C.DOCUMENTO AS NUMERO,A.TIPO_DE_CAMBIO as TC,A.MONEDA,C.
 ,CASE WHEN a.anticipo is true then 'APL ANT' WHEN date(a.primera_aplicacion) <> B.FECHA THEN 'APL SAF' ELSE ''  END AS DESCFORMADEPAGO,a.forma_de_pago AS DESCFORMADEPAGO1,ifnull(A.REFERENCIA,'') as REFERENCIA
 ,B.IMPORTE*A.tipo_de_cambio AS APLICADO,0 AS ANTICIPO
 ,IFNULL((SELECT SUM(X.IMPORTE*A.tipo_de_cambio) FROM aplicacion_de_cobro X WHERE B.COBRO_ID=X.COBRO_ID and x.fecha=$P{FECHA}),0) AS TOT_APLIC
-,IFNULL((SELECT SUM(XX.IMPORTE*Z.tipo_de_cambio) FROM aplicacion_de_cobro XX JOIN COBRO Z ON(Z.ID=XX.COBRO_ID) WHERE Z.CLIENTE_ID=X.ID and Z.TIPO=$P{ORIGEN} AND DATE(Z.PRIMERA_APLICACION)=$P{FECHA} AND  Z.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION')),0) AS CTE_APLIC
-,IFNULL((SELECT SUM(XX.IMPORTE*XX.TIPO_DE_CAMBIO) FROM COBRO XX WHERE XX.CLIENTE_ID=X.ID and XX.ID=B.COBRO_ID AND DATE(XX.PRIMERA_APLICACION)=$P{FECHA} AND XX.TIPO=$P{ORIGEN} AND  XX.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP')),0) AS DEPOSITO
-,IFNULL((SELECT SUM(XX.IMPORTE*XX.TIPO_DE_CAMBIO) FROM COBRO XX WHERE XX.CLIENTE_ID=X.ID and DATE(XX.PRIMERA_APLICACION)=$P{FECHA} AND XX.TIPO=$P{ORIGEN} AND XX.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') ),0) AS CTE_DEP
-,IFNULL((SELECT SUM(XX.IMPORTE*XX.TIPO_DE_CAMBIO) FROM COBRO XX WHERE DATE(XX.PRIMERA_APLICACION)=$P{FECHA} AND XX.TIPO=$P{ORIGEN}  AND XX.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') and XX.anticipo is false),0) AS TOTAL_DEPOSITO
+,IFNULL((SELECT SUM(XX.IMPORTE*Z.tipo_de_cambio) FROM aplicacion_de_cobro XX JOIN COBRO Z ON(Z.ID=XX.COBRO_ID) WHERE Z.CLIENTE_ID=X.ID and Z.TIPO=$P{ORIGEN} AND DATE(Z.PRIMERA_APLICACION)=$P{FECHA} AND  Z.forma_de_pago NOT IN('PAGO_DIF','ESPECIE','BONIFICACION','DEVOLUCION')),0) AS CTE_APLIC
+,IFNULL((SELECT SUM(XX.IMPORTE*XX.TIPO_DE_CAMBIO) FROM COBRO XX WHERE XX.CLIENTE_ID=X.ID and XX.ID=B.COBRO_ID AND DATE(XX.PRIMERA_APLICACION)=$P{FECHA} AND XX.TIPO=$P{ORIGEN} AND  XX.forma_de_pago NOT IN('PAGO_DIF','ESPECIE')),0) AS DEPOSITO
+,IFNULL((SELECT SUM(XX.IMPORTE*XX.TIPO_DE_CAMBIO) FROM COBRO XX WHERE XX.CLIENTE_ID=X.ID and DATE(XX.PRIMERA_APLICACION)=$P{FECHA} AND XX.TIPO=$P{ORIGEN} AND XX.forma_de_pago NOT IN('PAGO_DIF','ESPECIE','BONIFICACION','DEVOLUCION') ),0) AS CTE_DEP
+,IFNULL((SELECT SUM(XX.IMPORTE*XX.TIPO_DE_CAMBIO) FROM COBRO XX WHERE DATE(XX.PRIMERA_APLICACION)=$P{FECHA} AND XX.TIPO=$P{ORIGEN}  AND XX.forma_de_pago NOT IN('PAGO_DIF','ESPECIE','BONIFICACION','DEVOLUCION') and XX.anticipo is false),0) AS TOTAL_DEPOSITO
 ,B.IMPORTE AS DIS,C.TIPO AS CAR_ORIGEN,A.ID AS ABONO,IFNULL((SELECT '*' FROM cliente_credito P WHERE P.CLIENTE_ID=X.ID AND P.POSTFECHADO IS TRUE),'') AS POSTFECHADO
-,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
+,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','ESPECIE','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
+,IFNULL(ROUND((SELECT SUM(X.IMPORTE*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago  IN('PAGO_DIF') AND  DATE(X.PRIMERA_APLICACION)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS PAGO_DIF
 FROM  aplicacion_de_cobro  B JOIN cobro A ON(A.ID=B.COBRO_ID) JOIN cuenta_por_cobrar C ON(C.ID=B.cuenta_por_cobrar_id) JOIN cliente X ON(X.ID=C.cliente_id) JOIN sucursal S ON(S.ID=C.sucursal_id)
 WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGEN}   AND A.FORMA_DE_PAGO NOT IN('DEVOLUCION','BONIFICACION','PAGO_DIF','ESPECIE')]]></queryString>
 
@@ -73,37 +75,42 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 	<field name="ABONO" class="java.lang.String"/>
 	<field name="POSTFECHADO" class="java.lang.String"/>
 	<field name="DIF_ABN" class="java.math.BigDecimal"/>
+	<field name="PAGO_DIF" class="java.math.BigDecimal"/>
 
 	<sortField name="NOMBRE" />
 	<sortField name="SUCURSAL" />
 	<sortField name="NUMERO" />
 
 	<variable name="TOTAL_CHEQUE" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "CHEQUE" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "CHEQUE" ) 
+&&  $F{DESCFORMADEPAGO}.equals( "" )
+ ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_TRANSFER" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TRANSFERENCIA" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
-	</variable>
-	<variable name="TOTAL_CHECKPLUS" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "POSFECHADO" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TRANSFERENCIA" )
+&&  $F{DESCFORMADEPAGO}.equals( "" )
+ ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_TARJETA" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TARJETA_CREDITO" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TARJETA_CREDITO" ) 
+&&  $F{DESCFORMADEPAGO}.equals( "" )
+? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_EFECTIVO" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "EFECTIVO" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "EFECTIVO" ) 
+&&  $F{DESCFORMADEPAGO}.equals( "" )
+? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_SALDFAV" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "SAF" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
-	</variable>
-	<variable name="TOTAL_DIFMENOS" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "DIFERENCIA" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO}.equals( "APL SAF" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_DEP" class="java.math.BigDecimal" resetType="Report" incrementType="Group" incrementGroup="CLIENTE" calculation="Sum">
 		<variableExpression><![CDATA[$F{CTE_DEP}]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_ORD_DEP" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "DEPOSITO_CHEQUE" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO}.equals( "" ) &&
+($F{DESCFORMADEPAGO1}.equals( "DEPOSITO_CHEQUE" ) || $F{DESCFORMADEPAGO1}.equals( "DEPOSITO_EFECTIVO" ) )
+? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_PGO_SP" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "ESPECIE" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
@@ -111,11 +118,10 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 	<variable name="TOTAL_APLIC" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{APLICADO}]]></variableExpression>
 	</variable>
-	<variable name="TOTAL_AMEX" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TARJETA_CREDITO" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
-	</variable>
 	<variable name="TOTAL_DEBITO" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TARJETA_DEBITO" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "TARJETA_DEBITO" ) 
+&&  $F{DESCFORMADEPAGO}.equals( "" )
+? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_AJUSTE_SALDO" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "PAGO_DIF" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
@@ -124,10 +130,10 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 		<variableExpression><![CDATA[$F{APLICADO}]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_ANTICIPO" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "ANTICIPO" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO}.equals( "APL ANT" ) ? $F{APLICADO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_ENT_ANTI" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "ANTICIPO" ) ? $F{ANTICIPO}.doubleValue() : 0.00 )]]></variableExpression>
+		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO}.equals( "ANTICIPO" ) ? $F{ANTICIPO}.doubleValue() : 0.00 )]]></variableExpression>
 	</variable>
 
 		<group  name="CLIENTE" minHeightToStartNewPage="8" >
@@ -172,7 +178,7 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="408"
 						y="0"
@@ -201,7 +207,7 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 					<pen lineWidth="1.0"/>
 </graphicElement>
 				</line>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="239"
 						y="0"
@@ -218,7 +224,7 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CTE_DEP}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="0"
@@ -278,7 +284,7 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DESCFORMADEPAGO}.concat(" ").concat( $F{DESCFORMADEPAGO1} ).concat(" ").concat($F{REFERENCIA})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="239"
 						y="0"
@@ -294,7 +300,7 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEPOSITO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="0"
@@ -310,7 +316,7 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{DEPOSITO}.doubleValue()-$V{TOT_APL_DEP}.doubleValue() )]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="408"
 						y="0"
@@ -654,7 +660,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 		</columnHeader>
 		<detail>
 			<band height="12"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="408"
 						y="0"
@@ -672,7 +678,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{APLICADO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="367"
 						y="0"
@@ -690,7 +696,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{NUMERO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="347"
 						y="0"
@@ -723,7 +729,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[new String("TOTAL FACTURA ").concat($F{MONEDA}).concat(" $")]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="181"
 						y="0"
@@ -962,11 +968,11 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="276"  isSplitAllowed="true" >
+			<band height="188"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="6"
+						y="17"
 						width="67"
 						height="12"
 						key="textField"
@@ -982,10 +988,10 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_CHEQUE}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="18"
+						y="29"
 						width="67"
 						height="12"
 						key="textField-3"/>
@@ -1000,30 +1006,12 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_TRANSFER}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="481"
-						y="30"
-						width="67"
-						height="12"
-						key="textField-4"/>
-					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_CHECKPLUS}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						x="360"
-						y="6"
+						y="5"
 						width="20"
-						height="214"
+						height="182"
 						key="staticText-33"/>
 					<box>					<pen lineWidth="0.5" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
@@ -1036,10 +1024,10 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<text><![CDATA[RESUMEN DE COBRANZA]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="42"
+						y="5"
 						width="67"
 						height="12"
 						key="textField-31"/>
@@ -1054,10 +1042,10 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_EFECTIVO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="54"
+						y="53"
 						width="67"
 						height="12"
 						key="textField-32"/>
@@ -1072,10 +1060,10 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_TARJETA}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="174"
+						y="126"
 						width="67"
 						height="12"
 						key="textField-33"/>
@@ -1089,20 +1077,20 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(
-$F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
-             - $V{TOTAL_TRANSFER}.doubleValue()
-             - $V{TOTAL_CHECKPLUS}.doubleValue()
-             - $V{TOTAL_EFECTIVO}.doubleValue()
-             - $V{TOTAL_TARJETA}.doubleValue()
-             - $V{TOTAL_DEBITO}.doubleValue()
-             - $V{TOTAL_AMEX}.doubleValue()
-             - $V{TOTAL_ORD_DEP} .doubleValue()
+$F{TOTAL_DEPOSITO}.doubleValue()
+	- $F{DIF_ABN}.doubleValue()
+	- $V{TOTAL_CHEQUE}.doubleValue()
+        - $V{TOTAL_TRANSFER}.doubleValue()             
+        - $V{TOTAL_EFECTIVO}.doubleValue()
+        - $V{TOTAL_TARJETA}.doubleValue()
+        - $V{TOTAL_DEBITO}.doubleValue()             
+        - $V{TOTAL_ORD_DEP} .doubleValue()
 )]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="102"
+						y="77"
 						width="67"
 						height="12"
 						key="textField-38"/>
@@ -1117,28 +1105,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_SALDFAV}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="114"
-						width="67"
-						height="12"
-						key="textField-39"/>
-					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_DIFMENOS}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="481"
-						y="90"
+						y="41"
 						width="67"
 						height="12"
 						key="textField"/>
@@ -1153,10 +1123,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_ORD_DEP}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="126"
+						y="101"
 						width="67"
 						height="12"
 						key="textField"/>
@@ -1174,7 +1144,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="6"
+						y="17"
 						width="101"
 						height="12"
 						key="staticText-56"/>
@@ -1192,7 +1162,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="18"
+						y="29"
 						width="101"
 						height="12"
 						key="staticText-57"/>
@@ -1210,25 +1180,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="30"
-						width="101"
-						height="12"
-						key="staticText-58"/>
-					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<text><![CDATA[CHEKPLUS]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="380"
-						y="42"
+						y="5"
 						width="101"
 						height="12"
 						key="staticText-59"/>
@@ -1246,7 +1198,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="54"
+						y="53"
 						width="101"
 						height="12"
 						key="staticText-60"/>
@@ -1264,7 +1216,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="102"
+						y="77"
 						width="101"
 						height="12"
 						key="staticText-61"/>
@@ -1282,25 +1234,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="114"
-						width="101"
-						height="12"
-						key="staticText-62"/>
-					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<text><![CDATA[PAGO DIF. DE MENOS]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="380"
-						y="90"
+						y="41"
 						width="101"
 						height="12"
 						key="staticText-63"/>
@@ -1318,7 +1252,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="126"
+						y="101"
 						width="101"
 						height="12"
 						key="staticText-64"/>
@@ -1333,10 +1267,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[PAGO EN ESPECIE]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="162"
+						y="114"
 						width="67"
 						height="12"
 						key="textField"/>
@@ -1354,7 +1288,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="66"
+						y="65"
 						width="101"
 						height="12"
 						key="staticText-69"/>
@@ -1369,46 +1303,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[TARJETA DEBITO]]></text>
 				</staticText>
-				<staticText>
-					<reportElement
-						x="380"
-						y="78"
-						width="101"
-						height="12"
-						key="staticText-70"/>
-					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<text><![CDATA[AMERICAN EXPRESS]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="78"
-						width="67"
-						height="12"
-						key="textField-41"/>
-					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Bottom">
-						<font pdfFontName="Helvetica" size="8" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_AMEX}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="481"
-						y="66"
+						y="65"
 						width="67"
 						height="12"
 						key="textField"/>
@@ -1426,7 +1324,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="162"
+						y="114"
 						width="101"
 						height="12"
 						key="staticText-73"/>
@@ -1444,7 +1342,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="174"
+						y="126"
 						width="101"
 						height="12"
 						key="staticText-74"/>
@@ -1462,7 +1360,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="196"
+						y="151"
 						width="101"
 						height="12"
 						key="staticText-75"/>
@@ -1477,10 +1375,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[DEPOSITO TOTAL]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="196"
+						y="151"
 						width="67"
 						height="12"
 						key="textField-46"/>
@@ -1498,7 +1396,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="150"
+						y="163"
 						width="67"
 						height="12"
 						key="textField"/>
@@ -1506,12 +1404,12 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_AJUSTE_SALDO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{PAGO_DIF}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						x="380"
-						y="150"
+						y="163"
 						width="101"
 						height="12"
 						key="staticText-78"/>
@@ -1524,12 +1422,12 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
-				<text><![CDATA[AJUSTE DE SALDO]]></text>
+				<text><![CDATA[AJUSTE (OTROS GST)]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						x="380"
-						y="208"
+						y="175"
 						width="101"
 						height="12"
 						key="staticText-79"/>
@@ -1542,12 +1440,12 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<text><![CDATA[OTROS PRODUCTOS]]></text>
+				<text><![CDATA[AJUSTE (OTROS PROD)]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="208"
+						y="175"
 						width="67"
 						height="12"
 						key="textField-51"/>
@@ -1562,10 +1460,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIF_ABN}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="138"
+						y="89"
 						width="67"
 						height="12"
 						key="textField-53"/>
@@ -1583,7 +1481,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="138"
+						y="89"
 						width="101"
 						height="12"
 						key="staticText-80"/>
@@ -1598,10 +1496,10 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[ANTICIPO]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
-						y="185"
+						y="138"
 						width="67"
 						height="12"
 						key="textField-58"/>
@@ -1619,7 +1517,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 				<staticText>
 					<reportElement
 						x="380"
-						y="185"
+						y="138"
 						width="101"
 						height="12"
 						key="staticText-81"/>
