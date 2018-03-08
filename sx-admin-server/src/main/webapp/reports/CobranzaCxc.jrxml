@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Cobranza4"
+		 name="CobranzaCxc"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -49,8 +49,7 @@ SELECT X.CLAVE,X.NOMBRE,C.DOCUMENTO AS NUMERO,A.TIPO_DE_CAMBIO as TC,A.MONEDA,C.
 ,B.IMPORTE AS DIS,C.TIPO AS CAR_ORIGEN,A.ID AS ABONO,IFNULL((SELECT '*' FROM cliente_credito P WHERE P.CLIENTE_ID=X.ID AND P.POSTFECHADO IS TRUE),'') AS POSTFECHADO
 ,IFNULL(ROUND((SELECT SUM(X.DIFERENCIA*X.TIPO_DE_CAMBIO) FROM COBRO X WHERE X.forma_de_pago NOT IN('PAGO_DIF','PAGO_ESP','BONIFICACION','DEVOLUCION') AND  DATE(X.DIFERENCIA_FECHA)=$P{FECHA} AND X.TIPO=$P{ORIGEN}),2),0) AS DIF_ABN
 FROM  aplicacion_de_cobro  B JOIN cobro A ON(A.ID=B.COBRO_ID) JOIN cuenta_por_cobrar C ON(C.ID=B.cuenta_por_cobrar_id) JOIN cliente X ON(X.ID=C.cliente_id) JOIN sucursal S ON(S.ID=C.sucursal_id)
-WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGEN}   AND A.FORMA_DE_PAGO NOT IN('DEVOLUCION','BONIFICACION','PAGO_DIF','ESPECIE')
-]]></queryString>
+WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGEN}   AND A.FORMA_DE_PAGO NOT IN('DEVOLUCION','BONIFICACION','PAGO_DIF','ESPECIE')]]></queryString>
 
 	<field name="CLAVE" class="java.lang.String"/>
 	<field name="NOMBRE" class="java.lang.String"/>
@@ -964,7 +963,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 		</lastPageFooter>
 		<summary>
 			<band height="276"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="6"
@@ -983,7 +982,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_CHEQUE}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="18"
@@ -1001,7 +1000,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_TRANSFER}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="30"
@@ -1037,7 +1036,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<text><![CDATA[RESUMEN DE COBRANZA]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="42"
@@ -1055,7 +1054,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_EFECTIVO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="54"
@@ -1073,7 +1072,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_TARJETA}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="174"
@@ -1100,7 +1099,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
              - $V{TOTAL_ORD_DEP} .doubleValue()
 )]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="102"
@@ -1118,7 +1117,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_SALDFAV}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="114"
@@ -1136,7 +1135,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_DIFMENOS}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="90"
@@ -1154,7 +1153,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_ORD_DEP}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="126"
@@ -1334,7 +1333,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[PAGO EN ESPECIE]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="162"
@@ -1388,7 +1387,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[AMERICAN EXPRESS]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="78"
@@ -1406,7 +1405,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_AMEX}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="66"
@@ -1478,7 +1477,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[DEPOSITO TOTAL]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="196"
@@ -1496,7 +1495,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{TOTAL_DEPOSITO}.doubleValue()+$V{TOTAL_ENT_ANTI}.doubleValue())]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="150"
@@ -1545,7 +1544,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[OTROS PRODUCTOS]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="208"
@@ -1563,7 +1562,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIF_ABN}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,## #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="138"
@@ -1599,7 +1598,7 @@ $F{TOTAL_DEPOSITO}.doubleValue()- $V{TOTAL_CHEQUE}.doubleValue()
 					</textElement>
 				<text><![CDATA[ANTICIPO]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="¤ #,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="¤#,###,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="481"
 						y="185"
