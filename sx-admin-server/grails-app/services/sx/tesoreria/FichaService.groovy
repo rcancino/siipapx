@@ -3,11 +3,35 @@ package sx.tesoreria
 import grails.events.annotation.Subscriber
 import grails.gorm.transactions.Transactional
 import sx.core.AppConfig
+import sx.core.Empresa
 import sx.core.Folio
 import sx.cxc.Cobro
 
 @Transactional
 class FichaService {
+
+    def preparar(FichasBuildCommand command) {
+
+    }
+
+    def registrarIngreso(Ficha ficha){
+        assert !ficha.ingreso, 'Ingreso ya registrado'
+        Empresa empresa = Empresa.first()
+        MovimientoDeCuenta mov = new MovimientoDeCuenta()
+        mov.referencia = "Ficha: ${ficha.folio} (${ficha.tipoDeFicha}) "
+        mov.tipo = ficha.tipoDeFicha;
+        mov.fecha = ficha.fecha
+        mov.formaDePago = ficha.tipoDeFicha == 'EFECTIVO'?: 'CHEQUE'
+        mov.comentario = "Ficha ${ficha.tipoDeFicha} - ${ficha.folio}"
+        mov.cuenta = ficha.cuentaDeBanco
+        mov.afavor = empresa.nombre
+        mov.importe = ficha.total
+        mov.moneda = mov.cuenta.moneda
+        mov.concepto = 'VENTAS'
+        mov.save failOnError: true, flush: true
+        ficha.ingreso = mov;
+        ficha.save()
+    }
 
 
     def generar(FichasBuildCommand command) {

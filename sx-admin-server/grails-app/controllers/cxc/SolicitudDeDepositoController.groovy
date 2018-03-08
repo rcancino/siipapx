@@ -58,7 +58,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def pendientes() {
-        log.debug('Buscando solicitudes pendientes2 {}', params)
+        // log.debug('Buscando solicitudes pendientes2 {}', params)
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'

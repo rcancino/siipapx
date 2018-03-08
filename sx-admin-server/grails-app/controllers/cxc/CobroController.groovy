@@ -8,14 +8,13 @@ import org.apache.commons.lang.builder.ToStringBuilder
 import sx.core.AppConfig
 import sx.reports.ReportService
 import sx.core.Sucursal
+import sx.tesoreria.PorFechaCommand
 
 
 @Secured("hasRole('ROLE_CXC_USER')")
 class CobroController extends RestfulController{
 
     CobroService cobroService
-
-    def ventaService
 
     ReportService reportService
 
@@ -74,7 +73,7 @@ class CobroController extends RestfulController{
         return cobro
     }
 
-    def cobrosMonetarios() {
+    def cobrosMonetarios(CobranzaPorFechaCommand command) {
         log.debug('Cobros monetarios{}', params)
 
         params.max = 100
@@ -82,12 +81,15 @@ class CobroController extends RestfulController{
         params.order = params.order ?:'desc'
 
         def query = Cobro.where { sucursal == AppConfig.first().sucursal }
+        if(command.getFecha()) {
+            query = query.where {fecha == command.fecha}
+        }
 
         if(params.cartera) {
             query = query.where { tipo == params.cartera}
         }
 
-        query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'EFECTIVO' || formaDePago == 'TARJETA_DEBITO'}
+        query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'EFECTIVO' || formaDePago == 'TARJETA_DEBITO' || formaDePago == 'TARJETA_CREDITO'}
         if(params.term) {
             def search = '%' + params.term + '%'
             query = query.where { cliente.nombre =~ search  || referencia =~search}
@@ -104,7 +106,12 @@ class CobroController extends RestfulController{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ComisionTarjetas.pdf')
     }
 
-    // @Override
+
+    protected Object saveResource(Cobro resource) {
+        return cobroService.save(resource)
+    }
+
+
     protected Object updateResource(Cobro resource) {
         if (resource.pendientesDeAplicar) {
             // log.debug('Facturas por aplicar : {}', resource.pendientesDeAplicar)
@@ -113,25 +120,10 @@ class CobroController extends RestfulController{
         return super.updateResource(resource)
     }
 
-    @Transactional
-    def aplicar() {
-        Cobro cobro = Cobro.get(params.id)
-        cobro.properties = getObjectToBind()
-        responde cobro
-        /*
-        log.debug('Aplicando cobro {}', params)
-        Cobro cobro = Cobro.get(params.id)
-        cobro.refresh()
-        CuentaPorCobrar cxc = CuentaPorCobrar.get(params.cxc)
-        assert cobro.getDisponible() > 0.0, 'El cobro no tiene disponible'
-        assert cxc, 'No existe la cuenta por cobrar '
-
-        log.debug('Pagando cxc con saldo {} con disponible: {}', cxc.saldo, cobro.disponible)
-        if (cxc.saldo > 0 ){
-            cobro = cobroService.registrarAplicacion(cobro, cxc)
-        }
+    def saldar(Cobro cobro){
+        log.debug('Saldando cobro: {}', cobro)
+        cobro = cobroService.saldar(cobro)
         respond cobro
-        */
     }
 
     def reporteDeCobranza(CobranzaPorFechaCommand command){

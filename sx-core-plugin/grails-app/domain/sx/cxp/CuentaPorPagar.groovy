@@ -59,8 +59,6 @@ class CuentaPorPagar {
 
     BigDecimal pagosAplicados = 0.0
 
-
-
     List gastos = []
     
     Long sw2
@@ -70,7 +68,6 @@ class CuentaPorPagar {
     Date lastUpdated
 
     static hasMany =[gastos: Gasto]
-
 
     static constraints = {
         tipo inList:['COMPRAS', 'GASTOS']

@@ -38,6 +38,7 @@ class CobroTarjeta {
 
     static constraints = {
         corteDeTarjeta nullable: true
+        cobro nullable: true
         sw2 nullable: true
     }
 }

@@ -5,7 +5,18 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class CobroService {
 
-    def ventaService
+    def save(Cobro cobro) {
+        if(cobro.cheque) {
+            cobro.referencia = cobro.cheque.numero
+        }
+        if(cobro.tarjeta) {
+            cobro.referencia = cobro.tarjeta.validacion.toString()
+        }
+        setComisiones(cobro)
+        cobro.save flush:true
+
+    }
+
 
     def generarCobroDeContado(CuentaPorCobrar cxc, List<Cobro> cobros) {
         def saldo = cxc.saldo
@@ -53,6 +64,15 @@ class CobroService {
             }
         }
         cobro.save()
+        return cobro
+    }
+
+
+    def saldar(Cobro cobro){
+        if(cobro.disponible <= 100.00 && cobro.disponible > 0.00) {
+            cobro.diferencia = cobro.disponible;
+            cobro.save flush: true
+        }
         return cobro
     }
 

@@ -38,7 +38,6 @@ class Gasto {
 
     BigDecimal retencionIva=0
 
-
     List partidas = []
 
     Date dateCreated

@@ -84,7 +84,7 @@ def dataSource
         AuditLog.withNewSession {
             try {
                 audit.save(flush: true, failOnError: true)
-                log.debug('AuditLog generado: {}', audit)
+                // log.debug('AuditLog generado: {}', audit)
             }
             catch (e) {
                 log.error "Error generando auditlog:  {} Ex:{}", audit, ExceptionUtils.getRootCauseMessage(e)
