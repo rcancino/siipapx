@@ -44,6 +44,7 @@ class NotaBuilder {
         descuentoAcumulado = 0.0
         if (nota.tipo.startsWith('DEV')){
             rmd = DevolucionDeVenta.where{ cobro == this.nota.cobro}.find()
+            assert rmd, 'No existe el RMD '
         }
         buildComprobante()
             .buildEmisor()
@@ -91,40 +92,55 @@ class NotaBuilder {
         return this
     }
 
-    def buildFormaDePago(){
-        comprobante.metodoPago = CMetodoPago.PUE
+    def buildFormaDePago() {
         if (nota.tipoCartera == 'CRE') {
+            comprobante.metodoPago = CMetodoPago.PUE
             comprobante.formaPago = '99'
         } else {
-            def formaDePago = this.rmd.venta.formaDePago
-            switch (formaDePago) {
-                case 'EFECTIVO':
-                case 'DEPOSITO_EFECTIVO':
-                    comprobante.formaPago = '01'
-                    break
-                case 'CHEQUE':
-                case 'DEPOSITO_CHEQUE':
-                    comprobante.formaPago = '02'
-                    break
-                case 'TRANSFERENCIA':
-                    comprobante.formaPago = '03'
-                    break
-                case 'TARJETA_CREDITO':
-                    comprobante.formaPago = '04'
-                    break
-                case 'TARJETA_DEBITO':
-                    comprobante.formaPago = '28'
-                    break
-                case 'BONIFICACION':
-                case 'DEVOLUCION':
-                    comprobante.formaPago = '17'
-                    break
-                default:
-                    comprobante.formaPago = '99'
+            comprobante.metodoPago = CMetodoPago.PPD
+            if (this.nota.tipo.startsWith('DEV')) {
+                buildFormaDePagoDevolucionContado()
+            } else {
+                buildFormaDePagoBonificacionContado()
+
             }
         }
-        //comprobante.condicionesDePago = this.venta.tipo == 'CON' ? 'Contado' : 'Credito'
         return this
+    }
+
+    def buildFormaDePagoDevolucionContado(){
+        def formaDePago = this.rmd.venta.formaDePago
+        comprobante.formaPago = getFormaDePago(formaDePago)
+    }
+
+    def buildFormaDePagoBonificacionContado() {
+        NotaDeCreditoDet found = this.nota.partidas.max {NotaDeCreditoDet it -> it.cuentaPorCobrar.total}
+        log.debug('Venta origen de mayor valor: {}', found.cuentaPorCobrar.folio);
+        String formaDePago = found.cuentaPorCobrar.formaDePago
+        comprobante.formaPago = getFormaDePago(formaDePago)
+    }
+
+    private getFormaDePago(String formaDePago) {
+        switch (formaDePago) {
+            case 'EFECTIVO':
+            case 'DEPOSITO_EFECTIVO':
+                return '01'
+            case 'CHEQUE':
+            case 'DEPOSITO_CHEQUE':
+                return  '02'
+            case 'TRANSFERENCIA':
+                return '03'
+            case 'TARJETA_CREDITO':
+                return  '04'
+            case 'TARJETA_DEBITO':
+                return  '28'
+            case 'BONIFICACION':
+            case 'DEVOLUCION':
+                return '17'
+            default:
+                return '99'
+        }
+
     }
 
     def buildConceptos() {
@@ -284,6 +300,7 @@ class NotaBuilder {
         } else {
             relacionados.tipoRelacion = '01'
             this.nota.partidas.each { NotaDeCreditoDet det ->
+
                 Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
                 def cxc = det.cuentaPorCobrar
                 def uuid = cxc.uuid

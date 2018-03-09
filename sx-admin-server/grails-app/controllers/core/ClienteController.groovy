@@ -27,15 +27,16 @@ class ClienteController extends RestfulController{
         def query = Cliente.where {}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-
-        if(params.cartera &&  params.cartera.startsWith('CRE') ){
-            // log.debug('Clientes de credito')
-            query = query.where {credito.lineaDeCredito != null}
+        if (params.cartera) {
+            if(params.cartera.startsWith('CRE') ){
+                query = query.where {credito != null && credito.lineaDeCredito != null}
+            } else if (params.cartera.startsWith('CON') || params.cartera.startsWith('COD')) {
+                // log.debug('Buscando de contado: {}', params)
+                query = query.where {credito != null }
+            }
         }
-
         if(params.term){
             def search = '%' + params.term + '%'
-            //query = query.where { clave =~ search || nombre =~ search}
             query = query.where { nombre =~ search}
         }
         return query.list(params)

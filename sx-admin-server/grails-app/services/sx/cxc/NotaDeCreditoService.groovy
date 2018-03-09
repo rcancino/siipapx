@@ -24,8 +24,11 @@ class NotaDeCreditoService {
 
     def generarBonificacion(NotaDeCredito nota) {
         nota.tipo = 'BONIFICACION'
-        nota.serie = 'BON'
-        nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
+
+        String serie = "BON${nota.tipoCartera}"
+        nota.serie = serie
+        nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', serie)
+        log.debug('Folio: {}', nota.folio)
         if(nota.tipoDeCalculo == 'PRORRATEO') {
             if (nota.total <= 0.0) {
                 throw new NotaDeCreditoException('Nota de credito por bonificacion con prorrateo requiere de un total')
@@ -129,11 +132,13 @@ class NotaDeCreditoService {
         nota.cliente = rmd.venta.cliente
         nota.sucursal = rmd.sucursal
         nota.tipo = 'DEVOLUCION'
-        nota.serie = 'DEV'
+
         nota.importe = rmd.importe
         nota.impuesto = rmd.impuesto
         nota.total = rmd.total
-        nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
+        String serie = "DEV${nota.tipoCartera.toUpperCase()}"
+        nota.serie = serie
+        nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', serie)
         if (nota.tipoCartera == 'CRE'){
             Cobro cobro = generarCobro(nota)
             nota.save failOnError: true, flush: true
@@ -167,6 +172,7 @@ class NotaDeCreditoService {
             cfdi = cfdiTimbradoService.timbrar(cfdi)
             return nota
         } catch (Throwable ex){
+            ex.printStackTrace()
             throw  new NotaDeCreditoException(ExceptionUtils.getRootCauseMessage(ex))
         }
     }

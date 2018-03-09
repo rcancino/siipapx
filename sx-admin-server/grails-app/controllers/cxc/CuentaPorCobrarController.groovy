@@ -44,7 +44,8 @@ class CuentaPorCobrarController extends RestfulController{
         // params.max = 100
         params.sort = params.sort ?:'fecha'
         params.order = params.order ?:'asc'
-        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
+        def cartera = params.cartera ?: 'CRE'
+        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.tipo = ? and c.total - c.pagos > 0 ", [cliente, cartera])
         respond rows
     }
 

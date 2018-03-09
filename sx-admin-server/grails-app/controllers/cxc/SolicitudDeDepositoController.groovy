@@ -40,10 +40,10 @@ class SolicitudDeDepositoController extends RestfulController{
         }
         if (params.pendientes) {
             if (params.boolean('pendientes')){
-                log.debug('Buscando solicitudes pendientes')
+                // log.debug('Buscando solicitudes pendientes')
                 query = query.where {cobro == null}
             } else {
-                log.debug('Buscando solicitudes atendidas')
+                // log.debug('Buscando solicitudes atendidas')
                 query = query.where {cobro != null}
             }
         }
@@ -71,7 +71,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def autorizadas(SolicitudFilter filter) {
-        log.debug('Solicitudes autorizadas: {}', params);
+        // log.debug('Solicitudes autorizadas: {}', params);
         params.max = 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -86,7 +86,7 @@ class SolicitudDeDepositoController extends RestfulController{
         if( params.periodo) {
             Periodo periodo = new Periodo()
             bindData(periodo, params.periodo)
-            log.debug('Periodo: {}', periodo)
+            // log.debug('Periodo: {}', periodo)
             query = query.where{fecha >= periodo.fechaInicial && fecha <= periodo.fechaFinal}
 
         }
