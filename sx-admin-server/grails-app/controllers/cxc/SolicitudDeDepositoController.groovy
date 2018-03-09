@@ -1,5 +1,6 @@
 package sx.cxc
 
+import com.luxsoft.utils.Periodo
 import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import groovy.transform.ToString
@@ -58,7 +59,6 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def pendientes() {
-        // log.debug('Buscando solicitudes pendientes2 {}', params)
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
@@ -67,13 +67,11 @@ class SolicitudDeDepositoController extends RestfulController{
             cobro == null && comentario == null && cancelacion == null
         }
         def list = query.list(params)
-        log.debug('Solicitudes pendientes: {}', list.size())
         respond list
     }
 
     def autorizadas(SolicitudFilter filter) {
-        // log.debug('Buscando solicitudes autorizadas {}', params)
-        // log.debug('Filter: {}', filter)
+        log.debug('Solicitudes autorizadas: {}', params);
         params.max = 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -83,6 +81,14 @@ class SolicitudDeDepositoController extends RestfulController{
         }
         if(params.cartera) {
             query = query.where { tipo == params.cartera}
+        }
+
+        if( params.periodo) {
+            Periodo periodo = new Periodo()
+            bindData(periodo, params.periodo)
+            log.debug('Periodo: {}', periodo)
+            query = query.where{fecha >= periodo.fechaInicial && fecha <= periodo.fechaFinal}
+
         }
 
         if( params.folio && params.folio.isInteger()){

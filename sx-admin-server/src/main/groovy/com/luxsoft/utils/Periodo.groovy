@@ -1,5 +1,6 @@
 package com.luxsoft.utils
 
+import grails.databinding.BindingFormat
 
 
 // import grails.validation.Validateable;
@@ -10,8 +11,10 @@ import java.text.SimpleDateFormat
 // @Validateable
 class Periodo implements Comparable<Periodo>{
 	
-	
+
 	Date fechaInicial
+
+
 	Date fechaFinal
 	
 	static String defaultFormat='dd/MM/yyyy'
@@ -29,13 +32,7 @@ class Periodo implements Comparable<Periodo>{
 	static transients = ['listaDeDias']
 	
 	Periodo(){
-		fechaInicial=new Date()
-		fechaFinal=new Date()
-	}
-	
-	Periodo(String f1,String f2){
-		fechaInicial=Date.parse(defaultFormat, f1).clearTime()
-		fechaFinal=Date.parse(defaultFormat,f2).clearTime()
+
 	}
 	
 	Periodo(Date f1,Date f2){
@@ -87,6 +84,12 @@ class Periodo implements Comparable<Periodo>{
 		Calendar now=Calendar.getInstance()
 		return getPeriodoEnUnMes(now.get(Calendar.MONTH),now.get(Calendar.YEAR))
 	}
+
+    static Periodo getPeriodo(String f1,String f2){
+        Date fechaInicial=Date.parse(defaultFormat, f1).clearTime()
+        Date fechaFinal=Date.parse(defaultFormat,f2).clearTime()
+        return new Periodo(fechaInicial, fechaFinal)
+    }
 
 	/**
 	* Regresa el periodo correspondiente a un mes 
