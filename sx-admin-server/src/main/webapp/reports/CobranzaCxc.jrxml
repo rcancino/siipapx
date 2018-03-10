@@ -78,8 +78,9 @@ WHERE C.tipo_documento<>'TES' AND DATE(B.FECHA) = $P{FECHA} AND  C.TIPO=$P{ORIGE
 	<field name="PAGO_DIF" class="java.math.BigDecimal"/>
 
 	<sortField name="NOMBRE" />
+	<sortField name="DESCFORMADEPAGO1" />
+	<sortField name="REFERENCIA" />
 	<sortField name="SUCURSAL" />
-	<sortField name="NUMERO" />
 
 	<variable name="TOTAL_CHEQUE" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[new Double( $F{DESCFORMADEPAGO1}.equals( "CHEQUE" ) 

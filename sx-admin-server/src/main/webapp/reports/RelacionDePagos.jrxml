@@ -29,7 +29,7 @@
 	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="COBRADOR" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT 0 as folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.nombre,c.forma_de_pago ,0 as numero,c.importe,c.moneda,c.tipo_de_cambio as tc
+	<queryString><![CDATA[SELECT 0 as folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.nombre,c.forma_de_pago ,0 as numero,c.importe*c.tipo_de_cambio as importe,c.moneda,c.tipo_de_cambio as tc
 ,c.enviado AS noenviar,'' as banco,(SELECT concat(b.descripcion,' (',b.numero,')') FROM cuenta_de_banco b where b.id='b0ea1ed4-e101-11e7-b1f8-b4b52f67eab0') as cuenta
 ,ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador
 ,ifnull((SELECT y.nombres FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador_nom
@@ -37,7 +37,7 @@
 FROM cobro c  JOIN cliente r ON(c.cliente_id=r.id) where c.fecha=$P{FECHA} and c.tipo=$P{ORIGEN} and c.forma_de_pago='EFECTIVO' 
 and ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) like $P{COBRADOR}
 union
-SELECT 0 as FOLIO,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,h.numero,c.importe,c.moneda,c.tipo_de_cambio as tc,c.enviado AS noenvia
+SELECT 0 as FOLIO,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,h.numero,c.importe*c.tipo_de_cambio as importe,c.moneda,c.tipo_de_cambio as tc,c.enviado AS noenvia
 ,(SELECT b.nombre FROM banco b where h.banco_origen_id=b.id ) as banco,(SELECT concat(b.descripcion,' (',b.numero,')') FROM cuenta_de_banco b where f.cuenta_De_banco_id=b.id) as cuenta
 ,ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador
 ,ifnull((SELECT y.nombres FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador_nom
@@ -45,7 +45,7 @@ SELECT 0 as FOLIO,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS 
 FROM cobro c join cobro_cheque h on(h.cobro_id=c.id) JOIN cliente r ON(c.cliente_id=r.id) left join ficha f on(h.ficha_id=f.id) where c.fecha=$P{FECHA} and c.tipo=$P{ORIGEN} and 
 ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) like $P{COBRADOR}
 union
-SELECT d.folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,c.referencia as numero,c.importe,c.moneda,c.tipo_de_cambio as tc,c.enviado AS noenvia
+SELECT d.folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,c.referencia as numero,c.importe*c.tipo_de_cambio as importe,c.moneda,c.tipo_de_cambio as tc,c.enviado AS noenvia
 ,(SELECT b.nombre FROM banco b where d.banco_origen_id=b.id ) as banco,(SELECT concat(b.descripcion,' (',b.numero,')') FROM cuenta_de_banco b where d.cuenta_Destino_id=b.id) as cuenta
 ,ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador
 ,ifnull((SELECT y.nombres FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador_nom
@@ -53,7 +53,7 @@ SELECT d.folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS env
 FROM cobro c join cobro_deposito d on(d.cobro_id=c.id) JOIN cliente r ON(c.cliente_id=r.id) where c.fecha=$P{FECHA} and c.tipo=$P{ORIGEN} and 
 ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) like $P{COBRADOR}
 UNION
-SELECT d.folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,c.referencia as numero,c.importe,c.moneda,c.tipo_de_cambio as tc,c.enviado AS noenvia
+SELECT d.folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,c.referencia as numero,c.importe*c.tipo_de_cambio as importe,c.moneda,c.tipo_de_cambio as tc,c.enviado AS noenvia
 ,(SELECT b.nombre FROM banco b where d.banco_origen_id=b.id ) as banco,(SELECT concat(b.descripcion,' (',b.numero,')') FROM cuenta_de_banco b where d.cuenta_Destino_id=b.id) as cuenta
 ,ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador
 ,ifnull((SELECT y.nombres FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador_nom
@@ -61,7 +61,7 @@ SELECT d.folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS env
 FROM cobro c join cobro_transferencia d on(d.cobro_id=c.id) JOIN cliente r ON(c.cliente_id=r.id) where c.fecha=$P{FECHA} and c.tipo=$P{ORIGEN} and 
 ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) like $P{COBRADOR}
 UNION
-SELECT 0 as folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,t.validacion as numero,c.importe,c.moneda,c.tipo_de_cambio as tc
+SELECT 0 as folio,c.tipo ,(CASE WHEN c.enviado = true THEN 'S' ELSE ' ' END) AS enviado ,r.NOMBRE ,c.forma_de_pago ,t.validacion as numero,c.importe*c.tipo_de_cambio as importe,c.moneda,c.tipo_de_cambio as tc
 ,c.enviado AS noenvia,'' as banco,(SELECT concat(b.descripcion,' (',b.numero,')') FROM cuenta_de_banco b where b.id='b0ea1e84-e101-11e7-b1f8-b4b52f67eab0') as cuenta
 ,ifnull((SELECT y.sw2 FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador
 ,ifnull((SELECT y.nombres FROM cliente_credito x join cobrador y on(x.cobrador_id=y.id) where x.cliente_id=r.id),1) as cobrador_nom
@@ -594,7 +594,7 @@ $P{ORIGEN}.equals( "%" ) ? "TODOS" : "SIN CLASIFICACION"]]></textFieldExpression
 					<reportElement
 						x="449"
 						y="1"
-						width="30"
+						width="34"
 						height="12"
 						key="textField-20">
 							<printWhenExpression><![CDATA[new Boolean($F{moneda}.equals( "USD" ))]]></printWhenExpression>
