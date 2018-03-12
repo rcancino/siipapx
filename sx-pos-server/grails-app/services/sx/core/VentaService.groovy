@@ -166,6 +166,10 @@ class VentaService implements  EventPublisher{
         cxc.tipo = pedido.cod ? 'COD': pedido.tipo
         cxc.documento = Folio.nextFolio('FACTURAS',cxc.tipo)
         cxc.fecha = new Date()
+        if(cxc.tipo == 'CRE') {
+            Date vto = cxc.fecha + cxc.cliente.credito.plazo.intValue()
+            cxc.vencimiento = vto
+        }
         cxc.createUser = pedido.createUser
         cxc.updateUser = pedido.updateUser
         cxc.chequePostFechado = pedido.chequePostFechado

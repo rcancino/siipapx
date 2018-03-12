@@ -1,14 +1,16 @@
-package sx.core
+package sx.cxc
 
-import com.sun.org.apache.xpath.internal.operations.Bool
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import sx.core.Cobrador
+import sx.core.Socio
 
-@ToString(excludes = ["id,version,venta,cobrador,socio,dateCreated,lastUpdated"],includeNames=true,includePackage=false)
+
+@ToString(excludes = ["id,version,dateCreated,lastUpdated"],includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = 'id,cxc')
 class VentaCredito {
 
     String id
-
-    Venta venta
 
     Integer plazo = 0
 
@@ -56,8 +58,6 @@ class VentaCredito {
 
     String updateUser
 
-
-
     static constraints = {
         comentarioReprogramarPago nullable:true
         fechaRecepcionCxc nullable:true
@@ -65,6 +65,9 @@ class VentaCredito {
         socio nullable:true
         comentarioReprogramarPago nullable:  true
         comentario nullable: true
+        sw2 nullable: true
+        updateUser nullable: true
+        createUser nullable: true
     }
 
     static mapping = {

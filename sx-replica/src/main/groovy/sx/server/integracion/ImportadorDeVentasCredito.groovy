@@ -1,7 +1,7 @@
 package sx.server.integracion
 
 import org.springframework.stereotype.Component
-import sx.core.VentaCredito
+import sx.cxc.VentaCredito
 import sx.core.Socio
 
 /**

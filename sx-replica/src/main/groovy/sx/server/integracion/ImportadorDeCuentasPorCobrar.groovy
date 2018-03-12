@@ -4,11 +4,7 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.Cliente
-import sx.core.Producto
-import sx.core.Socio
 import sx.core.Venta
-import sx.core.VentaCredito
-import sx.core.VentaDet
 import sx.cxc.ChequeDevuelto
 import sx.cxc.CuentaPorCobrar
 import sx.cxc.DevolucionCliente

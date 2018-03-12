@@ -4,7 +4,7 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.tesoreria.CorteDeTarjeta
-import sx.tesoreria.CorteDeTarjetaDet
+
 import sx.tesoreria.CorteDeTarjetaAplicacion
 
 /**
@@ -53,20 +53,7 @@ class ImportadorDeCorteDeTarjetas implements Importador, SW2Lookup {
 
     }
 
-    def importarPartidas(CorteDeTarjeta corte){
 
-        println "importando partidas"
-        corte.partidas.clear()
-        List partidas = leerRegistros(QUERY_PARTIDAS,[corte.sw2])
-        partidas.each{ row ->
-            CorteDeTarjetaDet det = new  CorteDeTarjetaDet()
-
-            bindData(det,row)
-            det.cobro = importadorDeCobros.importar(row.abono_id)
-            corte.addToPartidas(det)
-
-        }
-    }
     def importarAplicaciones(CorteDeTarjeta corte){
         corte.aplicaciones.clear()
         List partidas = leerRegistros(QUERY_APLICACIONES,[corte.sw2])

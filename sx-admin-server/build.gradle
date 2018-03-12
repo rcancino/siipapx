@@ -24,5 +24,6 @@ dependencies {
     compile "org.grails.plugins:gsp"
     runtime 'org.grails.plugins:grails-console:2.1.1'
     compile 'org.grails.plugins:mail:2.0.0'
+    compile 'org.grails.plugins:quartz:2.0.13'
     compile 'com.github.groovy-wslite:groovy-wslite:1.1.2'
 }

@@ -81,6 +81,7 @@ class  Cobro {
         diferenciaFecha nullable: true
         diferencia nullable: true
         comentario nullable: true
+        tipoDeCambio(scale:6)
     }
 
     static mapping={

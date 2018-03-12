@@ -1,6 +1,7 @@
 package sx.cxc
 
 import com.luxsoft.cfdix.v33.NotaPdfGenerator
+import com.luxsoft.utils.Periodo
 import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 
@@ -207,6 +208,19 @@ class NotaDeCreditoController extends RestfulController{
     def handleNotaDeCreditoException(NotaDeCreditoException sx) {
         String msg = ExceptionUtils.getRootCauseMessage(sx)
         respond ([message: sx.message], status: 422)
+    }
+
+    def reporteDeNotasDeCredito() {
+        // log.debug('Re: {}', params)
+        Periodo periodo = new Periodo()
+        bindData(periodo, params)
+        def repParams = [
+                FECHA_INI: periodo.fechaInicial,
+                FECHA_FIN: periodo.fechaFinal,
+                ORIGEN: params.ORIGEN,
+        ]
+        def pdf  = reportService.run('NotasDeCredito.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'NotasDeCredito.pdf')
     }
 
 }

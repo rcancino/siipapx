@@ -18,11 +18,11 @@ class FichaService {
         assert !ficha.ingreso, 'Ingreso ya registrado'
         Empresa empresa = Empresa.first()
         MovimientoDeCuenta mov = new MovimientoDeCuenta()
-        mov.referencia = "Ficha: ${ficha.folio} (${ficha.tipoDeFicha}) "
-        mov.tipo = ficha.tipoDeFicha;
+        mov.referencia = "Ficha: ${ficha.folio} "
+        mov.tipo = ficha.origen;
         mov.fecha = ficha.fecha
         mov.formaDePago = ficha.tipoDeFicha == 'EFECTIVO'?: 'CHEQUE'
-        mov.comentario = "Ficha ${ficha.tipoDeFicha} - ${ficha.folio}"
+        mov.comentario = "Ficha ${ficha.tipoDeFicha} ${ficha.sucursal.nombre} "
         mov.cuenta = ficha.cuentaDeBanco
         mov.afavor = empresa.nombre
         mov.importe = ficha.total

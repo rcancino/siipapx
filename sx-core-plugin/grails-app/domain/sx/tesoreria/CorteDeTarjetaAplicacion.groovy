@@ -19,12 +19,11 @@ class CorteDeTarjetaAplicacion {
 	
 	String comentario
 	
-	int orden = 0
+	Integer orden = 0
 
-	Boolean	debitoCredito	 = true
+	Boolean	debitoCredito = true
 
-
-	Boolean	visaMaster	 = true
+	Boolean	visaMaster = true
 
 	String	sw2
 
@@ -35,6 +34,7 @@ class CorteDeTarjetaAplicacion {
 
     static constraints = {
     	comentario nullable:true
+		sw2 nullbale: true
     }
 
 	static mapping = {

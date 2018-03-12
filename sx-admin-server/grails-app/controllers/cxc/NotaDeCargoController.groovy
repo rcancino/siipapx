@@ -2,6 +2,7 @@ package sx.cxc
 
 import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.utils.MonedaUtils
+import com.luxsoft.utils.Periodo
 import grails.rest.*
 import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
@@ -115,5 +116,18 @@ class NotaDeCargoController extends RestfulController {
         assert !nota.cfdi, 'Nota ya timbrada'
         nota = notaDeCargoService.timbrar(nota)
         respond nota
+    }
+
+    def reporteDeNotasDeCargo() {
+        // log.debug('Re: {}', params)
+        Periodo periodo = new Periodo()
+        bindData(periodo, params)
+        def repParams = [
+            FECHA_INI: periodo.fechaInicial,
+            FECHA_FIN: periodo.fechaFinal,
+            ORIGEN: params.ORIGEN,
+        ]
+        def pdf  = reportService.run('NotasDeCargo.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ComisionTarjetas.pdf')
     }
 }

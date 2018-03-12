@@ -1,6 +1,7 @@
 package sx.tesoreria
 
 import sx.core.Sucursal
+import sx.cxc.CobroTarjeta
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.MovimientoDeCuenta
 
@@ -32,9 +33,7 @@ class CorteDeTarjeta {
 
 	Date lastUpdated
 
-
-
-	static hasMany =[partidas: CorteDeTarjetaDet, aplicaciones: CorteDeTarjetaAplicacion]
+	static hasMany =[partidas: CobroTarjeta, aplicaciones: CorteDeTarjetaAplicacion]
 
     static constraints = {
     	sw2 nullable: true
@@ -44,9 +43,7 @@ class CorteDeTarjeta {
 
     static mapping ={
 		id generator: 'uuid'
-        fecha type:'date' , index: 'CORTE_TAR_IDX1'
         corte type: 'date'
-        partidas cascade: "all-delete-orphan"
         aplicaciones cascade: "all-delete-orphan"
     }
 }

@@ -4,10 +4,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import sx.cfdi.Cfdi
 import sx.core.Cliente
-import sx.core.Cobrador
-import sx.core.Socio
 import sx.core.Sucursal
-import sx.core.Venta
 
 @ToString(excludes = ['id,version,sw2,dateCreated,lastUpdated'],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
@@ -53,6 +50,8 @@ class CuentaPorCobrar {
 
     Date fecha
 
+    Date vencimiento
+
     Date dateCreated
 
     Date lastUpdated
@@ -65,6 +64,8 @@ class CuentaPorCobrar {
 
     BigDecimal saldo = 0.0
 
+    Integer atraso = 0
+
     Boolean chequePostFechado = false
 
     Date cancelada
@@ -72,6 +73,8 @@ class CuentaPorCobrar {
     String cancelacionUsuario
 
     String cancelacionMotivo
+
+    VentaCredito credito
 
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
@@ -87,18 +90,21 @@ class CuentaPorCobrar {
         cancelada nullable: true
         cancelacionUsuario nullable: true
         cancelacionMotivo nullable: true
+        credito nullable: true
+        vencimiento nullable: true
     }
 
 
     static mapping = {
         id generator:'uuid'
         fecha type:'date' ,index: 'CXC_IDX1'
+        vencimiento type: 'date'
         cliente index: 'CXC_IDX3'
         cancelada type: 'date'
         pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
     }
 
-    static transients = ['saldo','folio']
+    static transients = ['saldo','folio','atraso']
 
     BigDecimal getSaldo() {
         return total - pagos
@@ -106,6 +112,13 @@ class CuentaPorCobrar {
 
     String getFolio() {
         return "${tipo}-${documento}"
+    }
+
+    Integer getAtraso() {
+        if (vencimiento) {
+            return vencimiento - fecha
+        }
+        return 0
     }
 
 

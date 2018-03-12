@@ -1,0 +1,24 @@
+import sx.cxc.CobroTarjeta
+import sx.tesoreria.CobrosPorSucursal
+
+model {
+    List<CobrosPorSucursal> cobros
+}
+
+json tmpl.cobrosPorSucursal(cobros)
+//json g.render(template: 'cobros')
+/*
+JSON {
+    TOTAL COBROS.SIZE()
+}
+*/
+/*
+json g.render(cobroTarjeta, [excludes:['cobro','dateCreated', 'lastUpdated']]){
+    cobro {
+        id cobroTarjeta.cobro.id
+        nombre cobroTarjeta.cobro.cliente.nombre
+        importe cobroTarjeta.cobro.importe
+    }
+}
+*/
+

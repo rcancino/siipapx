@@ -12,17 +12,17 @@ class CobroTarjeta {
 
     Cobro	cobro
 
-    Boolean	debitoCredito	 = true
+    Boolean	debitoCredito = true
 
-    Boolean	visaMaster	 = true
+    Boolean	visaMaster = true
 
-    BigDecimal	comision	 = 0
+    BigDecimal comision = 0
 
-    String	sw2
+    String sw2
 
     CorteDeTarjeta corteDeTarjeta
 
-    Integer	validacion	 = 0
+    Integer	validacion = 0
 
     Date dateCreated
 
@@ -32,8 +32,6 @@ class CobroTarjeta {
 
     static mapping = {
         id generator : 'uuid'
-
-
     }
 
     static constraints = {

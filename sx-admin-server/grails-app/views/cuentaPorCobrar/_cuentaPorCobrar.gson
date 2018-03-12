@@ -3,11 +3,18 @@ import sx.cxc.CuentaPorCobrar
 model {
     CuentaPorCobrar cuentaPorCobrar
 }
-json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','cliente']]){
+json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','cliente','credito']]){
+    nombre cuentaPorCobrar.cliente.nombre
     cliente g.render(cuentaPorCobrar.cliente, [includes: ['id', 'nombre', 'rfc']])
     moneda cuentaPorCobrar.moneda.currencyCode
     saldo cuentaPorCobrar.total - cuentaPorCobrar.pagos
+    atraso cuentaPorCobrar.getAtraso()
     cfdi g.render(cuentaPorCobrar.cfdi)
     sucursal cuentaPorCobrar.sucursal.nombre
+    if(cuentaPorCobrar.credito) {
+        cobrador cuentaPorCobrar.cliente.credito.cobrador.sw2
+    }
+    credito g.render(cuentaPorCobrar.credito)
+
 }
 

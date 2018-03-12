@@ -68,6 +68,9 @@ class UrlMappings {
         "/api/tesoreria/solicitudes/cancelar/$id"( controller: 'solicitudDeDeposito', action: 'cancelar')
         "/api/tesoreria/solicitudes/buscarDuplicada/$id"( controller: 'solicitudDeDeposito', action: 'buscarDuplicada')
 
+        "/api/tesoreria/cortesTarjeta"(resources: 'corteDeTarjeta')
+        "/api/tesoreria/cortesTarjeta/pendientes"( controller: 'corteDeTarjeta', action: 'pendientes')
+
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')
@@ -89,16 +92,21 @@ class UrlMappings {
         "/api/cxc/notas/timbrar/$id"(controller: 'notaDeCredito', action: 'timbrar', method: 'POST')
         "/api/cxc/notas/aplicar/$id"(controller: 'notaDeCredito', action: 'aplicar', method: 'POST')
         "/api/cxc/notas/print/$id"(controller: 'notaDeCredito', action: 'print', method: 'GET')
+        "/api/cxc/notas/reporteDeNotasDeCredito"(controller: 'notaDeCredito', action: 'reporteDeNotasDeCredito', method: 'GET')
 
         "/api/cxc/notasDeCargo"(resources: "notaDeCargo")
         "/api/cxc/notasDeCargo/timbrar/$id"(controller: 'notaDeCargo', action: 'timbrar', method: 'POST')
         "/api/cxc/notasDeCargo/print/$id"(controller: 'notaDeCargo', action: 'print', method: 'GET')
+        "/api/cxc/notasDeCargo/reporteDeNotasDeCargo"(controller: 'notaDeCargo', action: 'reporteDeNotasDeCargo', method: 'GET')
 
 
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/pendientes/$id"(controller: 'cuentaPorCobrar', action: 'pendientes', method: 'GET')
         "/api/cuentasPorCobrar/saldar/$id"(controller: 'cuentaPorCobrar', action: 'saldar', method: 'PUT')
 
+        "/api/cxc/ventaCredito"(resources: 'ventaCredito')
+        "/api/cxc/ventaCredito/generar"(controller: 'ventaCredito', action: 'generar', method: 'POST')
+        "/api/cxc/ventaCredito/recalcular"(controller: 'ventaCredito', action: 'generar', method: 'POST')
 
 
         //Existencias
