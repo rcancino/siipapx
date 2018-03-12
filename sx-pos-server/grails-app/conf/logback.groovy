@@ -33,20 +33,41 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
     }
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
 }
+if (Environment.isDevelopmentMode()) {
+    logger("org.springframework.security", OFF, ['STDOUT'], false)
+    logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
+    logger("org.pac4j", OFF, ['STDOUT'], false)
+
+    logger("sx.core", DEBUG, ['STDOUT'], false)
+    logger("sx.inventario", DEBUG, ['STDOUT'], false)
+    logger("sx.logistica", DEBUG, ['STDOUT'], false)
+    logger("sx.cfdi", DEBUG, ['STDOUT'], false)
+    logger("sx.reports", DEBUG, ['STDOUT'], false)
+    logger("sx.reportes", DEBUG, ['STDOUT'], false)
+    logger("sx.tesoreria", DEBUG, ['STDOUT'], false)
+    logger("sx.compras", DEBUG, ['STDOUT'], false)
+    logger("sx.cxc", DEBUG, ['STDOUT'], false)
+    logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
+    logger("pos.server", ERROR, ['STDOUT'], false)
+}
+if (Environment == Environment.PRODUCTION) {
+    logger("org.springframework.security", OFF, ['STDOUT'], false)
+    logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
+    logger("org.pac4j", OFF, ['STDOUT'], false)
+
+    logger("sx.core", ERROR, ['STDOUT'], false)
+    logger("sx.inventario", ERROR, ['STDOUT'], false)
+    logger("sx.logistica", ERROR, ['STDOUT'], false)
+    logger("sx.cfdi", ERROR, ['STDOUT'], false)
+    logger("sx.reports", ERROR, ['STDOUT'], false)
+    logger("sx.reportes", ERROR, ['STDOUT'], false)
+    logger("sx.tesoreria", ERROR, ['STDOUT'], false)
+    logger("sx.compras", ERROR, ['STDOUT'], false)
+    logger("sx.cxc", ERROR, ['STDOUT'], false)
+    logger("com.luxsoft.cfdix.v33", ERROR, ['STDOUT'], false)
+    logger("pos.server", ERROR, ['STDOUT'], false)
+}
+
 root(ERROR, ['STDOUT'])
 
-logger("org.springframework.security", OFF, ['STDOUT'], false)
-logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
-logger("org.pac4j", OFF, ['STDOUT'], false)
 
-logger("sx.core", DEBUG, ['STDOUT'], false)
-logger("sx.inventario", DEBUG, ['STDOUT'], false)
-logger("sx.logistica", DEBUG, ['STDOUT'], false)
-logger("sx.cfdi", DEBUG, ['STDOUT'], false)
-logger("sx.reports", DEBUG, ['STDOUT'], false)
-logger("sx.reportes", DEBUG, ['STDOUT'], false)
-logger("sx.tesoreria", DEBUG, ['STDOUT'], false)
-logger("sx.compras", DEBUG, ['STDOUT'], false)
-logger("sx.cxc", DEBUG, ['STDOUT'], false)
-logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
-logger("pos.server", ERROR, ['STDOUT'], false)
