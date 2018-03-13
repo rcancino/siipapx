@@ -141,6 +141,8 @@ class NotaDeCreditoService {
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', serie)
         if (nota.tipoCartera == 'CRE'){
             Cobro cobro = generarCobro(nota)
+            nota.cobro = cobro
+            cobro.save failOnError: true, flush: true
             nota.save failOnError: true, flush: true
             aplicar(nota)
             rmd.cobro = cobro
@@ -192,25 +194,20 @@ class NotaDeCreditoService {
         cobro.sucursal = nota.sucursal
         cobro.referencia = nota.folio.toString()
         cobro.formaDePago = nota.tipo == 'BON' ? 'BONIFICACION' : 'DEVOLUCION'
-        nota.cobro = cobro
     }
 
     def aplicar(NotaDeCredito nota) {
-        if (!nota.cobro) {
-            generarCobro(nota)
-        }
         Cobro cobro = nota.cobro
         log.debug('Aplicando cobro con disponible:{}', cobro.disponible)
-        if(cobro.disponible <= 0.0) {
-            throw new NotaDeCreditoException("Nota sin disponible no se puede aplicar")
+        if(cobro.disponible > 0.0) {
+            if(nota.tipo.startsWith('BON')){
+                this.aplicarCobroDeBonificacion(nota)
+            } else {
+                this.aplicarCobroDeDevolucion(nota)
+            }
+            cobro.save()
+            return nota
         }
-        if(nota.tipo.startsWith('BON')){
-            this.aplicarCobroDeBonificacion(nota)
-        } else {
-            this.aplicarCobroDeDevolucion(nota)
-        }
-        cobro.save()
-        return nota
     }
 
     protected aplicarCobroDeBonificacion(NotaDeCredito nota) {
