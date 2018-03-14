@@ -177,7 +177,7 @@ class NotaDeCreditoController extends RestfulController{
 
     @Transactional
     def generarConRmd(DevolucionDeVenta rmd){
-        // log.debug('Generando nota de credito para RMD: {} params: {}' , rmd, params)
+        log.debug('Generando nota de credito para RMD: {} params: {}' , rmd, params)
         NotaDeCredito nota = new NotaDeCredito()
         nota.tipoCartera = params.cartera
         nota =  notaDeCreditoService.generarNotaDeDevolucion(nota, rmd)
@@ -223,4 +223,8 @@ class NotaDeCreditoController extends RestfulController{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'NotasDeCredito.pdf')
     }
 
+
+    protected void deleteResource(NotaDeCredito nota) {
+        notaDeCreditoService.eliminar(nota)
+    }
 }

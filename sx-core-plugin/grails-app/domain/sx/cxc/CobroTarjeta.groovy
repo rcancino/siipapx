@@ -22,6 +22,8 @@ class CobroTarjeta {
 
     CorteDeTarjeta corteDeTarjeta
 
+    String corte
+
     Integer	validacion = 0
 
     Date dateCreated
@@ -36,6 +38,7 @@ class CobroTarjeta {
 
     static constraints = {
         corteDeTarjeta nullable: true
+        corte nullable: true
         cobro nullable: true
         sw2 nullable: true
     }

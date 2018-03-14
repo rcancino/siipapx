@@ -112,10 +112,10 @@ class RevisionService {
                 "from CuentaPorCobrar c  " +
                         " where  c.credito != null and " +
                         " c.tipo = ? " +
-                        " and c.redito.revision = true " +
+                        " and c.credito is not null " +
+                        " and c.credito.revision = true " +
                         " and c.total - c.pagos > 0 " +
                         " and c.uuid is not null " +
-                        " and c.credito is null " +
                         " order by c.fecha desc",
                 ['CRE'])
         rows.each { CuentaPorCobrar cxc ->

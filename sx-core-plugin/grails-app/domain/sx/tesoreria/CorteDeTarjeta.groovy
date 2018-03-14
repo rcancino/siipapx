@@ -13,7 +13,7 @@ class CorteDeTarjeta {
 
 	Sucursal sucursal
 
-	Date corte = new Date()
+	Date corte
 
 	CuentaDeBanco cuentaDeBanco
 
@@ -38,7 +38,6 @@ class CorteDeTarjeta {
     static constraints = {
     	sw2 nullable: true
     	comentario nullable: true
-    	corte nullable: true
     }
 
     static mapping ={

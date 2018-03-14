@@ -68,6 +68,7 @@ if (Environment == Environment.PRODUCTION) {
     logger("pos.server", ERROR, ['STDOUT'], false)
 }
 
+
 root(ERROR, ['STDOUT'])
 
 

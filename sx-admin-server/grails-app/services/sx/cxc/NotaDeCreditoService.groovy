@@ -128,7 +128,7 @@ class NotaDeCreditoService {
         if (rmd.cobro && nota.tipoCartera == 'CRE') {
             throw new NotaDeCreditoException("RMD ${rmd.documento} ${rmd.sucursal} Ya tiene nota de credito generada")
         }
-        log.debug('Generando nota de credito de devolucion para el rmd {}', rmd)
+        log.debug('Generando nota de credito de devolucion para el rmd {} ', rmd.id)
         nota.cliente = rmd.venta.cliente
         nota.sucursal = rmd.sucursal
         nota.tipo = 'DEVOLUCION'
@@ -140,6 +140,7 @@ class NotaDeCreditoService {
         nota.serie = serie
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', serie)
         if (nota.tipoCartera == 'CRE'){
+            log.debug('Generando cobro para nota de devoluion tipo {}', nota.tipoCartera)
             Cobro cobro = generarCobro(nota)
             nota.cobro = cobro
             cobro.save failOnError: true, flush: true
@@ -194,6 +195,7 @@ class NotaDeCreditoService {
         cobro.sucursal = nota.sucursal
         cobro.referencia = nota.folio.toString()
         cobro.formaDePago = nota.tipo == 'BON' ? 'BONIFICACION' : 'DEVOLUCION'
+        return cobro
     }
 
     def aplicar(NotaDeCredito nota) {
@@ -263,11 +265,22 @@ class NotaDeCreditoService {
                 throw new NotaDeCreditoException('Nota de credito timbrada no se puede eliminar')
             }
         }
-        // Eliminar el cobro
         Cobro cobro = nota.cobro
         nota.cobro = null
-        cobro.delete flush: true
         nota.delete flush:true
+
+        // Eliminar el cobro si es de Devolucion
+
+        if(nota.tipoCartera == 'CRE'  || nota.tipo.startsWith('BON')) {
+            if(nota.tipo.startsWith('DEV') ){
+                DevolucionDeVenta rmd = DevolucionDeVenta.where{cobro == cobro}.find()
+                rmd.cobro = null
+                rmd.save()
+            }
+            cobro.delete flush: true
+        }
+
+
     }
 
     def cancelar(NotaDeCredito nota) {
