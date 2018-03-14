@@ -59,7 +59,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def pendientes() {
-        params.max = params.registros ?:100
+        params.max = 150
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
 
@@ -72,7 +72,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     def autorizadas(SolicitudFilter filter) {
         // log.debug('Solicitudes autorizadas: {}', params);
-        params.max = 50
+        params.max = 150
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
