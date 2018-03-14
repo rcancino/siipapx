@@ -8,6 +8,7 @@ import sx.cxc.SolicitudDeDeposito
 class SolicitudDeDepositoService {
 
     def autorizar(SolicitudDeDeposito solicitud) {
+        assert solicitud.cobro == null, 'Solicitud ya autorizada'
         log.debug('Autorizando solicitud: {}',solicitud.folio)
         Cobro cobro = new Cobro()
         cobro.sucursal = solicitud.sucursal

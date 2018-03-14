@@ -194,7 +194,7 @@ class NotaDeCreditoService {
         cobro.updateUser = nota.updateUser
         cobro.sucursal = nota.sucursal
         cobro.referencia = nota.folio.toString()
-        cobro.formaDePago = nota.tipo == 'BON' ? 'BONIFICACION' : 'DEVOLUCION'
+        cobro.formaDePago = nota.tipo
         return cobro
     }
 
@@ -212,7 +212,7 @@ class NotaDeCreditoService {
         }
     }
 
-    protected aplicarCobroDeBonificacion(NotaDeCredito nota) {
+    public aplicarCobroDeBonificacion(NotaDeCredito nota) {
         Cobro cobro = nota.cobro
         BigDecimal disponible = cobro.getDisponible()
         BigDecimal porAplicar = nota.partidas.sum 0.0, { it.importe}
@@ -235,7 +235,7 @@ class NotaDeCreditoService {
         }
     }
 
-    protected aplicarCobroDeDevolucion(NotaDeCredito nota) {
+    public aplicarCobroDeDevolucion(NotaDeCredito nota) {
         Cobro cobro = nota.cobro
         DevolucionDeVenta rmd = DevolucionDeVenta.where{ cobro == cobro}.find()
         if (rmd == null) {

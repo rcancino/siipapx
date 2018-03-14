@@ -64,9 +64,11 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     protected SolicitudDeDeposito updateResource(SolicitudDeDeposito resource) {
+        log.debug('Actualizando solicitud con params {}', params)
+        log.debug('Fecha deposito: {}', resource.fechaDeposito)
         resource.total = resource.cheque + resource.efectivo + resource.transferencia
         resource.comentario = null;
-        return super.updateResource(resource)
+        resource.save flush: true
     }
 
     def pendientes(Sucursal sucursal) {
