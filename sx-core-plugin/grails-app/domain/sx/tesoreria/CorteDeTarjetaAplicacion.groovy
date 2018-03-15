@@ -34,7 +34,8 @@ class CorteDeTarjetaAplicacion {
 
     static constraints = {
     	comentario nullable:true
-		sw2 nullbale: true
+        sw2 nullable: true
+        ingreso nullable: true
     }
 
 	static mapping = {
@@ -43,7 +44,12 @@ class CorteDeTarjetaAplicacion {
 }
 
 enum TipoDeAplicacion {
-	
-	INGRESO,COMISION_CREDITO,COMISION_DEBITO,COMISION_AMEX,IMPUESTO
-
+	VISAMASTER_INGRESO,
+    CREDITO_COMISION,
+    CREDITO_COMISION_IVA,
+    DEBITO_COMISON,
+    DEBITO_COMISON_IVA,
+    AMEX_INGRESO,
+    AMEX_COMISION,
+    AMEX_COMISION_IVA
 }

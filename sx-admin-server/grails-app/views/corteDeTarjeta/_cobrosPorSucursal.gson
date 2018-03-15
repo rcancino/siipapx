@@ -1,14 +1,18 @@
 import groovy.transform.Field
 import sx.tesoreria.CobrosPorSucursal
 
-
 // @Field CobrosPorSucursal cobrosPorSucursal
 model {
     CobrosPorSucursal cobrosPorSucursal
 }
 
 json {
-    sucursal cobrosPorSucursal.sucursal
+    sucursal {
+        id cobrosPorSucursal.sucursal.id
+        nombre cobrosPorSucursal.sucursal.nombre
+    }
+    cobros g.render(cobrosPorSucursal.cobros)
+    fecha cobrosPorSucursal.fecha
 }
 
 /*

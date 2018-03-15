@@ -82,7 +82,7 @@ class NotaDeCredito {
     static constraints = {
         serie maxSize: 20
         folio unique:'serie'
-        tipoCartera minSize:3, maxSize: 3
+        tipoCartera inList: ['CRE','CON', 'CHE', 'JUR', 'COD']
         tipo(nullable:false,inList:['BONIFICACION', 'DEVOLUCION'])
         tc(scale:6,validator:{ val,obj ->
             if(obj.moneda!=MonedaUtils.PESOS && val <= 1.0)
@@ -92,7 +92,7 @@ class NotaDeCredito {
         })
         comentario nullable:true
         cfdi nullable:true
-        cobro nullable: true
+        // cobro nullable: true
         sw2 nullable: true
         createUser nullable: true
         updateUser nullable: true

@@ -41,7 +41,7 @@ class SolicitudDeDepositoController extends RestfulController{
         if (params.pendientes) {
             if (params.boolean('pendientes')){
                 // log.debug('Buscando solicitudes pendientes')
-                query = query.where {cobro == null}
+                query = query.where {cobro == null && cancelacion == null}
             } else {
                 // log.debug('Buscando solicitudes atendidas')
                 query = query.where {cobro != null}

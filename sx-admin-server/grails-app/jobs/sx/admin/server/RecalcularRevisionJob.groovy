@@ -23,6 +23,6 @@ class RecalcularRevisionJob {
 
     def execute() {
         log.debug('Actualizando existencia revision de cuentas por cobrar')
-        revisionService.generar();
+        revisionService.recalcularPendientes(new Date())
     }
 }

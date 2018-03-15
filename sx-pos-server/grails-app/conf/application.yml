@@ -117,7 +117,7 @@ environments:
     certificacion:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.10.1.84:3306/siipapx_tacuba?autoReconnect=true
+            url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=false
             username: root
             password: sys
 ---
