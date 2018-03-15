@@ -2,6 +2,7 @@ package sx.tesoreria
 
 import com.luxsoft.utils.MonedaUtils
 import grails.gorm.transactions.Transactional
+import sx.core.Empresa
 import sx.core.Folio
 import sx.core.Sucursal
 import sx.cxc.Cobro
@@ -24,11 +25,11 @@ class CorteDeTarjetaService {
         BigDecimal debito = visaMastercard.sum(0.0, {
             it.debitoCredito ? it.cobro.importe : 0.0
         })
-        BigDecimal debitoComision = MonedaUtils.round(debito * 2.36)
+        BigDecimal debitoComision = MonedaUtils.round(debito * (2.36 / 100))
         BigDecimal debitoComisionIva = MonedaUtils.round(debitoComision * MonedaUtils.IVA)
 
         BigDecimal credito = visaMastercard.sum 0.0 ,{ !it.debitoCredito ? it.cobro.importe : 0.0}
-        BigDecimal creditoComision = MonedaUtils.round(credito * 1.46)
+        BigDecimal creditoComision = MonedaUtils.round(credito * (1.46 / 100))
         BigDecimal creditoComisionIva = MonedaUtils.round(debitoComision * MonedaUtils.IVA)
 
 
@@ -96,7 +97,7 @@ class CorteDeTarjetaService {
 
         if(amex) {
             BigDecimal amexIngreso = amex.sum 0.0, {it.cobro.importe}
-            BigDecimal amexComision = MonedaUtils.round(amexIngreso * 3.8, 2)
+            BigDecimal amexComision = MonedaUtils.round( amexIngreso * (3.8 / 100), 2)
             BigDecimal amexComisionIva = MonedaUtils.round(amexComision * MonedaUtils.IVA, 2)
 
             CorteDeTarjeta corte = new CorteDeTarjeta()
@@ -128,7 +129,7 @@ class CorteDeTarjetaService {
             comisionIva.importe = amexComisionIva
             comisionIva.visaMaster = true
             comisionIva.debitoCredito = true
-            comisionIva.tipo = TipoDeAplicacion.DEBITO_COMISON_IVA
+            comisionIva.tipo = TipoDeAplicacion.AMEX_COMISION_IVA
             corte.addToAplicaciones(comisionIva)
 
             corte.save()
@@ -145,6 +146,73 @@ class CorteDeTarjetaService {
 
     @Transactional
     def ajustarCobro(Cobro cobro, CobroTarjeta tarjet){
+
+    }
+
+    @Transactional
+    def eliminarCorte(CorteDeTarjeta corte) {
+        CobroTarjeta.executeUpdate(
+                "update from CobroTarjeta set corte = null where corte = ?",
+                [corte.id])
+        corte.delete flush: true
+    }
+
+    @Transactional
+    def aplicar(CorteDeTarjeta corte){
+        log.debug('Aplicando corte: {}',corte.id)
+        Empresa empresa = Empresa.first()
+        corte.aplicaciones.each { CorteDeTarjetaAplicacion aplicacion ->
+            String comentario = ''
+            BigDecimal importe = aplicacion.importe
+            switch (aplicacion.tipo) {
+                case TipoDeAplicacion.AMEX_INGRESO:
+                    comentario = "Corte por tarjeta Amex ${corte.corte.format('dd/MM/yyyy')} ${corte.sucursal.nombre}"
+                    break
+                case TipoDeAplicacion.VISAMASTER_INGRESO:
+                    comentario = "Corte por tarjeta Visa/Mastercard ${corte.corte.format('dd/MM/yyyy')} ${corte.sucursal.nombre}"
+                    break
+                case TipoDeAplicacion.AMEX_COMISION:
+                    comentario = "Comisión por tarjeta AMEX "
+                    importe = importe * -1
+                    break
+                case TipoDeAplicacion.CREDITO_COMISION:
+                    comentario = "Comisión por tarjeta CREDITO "
+                    importe = importe * -1
+                    break
+                case TipoDeAplicacion.DEBITO_COMISON:
+                    comentario = 'Comision por tarjeta de DEBITO'
+                    importe = importe * -1
+                    break
+                case TipoDeAplicacion.AMEX_COMISION_IVA:
+                    comentario = "IVA Comision tarjeta AMEX}"
+                    importe = importe * -1
+                    break
+                case TipoDeAplicacion.DEBITO_COMISON_IVA:
+                    comentario = "IVA Comision tarjeta DEBITO}"
+                    importe = importe * -1
+                    break
+                case TipoDeAplicacion.CREDITO_COMISION_IVA:
+                    comentario = "IVA Comision tarjeta CREDITO}"
+                    importe = importe * -1
+                    break
+
+            }
+            MovimientoDeCuenta mov = new MovimientoDeCuenta()
+            mov.referencia = "${aplicacion.tipo}"
+            mov.tipo = aplicacion.visaMaster ? 'VISA-MASTERCARD' : 'AMEX'
+            mov.fecha = corte.corte
+            mov.formaDePago = 'TARJETA'
+            mov.comentario = comentario
+            mov.cuenta = corte.cuentaDeBanco
+            mov.afavor = empresa.nombre
+            mov.importe = importe
+            mov.moneda = mov.cuenta.moneda
+            mov.concepto = 'VENTAS'
+            mov.save failOnError: true, flush: true
+            aplicacion.ingreso = mov;
+
+        }
+        corte.save flush: true
 
     }
 

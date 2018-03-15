@@ -52,6 +52,15 @@ class CorteDeTarjetaController extends RestfulController {
         respond cobro
     }
 
+    def aplicar(CorteDeTarjeta corte){
+        corte = corteDeTarjetaService.aplicar(corte)
+        respond corte
+    }
+
+    @Override
+    protected void deleteResource(Object resource) {
+        corteDeTarjetaService.eliminarCorte(resource);
+    }
 }
 
 class CobrosPorSucursal {

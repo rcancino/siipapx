@@ -287,7 +287,7 @@ class NotaDeCreditoService {
         assert nota.cfdi, 'Nota sin XML generado no se puede cancelar'
         assert nota.cfdi.uuid, 'Nota sin timbrar no se puede cancelar'
         Cfdi cfdi = nota.cfdi
-        cfdiTimbradorService.cancelar(cfdi)
+        cfdiTimbradoService.cancelar(cfdi)
         nota.comentario = 'CANCELADA'
         nota.save flush: true
     }

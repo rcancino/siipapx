@@ -33,7 +33,11 @@ class CorteDeTarjeta {
 
 	Date lastUpdated
 
+    String estatus
+
 	static hasMany =[partidas: CobroTarjeta, aplicaciones: CorteDeTarjetaAplicacion]
+
+    static transients = ['estatus']
 
     static constraints = {
     	sw2 nullable: true
@@ -44,6 +48,11 @@ class CorteDeTarjeta {
 		id generator: 'uuid'
         corte type: 'date'
         aplicaciones cascade: "all-delete-orphan"
+    }
+
+    def getEstatus() {
+        def found = this.aplicaciones.find{ CorteDeTarjetaAplicacion it -> it.ingreso}
+        return found ? 'APLICADO' : 'PENDIENTE'
     }
 }
 
