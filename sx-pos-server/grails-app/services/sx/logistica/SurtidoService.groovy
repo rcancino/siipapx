@@ -13,7 +13,7 @@ import sx.security.User
 @Transactional
 class SurtidoService {
 
-    @Subscriber
+    // @Subscriber
     def onFacturar(Venta venta){
         log.debug("Generando Surtido para factura: ${venta.statusInfo()}")
         // Venta pedido = Venta.findById(source.id, [fetch:[partidas:"join"]])
@@ -22,7 +22,7 @@ class SurtidoService {
 
     }
 
-    @Subscriber
+    // @Subscriber
     def onSave(Venta venta) {
         if(venta.puesto){
             log.debug("Generando Surtido para pedido tipo  PUESTO: {}", venta.getFolio())
