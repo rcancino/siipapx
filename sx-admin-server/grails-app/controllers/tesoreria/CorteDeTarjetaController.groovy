@@ -17,6 +17,21 @@ class CorteDeTarjetaController extends RestfulController {
         super(CorteDeTarjeta)
     }
 
+    @Override
+    protected List listAllResources(Map params) {
+        // log.debug('List: {}', params)
+        params.max = 30
+        params.sort = 'folio'
+        params.order = 'asc'
+        Periodo periodo = new Periodo()
+        bindData(periodo, params)
+        def list = CorteDeTarjeta.findAll(
+                "from CorteDeTarjeta c where date(c.corte) between ? and ? ",
+                [periodo.fechaInicial, periodo.fechaFinal], [sort:'folio', order: 'asc', max: 50]
+        )
+        respond list
+    }
+
     def pendientes() {
         log.debug('Pendientes: {}', params)
         Periodo periodo = new Periodo()
@@ -54,6 +69,12 @@ class CorteDeTarjetaController extends RestfulController {
 
     def aplicar(CorteDeTarjeta corte){
         corte = corteDeTarjetaService.aplicar(corte)
+        respond corte
+    }
+    def cancelarAplicacion(CorteDeTarjeta corte){
+        if(corte.getEstatus() == 'APLICADO') {
+            corte = corteDeTarjetaService.cancelarAplicacion(corte)
+        }
         respond corte
     }
 

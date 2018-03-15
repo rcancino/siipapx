@@ -39,7 +39,7 @@ class CorteDeTarjetaService {
         corte.folio = Folio.nextFolio('CORTE_TARJETA', sucursal.nombre)
         corte.corte = fecha
         corte.total = total
-        corte.cuentaDeBanco = CuentaDeBanco.first()
+        corte.cuentaDeBanco = CuentaDeBanco.where{numero == 1858193}.find()
         corte.comentario = 'CORTE AUTOMATICO'
 
         // INGRESO
@@ -106,7 +106,7 @@ class CorteDeTarjetaService {
             corte.folio = Folio.nextFolio('CORTE_TARJETA', sucursal.nombre)
             corte.corte = fecha
             corte.total = amexIngreso
-            corte.cuentaDeBanco = CuentaDeBanco.first()
+            corte.cuentaDeBanco = CuentaDeBanco.where{numero == 1858193}.find()
             corte.comentario = 'CORTE AUTOMATICO AMEX'
 
             // INGRESO
@@ -216,4 +216,14 @@ class CorteDeTarjetaService {
 
     }
 
+    @Transactional
+    def cancelarAplicacion(CorteDeTarjeta corte){
+        corte.aplicaciones.each {
+            def ingreso = it.ingreso
+            it.ingreso = null
+            it.save flush: true
+            ingreso.delete flush: true
+        }
+        return corte
+    }
 }
