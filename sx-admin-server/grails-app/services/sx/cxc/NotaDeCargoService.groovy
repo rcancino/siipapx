@@ -60,13 +60,15 @@ class NotaDeCargoService {
         assert nota.total >0 , 'Nota de cargo requiere total para proceder Total registrado: ' + nota.total
         nota.cargo = 0.0;
         BigDecimal importe = nota.total
-        boolean sobreSaldo = 'saldo'
+
         List<CuentaPorCobrar> facturas = nota.partidas.collect{ it.cuentaPorCobrar}
-        log.debug('Generando nota de cargo por {} facturas', facturas.size())
+        NotaDeCargoDet sinSaldo = nota.partidas.find{it.cuentaPorCobrar.getSaldo() == 0.0}
+        log.debug('Se encontro una factura con saldo {}', sinSaldo)
+        boolean sobreSaldo = sinSaldo == null
 
         BigDecimal base = facturas.sum 0.0,{ item -> sobreSaldo ? item.getSaldo() : item.getTotal()}
 
-        log.debug("Importe a prorratear: ${importe} Base del prorrateo ${base}")
+        log.debug("Importe a prorratear: ${importe} Base del prorrateo ${base} Tipo ${sobreSaldo ? 'SOBR SALDO': 'SOBRE TOTAL'}")
 
         nota.partidas.each {  NotaDeCargoDet det ->
             CuentaPorCobrar cxc = det.cuentaPorCobrar
