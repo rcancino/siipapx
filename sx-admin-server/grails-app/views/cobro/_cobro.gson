@@ -15,5 +15,6 @@ json g.render(cobro, [excludes:['moneda','cliente', 'sucursal']]){
         cheque g.render(cobro.cheque)
         bancoOrigen cobro.cheque.bancoOrigen.nombre
     }
+    ingreso cobro.getIngreso()
 }
 

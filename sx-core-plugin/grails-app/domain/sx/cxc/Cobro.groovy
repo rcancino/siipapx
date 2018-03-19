@@ -61,6 +61,8 @@ class  Cobro {
 
     Date fechaDeAplicacion
 
+    String ingreso
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static hasMany =[aplicaciones: AplicacionDeCobro]
@@ -95,10 +97,19 @@ class  Cobro {
         diferenciaFecha type: 'date'
     }
 
-    static transients = ['disponible', 'pendientesDeAplicar', 'fechaDeAplicacion']
+    static transients = ['disponible', 'pendientesDeAplicar', 'fechaDeAplicacion', 'ingreso']
 
     BigDecimal getDisponible(){
         return this.importe - this.aplicado - this.diferencia
+    }
+
+    def getIngreso() {
+        if (deposito) {
+            return deposito.ingreso?.id
+        }else  if (transferencia) {
+            return transferencia.ingreso?.id
+        }
+        return null;
     }
 
 }

@@ -24,17 +24,23 @@ class FichaController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('List: {}', params)
+        // log.debug('Fichas list: {}', params)
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
+        String cartera = params.cartera ?: 'CREDITO'
+        // log.debug('Buscando fichas para: {}', cartera)
         PorFechaCommand command = new PorFechaCommand()
         bindData(command, params)
         def query = Ficha.where {fecha == command.fecha}
+        if(cartera == 'CREDITO'){
+            query = query.where {origen == 'CRE'}
+        } else {
+            query = query.where {origen != 'CRE'}
+        }
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}
         }
-        // log.debug('Cargando fichas {}', command)
         return query.list(params)
     }
 

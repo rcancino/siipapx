@@ -21,7 +21,7 @@ class FichaService {
         mov.referencia = "Ficha: ${ficha.folio} "
         mov.tipo = ficha.origen;
         mov.fecha = ficha.fecha
-        mov.formaDePago = ficha.tipoDeFicha == 'EFECTIVO'?: 'CHEQUE'
+        mov.formaDePago = ficha.tipoDeFicha == 'EFECTIVO' ? 'EFECTIVO' : 'CHEQUE'
         mov.comentario = "Ficha ${ficha.tipoDeFicha} ${ficha.sucursal.nombre} "
         mov.cuenta = ficha.cuentaDeBanco
         mov.afavor = empresa.nombre

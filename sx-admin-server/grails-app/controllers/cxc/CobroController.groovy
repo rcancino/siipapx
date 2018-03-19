@@ -98,13 +98,7 @@ class CobroController extends RestfulController{
         respond query.list(params)
     }
 
-    def reporteDeComisionesTarjeta(PorSucursalFechaRepCommand command){
-        log.debug('Re: {}', command.fecha)
-        // log.debug('Fecha: ', params.getDate('fecha'))
-        def repParams = [FECHA_CORTE: command.fecha, SUCURSAL: command.sucursal.id]
-        def pdf  = reportService.run('ComisionTarjetas.jrxml', repParams)
-        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ComisionTarjetas.pdf')
-    }
+
 
 
     protected Object saveResource(Cobro resource) {

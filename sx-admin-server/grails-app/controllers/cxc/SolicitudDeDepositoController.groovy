@@ -26,7 +26,6 @@ class SolicitudDeDepositoController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('List: {}', params)
         params.max = params.registros ?:1000
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -71,7 +70,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def autorizadas(SolicitudFilter filter) {
-        // log.debug('Solicitudes autorizadas: {}', params);
+
         params.max = 150
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -97,12 +96,12 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if( params.total && params.total.isBigDecimal()){
-            // log.debug('Buscando por total: ', params.total.toBigDecimal())
+            // log.debug('Buscando por total: {}', params.total.toBigDecimal())
             query = query.where { total == params.total.toBigDecimal() }
         }
 
         if(filter.fechaDeposito) {
-            // log.debug('Buscando por fecha: {}', filter.fechaDeposito)
+            // log.debug('Buscando por fecha deposito: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
         }
 
@@ -139,17 +138,14 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if( params.folio && params.folio.isInteger()){
-            log.debug('Buscando por Folio: ', params.folio.toInteger())
             query = query.where { folio == params.folio.toInteger() }
         }
 
         if( params.total && params.total.isBigDecimal()){
-            log.debug('Buscando por total: ', params.total.toBigDecimal())
             query = query.where { total == params.total.toBigDecimal() }
         }
 
         if(filter.fechaDeposito) {
-            // log.debug('Buscando por fecha: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
         }
 
@@ -277,6 +273,13 @@ class SolicitudDeDepositoController extends RestfulController{
         // log.debug('Duplicada: ', duplicada)
 
         respond duplicada?: ['OK']
+    }
+
+    def ingreso(SolicitudDeDeposito sol) {
+        log.debug('Generando ingreso de: {}', sol)
+        def res = solicitudDeDepositoService.registrarIngreso(sol)
+        sol = sol.refresh()
+        respond sol
     }
 
 

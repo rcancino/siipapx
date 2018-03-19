@@ -6,12 +6,15 @@ import grails.converters.*
 import sx.core.Sucursal
 import sx.cxc.Cobro
 import sx.cxc.CobroTarjeta
+import sx.reports.ReportService
 
 class CorteDeTarjetaController extends RestfulController {
 
     static responseFormats = ['json']
 
     CorteDeTarjetaService corteDeTarjetaService
+
+    ReportService reportService
 
     CorteDeTarjetaController() {
         super(CorteDeTarjeta)
@@ -82,6 +85,14 @@ class CorteDeTarjetaController extends RestfulController {
     protected void deleteResource(Object resource) {
         corteDeTarjetaService.eliminarCorte(resource);
     }
+
+    def reporteDeComisionesTarjeta(CortePorSucursal command){
+        log.debug('Re: {}', command.fecha)
+        // log.debug('Fecha: ', params.getDate('fecha'))
+        def repParams = [FECHA_CORTE: command.fecha, SUCURSAL: command.sucursal.id]
+        def pdf  = reportService.run('ComisionTarjetas.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ComisionTarjetas.pdf')
+    }
 }
 
 class CobrosPorSucursal {
@@ -93,4 +104,8 @@ class CobrosPorSucursal {
     String toString() {
         "${sucursal} : Cobros: ${cobros.size()} Fecha: ${fecha?.format('dd/MM/yyyy')}"
     }
+}
+class CortePorSucursal {
+    Date fecha
+    Sucursal sucursal
 }

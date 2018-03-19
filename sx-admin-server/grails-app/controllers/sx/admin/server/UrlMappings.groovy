@@ -67,6 +67,7 @@ class UrlMappings {
         "/api/tesoreria/solicitudes/rechazar/$id"( controller: 'solicitudDeDeposito', action: 'rechazar')
         "/api/tesoreria/solicitudes/cancelar/$id"( controller: 'solicitudDeDeposito', action: 'cancelar')
         "/api/tesoreria/solicitudes/buscarDuplicada/$id"( controller: 'solicitudDeDeposito', action: 'buscarDuplicada')
+        "/api/tesoreria/solicitudes/ingreso/$id"( controller: 'solicitudDeDeposito', action: 'ingreso', method: 'PUT')
 
         "/api/tesoreria/cortesTarjeta"(resources: 'corteDeTarjeta')
         "/api/tesoreria/cortesTarjeta/pendientes"( controller: 'corteDeTarjeta', action: 'pendientes')
@@ -74,12 +75,12 @@ class UrlMappings {
         "/api/tesoreria/cortesTarjeta/ajustarCobro"( controller: 'corteDeTarjeta', action: 'ajustarCobro', method: 'PUT')
         "/api/tesoreria/cortesTarjeta/aplicar/$id"( controller: 'corteDeTarjeta', action: 'aplicar', method: 'PUT')
         "/api/tesoreria/cortesTarjeta/cancelarAplicacion/$id"( controller: 'corteDeTarjeta', action: 'cancelarAplicacion', method: 'PUT')
+        "/api/tesoreria/cortesTarjeta/reporteDeComisionesTarjeta"(controller: 'corteDeTarjeta', action: 'reporteDeComisionesTarjeta', method: 'GET')
 
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')
         "/api/cxc/cobro/disponibles"(controller: "cobro", action: 'disponibles', method: 'GET')
-        "/api/cxc/cobro/reporteDeComisionesTarjeta"(controller: 'cobro', action: 'reporteDeComisionesTarjeta', method: 'GET')
         "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
         "/api/cxc/cobro/saldar/$id"(controller: "cobro", action: 'saldar', method: 'PUT')
         "/api/cxc/cobro/reporteDeCobranza"(controller: "cobro", action: 'reporteDeCobranza', method: 'GET')
