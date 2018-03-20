@@ -208,32 +208,34 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     @Transactional
-    def autorizar(SolicitudDeDeposito sol) {
-        // log.debug('Autorizando solicitud de deposito {}', params.id)
+    def autorizar() {
+        SolicitudDeDeposito sol = SolicitudDeDeposito.get(params.id)
         def res = solicitudDeDepositoService.autorizar(sol)
         respond res;
     }
 
     @Transactional
-    def posponer(SolicitudDeDeposito sol) {
-        // log.debug('Posponiendo sol: ', sol);
+    def posponer() {
+        SolicitudDeDeposito sol = SolicitudDeDeposito.get(params.id)
         sol.sw2 = new Date().toString();
         sol.save flush:true
         respond sol
     }
 
     @Transactional
-    def rechazar(SolicitudDeDeposito sol) {
+    def rechazar() {
+        SolicitudDeDeposito sol = SolicitudDeDeposito.get(params.id)
         sol.comentario = params.comentario
         updateResource sol
         respond sol
     }
 
     @Transactional
-    def cancelar(SolicitudDeDeposito sol) {
+    def cancelar() {
+        SolicitudDeDeposito sol = SolicitudDeDeposito.get(params.id)
         sol.cancelacionComentario = params.comentario
         sol.cancelacion = new Date()
-        updateResource sol
+        sol.save flush: true
         respond sol
     }
 
