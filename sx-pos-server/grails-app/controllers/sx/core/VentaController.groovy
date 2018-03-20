@@ -234,8 +234,8 @@ class VentaController extends RestfulController{
     }
 
     def print( ) {
-        Venta venta = Venta.get(params.id)
-        params.ID = venta.id
+        Venta pedido = Venta.get(params.id)
+        params.ID = pedido.id
         params.IMP_CON_LETRA = ImporteALetra.aLetra(pedido.total)
         params.TELEFONOS = pedido.cliente.getTelefonos().join('/')
         if(pedido.envio) {
