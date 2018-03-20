@@ -276,7 +276,6 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def ingreso(SolicitudDeDeposito sol) {
-        log.debug('Generando ingreso de: {}', sol)
         def res = solicitudDeDepositoService.registrarIngreso(sol)
         sol = sol.refresh()
         respond sol
