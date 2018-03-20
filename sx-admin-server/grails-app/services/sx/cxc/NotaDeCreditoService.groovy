@@ -35,8 +35,8 @@ class NotaDeCreditoService {
             }
             nota = calcularProrrateo(nota)
             Cobro cobro = generarCobro(nota)
+            nota.cobro = cobro
             nota.save failOnError: true, flush: true
-            cobro.save flush: true
             return nota
 
         } else {
@@ -45,8 +45,8 @@ class NotaDeCreditoService {
             }
             nota = calcularPorentaje(nota)
             Cobro cobro = generarCobro(nota)
+            nota.cobro = cobro
             nota.save failOnError: true, flush: true
-            cobro.save flush: true
             return nota
         }
     }
@@ -143,7 +143,6 @@ class NotaDeCreditoService {
             log.debug('Generando cobro para nota de devoluion tipo {}', nota.tipoCartera)
             Cobro cobro = generarCobro(nota)
             nota.cobro = cobro
-            cobro.save failOnError: true, flush: true
             nota.save failOnError: true, flush: true
             aplicar(nota)
             rmd.cobro = cobro
@@ -195,6 +194,7 @@ class NotaDeCreditoService {
         cobro.sucursal = nota.sucursal
         cobro.referencia = nota.folio.toString()
         cobro.formaDePago = nota.tipo
+        cobro.save failOnError: true, flush: true
         return cobro
     }
 
@@ -287,7 +287,8 @@ class NotaDeCreditoService {
         assert nota.cfdi, 'Nota sin XML generado no se puede cancelar'
         assert nota.cfdi.uuid, 'Nota sin timbrar no se puede cancelar'
         Cfdi cfdi = nota.cfdi
-        cfdiTimbradoService.cancelar(cfdi)
+        cfdiTimbradorService.cancelar(cfdi)
+        cfdiTimbradoService
         nota.comentario = 'CANCELADA'
         nota.save flush: true
     }
