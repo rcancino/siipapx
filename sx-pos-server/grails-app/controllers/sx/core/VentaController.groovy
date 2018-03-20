@@ -28,7 +28,6 @@ class VentaController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('Localizando ventas {}', params)
         params.sort = 'lastUpdated'
         params.order = 'desc'
         params.max = 500
@@ -188,11 +187,8 @@ class VentaController extends RestfulController{
     }
 
     @Transactional
-    def facturar(Venta pedido) {
-        if(pedido == null ){
-            notFound()
-            return
-        }
+    def facturar() {
+        Venta pedido = Venta.get(params.id)
         assert !pedido.cuentaPorCobrar, 'Pedido ya facturado'
         pedido = ventaService.facturar(pedido);
         respond pedido
@@ -226,11 +222,8 @@ class VentaController extends RestfulController{
     }
 
     @Transactional
-    def timbrar(Venta venta) {
-        if(venta == null ){
-            notFound()
-            return
-        }
+    def timbrar() {
+        Venta venta = Venta.get(params.id)
         try {
             def cfdi = ventaService.timbrar(venta)
             respond cfdi
@@ -240,7 +233,8 @@ class VentaController extends RestfulController{
         }
     }
 
-    def print( Venta pedido) {
+    def print( ) {
+        Venta venta = Venta.get(params.id)
         params.ID = pedido.id
         params.IMP_CON_LETRA = ImporteALetra.aLetra(pedido.total)
         params.TELEFONOS = pedido.cliente.getTelefonos().join('/')
