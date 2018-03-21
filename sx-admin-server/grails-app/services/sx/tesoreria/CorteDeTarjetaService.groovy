@@ -22,15 +22,13 @@ class CorteDeTarjetaService {
         if (!visaMastercard)
             return
         BigDecimal total = visaMastercard.sum(0.0, { it.cobro.importe})
-        BigDecimal debito = visaMastercard.sum(0.0, {
-            it.debitoCredito ? it.cobro.importe : 0.0
-        })
-        BigDecimal debitoComision = MonedaUtils.round(debito * (2.36 / 100))
+        BigDecimal debito = visaMastercard.sum(0.0, {it.debitoCredito ? it.cobro.importe : 0.0})
+        BigDecimal debitoComision = MonedaUtils.round(debito * (1.46 / 100))
         BigDecimal debitoComisionIva = MonedaUtils.round(debitoComision * MonedaUtils.IVA)
 
-        BigDecimal credito = visaMastercard.sum 0.0 ,{ !it.debitoCredito ? it.cobro.importe : 0.0}
-        BigDecimal creditoComision = MonedaUtils.round(credito * (1.46 / 100))
-        BigDecimal creditoComisionIva = MonedaUtils.round(debitoComision * MonedaUtils.IVA)
+        BigDecimal credito = visaMastercard.sum 0.0, { !it.debitoCredito ? it.cobro.importe : 0.0}
+        BigDecimal creditoComision = MonedaUtils.round(credito * (2.36 / 100))
+        BigDecimal creditoComisionIva = MonedaUtils.round(creditoComision * MonedaUtils.IVA)
 
 
         CorteDeTarjeta corte = new CorteDeTarjeta()
@@ -227,15 +225,15 @@ class CorteDeTarjetaService {
         return corte
     }
 
-    public actualizarComisiones(Cobro cobro) {
-        if (cobro.tarjeta) {
-            if(cobro.tarjeta.debitoCredito) {
+    public actualizarComisiones(CobroTarjeta tarjeta) {
+        if(tarjeta.visaMaster){
+            if(tarjeta.debitoCredito) {
                 cobro.tarjeta.comision = 1.46
-            } else if (cobro.tarjeta.visaMaster) {
-                cobro.tarjeta.comision = 2.36
             } else {
-                cobro.tarjeta.comision = 3.80
+                cobro.tarjeta.comision = 2.36
             }
+        } else {
+            cobro.tarjeta.comision = 3.80
         }
     }
 }
