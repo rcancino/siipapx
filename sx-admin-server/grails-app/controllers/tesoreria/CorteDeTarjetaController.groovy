@@ -66,6 +66,7 @@ class CorteDeTarjetaController extends RestfulController {
         Cobro cobro = cobroTarjeta.cobro
         cobro.tarjeta.visaMaster = cobroTarjeta.visaMaster
         cobro.tarjeta.debitoCredito = cobroTarjeta.debitoCredito
+        corteDeTarjetaService.actualizarComisiones(cobro)
         cobro.save flush:true
         respond cobro
     }

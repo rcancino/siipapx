@@ -226,4 +226,16 @@ class CorteDeTarjetaService {
         }
         return corte
     }
+
+    public actualizarComisiones(Cobro cobro) {
+        if (cobro.tarjeta) {
+            if(cobro.tarjeta.debitoCredito) {
+                cobro.tarjeta.comision = 1.46
+            } else if (cobro.tarjeta.visaMaster) {
+                cobro.tarjeta.comision = 2.36
+            } else {
+                cobro.tarjeta.comision = 3.80
+            }
+        }
+    }
 }
