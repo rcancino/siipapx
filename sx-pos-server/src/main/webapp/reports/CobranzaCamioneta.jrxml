@@ -145,6 +145,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 	<variable name="TOT_DEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[$V{TOT_EFEC}
 .add( $V{TOT_CHEQU} )
+.add( $V{TOT_DEP_EFE} )
 .add( $V{TOT_DEP_CHE} )
 .add($V{TOT_TRANSF} )
 .add( $V{TOT_TAR_C} )
@@ -1582,10 +1583,17 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{DEPOSITABLE}.doubleValue()
--$V{TOT_DEPOSITABLE}.doubleValue()
-+$V{TOTALDIFERENCIAP}.doubleValue()
-)]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEPOSITABLE}
+.subtract($V{TOT_EFEC})
+.subtract( $V{TOT_CHEQU} )
+.subtract( $V{TOT_DEP_EFE} )
+.subtract( $V{TOT_DEP_CHE} )
+.subtract($V{TOT_TRANSF} )
+.subtract( $V{TOT_TAR_C} )
+.subtract($V{TOT_TAR_D} )
+.subtract($V{TOT_TAR_A} )
+.add($V{TOTALDIFERENCIAP})
+]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
