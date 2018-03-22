@@ -39,17 +39,30 @@
 ,A.IMPORTE * O.tipo_de_cambio AS COBRADO
 ,O.tipo_de_cambio AS TC
 ,(C.total-A.IMPORTE-o.diferencia)  * O.tipo_de_cambio AS DIFERENCIA
-,(CASE when o.anticipo is true then 'ANTICIPO' WHEN date(o.primera_aplicacion) <> a.FECHA  THEN 'SALDO A FAVOR'
-	  ELSE o.forma_de_pago END )AS TIPO
+,(CASE when o.anticipo is true then 'ANTICIPO' WHEN date(o.primera_aplicacion) <> a.FECHA  THEN 'SALDO A FAVOR'  WHEN (SELECT T.COBRO_ID FROM cobro_tarjeta T WHERE T.cobro_id=O.ID AND T.visa_master IS false) IS NOT NULL THEN 'TARJETA_AMEX'	  ELSE o.forma_de_pago END )AS TIPO
 ,ifnull((select sum(total) from cuenta_por_cobrar v  where V.fecha=$P{FECHA} and V.SUCURSAL_ID=$P{SUCURSAL} and tipo_documento='VENTA' and tipo='CON'),0) as 'VTA TOTAL'
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS CHEQUE
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
 ,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
-	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
 ,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
-	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
+,CASE   WHEN o.forma_de_pago='EFECTIVO' THEN 1
+        WHEN o.forma_de_pago='CHEQUE'  THEN 2
+        WHEN o.forma_de_pago='TRANSFERENCIA' THEN 3
+        WHEN SUBSTR(o.forma_de_pago,1,17)='DEPOSITO_EFECTIVO' THEN 4.1
+        WHEN SUBSTR(o.forma_de_pago,1,15)='DEPOSITO_CHEQUE' THEN 4.2
+        WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
+        WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5.1
+        WHEN o.forma_de_pago='TARJETA_AMEX' THEN 5.2
+        WHEN ANTICIPO IS TRUE THEN 6
+        WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
+        WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
+        WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
+	   WHEN o.forma_de_pago='BONIFICACION'  THEN 9
+ ELSE 10 END AS ORDEN_PAGO,A.aplicaciones_idx
 FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_id=C.ID) JOIN cobro O ON (O.ID=A.cobro_id) JOIN cliente L ON (L.ID=C.CLIENTE_ID)
 WHERE A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.sucursal_id=$P{SUCURSAL}
 UNION
@@ -70,6 +83,7 @@ WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobra
 ,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
 	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
+,11 AS ORDEN_PAGO,0 AS aplicaciones_idx
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
 where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
@@ -89,7 +103,10 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<field name="EFECTIVO" class="java.math.BigDecimal"/>
 	<field name="DEPOSITABLE" class="java.math.BigDecimal"/>
 	<field name="DIF" class="java.math.BigDecimal"/>
+	<field name="ORDEN_PAGO" class="java.math.BigDecimal"/>
+	<field name="aplicaciones_idx" class="java.lang.Long"/>
 
+	<sortField name="ORDEN_PAGO" />
 	<sortField name="TIPO" order="Descending" />
 	<sortField name="DOCTO" />
 
@@ -111,7 +128,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<variable name="TOT_PAGO_DIF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "PAGO_DIF" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
-	<variable name="TOT_TARJETA" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="TOT_TARJETA_CRE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA_CREDITO" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_EFECTIVO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
@@ -140,9 +157,9 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 .add( $V{TOT_CHEQUE} )
 .add( $V{TOT_DEP_EFE} )
 .add($V{TOT_TRANSF} )
-.add( $V{TOT_TARJETA} )
-.add($V{TOT_TAR_D} )
-.add($V{TOT_TAR_A} )
+.add( $V{TOT_TARJETA_CRE} )
+.add($V{TOT_TARJETA_DEB} )
+.add($V{TOT_TARJETA_AMEX} )
 ]]></variableExpression>
 	</variable>
 	<variable name="TOT_SAF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
@@ -154,11 +171,11 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<variable name="TOT_TRANSF" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO}.startsWith( "TRANSFERENCIA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
-	<variable name="TOT_TAR_D" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="TOT_TARJETA_DEB" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA_DEBITO" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
-	<variable name="TOT_TAR_A" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	<variable name="TOT_TARJETA_AMEX" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "TARJETA_AMEX" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOT_ESP" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "ESPECIE" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
@@ -604,7 +621,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 						width="29"
 						height="11"
 						key="textField">
-							<printWhenExpression><![CDATA[new Boolean(!$F{TC}.equals( new BigDecimal(1.0000)))]]></printWhenExpression>
+							<printWhenExpression><![CDATA[new Boolean($F{TC}.doubleValue()>1)]]></printWhenExpression>
 						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right">
@@ -1227,7 +1244,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TARJETA}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TARJETA_CRE}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1240,7 +1257,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TAR_D}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TARJETA_DEB}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1386,7 +1403,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TAR_A}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_TARJETA_AMEX}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -1825,9 +1842,9 @@ $F{DEPOSITABLE}.doubleValue()
 -$V{TOT_DEP_EFE}.doubleValue()
 -$V{TOT_DEP_CHE}.doubleValue()
 -$V{TOT_TRANSF}.doubleValue()
--$V{TOT_TARJETA}.doubleValue()
--$V{TOT_TAR_D}.doubleValue()
--$V{TOT_TAR_A}.doubleValue()
+-$V{TOT_TARJETA_CRE}.doubleValue()
+-$V{TOT_TARJETA_DEB}.doubleValue()
+-$V{TOT_TARJETA_AMEX}.doubleValue()
 )]]></textFieldExpression>
 				</textField>
 				<staticText>
