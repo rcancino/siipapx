@@ -77,6 +77,8 @@ class UrlMappings {
         "/api/tesoreria/cortesTarjeta/cancelarAplicacion/$id"( controller: 'corteDeTarjeta', action: 'cancelarAplicacion', method: 'PUT')
         "/api/tesoreria/cortesTarjeta/reporteDeComisionesTarjeta"(controller: 'corteDeTarjeta', action: 'reporteDeComisionesTarjeta', method: 'GET')
 
+        "/api/tesoreria/movimientosDeTesoreria"(resources: 'movimientoDeTesoreria')
+
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')

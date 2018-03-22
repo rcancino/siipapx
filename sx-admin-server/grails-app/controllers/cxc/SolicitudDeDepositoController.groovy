@@ -278,7 +278,8 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def ingreso(SolicitudDeDeposito sol) {
-        def res = solicitudDeDepositoService.registrarIngreso(sol)
+        assert sol.cobro, 'Solicitud no autoriada no puede registrar ingreso'
+        def res = solicitudDeDepositoService.registrarIngreso(sol.cobro)
         sol = sol.refresh()
         respond sol
     }

@@ -228,12 +228,12 @@ class CorteDeTarjetaService {
     public actualizarComisiones(CobroTarjeta tarjeta) {
         if(tarjeta.visaMaster){
             if(tarjeta.debitoCredito) {
-                cobro.tarjeta.comision = 1.46
+                tarjeta.comision = 1.46
             } else {
-                cobro.tarjeta.comision = 2.36
+                tarjeta.comision = 2.36
             }
         } else {
-            cobro.tarjeta.comision = 3.80
+            tarjeta.comision = 3.80
         }
     }
 }

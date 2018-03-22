@@ -77,7 +77,7 @@ class NotaDeCreditoController extends RestfulController{
 
     def buscarRmd() {
         // log.debug('Localizando RMD {}', params)
-        params.max = 20
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 

@@ -10,10 +10,17 @@ package sx.tesoreria
 class MovimientoDeTesoreria {
 
     String id
-    String fecha
+
+    Long folio
+
+    Date fecha
+
     ConceptoTesoreria concepto
+
     BigDecimal importe
+
     CuentaDeBanco cuenta
+
     MovimientoDeCuenta movimiento
 
     String comentario
