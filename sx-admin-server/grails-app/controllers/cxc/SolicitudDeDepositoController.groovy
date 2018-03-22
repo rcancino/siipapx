@@ -8,6 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import sx.core.AppConfig
 import sx.core.Folio
 import sx.core.Sucursal
+import sx.reports.ReportService
 import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.SolicitudDeDepositoService
@@ -17,6 +18,8 @@ import sx.tesoreria.SolicitudDeDepositoService
 class SolicitudDeDepositoController extends RestfulController{
 
     static responseFormats = ['json']
+
+    ReportService reportService
 
     SolicitudDeDepositoService solicitudDeDepositoService;
 
@@ -70,7 +73,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def autorizadas(SolicitudFilter filter) {
-
+        log.info('Solicitudes {}', params)
         params.max = 150
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -103,6 +106,10 @@ class SolicitudDeDepositoController extends RestfulController{
         if(filter.fechaDeposito) {
             // log.debug('Buscando por fecha deposito: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
+        }
+        if(filter.fechaCobranza) {
+            // log.debug('Buscando por fecha cobranza: {}', filter.fechaCobranza)
+            query = query.where { cobro.primeraAplicacion == filter.fechaCobranza }
         }
 
         if (params.cliente) {
@@ -166,7 +173,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def canceladas(SolicitudFilter filter) {
-        // log.debug('Buscando solicitudes transito {}', params)
+        //log.debug('Buscando solicitudes transito {}', params)
         // log.debug('Filter: {}', filter)
         params.max = 50
         params.sort = params.sort ?:'lastUpdated'
@@ -189,6 +196,11 @@ class SolicitudDeDepositoController extends RestfulController{
         if(filter.fechaDeposito) {
             // log.debug('Buscando por fecha: {}', filter.fechaDeposito)
             query = query.where { fechaDeposito == filter.fechaDeposito }
+        }
+
+        if(filter.fechaCobranza) {
+            // log.debug('Buscando por fecha cobranza: {}', filter.fechaCobranza)
+            query = query.where { cobro.primeraAplicacion == filter.fechaCobranza }
         }
 
         if (params.cliente) {
@@ -284,16 +296,45 @@ class SolicitudDeDepositoController extends RestfulController{
         respond sol
     }
 
+    def cobranzaContado(SolsFechaSucursalCommand command){
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = command.sucursal.id
+        def pdf = reportService.run('FacturasCobrada', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CobranzaContado.pdf")
+    }
+
+    def cobranzaCod(SolsFechaSucursalCommand command) {
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['SALDOAFAVOR']=0.0
+        def pdf = this.reportService.run('CobranzaCamioneta', repParams)
+        def fileName = "CobranzaCOD.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+
+    }
+
 
 }
 
 @ToString(includeNames=true,includePackage=false)
 class SolicitudFilter {
     Date fechaDeposito
+    Date fechaCobranza
 
     static constraints = {
         fechaDeposito nullable: true
+        fechaCobranza nullable: true
     }
 
 }
 
+class SolsFechaSucursalCommand {
+    Date fecha
+    Sucursal sucursal
+
+    String toString() {
+        return " ${sucursal.nombre} ${fecha.format('dd/MM/yyyy')}"
+    }
+}

@@ -244,7 +244,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="8"
+						x="25"
 						y="0"
 						width="465"
 						height="14"
@@ -266,7 +266,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 			<band height="149"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="510"
 						y="34"
 						width="58"
 						height="13"
@@ -283,7 +283,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="510"
 						y="47"
 						width="58"
 						height="13"
@@ -300,7 +300,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="510"
 						y="60"
 						width="58"
 						height="13"
@@ -317,7 +317,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="510"
 						y="73"
 						width="58"
 						height="13"
@@ -334,7 +334,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="510"
 						y="86"
 						width="58"
 						height="13"
@@ -352,7 +352,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="287"
+						x="309"
 						y="86"
 						width="70"
 						height="13"
@@ -371,7 +371,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="287"
+						x="309"
 						y="73"
 						width="70"
 						height="13"
@@ -385,12 +385,12 @@ AND A.tipo_cartera=$P{ORIGEN}
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[E R M I T A :]]></text>
+				<text><![CDATA[CF5FEBRERO :]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="287"
+						x="309"
 						y="60"
 						width="70"
 						height="13"
@@ -409,7 +409,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="287"
+						x="309"
 						y="47"
 						width="70"
 						height="13"
@@ -428,7 +428,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="287"
+						x="309"
 						y="34"
 						width="70"
 						height="13"
@@ -447,7 +447,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="493"
+						x="510"
 						y="105"
 						width="58"
 						height="13"
@@ -465,7 +465,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="266"
+						x="288"
 						y="105"
 						width="91"
 						height="13"
@@ -482,7 +482,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="449"
 						y="34"
 						width="61"
 						height="13"
@@ -499,7 +499,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="449"
 						y="47"
 						width="61"
 						height="13"
@@ -516,7 +516,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="449"
 						y="60"
 						width="61"
 						height="13"
@@ -533,7 +533,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="449"
 						y="73"
 						width="61"
 						height="13"
@@ -550,7 +550,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="449"
 						y="86"
 						width="61"
 						height="13"
@@ -567,7 +567,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="357"
+						x="379"
 						y="34"
 						width="70"
 						height="13"
@@ -584,7 +584,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="357"
+						x="379"
 						y="47"
 						width="70"
 						height="13"
@@ -601,7 +601,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="357"
+						x="379"
 						y="60"
 						width="70"
 						height="13"
@@ -618,7 +618,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="357"
+						x="379"
 						y="73"
 						width="70"
 						height="13"
@@ -635,7 +635,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="357"
+						x="379"
 						y="86"
 						width="70"
 						height="13"
@@ -653,7 +653,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="432"
+						x="449"
 						y="105"
 						width="61"
 						height="13"
@@ -671,7 +671,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="357"
+						x="379"
 						y="105"
 						width="70"
 						height="13"
@@ -689,7 +689,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="493"
+						x="510"
 						y="5"
 						width="58"
 						height="13"
@@ -707,7 +707,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="266"
+						x="288"
 						y="5"
 						width="91"
 						height="13"
@@ -725,7 +725,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="432"
+						x="449"
 						y="5"
 						width="61"
 						height="13"
@@ -743,7 +743,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="357"
+						x="379"
 						y="5"
 						width="70"
 						height="13"
@@ -761,7 +761,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="493"
+						x="510"
 						y="125"
 						width="58"
 						height="13"
@@ -779,7 +779,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="281"
+						x="303"
 						y="125"
 						width="76"
 						height="13"
@@ -797,7 +797,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="432"
+						x="449"
 						y="125"
 						width="61"
 						height="13"
@@ -815,7 +815,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="357"
+						x="379"
 						y="125"
 						width="70"
 						height="13"
@@ -834,7 +834,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 					<reportElement
 						x="0"
 						y="2"
-						width="552"
+						width="578"
 						height="0"
 						forecolor="#999999"
 						key="line-9"/>
@@ -842,7 +842,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</line>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="292"
+						x="311"
 						y="-11"
 						width="30"
 						height="12"
@@ -857,7 +857,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="323"
+						x="342"
 						y="-11"
 						width="34"
 						height="12"
@@ -915,7 +915,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 					<reportElement
 						x="92"
 						y="0"
-						width="195"
+						width="202"
 						height="11"
 						key="textField-33"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -930,7 +930,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="357"
+						x="379"
 						y="0"
 						width="70"
 						height="11"
@@ -947,7 +947,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="449"
 						y="0"
 						width="61"
 						height="11"
@@ -964,7 +964,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="510"
 						y="0"
 						width="59"
 						height="11"
@@ -979,13 +979,15 @@ AND A.tipo_cartera=$P{ORIGEN}
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{total}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="287"
+						x="302"
 						y="0"
 						width="70"
 						height="11"
-						key="textField-54"/>
+						key="textField-54">
+							<printWhenExpression><![CDATA[new Boolean(!$F{moneda}.equals( "USD" ))]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
@@ -998,7 +1000,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="552"
+						x="569"
 						y="0"
 						width="9"
 						height="11"
@@ -1033,7 +1035,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="322"
+						x="339"
 						y="24"
 						width="230"
 						height="18"
@@ -1053,7 +1055,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="368"
+						x="385"
 						y="0"
 						width="184"
 						height="19"
@@ -1123,7 +1125,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</staticText>
 				<staticText>
 					<reportElement
-						x="313"
+						x="330"
 						y="45"
 						width="88"
 						height="13"
@@ -1140,7 +1142,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</staticText>
 				<staticText>
 					<reportElement
-						x="464"
+						x="481"
 						y="45"
 						width="19"
 						height="13"
@@ -1157,7 +1159,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="401"
+						x="418"
 						y="45"
 						width="63"
 						height="13"
@@ -1174,7 +1176,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="483"
+						x="500"
 						y="45"
 						width="68"
 						height="13"
@@ -1251,7 +1253,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 						mode="Opaque"
 						x="92"
 						y="6"
-						width="195"
+						width="202"
 						height="13"
 						key="staticText-5"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1267,7 +1269,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="357"
+						x="379"
 						y="6"
 						width="70"
 						height="13"
@@ -1285,7 +1287,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="432"
+						x="449"
 						y="6"
 						width="61"
 						height="13"
@@ -1303,7 +1305,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="493"
+						x="510"
 						y="6"
 						width="59"
 						height="13"
@@ -1322,7 +1324,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 					<reportElement
 						x="0"
 						y="3"
-						width="552"
+						width="578"
 						height="0"
 						forecolor="#999999"
 						key="line-1"
@@ -1335,7 +1337,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 					<reportElement
 						x="0"
 						y="23"
-						width="552"
+						width="578"
 						height="0"
 						forecolor="#999999"
 						key="line-2"/>
@@ -1356,7 +1358,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="233"
+						x="249"
 						y="12"
 						width="48"
 						height="11"
@@ -1375,7 +1377,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="281"
+						x="297"
 						y="12"
 						width="31"
 						height="11"
@@ -1394,7 +1396,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="390"
+						x="399"
 						y="12"
 						width="76"
 						height="11"
@@ -1413,7 +1415,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="466"
+						x="475"
 						y="12"
 						width="85"
 						height="11"
@@ -1434,7 +1436,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 						mode="Opaque"
 						x="0"
 						y="8"
-						width="552"
+						width="578"
 						height="0"
 						forecolor="#999999"
 						backcolor="#FFFFFF"
@@ -1443,7 +1445,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="546"
+						x="564"
 						y="3"
 						width="0"
 						height="20"
@@ -1458,7 +1460,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="390"
+						x="399"
 						y="10"
 						width="76"
 						height="11"
@@ -1477,7 +1479,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="466"
+						x="475"
 						y="10"
 						width="85"
 						height="11"
@@ -1498,7 +1500,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 						mode="Opaque"
 						x="0"
 						y="8"
-						width="552"
+						width="578"
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1510,7 +1512,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="233"
+						x="249"
 						y="10"
 						width="48"
 						height="11"
@@ -1529,7 +1531,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="281"
+						x="297"
 						y="10"
 						width="31"
 						height="11"
@@ -1547,7 +1549,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="546"
+						x="564"
 						y="3"
 						width="0"
 						height="20"
@@ -1562,7 +1564,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="347"
+						x="364"
 						y="116"
 						width="69"
 						height="13"
@@ -1580,7 +1582,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="416"
+						x="433"
 						y="116"
 						width="59"
 						height="13"
@@ -1598,7 +1600,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="492"
 						y="116"
 						width="77"
 						height="13"
@@ -1616,7 +1618,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="236"
+						x="255"
 						y="116"
 						width="109"
 						height="13"
@@ -1634,7 +1636,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="277"
+						x="295"
 						y="97"
 						width="70"
 						height="13"
@@ -1653,7 +1655,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="277"
+						x="295"
 						y="84"
 						width="70"
 						height="13"
@@ -1667,12 +1669,12 @@ AND A.tipo_cartera=$P{ORIGEN}
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[E R M I T A :]]></text>
+				<text><![CDATA[CF5FEBRERO :]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="277"
+						x="295"
 						y="71"
 						width="70"
 						height="13"
@@ -1691,7 +1693,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="277"
+						x="295"
 						y="58"
 						width="70"
 						height="13"
@@ -1710,7 +1712,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="277"
+						x="295"
 						y="45"
 						width="70"
 						height="13"
@@ -1728,7 +1730,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="479"
+						x="496"
 						y="45"
 						width="72"
 						height="13"
@@ -1745,7 +1747,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="479"
+						x="496"
 						y="58"
 						width="72"
 						height="13"
@@ -1762,7 +1764,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="479"
+						x="496"
 						y="71"
 						width="72"
 						height="13"
@@ -1779,7 +1781,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="479"
+						x="496"
 						y="84"
 						width="72"
 						height="13"
@@ -1796,7 +1798,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="479"
+						x="496"
 						y="97"
 						width="72"
 						height="13"
@@ -1813,7 +1815,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="417"
+						x="434"
 						y="45"
 						width="61"
 						height="13"
@@ -1830,7 +1832,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="418"
+						x="435"
 						y="58"
 						width="61"
 						height="13"
@@ -1847,7 +1849,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="418"
+						x="435"
 						y="71"
 						width="61"
 						height="13"
@@ -1864,7 +1866,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="418"
+						x="435"
 						y="84"
 						width="61"
 						height="13"
@@ -1881,7 +1883,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="418"
+						x="435"
 						y="97"
 						width="61"
 						height="13"
@@ -1898,7 +1900,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="348"
+						x="365"
 						y="45"
 						width="69"
 						height="13"
@@ -1915,7 +1917,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="348"
+						x="365"
 						y="58"
 						width="70"
 						height="13"
@@ -1932,7 +1934,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="348"
+						x="365"
 						y="71"
 						width="70"
 						height="13"
@@ -1949,7 +1951,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="348"
+						x="365"
 						y="84"
 						width="70"
 						height="13"
@@ -1966,7 +1968,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="348"
+						x="365"
 						y="97"
 						width="69"
 						height="13"
@@ -1998,7 +2000,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="492"
 						y="22"
 						width="71"
 						height="13"
@@ -2016,7 +2018,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="230"
+						x="253"
 						y="22"
 						width="107"
 						height="13"
@@ -2034,7 +2036,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="414"
+						x="431"
 						y="22"
 						width="61"
 						height="13"
@@ -2052,7 +2054,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="343"
+						x="360"
 						y="22"
 						width="70"
 						height="13"
@@ -2070,7 +2072,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="347"
+						x="364"
 						y="136"
 						width="69"
 						height="13"
@@ -2088,7 +2090,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="416"
+						x="433"
 						y="136"
 						width="59"
 						height="13"
@@ -2106,7 +2108,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="492"
 						y="136"
 						width="77"
 						height="13"
@@ -2124,7 +2126,7 @@ AND A.tipo_cartera=$P{ORIGEN}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="236"
+						x="255"
 						y="136"
 						width="109"
 						height="13"

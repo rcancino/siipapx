@@ -38,8 +38,10 @@ class FichaController extends RestfulController {
         } else {
             query = query.where {origen != 'CRE'}
         }
-        if(params.sucursal){
-            query = query.where {sucursal.id ==  params.sucursal}
+        if(params.sucursal) {
+            String sucursal = params.sucursal
+            def search = '%' + sucursal.toUpperCase() + '%'
+            query = query.where { sucursal.nombre =~ search }
         }
         return query.list(params)
     }
