@@ -56,7 +56,10 @@ class NotaDeCreditoService {
         boolean sobreSaldo = nota.baseDelCalculo == 'Saldo' ? true : false
         List<CuentaPorCobrar> facturas = nota.partidas.collect{ it.cuentaPorCobrar}
         log.debug('Generando bonificaion por {} facturas', facturas.size())
-
+        if(sobreSaldo) {
+            def facSinSaldo = facturas.find { it.saldo <= 0.0}
+            if(facSinSaldo) sobreSaldo = false; // Debemos usar el Total
+        }
         BigDecimal base = facturas.sum 0.0,{ item-> sobreSaldo ? item.getSaldo() : item.getTotal()}
 
         log.debug("Importe a prorratear: ${importe} Base del prorrateo ${base}")
@@ -104,7 +107,6 @@ class NotaDeCreditoService {
             CuentaPorCobrar cxc = det.cuentaPorCobrar
             def monto = sobreSaldo ? det.cuentaPorCobrar.getSaldo() : det.cuentaPorCobrar.getTotal()
             def asignado = MonedaUtils.round(monto * descuento)
-
             log.debug('Procesando factura {} Asignando {} a NotaDet', cxc.documento, asignado)
             acu = acu + asignado
             det.cuentaPorCobrar = cxc
