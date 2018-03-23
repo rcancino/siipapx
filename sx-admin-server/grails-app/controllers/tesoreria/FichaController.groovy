@@ -24,7 +24,7 @@ class FichaController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('Fichas list: {}', params)
+        //log.debug('Fichas list: {}', params)
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'

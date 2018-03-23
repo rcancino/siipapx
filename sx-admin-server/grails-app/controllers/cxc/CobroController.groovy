@@ -26,7 +26,7 @@ class CobroController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        log.debug('List {}', params)
+        // log.debug('List {}', params)
         def query = Cobro.where {}
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
@@ -47,7 +47,7 @@ class CobroController extends RestfulController{
     }
 
     def disponibles() {
-        log.debug('Disponibles {}', params)
+        // log.debug('Disponibles {}', params)
         String hql = 'from Cobro c where c.importe - c.aplicado > 0  and tipo like ? order by fecha asc'
         params.max = 100
         String cartera = params.cartera ?: '%'

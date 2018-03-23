@@ -73,7 +73,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def autorizadas(SolicitudFilter filter) {
-        log.info('Solicitudes {}', params)
+        // log.info('Solicitudes {}', params)
         params.max = 150
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
