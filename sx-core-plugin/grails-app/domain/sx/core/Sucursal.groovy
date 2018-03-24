@@ -21,6 +21,8 @@ class Sucursal {
 
 	Long sw2
 
+    String dbUrl
+
 	Date dateCreated
 
 	Date lastUpdated
@@ -30,6 +32,7 @@ class Sucursal {
         clave minSize:1, maxSize:20, unique:true
         nombre unique:true
         sw2 nullable:true
+        dbUrl nullble: true
     }
 
     static mapping = {
