@@ -51,7 +51,7 @@ trait Integracion {
         return sql;
     }
 
-    def getLocalRows(Sucursal sucursal, String sql, List params) {
+    def getLocalRows(String sql, List params) {
         def db = getLocalSql()
         try {
             return db.rows(sql, params)
@@ -63,6 +63,11 @@ trait Integracion {
         }finally {
             db.close()
         }
+    }
+
+    def getLocalRow(String sql, List params){
+        Sql db = getLocalSql()
+        return db.firstRow(sql, params)
     }
 
     def logException(Exception ex) {

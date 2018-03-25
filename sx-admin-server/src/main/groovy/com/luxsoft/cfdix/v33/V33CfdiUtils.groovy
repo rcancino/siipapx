@@ -18,17 +18,22 @@ import sx.utils.MonedaUtils
 
 class V33CfdiUtils {
 
-	static Comprobante toComprobante(Cfdi cfdi){
-        File file = FileUtils.toFile(cfdi.url)
-        Comprobante comprobante = CfdiUtils.read(file.bytes)
+	static Comprobante toComprobante(Cfdi cfdi, Byte[] xmlFile){
+        Comprobante comprobante = CfdiUtils.read(xmlFile)
         return comprobante
 	}
 
-    static List getPartidas(Cfdi cfdi) {
-        Comprobante comprobante = CfdiUtils.read(cfdi.url.bytes)
+    static List getPartidas(Cfdi cfdi, Byte[] xmlFile) {
+        Comprobante comprobante = CfdiUtils.read(xmlFile)
         comprobante.getConceptos().concepto
     }
 
+    /**
+     * Pritty XML del comprobante
+     *
+     * @param xmlData
+     * @return
+     */
     static String parse(byte[] xmlData){
         ByteArrayInputStream is=new ByteArrayInputStream(xmlData)
         GPathResult xmlResult = new XmlSlurper().parse(is)

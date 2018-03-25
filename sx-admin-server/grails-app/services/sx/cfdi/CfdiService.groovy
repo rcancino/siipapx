@@ -1,5 +1,6 @@
 package sx.cfdi
 
+import com.luxsoft.cfdix.CFDIXUtils
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.core.GrailsApplication
 import grails.gorm.transactions.Transactional
@@ -139,7 +140,7 @@ class CfdiService {
 
     def enviarFacturaEmail(Cfdi cfdi, Venta factura, String targetEmail) {
         log.debug('Enviando cfdi {} {} al correo: {}', cfdi.serie,cfdi.folio, targetEmail)
-        def xml = cfdi.getUrl().getBytes()
+        def xml = getXml(cfdi)
         def pdf = generarImpresionV33(cfdi, true).toByteArray()
 
         String message = """Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra. Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración 
@@ -161,12 +162,24 @@ class CfdiService {
 
     private generarImpresionV33( Cfdi cfdi) {
         def logoPath = ServletContextHolder.getServletContext().getRealPath("reports/PAPEL_CFDI_LOGO.jpg")
-        def data = V33PdfGenerator.getReportData(cfdi, true)
+        def data = V33PdfGenerator.getReportData(cfdi, getXml(cfdi),true)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = logoPath
         return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 
+    Byte[] getXml(Cfdi cfdi){
+        String fileName = cfdi.url.getPath().substring(cfdi.url.getPath().lastIndexOf('/')+1)
+        File file = new File(getCfdiDir(cfdi), fileName)
+        return file.getBytes()
+    }
 
+    def getCfdiDir(Cfdi cfdi) {
+        String cfdiDirPath = grailsApplication.config.getProperty('sx.cfdi.dir')
+        String datePath = "${cfdi.fecha[Calendar.YEAR]}/${cfdi.fecha[Calendar.MONTH]+1}/${cfdi.fecha[Calendar.DATE]}"
+        File cfdiDir = new File("${cfdiDirPath/${datePath}}" )
+        assert cfdiDir.isDirectory(), cfdiDir.path + ' No ex dierctorio'
+        assert cfdiDir.exists(), 'No existe el directorio: ' + cfdiDir.path
+    }
 
 }

@@ -2,6 +2,7 @@ package sx.integracion
 
 import groovy.sql.Sql
 import groovy.util.logging.Slf4j
+import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.object.SqlUpdate
 import org.springframework.stereotype.Component
@@ -35,17 +36,36 @@ class CuentasPorCobrarIntegration implements  Integracion{
         integracionLog.controlOficinas = res.control
     }
 
-    def validacionIndivicual(Sucursal sucursal, Date fecha ) {
-        def closure = { row -> println 'Validando registro: ' +row };
+    def validacionIndividual(Sucursal sucursal, Date fecha ) {
+        String sql = "select * from cobro where sucursal_id = ? and date(fecha)=? "
+        List params = [sucursal.id, fecha]
+        List oficinasRows = getLocalRows(sql, [sucursal.id, fecha])
+        List sucursalRows = getRows(sucursal, params)
+
+        def faltantesSucursal = oficinasRows.minus(sucursalRows)
+        println faltantesSucursal
+        /*
+        Sql oficinasDb = getLocalSql()
+        def closure = { row ->
+            Map found = oficinasDb.firstRow("select * from cobro where id = ?", row.id)
+            if (!found) {
+                println 'Faltante: ' + row.id
+            } else {
+                println "Id: ${row.id.substring(0,4)} ${sucursal.nombre} : ${row.importe} Oficinas: ${found.importe}"
+            }
+        };
+
         Sql db = getSql(sucursal)
         try{
-            db.eachRow("select * from cobro where date(fecha)=? and sucursal_id = ? ", closure)
-            JdbcTemplate template = new JdbcTemplate(dataSource)
-            SqlUpdate update = new SqlUpdate(dataSource,"")
-            template.inser
+            db.eachRow("select * from cobro where date(fecha)=? and sucursal_id = ? ", [fecha, sucursal.id],closure)
         }catch (Exception ex) {
-            ex.printStackTrace()
+            String msg = ExceptionUtils.getRootCauseMessage(ex)
+            println 'Error: ' + msg
+        } finally {
+            db.close()
+            oficinasDb.close()
         }
+        */
     }
 
 }

@@ -81,8 +81,8 @@ environments:
         dataSource:
             dbCreate: update
             url: jdbc:mysql://localhost/siipapx_oficinas?autoReconnect=false
-            username: 'root'
-            password: 'shoto'
+            username: root
+            password: sys
     test:
         dataSource:
             dbCreate: create-drop
@@ -121,3 +121,12 @@ server:
 grails:
     cors:
         enabled: true
+---
+sx:
+  cfdi:
+    dir: '${user.home}/cfdis/'
+environments:
+  production:
+    sx:
+      cfdi:
+        dir: '/xml'

@@ -53,13 +53,15 @@ class CfdiTimbradoService {
         Map map = ZipUtils.descomprimir(res)
 
         def entry = map.entrySet().iterator().next()
-        File target = new File(file.getParent(), file.getName().replaceAll(".xml", "_SIGNED.xml"))
+        def targetName = file.getName().replaceAll(".xml", "_SIGNED.xml")
+        File target = new File(file.getParent(), targetName)
 
         FileUtils.writeByteArrayToFile(target, entry.getValue())
         log.debug('Archivo timbrado generado: {}', target.getPath())
         CfdiTimbre timbre = new CfdiTimbre(entry.getValue())
         cfdi.uuid = timbre.uuid
         cfdi.url = target.toURI().toURL()
+        cfdi.fileName = targetName
         cfdi.save flush: true
     }
 
