@@ -2,6 +2,7 @@ package sx.integracion
 
 import groovy.sql.Sql
 
+import javax.sql.DataSource
 import java.sql.ResultSet
 import java.sql.SQLException
 
@@ -11,16 +12,22 @@ class DataAcessObject implements  Closeable {
 
     private final Sql sql
 
-    private List<String> columns
+    List<String> columns
 
     private String tableName
 
-    private String whereClause
+    String whereClause
 
-    private boolean connected
+    boolean connected
+
+    boolean updateTarget = true
 
     DataAcessObject(final String connectionString, final String user, final String password) throws SQLException {
-        this.sql = Sql.newInstance(connectionString, user, password)
+        this.sql = Sql.newInstance(connectionString, user, password, 'com.mysql.jdbc.Driver')
+    }
+
+    DataAcessObject( DataSource ds){
+        this.sql = new Sql(ds.getConnection())
     }
 
     /**
@@ -69,22 +76,23 @@ class DataAcessObject implements  Closeable {
 
         final Map<String, Object> row = sql.firstRow(select, record)
 
-        if (row) {
+        if (row && updateTarget) {
             updateRow row, record
         }
         else {
+            println 'Faltante: ' + record.id
             insertRow record
         }
     }
 
-    private def updateRow = { final Map<String, Object> row, final Map<String, Object> record ->
+    def updateRow = { final Map<String, Object> row, final Map<String, Object> record ->
         assert connected, 'Not connected to a table'
 
-        println "Found matching record: $record"
+        //println "Found matching record: $record"
         final List<String> updates = row.entrySet().findAll {
             it.value != record[it.key]
         }.collect {
-            println "Updating $it.key to ${record[it.key]} from $it.value"
+            // println "Updating $it.key to ${record[it.key]} from $it.value"
             it.key
         }
 
@@ -98,11 +106,11 @@ class DataAcessObject implements  Closeable {
             sql.executeUpdate(update, record)
         }
         else {
-            println 'No differences found. Record is dropped.'
+            //println 'No differences found. Record is dropped.'
         }
     }
 
-    private def insertRow = { final Map<String, Object> record ->
+    def insertRow = { final Map<String, Object> record ->
         assert connected, 'Not connected to a table'
 
         final def insert = """
@@ -111,12 +119,11 @@ class DataAcessObject implements  Closeable {
           values
            (${columns.collect { ":$it" }.join(', ')})
         """
-
+        // println "Inserting record: $record"
         sql.executeInsert(insert, record)
-        println "Inserting record: $record"
     }
 
-    private def getResultSetString = { final ResultSet rs, final int col ->
+    def getResultSetString = { final ResultSet rs, final int col ->
         final def result = []
         while (rs.next()) {
             result << rs.getString(col)
@@ -124,7 +131,7 @@ class DataAcessObject implements  Closeable {
         result
     }
 
-    private def getColumnNames = getResultSetString.rcurry(COLUMN_NAME_RS_INDEX)
+    def getColumnNames = getResultSetString.rcurry(COLUMN_NAME_RS_INDEX)
 
     @Override
     void close() throws IOException {
