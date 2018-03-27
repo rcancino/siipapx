@@ -66,6 +66,7 @@ class CorteDeTarjetaController extends RestfulController {
         Cobro cobro = cobroTarjeta.cobro
         cobro.tarjeta.visaMaster = cobroTarjeta.visaMaster
         cobro.tarjeta.debitoCredito = cobroTarjeta.debitoCredito
+        cobro.formaDePago = cobroTarjeta.debitoCredito ? 'TARJETA_DEBITO' : 'TARJETA_CREDITO'
         corteDeTarjetaService.actualizarComisiones(cobro.tarjeta)
         cobro.save flush:true
         respond cobro
