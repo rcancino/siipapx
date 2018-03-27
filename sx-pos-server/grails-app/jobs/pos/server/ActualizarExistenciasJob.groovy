@@ -29,7 +29,7 @@ class ActualizarExistenciasJob {
         def ejercicio = hoy[Calendar.YEAR]
         def mes = hoy[Calendar.MONTH] + 1
         Set productos = Inventario.executeQuery('select distinct(e.producto.id) ' +
-                'from Inventario e where date(e.lastUpdated) = ? order by e.lastUpdated asc',
+                'from Inventario e where date(e.lastUpdated) = ? ',
                 [new Date()])
         log.debug('Actualizando existencia de {} productos', productos.size())
         productos.each { String id ->

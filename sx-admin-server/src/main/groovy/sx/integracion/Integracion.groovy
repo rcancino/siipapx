@@ -14,6 +14,9 @@ trait Integracion {
     @Qualifier('dataSource')
     def dataSource
 
+    @Autowired
+    def grailsApplication
+
     IntegracionLog preparaBitacora(Class entidad, Sucursal sucursal, Date fecha) {
         IntegracionLog integracionLog = new IntegracionLog()
         integracionLog.sucursal = sucursal
@@ -70,8 +73,9 @@ trait Integracion {
         return db.firstRow(sql, params)
     }
 
-    def logException(Exception ex) {
-
+    def tempo() {
+        Sql sql = getLocalSql()
+        sql.firstRow("select count(*) from Cfdi where uuid is not null")
     }
 
 }

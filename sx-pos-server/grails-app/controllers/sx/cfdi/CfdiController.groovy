@@ -84,6 +84,7 @@ class CfdiController extends RestfulController{
                 text message
                 attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
                 attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
+
             }
             cfdi.enviado = new Date()
             cfdi.email = targetEmail

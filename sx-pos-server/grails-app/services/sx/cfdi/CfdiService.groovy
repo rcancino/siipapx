@@ -8,10 +8,14 @@ import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
 import org.apache.commons.lang3.StringEscapeUtils
 import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.exception.ExceptionUtils
 import org.grails.core.io.ResourceLocator
 import sx.core.AppConfig
 import sx.core.Venta
 import sx.reports.ReportService
+
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 
 @Transactional
 class CfdiService {
@@ -134,6 +138,7 @@ class CfdiService {
 
     def enviarFacturaEmail(Cfdi cfdi, Venta factura, String targetEmail) {
         log.debug('Enviando cfdi {} {} al correo: {}', cfdi.serie,cfdi.folio, targetEmail)
+        println "Enviando cfdi ${cfdi.serie} - ${cfdi.folio} al correo: ${targetEmail}"
 
         def xml = cfdi.getUrl().getBytes()
         def pdf = generarImpresionV33(cfdi).toByteArray()
@@ -155,25 +160,67 @@ class CfdiService {
         cfdi.email = targetEmail
         cfdi.save()
     }
-    /*
-    private generarImpresionV33( Cfdi cfdi) {
-        def realPath = grailsResourceLocator.findResourceForURI('/reports').file.getPath()
-        // resourceLocator.findResourceForURI('/reports').getFile().getPath()
-        def data = V33PdfGenerator.getReportData(cfdi, true)
-        Map parametros = data['PARAMETROS']
-        parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
-        parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
-        parametros.FACTURA_USD = realPath + '/facUSD.jpg'
-        return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
-    }
-    */
 
-    private generarImpresionV33( Cfdi cfdi) {
+
+    public generarImpresionV33( Cfdi cfdi) {
         def logoPath = ServletContextHolder.getServletContext().getRealPath("reports/PAPEL_CFDI_LOGO.jpg")
         def data = V33PdfGenerator.getReportData(cfdi, true)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = logoPath
         return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+    }
+
+    Byte[] zip(List cfdis){
+        try{
+            byte[] buffer = new byte[1024];
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()
+            ZipOutputStream zos = new ZipOutputStream(byteArrayOutputStream)
+
+            cfdis.each { Cfdi cfdi ->
+                String name = "${cfdi.serie}-${cfdi.folio}.xml"
+                ZipEntry ze = new ZipEntry(name);
+                zos.putNextEntry(ze);
+                zos.write(cfdi.getUrl().getBytes())
+                zos.closeEntry();
+                // PDF
+                def pdf =   generarImpresionV33(cfdi)
+                ZipEntry pdfEntry = new ZipEntry(name.replaceAll('xml', 'pdf'))
+                zos.putNextEntry(pdfEntry);
+                zos.write(pdf.toByteArray())
+                zos.closeEntry();
+            }
+            zos.close();
+            return byteArrayOutputStream.toByteArray()
+        }catch (IOException ex) {
+            String msg = ExceptionUtils.getRootCauseMessage(ex)
+            println msg
+            log.error(msg)
+        }
+    }
+
+
+    def envioBatch(List cfdis, String targetEmail, String observacion = ''){
+        def zipData = zip(cfdis)
+
+        sendMail {
+            multipart false
+            to targetEmail
+            from 'papelsa-facturacion@papelsa.com.mx'
+            subject "Envio de Comprobantes fiscales digitales (CFDIs) ${observacion}"
+            html view: "/cfdi/envioBatch", model: [facturas: cfdis]
+            attachBytes "comprobantes.zip", "application/x-compressed", zipData
+        }
+        cfdis.each { Cfdi
+            try {
+                cfdi.enviado = new Date()
+                cfdi.email = targetEmail
+                cfdi.save()
+            } catch (Exception ex){
+
+            }
+
+        }
+
     }
 
 
