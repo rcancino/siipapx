@@ -14,7 +14,9 @@ trait Integracion {
     @Qualifier('dataSource')
     def dataSource
 
+
     @Autowired
+    @Qualifier('grailsApplication')
     def grailsApplication
 
     IntegracionLog preparaBitacora(Class entidad, Sucursal sucursal, Date fecha) {
