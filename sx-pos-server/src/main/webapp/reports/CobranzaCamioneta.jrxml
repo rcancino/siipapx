@@ -1349,7 +1349,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEPOSITABLE}.add($V{TOTAL_NODEPOSITABLE} )]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DEPOSITABLE}.add($V{TOTAL_NODEPOSITABLE} )]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -1592,8 +1592,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 .subtract( $V{TOT_TAR_C} )
 .subtract($V{TOT_TAR_D} )
 .subtract($V{TOT_TAR_A} )
-.add($V{TOTALDIFERENCIAP})
-]]></textFieldExpression>
+.add($V{TOTALDIFERENCIAP})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

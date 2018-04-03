@@ -45,7 +45,7 @@
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
 ,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
-	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
 ,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
 	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
@@ -62,7 +62,7 @@ WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobra
         WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
         WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
 	   WHEN o.forma_de_pago='BONIFICACION'  THEN 9
- ELSE 10 END AS ORDEN_PAGO,A.aplicaciones_idx
+ ELSE 10 END AS ORDEN_PAGO,A.aplicaciones_idx,a.id
 FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_id=C.ID) JOIN cobro O ON (O.ID=A.cobro_id) JOIN cliente L ON (L.ID=C.CLIENTE_ID)
 WHERE A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.sucursal_id=$P{SUCURSAL}
 UNION
@@ -79,11 +79,11 @@ SELECT (select s.nombre from sucursal s where s.id=o.sucursal_id) as sucursal
 ,ifnull((SELECT sum(b.importe) FROM cobro_cheque E join cobro b  on (b.id=e.cobro_id) WHERE DATE(b.fecha)=$P{FECHA} AND E.cambio_por_efectivo is true and b.SUCURSAL_ID=$P{SUCURSAL}),0)  AS EFECTIVO
 ,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
-	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
 ,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
 	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
-,11 AS ORDEN_PAGO,0 AS aplicaciones_idx
+,11 AS ORDEN_PAGO,0 AS aplicaciones_idx,e.id
 FROM cobro_cheque e join cobro o on (e.cobro_id=o.id) join cliente l on (l.id=o.cliente_id)
 where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo is true]]></queryString>
 
@@ -105,6 +105,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 	<field name="DIF" class="java.math.BigDecimal"/>
 	<field name="ORDEN_PAGO" class="java.math.BigDecimal"/>
 	<field name="aplicaciones_idx" class="java.lang.Long"/>
+	<field name="id" class="java.lang.String"/>
 
 	<sortField name="ORDEN_PAGO" />
 	<sortField name="TIPO" order="Descending" />
