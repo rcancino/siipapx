@@ -39,6 +39,9 @@ if (Environment.isDevelopmentMode()) {
     logger("org.pac4j", OFF, ['STDOUT'], false)
 
     logger("sx.core", DEBUG, ['STDOUT'], false)
+    logger("sx.ventas", DEBUG, ['STDOUT'], false)
+    logger("sx.pos.server", ERROR, ['STDOUT'], false)
+
     logger("sx.inventario", DEBUG, ['STDOUT'], false)
     logger("sx.logistica", DEBUG, ['STDOUT'], false)
     logger("sx.cfdi", DEBUG, ['STDOUT'], false)
@@ -49,6 +52,8 @@ if (Environment.isDevelopmentMode()) {
     logger("sx.cxc", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
     logger("pos.server", ERROR, ['STDOUT'], false)
+
+
 }
 if (Environment == Environment.PRODUCTION) {
     logger("org.springframework.security", OFF, ['STDOUT'], false)

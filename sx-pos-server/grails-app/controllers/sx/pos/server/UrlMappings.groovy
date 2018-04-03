@@ -57,7 +57,12 @@ class UrlMappings {
         "/api/compras/recepciones/recepcionDeMercancia"(controller: "recepcionDeCompra", action: 'recepcionDeMercancia', method: 'GET')
 
 
-        // Ventas
+        // Ventas ////////////////////////////////
+
+        // Pedidos
+        "/api/pedidos"(resources:"pedido")
+        "/api/pedidos/print/$id"(controller: "pedido", action: 'print', method: 'GET')
+
         "/api/ventas"(resources:"venta")
         "/api/ventas/pendientes/$id"( controller: 'venta', action: 'pendientes')
         "/api/ventas/facturados/$id"( controller: 'venta', action: 'facturados')
