@@ -115,7 +115,6 @@ class TrasladoController extends RestfulController {
 
     def print() {
         params.TRALADO_ID = params.ID
-        params.COMENTARIO = params.COMENTARIO
         Traslado traslado = Traslado.get(params.ID)
         params.SOL_ID = traslado.solicitudDeTraslado.id
         def reportName = traslado.tipo == 'TPS' ? 'SalidaDeTraslado.jrxml' : 'EntradaTraslado.jrxml'
@@ -125,17 +124,17 @@ class TrasladoController extends RestfulController {
     }
 
     def printCfdi() {
-
         Traslado tps = Traslado.get(params.ID)
         assert tps.tipo == 'TPS', 'Traslado no es un TPS'
         assert tps.cfdi, 'TPS no se ha timbrado'
-
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def data = TrasladoPdfGenerator.getReportData(tps)
         Map parametros = data['PARAMETROS']
+        parametros.COMENTARIO = tps.comentario
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
         parametros.FACTURA_USD = realPath + '/facUSD.jpg'
+        println 'Params: ' + parametros
         def pdf  = reportService.run('CFDITraslado.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CfdiTPS.pdf')
     }
