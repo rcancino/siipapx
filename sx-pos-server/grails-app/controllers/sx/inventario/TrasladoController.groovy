@@ -115,7 +115,7 @@ class TrasladoController extends RestfulController {
 
     def print() {
         params.TRALADO_ID = params.ID
-        params.comentario = params.comentario
+        params.COMENTARIO = params.COMENTARIO
         Traslado traslado = Traslado.get(params.ID)
         params.SOL_ID = traslado.solicitudDeTraslado.id
         def reportName = traslado.tipo == 'TPS' ? 'SalidaDeTraslado.jrxml' : 'EntradaTraslado.jrxml'
