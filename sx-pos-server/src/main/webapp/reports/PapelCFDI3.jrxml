@@ -157,7 +157,7 @@
 					<reportElement
 						x="448"
 						y="100"
-						width="30"
+						width="35"
 						height="15"
 						key="staticText-144">
 							<printWhenExpression><![CDATA[new Boolean(!$P{SELLO_DIGITAL}.equals( "1" )|| $P{RECEPTOR_NOMBRE}.equals("VENTA PUBLICO EN GENERAL"))]]></printWhenExpression>
@@ -2365,6 +2365,19 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					</textElement>
 				<text><![CDATA[TELS.: ]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="259"
+						y="35"
+						width="90"
+						height="18"
+						key="textField-240"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="true" isItalic="false" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PUESTO}]]></textFieldExpression>
+				</textField>
 			</band>
 		</columnHeader>
 		<detail>

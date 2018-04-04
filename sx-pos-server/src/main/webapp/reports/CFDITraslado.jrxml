@@ -82,6 +82,7 @@
 	<parameter name="RfcProvCertif" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="UsoCFDI" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SOL" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="COMENTARIO" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.math.BigDecimal"/>
@@ -600,7 +601,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="46"
-						y="291"
+						y="287"
 						width="209"
 						height="0"
 						key="line-9"/>
@@ -609,7 +610,7 @@
 				<staticText>
 					<reportElement
 						x="45"
-						y="297"
+						y="293"
 						width="208"
 						height="15"
 						key="staticText-216"/>
@@ -622,7 +623,7 @@
 				<line direction="TopDown">
 					<reportElement
 						x="320"
-						y="291"
+						y="287"
 						width="209"
 						height="0"
 						key="line-10"/>
@@ -631,7 +632,7 @@
 				<staticText>
 					<reportElement
 						x="319"
-						y="297"
+						y="293"
 						width="208"
 						height="15"
 						key="staticText-217"/>
@@ -640,24 +641,6 @@
 						<font pdfFontName="Helvetica" isBold="false"/>
 					</textElement>
 				<text><![CDATA[ENTREGO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="9"
-						y="320"
-						width="561"
-						height="48"
-						key="staticText-218"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Double"/>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Left">
-						<font pdfFontName="Helvetica" isBold="false"/>
-					</textElement>
-				<text><![CDATA[   COMENTARIOS :]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -788,6 +771,41 @@
 					</textElement>
 				<text><![CDATA[SOL : ]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="9"
+						y="308"
+						width="108"
+						height="15"
+						key="staticText-238"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Times-Roman" size="8"/>
+					</textElement>
+				<text><![CDATA[COMENTARIO  : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="9"
+						y="323"
+						width="561"
+						height="43"
+						key="textField-183"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{COMENTARIO}]]></textFieldExpression>
+				</textField>
 			</band>
 			</groupFooter>
 		</group>

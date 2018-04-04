@@ -107,7 +107,7 @@ AND V.IMPORTE-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.C
 	</variable>
 	<variable name="CARGO_TOTAL" class="java.math.BigDecimal" resetType="Group" resetGroup="CLIENTE" calculation="Sum">
 		<variableExpression><![CDATA[
-$F{TIPO}.equals("FAC") ?  $F{IMP_CAR}: new BigDecimal(0)]]></variableExpression>
+$F{TIPO}.equals("VENTA") ?  $F{IMP_CAR}: new BigDecimal(0)]]></variableExpression>
 	</variable>
 
 		<group  name="CLIENTE" isStartNewPage="true" isResetPageNumber="true" >
@@ -309,6 +309,28 @@ $F{TIPO}.equals("FAC") ?  $F{IMP_CAR}: new BigDecimal(0)]]></variableExpression>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{ORIGEN}.equalsIgnoreCase( "JUR" )? $F{LINEA}.subtract($V{SALDO_TOTAL}) :
 $F{LINEA}.subtract( $V{SALDO_TOTAL}.add( $V{CARGO_TOTAL} ))]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="78"
+						y="8"
+						width="158"
+						height="11"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-123">
+							<printWhenExpression><![CDATA[new Boolean($F{ORIGEN}.equals( "CRE" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[CREDITO DISPONIBLE :]]></text>
+				</staticText>
 			</band>
 			</groupFooter>
 		</group>
@@ -632,7 +654,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="68"
+						x="64"
 						y="16"
 						width="29"
 						height="11"
@@ -651,7 +673,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="97"
+						x="93"
 						y="16"
 						width="28"
 						height="11"
@@ -670,7 +692,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="125"
+						x="121"
 						y="16"
 						width="44"
 						height="11"
@@ -689,9 +711,9 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="169"
+						x="165"
 						y="16"
-						width="48"
+						width="52"
 						height="11"
 						key="staticText-81"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -993,7 +1015,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="64"
+						x="60"
 						y="1"
 						width="30"
 						height="11"
@@ -1011,7 +1033,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="122"
+						x="118"
 						y="1"
 						width="44"
 						height="11"
@@ -1029,9 +1051,9 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="166"
+						x="162"
 						y="1"
-						width="48"
+						width="52"
 						height="11"
 						key="textField"/>
 					<box>					<pen lineWidth="0.25" lineStyle="Solid"/>
@@ -1139,7 +1161,7 @@ $P{ORIGEN}.equals("CHE") ?"CHEQUES DEVUELTOS" :
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="94"
+						x="90"
 						y="1"
 						width="28"
 						height="11"
