@@ -31,36 +31,22 @@ class EnvioDeCfdisJob {
     private doEnviar(){
         Date dia = new Date()
         def cfdis = buscarCfdisPendientes(dia)
-        if (cfdis) {
-            log.debug('Enviando CFDIs {} pendientes ', cfdis.size());
-            cfdis.each {
-                Cfdi cfdi = Cfdi.get(it)
-                Venta venta = Venta.where{cuentaPorCobrar.cfdi == cfdi}.find()
-                if (venta) {
-                    try{
-                        log.debug('Enviando cfdi venta: {}', venta.statusInfo())
-                        // Credito
-                        if (venta.tipo == 'CRE'){
-                            cfdiService.enviarFacturaEmail(cfdi, venta, venta.cliente.getCfdiMail())
-                        } else {
-                            Cliente cliente = venta.cliente
-                            if (cliente.clave != '1'){
-                                ComunicacionEmpresa medio = cliente.medios.find{ it.tipo == 'MAIL' && it.cfdi}
-                                if (medio && medio.validado) {
-                                    String mail = medio.descripcion
-                                    cfdiService.enviarFacturaEmail(cfdi, venta, mail)
-                                }
-                            }
+        cfdis.each {
+            Cfdi cfdi = Cfdi.get(it)
+            Venta venta = Venta.where{cuentaPorCobrar.cfdi == cfdi}.find()
+            if (venta) {
+                log.debug('Enviando cfdi venta: {}', venta.statusInfo())
+                // Credito
+                if (venta.tipo == 'CRE'){
+                    cfdiService.enviarFacturaEmail(cfdi, venta, venta.cliente.getCfdiMail())
+                } else {
+                    Cliente cliente = venta.cliente
+                    if (cliente.clave != '1'){
+                        ComunicacionEmpresa medio = cliente.medios.find{ it.tipo == 'MAIL' && it.cfdi}
+                        if (medio && medio.validado) {
+                            String mail = medio.descripcion
+                            cfdiService.enviarFacturaEmail(cfdi, venta, mail)
                         }
-
-                    }catch (Exception ex) {
-                        ex.printStackTrace()
-                        String c = ExceptionUtils.getRootCauseMessage(ex)
-                        log.debug('Error enviando correo Fac: {} Error: {}', venta.statusInfo(), c)
-                        cfdi.enviado = new Date()
-                        cfdi.email = venta.cliente.getCfdiMail()
-                        cfdi.comentario = "Error en evio: ${c}"
-                        cfdi.save flush:true
                     }
                 }
             }

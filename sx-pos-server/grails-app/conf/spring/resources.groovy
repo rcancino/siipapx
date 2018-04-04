@@ -3,6 +3,7 @@ import com.luxsoft.cfdix.v33.CfdiCadenaBuilder33
 import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 import com.luxsoft.cfdix.v33.CfdiSellador33
 import com.luxsoft.cfdix.v33.TrasladoBuilder
+import org.springframework.web.servlet.i18n.FixedLocaleResolver
 
 
 // Place your Spring DSL code here
@@ -23,6 +24,11 @@ beans = {
 
     trasladoBuilder(TrasladoBuilder) {
         sellador = ref('cfdiSellador')
+    }
+
+    localeResolver(FixedLocaleResolver, Locale.US){
+        defaultLocale = new Locale('es', 'MX')
+        Locale.setDefault(defaultLocale)
     }
 
 

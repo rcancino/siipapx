@@ -26,7 +26,7 @@ beans = {
     }
 
     localeResolver(FixedLocaleResolver, Locale.US){
-        defaultLocale = new Locale('ex', 'mx')
+        defaultLocale = new Locale('es', 'MX')
         Locale.setDefault(defaultLocale)
     }
 }

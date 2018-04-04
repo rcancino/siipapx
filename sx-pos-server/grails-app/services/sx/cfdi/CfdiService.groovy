@@ -146,19 +146,28 @@ class CfdiService {
         String message = """Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra. Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración 
             la puede dirigir a: servicioaclientes@papelsa.com.mx 
         """
-
-        sendMail {
-            multipart false
-            to targetEmail
-            from 'credito.papelsa14@gmail.com'
-            subject "Envio de CFDI ${cfdi.serie} ${cfdi.folio}"
-            text message
-            attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
-            attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
+        try {
+            sendMail {
+                multipart false
+                to targetEmail
+                from 'credito.papelsa14@gmail.com'
+                subject "Envio de CFDI ${cfdi.serie} ${cfdi.folio}"
+                text message
+                attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
+                attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
+            }
+            cfdi.enviado = new Date()
+            cfdi.email = targetEmail
+            cfdi.save()
+        } catch (Exception ex) {
+            String c = ExceptionUtils.getRootCauseMessage(ex)
+            log.debug('Error enviando correo Fac: {} Error: {}', venta.statusInfo(), c)
+            cfdi.enviado = new Date()
+            cfdi.email = targetEmail
+            cfdi.comentario = "Error en evio: ${c}"
+            cfdi.save flush:true
         }
-        cfdi.enviado = new Date()
-        cfdi.email = targetEmail
-        cfdi.save()
+
     }
 
 
