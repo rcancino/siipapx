@@ -25,6 +25,13 @@ class ComunicacionEmpresa {
 
     Boolean validado = false;
 
+    String createUser
+
+    String updateUser
+
+    String sucursalCreated
+    String sucursalUpdated
+
 
     static constraints = {
         tipo inList:['TEL','CEL','FAX','MAIL','WEB']
@@ -32,6 +39,10 @@ class ComunicacionEmpresa {
         comentario  nullable:true
         sw2 nullable: true
         validado nullable: true
+        createUser nullable: true
+        updateUser nullbale: true
+        sucursalCreated nullable: true
+        sucursalUpdated nullable: true
 
     }
     static  mapping={

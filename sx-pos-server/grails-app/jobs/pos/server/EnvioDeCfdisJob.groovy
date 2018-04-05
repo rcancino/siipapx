@@ -14,8 +14,8 @@ class EnvioDeCfdisJob {
     CfdiService cfdiService
 
     static triggers = {
-        // simple repeatInterval: 60000l // execute job once in 5 seconds
-        simple name:'envioDeCfdi', startDelay: 10000, repeatInterval: 600000
+        // simple repeatInterval: 5000l // execute job once in 5 seconds
+        simple name:'envioDeCfdi', startDelay: 10000, repeatInterval: 120000
     }
 
     def execute() {

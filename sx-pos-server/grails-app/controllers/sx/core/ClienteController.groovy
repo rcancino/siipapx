@@ -58,6 +58,8 @@ class ClienteController extends RestfulController{
             return
         }
         String email = params.email
+        Sucursal sucursal = AppConfig.first().sucursal
+        String usuario = params.usuario
         def medio = cliente.medios.find {it.tipo =='MAIL' && it.cfdi}
         log.debug('Medio localizado: {}', medio)
         if(!medio) {
@@ -67,9 +69,17 @@ class ClienteController extends RestfulController{
             medio.cfdi = true
             medio.comentario = 'email para envio de CFDIs'
             medio.cliente = cliente
+            medio.createUser = usuario
+            medio.updateUser = usuario
+            medio.sucursalCreated = sucursal.nombre
+            medio.sucursalUpdated = sucursal.nombre
+            medio.validado = true
             cliente.addToMedios(medio)
         }
         medio.descripcion = email
+        medio.updateUser = usuario
+        medio.sucursalUpdated = sucursal.nombre
+        medio.validado = true
         cliente.save failOnError: true, flush:true
         respond cliente
 

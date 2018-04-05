@@ -98,5 +98,8 @@ class Cliente {
     def getCfdiMail() {
         return medios.find{ it.tipo == 'MAIL' && it.cfdi}?.descripcion
     }
+    def getCfdiValidado() {
+        return medios.find{ it.tipo == 'MAIL' && it.cfdi}?.validado
+    }
 
 }
