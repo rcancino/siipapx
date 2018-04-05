@@ -45,7 +45,7 @@ class Direccion implements GormValidateable{
     }
 
     String toLabel(){
-        return "Calle:$calle #:$numeroExterior ${numeroInterior?:''} Col:$colonia CP:$codigoPostal Del/Mun:$municipio $estado $pais"
+        return "Calle:${calle?:''} Ext#:${numeroExterior?:''} ${numeroInterior? 'Int#:' +numeroInterior :''} Col:${colonia?: ''} CP:${codigoPostal?:''} Del/Mun:${municipio?:''} ${estado?:''} ${pais?:''}"
     }
 
 

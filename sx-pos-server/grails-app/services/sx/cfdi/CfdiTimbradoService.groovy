@@ -25,6 +25,7 @@ class CfdiTimbradoService {
 
     // WS cerpiService
     CFDi edicomService
+    CfdiEdicomService cfdiEdicomService
 
     Empresa empresaTransient
 
@@ -46,6 +47,7 @@ class CfdiTimbradoService {
         if (this.isTimbradoDePrueba()) {
             log.debug('Timbrado de prueba')
             res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
+            // res = cfdiEdicomService.getCfdiTest(file.bytes)
         } else {
             res = edicomService.getCfdi('PAP830101CR3','yqjvqfofb', file.bytes)
         }
