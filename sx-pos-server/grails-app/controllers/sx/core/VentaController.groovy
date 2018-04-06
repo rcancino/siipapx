@@ -30,7 +30,7 @@ class VentaController extends RestfulController{
     protected List listAllResources(Map params) {
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        params.max = 500
+        params.max = 50
         def query = Venta.where {}
         if(params.sucursal){
             query = query.where {sucursal.id ==  params.sucursal}
@@ -135,7 +135,7 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:200
+        params.max = params.registros ?:50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null}
@@ -297,6 +297,16 @@ class VentaController extends RestfulController{
         venta.updateUser = usuario
         venta.save flush: true
         respond venta
+    }
+
+    def pedidosPendientes(Cliente cliente){
+        if(cliente== null ){
+            notFound()
+            return
+        }
+        Sucursal sucursal = AppConfig.first().sucursal
+        def query = Venta.where{ cliente == cliente && sucursal == sucursal && cuentaPorCobrar == null && facturar == null}
+        respond query.list(params)
     }
 
 }

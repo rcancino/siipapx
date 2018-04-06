@@ -3,5 +3,6 @@ import sx.security.User
 model {
     User user
 }
-
-json g.render(user)
+json g.render(user) {
+    roles user.getAuthorities().collect{it.authority}
+}
