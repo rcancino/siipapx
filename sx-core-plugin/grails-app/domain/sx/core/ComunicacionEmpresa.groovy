@@ -40,7 +40,7 @@ class ComunicacionEmpresa {
         sw2 nullable: true
         validado nullable: true
         createUser nullable: true
-        updateUser nullbale: true
+        updateUser nullable: true
         sucursalCreated nullable: true
         sucursalUpdated nullable: true
 
