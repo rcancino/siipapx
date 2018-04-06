@@ -305,7 +305,11 @@ class VentaController extends RestfulController{
             return
         }
         Sucursal sucursal = AppConfig.first().sucursal
-        def query = Venta.where{ cliente == cliente && sucursal == sucursal && cuentaPorCobrar == null && facturar == null}
+        Date hoy = new Date()
+        Date fechaInicial = hoy - 14
+        def query = Venta.where{
+            cliente == cliente && sucursal == sucursal && cuentaPorCobrar == null && facturar == null && fecha >= fechaInicial && fecha <= hoy
+        }
         respond query.list(params)
     }
 
