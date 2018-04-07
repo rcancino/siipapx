@@ -24,6 +24,7 @@ class UrlMappings {
         }
         "/api/clientes"(resources: "cliente")
         "/api/clientes/actualizarCfdiMail/$id"(controller: "cliente", action: 'actualizarCfdiMail', method: 'PUT')
+        "/api/clientes/validarRfc"(controller: "cliente", action: 'validarRfc', method: 'GET')
 
         // SAT
         "/api/sat/bancos"(resources: "SatBanco")

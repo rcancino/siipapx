@@ -85,6 +85,12 @@ class ClienteController extends RestfulController{
 
     }
 
+    def validarRfc(){
+        String rfc = params.rfc
+        Cliente found = Cliente.where {rfc == rfc}.find()
+        respond found?: []
+    }
+
 
 
 
