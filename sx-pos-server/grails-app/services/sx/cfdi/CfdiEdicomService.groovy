@@ -17,16 +17,13 @@ class CfdiEdicomService {
 
     private Empresa empresa
 
-    def timbrar(Cfdi cfdi) {
-
-    }
 
     SOAPClient client = new SOAPClient("https://cfdiws.sedeb2b.com/EdiwinWS/services/CFDi?wsdl")
 
     @CompileDynamic
     def getCfdiTest(byte[] data){
         log.debug("Timbrando" )
-        Empresa empresa = Empresa.first()
+        Empresa empresa = getEmpresa()
         String url = 'http://cfdi.service.ediwinws.edicom.com'
         SOAPResponse response = client.send(SOAPAction: url, sslTrustAllCerts:true){
             body('xmlns:cfdi': 'http://cfdi.service.ediwinws.edicom.com') {
@@ -39,13 +36,25 @@ class CfdiEdicomService {
         }
         String res = response.getCfdiTestResponse
         return res.decodeBase64()
-
     }
 
-
-    Boolean isTimbradoDePrueba() {
-        return Environment.current != Environment.PRODUCTION
+    @CompileDynamic
+    def getCfdi(byte[] data){
+        Empresa empresa = getEmpresa()
+        String url = 'http://cfdi.service.ediwinws.edicom.com'
+        SOAPResponse response = client.send(SOAPAction: url, sslTrustAllCerts:true){
+            body('xmlns:cfdi': 'http://cfdi.service.ediwinws.edicom.com') {
+                getCfdi{
+                    user(empresa.usuarioPac)
+                    password(empresa.passwordPac)
+                    file(data.encodeBase64())
+                }
+            }
+        }
+        String res = response.getCfdiTestResponse
+        return res.decodeBase64()
     }
+
 
     Empresa getEmpresa() {
         if(!empresa) {

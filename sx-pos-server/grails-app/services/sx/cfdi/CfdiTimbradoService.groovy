@@ -46,10 +46,11 @@ class CfdiTimbradoService {
         byte[] res = null;
         if (this.isTimbradoDePrueba()) {
             log.debug('Timbrado de prueba')
-            res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
-            // res = cfdiEdicomService.getCfdiTest(file.bytes)
+            // res = edicomService.getCfdiTest('PAP830101CR3','yqjvqfofb', file.bytes)
+            res = cfdiEdicomService.getCfdiTest(file.bytes)
         } else {
-            res = edicomService.getCfdi('PAP830101CR3','yqjvqfofb', file.bytes)
+            // res = edicomService.getCfdi('PAP830101CR3','yqjvqfofb', file.bytes)
+            res = cfdiEdicomService.getCfdi(file.bytes)
         }
         log.debug('Timbrado exitoso')
         Map map = ZipUtils.descomprimir(res)
