@@ -51,7 +51,7 @@ class CfdiEdicomService {
                 }
             }
         }
-        String res = response.getCfdiTestResponse
+        String res = response.getCfdiResponse
         return res.decodeBase64()
     }
 
