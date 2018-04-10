@@ -14,6 +14,8 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
     	id venta.cliente.id
     	nombre venta.cliente.nombre
         telefonos venta.cliente.telefonos
+        cfdiMail venta.cliente.cfdiMail
+        cfdiMailValidado venta.cliente.getCfdiValidado()
     }
     vendedor {
     	id venta.vendedor.id
@@ -38,8 +40,12 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
             pagos venta.cuentaPorCobrar.pagos
             saldo venta.cuentaPorCobrar.saldo
             cfdi g.render(venta.cuentaPorCobrar.cfdi)
-
         }
+        if(venta.cuentaPorCobrar.cfdi){
+            enviado venta.cuentaPorCobrar.cfdi.enviado
+            cfdiMail venta.cuentaPorCobrar.cfdi.email
+        }
+
     }
     if(venta.socio) {
         socio {
@@ -47,6 +53,7 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
             nombre venta.socio.nombre
         }
     }
+
     
 
 }

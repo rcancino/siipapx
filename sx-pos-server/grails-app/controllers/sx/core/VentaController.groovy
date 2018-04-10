@@ -157,7 +157,7 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:100
+        params.max = params.registros ?:30
         params.sort = params.sort ?:'documento'
         params.order = params.order ?:'desc'
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}
