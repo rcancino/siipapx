@@ -1,6 +1,7 @@
 package sx.core
 
 import com.luxsoft.utils.ImporteALetra
+import com.luxsoft.utils.Periodo
 import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
 import groovy.transform.ToString
@@ -165,6 +166,21 @@ class VentaController extends RestfulController{
             log.debug('Facturas canceladas {}', params)
             query = query.where {cuentaPorCobrar.cancelada != null}
         }
+
+        if(params.cliente) {
+            def search = '%' + params.cliente + '%'
+            query = query.where { nombre =~ search }
+        }
+        if(params.usuario) {
+            def search = '%' + params.usuario + '%'
+            query = query.where { updateUser =~ search }
+        }
+        if( params.fechaInicial) {
+            Periodo periodo = new Periodo()
+            periodo.properties = params
+            query = query.where{ fecha >= periodo.fechaInicial && fecha<= periodo.fechaFinal}
+        }
+
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
