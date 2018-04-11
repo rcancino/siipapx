@@ -54,7 +54,7 @@ class CfdiEdicomService {
     }
 
     @CompileDynamic
-    getCfdiFromUUID(String uuid) {
+    getCfdiFromUUID(Cfdi cfdi) {
         Empresa empresa = getEmpresa()
         String url = 'http://cfdi.service.ediwinws.edicom.com'
         SOAPResponse response = client.send(SOAPAction: url, sslTrustAllCerts:true){

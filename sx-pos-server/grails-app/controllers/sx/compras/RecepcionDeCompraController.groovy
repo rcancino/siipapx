@@ -25,12 +25,21 @@ class RecepcionDeCompraController extends  RestfulController{
     public RecepcionDeCompraController() {
         super(RecepcionDeCompra)
     }
+    /*
+    def index() {
+        this.params.getBoolean('pendientes')
+    }
+    */
 
    @Override
     protected List listAllResources(Map params) {
+       log.debug('List: {}', params)
        params.sort = 'lastUpdated'
        params.order = 'desc'
        def query = RecepcionDeCompra.where {sucursal.id ==  params.sucursal}
+       if(params.getBoolean('pendientes')) {
+            query = query.where {fechaInventario == null}
+       }
        if(params.term) {
            if(params.term.isInteger()) {
                query = query.where{documento == params.term.toInteger() }

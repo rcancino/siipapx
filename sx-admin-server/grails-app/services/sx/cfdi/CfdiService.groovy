@@ -16,12 +16,18 @@ import sx.core.AppConfig
 import sx.core.Venta
 import sx.reports.ReportService
 
+import com.luxsoft.utils.ZipUtils
+import org.apache.commons.io.FileUtils
+
+
 @Transactional
 class CfdiService {
 
     private AppConfig config
 
     ReportService reportService
+
+    CfdiEdicomService cfdiEdicomService
 
     def grailsApplication
 
@@ -174,13 +180,40 @@ class CfdiService {
         return file.getBytes()
     }
 
+    def getCfdiLocation(Cfdi cfdi){
+        File dir = getCfdiDir(cfdi);
+        String subDir = "${cfdi.fecha[Calendar.YEAR]}/${cfdi.fecha[Calendar.MONTH]+1}/"
+        File targetDir = new File(dir, subDir)
+        if(!targetDir.exists()){
+            targetDir.mkdir()
+        }
+        return targetDir;
+    }
+
     def getCfdiDir(Cfdi cfdi) {
         String cfdiDirPath = grailsApplication.config.getProperty('sx.cfdi.dir')
-        String datePath = "${cfdi.fecha[Calendar.YEAR]}/${cfdi.fecha[Calendar.MONTH]+1}/${cfdi.fecha[Calendar.DATE]}"
-        File cfdiDir = new File("${cfdiDirPath/${datePath}}" )
-        assert cfdiDir.isDirectory(), cfdiDir.path + ' No ex dierctorio'
+        File cfdiDir = new File(cfdiDirPath)
+        assert cfdiDir.isDirectory(), cfdiDir.path + ' No es dierctorio'
         assert cfdiDir.exists(), 'No existe el directorio: ' + cfdiDir.path
+        return cfdiDir
     }
+
+
+    def downloadXmlFromUUID(Cfdi cfdi) {
+        def res = cfdiEdicomService.getCfdiFromUUID(cfdi)
+        Map map = ZipUtils.descomprimir(res)
+        def entry = map.entrySet().iterator().next()
+        def dir = getCfdiLocation(cfdi)
+        String fileName = "${cfdi.serie}-${cfdi.folio}_SIGNED.xml"
+        File target = new File(dir, fileName)
+        FileUtils.writeByteArrayToFile(target, entry.getValue())
+        cfdi.url = target.toURI().toURL()
+        cfdi.fileName = fileName
+        cfdi.comentario = "Actualizado desde EDICOM"
+        cfdi.save flush: true
+    }
+
+
 
 
 
