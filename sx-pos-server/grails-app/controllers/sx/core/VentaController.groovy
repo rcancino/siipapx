@@ -158,10 +158,10 @@ class VentaController extends RestfulController{
             notFound()
             return
         }
-        params.max = params.registros ?:30
+        params.max = params.registros ?:50
         params.sort = params.sort ?:'documento'
         params.order = params.order ?:'desc'
-        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null}
+        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar != null }
         if(params.boolean('canceladas')) {
             log.debug('Facturas canceladas {}', params)
             query = query.where {cuentaPorCobrar.cancelada != null}
@@ -178,7 +178,7 @@ class VentaController extends RestfulController{
         if( params.fechaInicial) {
             Periodo periodo = new Periodo()
             periodo.properties = params
-            query = query.where{ fecha >= periodo.fechaInicial && fecha<= periodo.fechaFinal}
+            query = query.where{ cuentaPorCobrar.fecha >= periodo.fechaInicial && cuentaPorCobrar.fecha<= periodo.fechaFinal}
         }
 
         if(params.term) {

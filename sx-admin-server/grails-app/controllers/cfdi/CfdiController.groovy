@@ -6,6 +6,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.rest.RestfulController
+import groovy.transform.ToString
 import sx.core.Cliente
 import sx.cxc.NotaDeCredito
 import sx.reports.ReportService
@@ -15,6 +16,8 @@ import sx.reports.ReportService
 class CfdiController extends RestfulController{
 
     CfdiTimbradoService cfdiTimbradoService
+
+    CfdiService cfdiService;
 
     ReportService reportService
 
@@ -104,5 +107,21 @@ class CfdiController extends RestfulController{
         }
         respond cfdi
     }
+
+    def envioBatch(){
+        EnvioBatchCommand command = new EnvioBatchCommand()
+        command.properties = getObjectToBind()
+        log.debug('Envio batch de facturas {}', command)
+        respond 'OK', status:200
+    }
+
+}
+
+@ToString(includeNames = true)
+public class EnvioBatchCommand {
+    Cliente cliente
+    List facturas;
+    String email
+
 
 }

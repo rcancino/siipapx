@@ -40,6 +40,7 @@ class UrlMappings {
         "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
         "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
         "/api/cfdis/enviarFacturaEmail"(controller: "cfdi", action: 'enviarFacturaEmail', method: 'PUT')
+        "/api/cfdis/envioBatch"(controller: "cfdi", action: 'envioBatch', method: 'PUT')
 
         // Compras
         "/api/compras"(resources: "compra"){

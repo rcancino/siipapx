@@ -214,7 +214,7 @@ class CfdiService {
         sendMail {
             multipart false
             to targetEmail
-            from 'papelsa-facturacion@papelsa.com.mx'
+            from 'facturacion@papelsa.com.mx'
             subject "Envio de Comprobantes fiscales digitales (CFDIs) ${observacion}"
             html view: "/cfdi/envioBatch", model: [facturas: cfdis]
             attachBytes "comprobantes.zip", "application/x-compressed", zipData

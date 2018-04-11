@@ -5,6 +5,8 @@ import grails.plugin.springsecurity.annotation.Secured
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.rest.RestfulController
+import groovy.transform.ToString
+import sx.core.Cliente
 import sx.core.Venta
 import sx.reports.ReportService
 
@@ -13,6 +15,8 @@ import sx.reports.ReportService
 class CfdiController extends RestfulController{
 
     CfdiTimbradoService cfdiTimbradoService
+
+    CfdiService cfdiService
 
     ReportService reportService
 
@@ -98,7 +102,30 @@ class CfdiController extends RestfulController{
         respond command
     }
 
+    def envioBatch(EnvioBatchCommand command){
+        if (command == null) {
+            notFound()
+            return
+        }
+        if (command.hasErrors()) {
+            respond command.errors
+            return
+        }
+        log.debug('Envio batch de facturas {}', command)
+        List<Cfdi> cfdis = []
+        command.facturas.each {
+            Cfdi c = Cfdi.get(it)
+            if (c.receptorRfc == command.cliente.rfc) {
+                cfdis<< c
+            }
+        }
+        cfdiService.envioBatch(cfdis, command.target, 'Envio automático');
+        log.debug('Cfdis por enviar: {}', cfdis.size())
+        respond 'OK', status:200
+    }
+
 }
+
 
 class EnvioDeFacturaCfdiCommand {
     String target
@@ -111,4 +138,17 @@ class EnvioDeFacturaCfdiCommand {
     String toString() {
         return "${factura?.statusInfo()} Email:${target}"
     }
+}
+
+
+@ToString(includeNames = true)
+public class EnvioBatchCommand {
+    Cliente cliente
+    List facturas;
+    String target
+
+    static constraints = {
+        target email: true
+    }
+
 }

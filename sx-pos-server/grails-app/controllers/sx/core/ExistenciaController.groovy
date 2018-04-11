@@ -67,7 +67,7 @@ class ExistenciaController extends RestfulController {
     @Override
     protected List listAllResources(Map params) {
         addPeriodo(params)
-        // log.debug('Exis: {}', params)
+        log.debug('Exis: {}', params)
         params.max = params.max ?: 40
         params.sort = 'lastUpdated'
         params.order = 'desc'
