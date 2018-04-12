@@ -6,6 +6,7 @@ import grails.events.annotation.Publisher
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import org.apache.commons.lang3.exception.ExceptionUtils
+import org.apache.commons.lang3.time.DateUtils
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
@@ -33,6 +34,9 @@ class VentaService implements  EventPublisher{
 
     @Publisher
     def save(Venta venta) {
+        if(venta.tipo == 'ANT'){
+            return saveFacturaDeAnticipo(venta)
+        }
         fixCortes(venta)
         fixDescuentos(venta)
         fixNombre(venta)
@@ -49,6 +53,24 @@ class VentaService implements  EventPublisher{
         }
         venta.save()
         return venta
+    }
+
+    def saveFacturaDeAnticipo(Venta venta) {
+        fixNombre(venta)
+        fixVendedor(venta)
+        if(venta.id == null){
+            Folio folio=Folio.findOrCreateWhere(entidad: 'VENTAS', serie: 'ANTICIPOS')
+            def res = folio.folio + 1
+            folio.folio = res
+            venta.documento = res
+            folio.save()
+        }
+        // Generar partida de anticipo
+        /*
+        VentaDet det = new VentaDet()
+        det.producto = Producto.where{}
+        */
+        venta.save()
     }
 
     /**
@@ -132,9 +154,10 @@ class VentaService implements  EventPublisher{
      * @return
      */
     @Publisher
-    def mandarFacturar(String ventaId) {
+    def mandarFacturar(String ventaId, String usuario) {
         Venta venta = Venta.get(ventaId)
-        log.debug('Mandando facturar venta......'+ venta.getFolio())
+        venta.facturarUsuario = usuario
+        // log.debug('Mandando facturar venta......'+ venta.getFolio())
         venta.facturar = new Date()
         venta.save()
         return venta
@@ -185,9 +208,7 @@ class VentaService implements  EventPublisher{
 
     def generarCfdi(Venta venta){
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
-        log.debug('Generando CFDI para  {}', venta.statusInfo())
         def comprobante = cfdiFacturaBuilder.build(venta)
-        // log.debug('Comprobante: {}', CfdiUtils.serialize(comprobante))
         def cfdi = cfdiService.generarCfdi(comprobante, 'I')
         venta.cuentaPorCobrar.cfdi = cfdi
         venta.save flush: true
@@ -234,10 +255,19 @@ class VentaService implements  EventPublisher{
      * @return
      */
     @Publisher
-    def cancelarFactura(Venta factura, String username, String motivo) {
+    def cancelarFactura(Venta factura, String username, String motivo, boolean validarDia = true) {
         assert factura.cuentaPorCobrar, "El pedido ${factura.statusInfo()} no esta facturado "
         assert username, 'Debe registrar usiuario para la cancelacion'
         assert motivo, 'Debe registrar motivo de cancelacion'
+
+        if(validarDia) {
+            Date hoy = new Date()
+            boolean mismoDia = DateUtils.isSameDay(hoy, factura.cuentaPorCobrar.fecha)
+            if(!mismoDia){
+                throw new RuntimeException("La Factura ${factura.statusInfo()} no es del dia  no se puede cancelar")
+            }
+        }
+
 
         log.debug('Cancelando factura {}', factura.statusInfo())
         CuentaPorCobrar cxc = factura.cuentaPorCobrar

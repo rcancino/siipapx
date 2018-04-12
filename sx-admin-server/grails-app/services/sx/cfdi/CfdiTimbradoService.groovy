@@ -67,6 +67,15 @@ class CfdiTimbradoService {
         cfdi.save flush: true
     }
 
+    def getCfdiFromUUID(Cfdi cfdi) {
+        byte[] res = cfdiEdicomService.getCfdiFromUUID(cfdi);
+        Map map = ZipUtils.descomprimir(res)
+        def dir = cfdiService.getCfdiLocation(cfdi)
+        File f = new File('')
+        f.toURI().toURL()
+
+    }
+
     /*
     def timbrarCerpi() {
       File file = FileUtils.toFile(cfdi.url)

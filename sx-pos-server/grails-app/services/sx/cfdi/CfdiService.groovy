@@ -1,5 +1,6 @@
 package sx.cfdi
 
+import com.luxsoft.cfdix.CFDIXUtils
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.gorm.transactions.Transactional
 import grails.web.context.ServletContextHolder
@@ -47,8 +48,8 @@ class CfdiService {
             cfdi.save failOnError: true, flush:true
             return cfdi
         }catch (Exception ex) {
-            ex.printStackTrace()
-            return null
+            //ex.printStackTrace()
+            throw ex;
         }
 
     }

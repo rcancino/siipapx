@@ -58,7 +58,7 @@ class VentaController extends RestfulController{
     @Transactional
     def mandarFacturar() {
         log.debug('Mandando facturar: ' + params)
-        def res = ventaService.mandarFacturar(params.id)
+        def res = ventaService.mandarFacturar(params.id, params.usuario)
         respond res
     }
 
@@ -245,7 +245,8 @@ class VentaController extends RestfulController{
             respond cfdi
             return
         }catch (Exception ex) {
-            respond( [message: ExceptionUtils.getRootCauseMessage(ex)], status: HttpStatus.NOT_ACCEPTABLE )
+            String m = ExceptionUtils.getRootCauseMessage(ex)
+            respond( [message: m], status: HttpStatus.NOT_ACCEPTABLE )
         }
     }
 

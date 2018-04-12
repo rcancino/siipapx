@@ -122,12 +122,3 @@ grails:
     cors:
         enabled: true
 ---
-sx:
-  cfdi:
-    #dir: '${user.home}/cfdis/'
-    dir: '/Volumes/xml'
-environments:
-  production:
-    sx:
-      cfdi:
-        dir: '/xml'

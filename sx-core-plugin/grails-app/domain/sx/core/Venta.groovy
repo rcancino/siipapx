@@ -62,6 +62,8 @@ class Venta {
 
     Date facturar
 
+    String facturarUsuario
+
     Boolean vale = false
 
     Sucursal sucursalVale
@@ -136,6 +138,7 @@ class Venta {
         sinExistencia nullable: true
         socio nullable: true
         chequePostFechado nullable: true
+        facturarUsuario nullable: true
     }
 
     static mapping = {

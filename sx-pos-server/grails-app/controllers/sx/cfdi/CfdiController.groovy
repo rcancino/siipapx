@@ -83,7 +83,7 @@ class CfdiController extends RestfulController{
             sendMail {
                 multipart false
                 to targetEmail
-                from 'credito.papelsa14@gmail.com'
+                from 'facturacion@papelsa.com.mx'
                 subject "Envio de CFDI ${cfdi.serie} ${cfdi.folio}"
                 text message
                 attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
