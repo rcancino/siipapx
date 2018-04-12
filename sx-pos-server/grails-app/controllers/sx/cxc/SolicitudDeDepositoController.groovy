@@ -21,11 +21,11 @@ class SolicitudDeDepositoController extends RestfulController{
 
         params.sort = 'lastUpdated'
         params.order = 'desc'
-        params.max = 50
+        params.max = 80
         def fechaFinal = new Date()
         def fechaInicial = fechaFinal - 5
 
-        log.debug('Buscando solicitudes: {}', params)
+        // log.debug('Buscando solicitudes: {}', params)
 
         def query = SolicitudDeDeposito.where {}
         
