@@ -34,6 +34,9 @@ class VentaService implements  EventPublisher{
 
     @Publisher
     def save(Venta venta) {
+        if(venta.tipo == 'ANT'){
+            return saveFacturaDeAnticipo(venta)
+        }
         fixCortes(venta)
         fixDescuentos(venta)
         fixNombre(venta)
@@ -50,6 +53,24 @@ class VentaService implements  EventPublisher{
         }
         venta.save()
         return venta
+    }
+
+    def saveFacturaDeAnticipo(Venta venta) {
+        fixNombre(venta)
+        fixVendedor(venta)
+        if(venta.id == null){
+            Folio folio=Folio.findOrCreateWhere(entidad: 'VENTAS', serie: 'ANTICIPOS')
+            def res = folio.folio + 1
+            folio.folio = res
+            venta.documento = res
+            folio.save()
+        }
+        // Generar partida de anticipo
+        /*
+        VentaDet det = new VentaDet()
+        det.producto = Producto.where{}
+        */
+        venta.save()
     }
 
     /**

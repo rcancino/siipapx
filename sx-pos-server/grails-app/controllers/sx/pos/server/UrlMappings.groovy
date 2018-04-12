@@ -65,6 +65,10 @@ class UrlMappings {
         "/api/pedidos"(resources:"pedido")
         "/api/pedidos/print/$id"(controller: "pedido", action: 'print', method: 'GET')
 
+        // Anticipos
+        "/api/cxc/anticipos"(resources: 'anticipo')
+        "/api/cxc/anticipos/print"(controller: "anticipo", action: 'print', method: 'GET')
+
         "/api/ventas"(resources:"venta")
         "/api/ventas/pendientes/$id"( controller: 'venta', action: 'pendientes')
         "/api/ventas/facturados/$id"( controller: 'venta', action: 'facturados')
@@ -215,6 +219,7 @@ class UrlMappings {
         "/api/report/facturasPendientesCodEmbarques"(controller: 'ventas', action: 'facturasPendientesCodEmbarques', method: 'GET')
         "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
         "/api/report/clientesNuevos"(controller: 'ventas', action: 'clientesNuevos', method: 'GET')
+
 
         // Security
         "/api/security/users"(resources: "user")
