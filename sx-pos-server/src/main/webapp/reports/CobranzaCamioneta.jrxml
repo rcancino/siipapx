@@ -159,6 +159,9 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 	<variable name="TOT_DEP_EFE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEPOSITO_EFECTIVO" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
+	<variable name="TOT_DEP_MIX" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[( $F{TIPO} .equals( "DEPOSITO_MIXTO" )  ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
+	</variable>
 
 		<group  name="TIPO" >
 			<groupExpression><![CDATA[$F{TIPO}]]></groupExpression>
@@ -859,7 +862,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="148"  isSplitAllowed="true" >
+			<band height="166"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="376"
@@ -895,7 +898,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="40"
-						y="58"
+						y="71"
 						width="77"
 						height="11"
 						forecolor="#000000"
@@ -915,7 +918,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="41"
-						y="71"
+						y="84"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1081,7 +1084,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="41"
-						y="84"
+						y="97"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1113,7 +1116,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="117"
-						y="58"
+						y="71"
 						width="84"
 						height="11"
 						key="textField-13"/>
@@ -1126,7 +1129,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="117"
-						y="71"
+						y="84"
 						width="84"
 						height="11"
 						key="textField-14"/>
@@ -1139,7 +1142,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="117"
-						y="84"
+						y="97"
 						width="84"
 						height="11"
 						key="textField-15"/>
@@ -1191,7 +1194,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="117"
-						y="137"
+						y="150"
 						width="84"
 						height="11"
 						key="textField-19"/>
@@ -1206,7 +1209,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="18"
-						y="137"
+						y="150"
 						width="99"
 						height="11"
 						forecolor="#000000"
@@ -1246,7 +1249,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="41"
-						y="84"
+						y="97"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1266,7 +1269,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="41"
-						y="97"
+						y="110"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1285,7 +1288,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="117"
-						y="97"
+						y="110"
 						width="84"
 						height="11"
 						key="textField-20"/>
@@ -1299,7 +1302,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="41"
-						y="97"
+						y="110"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1319,7 +1322,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="248"
-						y="128"
+						y="141"
 						width="114"
 						height="20"
 						forecolor="#000000"
@@ -1338,7 +1341,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="361"
-						y="128"
+						y="141"
 						width="77"
 						height="20"
 						key="textField-22"/>
@@ -1503,7 +1506,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="40"
-						y="110"
+						y="123"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1522,7 +1525,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="116"
-						y="110"
+						y="123"
 						width="84"
 						height="11"
 						key="textField-33"/>
@@ -1536,7 +1539,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="27"
-						y="110"
+						y="123"
 						width="89"
 						height="11"
 						forecolor="#000000"
@@ -1556,7 +1559,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="40"
-						y="123"
+						y="136"
 						width="76"
 						height="11"
 						forecolor="#000000"
@@ -1575,7 +1578,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="116"
-						y="123"
+						y="136"
 						width="84"
 						height="11"
 						key="textField-34"/>
@@ -1588,6 +1591,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 .subtract( $V{TOT_CHEQU} )
 .subtract( $V{TOT_DEP_EFE} )
 .subtract( $V{TOT_DEP_CHE} )
+.subtract($V{TOT_DEP_MIX} )
 .subtract($V{TOT_TRANSF} )
 .subtract( $V{TOT_TAR_C} )
 .subtract($V{TOT_TAR_D} )
@@ -1598,7 +1602,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="27"
-						y="123"
+						y="136"
 						width="89"
 						height="11"
 						forecolor="#000000"
@@ -1677,6 +1681,39 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEP_EFE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="40"
+						y="58"
+						width="77"
+						height="11"
+						forecolor="#000000"
+						key="staticText-68"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DEPOSITO MIX :]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="117"
+						y="58"
+						width="84"
+						height="11"
+						key="textField-37"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEP_MIX}]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>
