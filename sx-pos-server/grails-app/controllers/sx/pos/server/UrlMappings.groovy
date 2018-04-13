@@ -57,8 +57,10 @@ class UrlMappings {
         "/api/compras/devolucionCompra"(resources: "devolucionDeCompra")
 
         "/api/compras/recepciones/recepcionDeMercancia"(controller: "recepcionDeCompra", action: 'recepcionDeMercancia', method: 'GET')
+        "/api/compras/alcance"(controller: "alcance", action: 'generar', method: 'GET')
 
-
+        /// Alcances
+        "/api/alcances/generar"(controller: 'alcances', action: 'generar')
         // Ventas ////////////////////////////////
 
         // Pedidos
