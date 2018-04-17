@@ -60,7 +60,11 @@ class UrlMappings {
         "/api/compras/alcance"(controller: "alcance", action: 'generar', method: 'GET')
 
         /// Alcances
-        "/api/alcances/generar"(controller: 'alcances', action: 'generar')
+        "/api/alcances/list"(controller: 'alcances', action: 'list')
+        "/api/alcances/generar"(controller: 'alcances', action: 'generar', method: 'POST')
+        "/api/alcances/generarOrden"(controller: 'alcances', action: 'generarOrden', method: 'POST')
+        "/api/alcances/actualizarMeses"(controller: 'alcances', action: 'actualizarMeses', method: 'PUT')
+
         // Ventas ////////////////////////////////
 
         // Pedidos
