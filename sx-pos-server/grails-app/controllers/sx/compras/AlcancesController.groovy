@@ -1,5 +1,6 @@
 package sx.compras
 
+import com.luxsoft.utils.Periodo
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 import groovy.transform.ToString
@@ -77,7 +78,13 @@ class AlcancesController extends RestfulController<Compra>{
 
     def print( ) {
         //params.ID = params.id;
+        Periodo periodo = new Periodo()
+        periodo.properties = params
         params.SUCURSAL = AppConfig.first().sucursal.id
+        params.FECHA_INI = periodo.fechaInicial
+        params.FECHA_FIN = periodo.fechaFinal
+        params.MESES = params.getDouble('MESES')
+        params.MESESF = params.getDouble('MESESF')
         def pdf =  reportService.run('GeneralDeAlcance.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'OrdenDeCompraSuc.pdf')
     }
