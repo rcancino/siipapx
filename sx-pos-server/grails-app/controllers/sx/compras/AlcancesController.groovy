@@ -3,7 +3,9 @@ package sx.compras
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 import groovy.transform.ToString
+import sx.core.AppConfig
 import sx.core.Proveedor
+import sx.reports.ReportService
 
 @Secured("ROLE_COMPRAS_USER")
 class AlcancesController extends RestfulController<Compra>{
@@ -11,6 +13,8 @@ class AlcancesController extends RestfulController<Compra>{
     static responseFormats = ['json']
 
     AlcancesService alcancesService
+
+    ReportService reportService
 
     public AlcancesController(){
         super(Alcance)
@@ -69,6 +73,13 @@ class AlcancesController extends RestfulController<Compra>{
         Map data = ['updated': res]
         log.debug('Act: ', data)
         respond data, status:200
+    }
+
+    def print( ) {
+        //params.ID = params.id;
+        params.SUCURSAL = AppConfig.first().sucursal.id
+        def pdf =  reportService.run('GeneralDeAlcance.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'OrdenDeCompraSuc.pdf')
     }
 }
 
