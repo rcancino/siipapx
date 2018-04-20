@@ -52,9 +52,10 @@ class TrasladoController extends RestfulController {
                 log.debug('Buscando: {}', search)
                 if (params.tipo == 'TPE') {
                     log.debug('Buscando {} por sucursal Atiende {}', params.tipo, search)
+                    query = query.where { comentario =~ search }
                 } else {
                     log.debug('Buscando {} por sucursal Atiende {}', params.tipo, search)
-                    query = query.where { solicitudDeTraslado.sucursalAtiende.nombre =~ search }
+                    query = query.where { solicitudDeTraslado.sucursalAtiende.nombre =~ search || comentario =~ search }
                 }
 
             }

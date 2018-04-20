@@ -54,7 +54,7 @@
  ELSE 10 END AS ORDEN_PAGO
 ,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='COD' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
-	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION)') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
+	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DEPOSITABLE
 ,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='COD' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
 	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} 	 AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
