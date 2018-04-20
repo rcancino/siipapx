@@ -64,9 +64,25 @@ class CorteDeTarjetaController extends RestfulController {
         CobroTarjeta cobroTarjeta = new CobroTarjeta()
         bindData(cobroTarjeta, getObjectToBind())
         Cobro cobro = cobroTarjeta.cobro
-        cobro.tarjeta.visaMaster = cobroTarjeta.visaMaster
-        cobro.tarjeta.debitoCredito = cobroTarjeta.debitoCredito
-        cobro.formaDePago = cobroTarjeta.debitoCredito ? 'TARJETA_DEBITO' : 'TARJETA_CREDITO'
+
+        if(cobroTarjeta.debitoCredito) {
+            cobro.tarjeta.debitoCredito = true
+            cobro.tarjeta.visaMaster = true
+            cobro.formaDePago = 'TARJETA_DEBITO'
+        }
+
+        if(cobroTarjeta.visaMaster && !cobroTarjeta.debitoCredito) {
+            cobro.tarjeta.debitoCredito = false
+            cobro.tarjeta.visaMaster = true
+            cobro.formaDePago = 'TARJETA_CREDITO'
+        }
+
+        if(!cobroTarjeta.visaMaster){
+            cobro.tarjeta.visaMaster = false
+            cobro.tarjeta.debitoCredito = false
+            cobro.formaDePago = 'TARJETA_CREDITO'
+        }
+
         corteDeTarjetaService.actualizarComisiones(cobro.tarjeta)
         cobro.save flush:true
         respond cobro
