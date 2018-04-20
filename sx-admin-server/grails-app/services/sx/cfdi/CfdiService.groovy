@@ -154,7 +154,7 @@ class CfdiService {
         """
         sendMail {
             multipart false
-            from "noreplay@papelsa.com.mx"
+            from 'facturacion@papelsa.mobi'
             to targetEmail
             subject "Envio de CFDI Serie: ${cfdi.serie} Folio: ${cfdi.folio}"
             html "<p>${message}</p> "

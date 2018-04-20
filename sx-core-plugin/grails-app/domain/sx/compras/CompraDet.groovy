@@ -59,6 +59,7 @@ class CompraDet {
     static constraints = {
         comentario nullable: true
         depuracion nullable: true
+        sw2 nullable:true
     }
 
     static mapping = {

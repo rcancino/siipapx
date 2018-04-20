@@ -3,7 +3,7 @@ package sx.cxc
 import grails.rest.RestfulController
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
-
+import org.apache.commons.lang3.time.DateUtils
 import sx.core.Folio
 import sx.core.Sucursal
 
@@ -23,9 +23,10 @@ class SolicitudDeDepositoController extends RestfulController{
         params.order = 'desc'
         params.max = 80
         def fechaFinal = new Date()
-        def fechaInicial = fechaFinal - 5
+        Date fechaInicial = fechaFinal - 7
 
         // log.debug('Buscando solicitudes: {}', params)
+        // log.debug('Fecha Inicial: {}', fechaInicial)
 
         def query = SolicitudDeDeposito.where {}
         
@@ -35,7 +36,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
 
         if(params.pendientes) {
-            query = query.where{ cobro == null  && fecha >= fechaInicial }
+            query = query.where{ cobro == null && fecha >=  fechaInicial }
         }
 
         if(params.autorizadas) {

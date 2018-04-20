@@ -77,9 +77,9 @@ cxf {
     }
 }
 grails.plugin.console.enabled = true
-
+/*
 grails {
-
+    // Mailjet
     mail{
         port= 465
         host= "in-v3.mailjet.com"
@@ -90,6 +90,21 @@ grails {
                 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
                 "mail.smtp.socketFactory.fallback":"false"
                 //"mail.smtp.ssl.trust":"smtp.mailgun.com"
+        ]
+    }
+}
+*/
+grails {
+    // Gmail
+    mail{
+        port= 465
+        host= "smt.gmail.com"
+        username= "{mai.user}"
+        password='${mail.password}'
+        props= ["mail.smtp.auth":"true",
+                "mail.smtp.socketFactory.port":"465",
+                "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+                "mail.smtp.socketFactory.fallback":"false"
         ]
     }
 }

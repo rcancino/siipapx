@@ -24,6 +24,8 @@ class Compra {
 
     Date fecha
 
+    Date cerrada
+
     Date entrega
 
 	String comentario
@@ -77,6 +79,7 @@ class Compra {
         sw2 nullable:true
         createdBy nullable: true
         lastUpdatedBy nullable: true
+        cerrada nullable: true
 
     }
 
@@ -88,6 +91,7 @@ class Compra {
         fecha type:'date', index: 'COMPRA_IDX1'
         entrega type:'date'
         folio index: 'COMPRA_IDX2'
+        cerrada type: 'date'
     }
 
     def actualizarStatus() {
