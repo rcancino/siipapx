@@ -9,6 +9,7 @@ model {
 
 json g.render(compra, [deep:true,excludes:['moneda','dateCreated','lastUpdated','partidas','sw2']]){
 	partidas g.render(compra.partidas)
+    // pendientes compra.pendientes()
 	// partidas g.render(compra.partidas, [deep: false, excludes:['compra','lastUpdated']] )
 }
 

@@ -48,17 +48,7 @@ class RecepcionDeCompraController extends  RestfulController{
                query = query.where { proveedor.nombre =~ search || remision =~ search}
            }
        }
-       /*
-        if(params.documento) {
-            def documento = params.int('documento')
-            query = query.where {documento >=  documento}
-        }
-        if(params.remision) {
-            def remision = params.remision
-            query = query.where {remision >=  remision}
-        }
-        */
-        return query.list(params)
+       return query.list(params)
     }
 
     // @Override
@@ -86,7 +76,7 @@ class RecepcionDeCompraController extends  RestfulController{
             return
         }
         def q = Compra.where{ (sucursal == command.sucursal || sucursal.nombre == 'OFICINAS') && folio == command.folio }
-        
+        q = q.where { cerrada != null && pendiente == true}
         Compra res = q.find()
 
         if (res == null) {

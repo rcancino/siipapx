@@ -70,6 +70,8 @@ class UrlMappings {
         "/api/tesoreria/solicitudes/ingreso/$id"( controller: 'solicitudDeDeposito', action: 'ingreso', method: 'PUT')
         "/api/tesoreria/solicitudes/cobranzaContado"(controller: 'solicitudDeDeposito', action: 'cobranzaContado', method: 'GET')
         "/api/tesoreria/solicitudes/cobranzaCod"(controller: 'solicitudDeDeposito', action: 'cobranzaCod',  method: 'GET')
+        "/api/tesoreria/solicitudes/disponibles"(controller: 'solicitudDeDeposito', action: 'disponibles',  method: 'GET')
+        "/api/tesoreria/solicitudes/ventasDiarias"(controller: 'solicitudDeDeposito', action: 'ventasDiarias',  method: 'GET')
 
         "/api/tesoreria/cortesTarjeta"(resources: 'corteDeTarjeta')
         "/api/tesoreria/cortesTarjeta/pendientes"( controller: 'corteDeTarjeta', action: 'pendientes')

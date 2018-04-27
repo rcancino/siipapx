@@ -220,7 +220,7 @@ class CfdiService {
             html view: "/cfdi/envioBatch", model: [facturas: cfdis]
             attachBytes "comprobantes.zip", "application/x-compressed", zipData
         }
-        cfdis.each { Cfdi
+        cfdis.each { Cfdi cfdi ->
             try {
                 cfdi.enviado = new Date()
                 cfdi.email = targetEmail

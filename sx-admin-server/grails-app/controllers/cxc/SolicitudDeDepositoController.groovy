@@ -315,6 +315,26 @@ class SolicitudDeDepositoController extends RestfulController{
 
     }
 
+    def disponibles(SolsFechaSucursalCommand command) {
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = command.sucursal.id
+        def pdf = this.reportService.run('DisponiblesSucursal', repParams)
+        def fileName = "DisponiblesSucursal.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+
+    }
+    def ventasDiarias(SolsFechaSucursalCommand command) {
+        Map repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy/MM/dd')
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['ORIGEN'] = params.origen
+        def pdf = this.reportService.run('ventas_diarias', repParams)
+        def fileName = "VentasDiarias.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+
+    }
+
 
 }
 
