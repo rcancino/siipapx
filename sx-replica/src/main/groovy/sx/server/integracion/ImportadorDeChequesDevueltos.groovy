@@ -68,6 +68,7 @@ class ImportadorDeChequesDevueltos implements Importador, SW2Lookup {
     }
 
     def build(def row){
+        /*
         println('Importando Cheque devuelto con ROW: ' + row)
         def cheque = ChequeDevuelto.where{ sw2 == row.sw2}.find()
         if(!cheque){
@@ -96,7 +97,7 @@ class ImportadorDeChequesDevueltos implements Importador, SW2Lookup {
         }catch (Exception ex){
             println(ExceptionUtils.getRootCauseMessage(ex))
         }
-
+        */
     }
 
 

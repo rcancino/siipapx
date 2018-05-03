@@ -38,7 +38,6 @@ class CobroCheque {
     Date lastUpdated
 
 
-
     static belongsTo = [cobro: Cobro]
 
     static constraints = {

@@ -84,6 +84,13 @@ class ClienteController extends RestfulController{
         respond rows
     }
 
+    def socios(Cliente cliente){
+        params.sort = 'nombre'
+        params.order = 'asc'
+        def rows = Socio.where {cliente == cliente}.list(params)
+        respond rows
+    }
+
     def estadoDeCuenta(CobranzaPorFechaCommand command){
         def repParams = [FECHA: command.fecha]
         repParams.ORIGEN = params.cartera

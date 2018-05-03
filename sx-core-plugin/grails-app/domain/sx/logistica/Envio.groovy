@@ -100,8 +100,16 @@ class Envio {
 
     }
 
-    def afterDelete() {
-
+    def beforeDelete() {
+        if( entidad == 'VENTA') {
+            CondicionDeEnvio.withNewSession {
+                CondicionDeEnvio envio = CondicionDeEnvio.where{venta.id == origen}.find()
+                if(envio) {
+                    envio.asignado = null;
+                    envio.save flush: true
+                }
+            }
+        }
     }
 
     def beforeUpdate() {

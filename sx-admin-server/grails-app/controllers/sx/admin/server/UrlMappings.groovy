@@ -28,6 +28,11 @@ class UrlMappings {
         "/api/clientes/$id/cxc"(controller: 'cliente', action: 'cxc', method: 'GET')
         "/api/clientes/$id/cobros"(controller: 'cliente', action: 'cobros', method: 'GET')
         "/api/clientes/$id/notas"(controller: 'cliente', action: 'notas', method: 'GET')
+        // "/api/clientes/$id/socios"(controller: 'cliente', action: 'socios', method: 'GET')
+        "/api/clientes"(resources: "cliente"){
+            "/socios"(resources: 'socio')
+        }
+
         "/api/clientes/estadoDeCuenta"(controller: "cliente", action: 'estadoDeCuenta', method: 'GET')
 
         // SAT

@@ -103,10 +103,11 @@ class ImportadorDeNotasDeCargo implements Importador, SW2Lookup{
             NotaDeCargoDet det = new  NotaDeCargoDet()
 
             if(row.tipo=='CHE'){
-                ChequeDevuelto chequeDevuelto=ChequeDevuelto.where{sw2==row.venta_id}.find()
+                /* ChequeDevuelto chequeDevuelto=ChequeDevuelto.where{sw2==row.venta_id}.find()
                 if(!chequeDevuelto){
                     chequeDevuelto=importadorDeChequesDevueltos.importar(row.venta_id)
                 }
+                */
             }else{
                 Venta venta=Venta.where{sw2==row.venta_id}.find()
 

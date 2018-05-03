@@ -14,11 +14,11 @@ class SocioController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('Buscando socios params: {}', params)
+        log.info('List: {}', params)
         def query = Socio.where {}
         params.sort = params.sort ?:'clave'
         params.order = params.order ?:'desc'
-        params.max = params.max ?: 20
+        params.max = params.max ?: 30
         if(params.term){
             def search = '%' + params.term + '%'
             query = query.where { nombre =~ search }

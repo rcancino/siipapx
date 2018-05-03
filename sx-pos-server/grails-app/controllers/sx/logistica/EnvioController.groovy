@@ -9,8 +9,6 @@ import sx.core.Sucursal
 import sx.core.Venta
 import grails.transaction.Transactional
 
-
-
 @Secured("ROLE_INVENTARIO_USER")
 class EnvioController extends RestfulController {
     
@@ -25,10 +23,13 @@ class EnvioController extends RestfulController {
     
 
     protected Envio updateResource(Envio resource) {
-        
         return super.updateResource(resource)
     }
 
+
+    protected void deleteResource(Envio envio) {
+        log.info('Eliminando envio: {}', envio);
+    }
 
     def buscarPartidasParaEnvio(EnvioPartidasSearchCommand command){
         command.validate()

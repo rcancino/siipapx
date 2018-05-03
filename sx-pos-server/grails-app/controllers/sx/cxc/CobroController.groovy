@@ -129,10 +129,16 @@ class CobroController extends RestfulController{
             notFound()
             return
         }
-        params.max = 20
+        params.max = 50
         params.sort = 'fecha'
         params.order = 'asc'
-        def cobros = Cobro.findAll(' from Cobro c where c.cliente = ? and c.importe - c.aplicado > 0', cliente)
+        def cobros = Cobro.findAll(' from Cobro c where c.cliente = ?  and c.importe - c.aplicado > 0 ', cliente)
+        cobros = cobros.findAll{
+            if(it.cheque) {
+                return it.cheque.cambioPorEfectivo == false
+            }
+            return true
+        }
         respond cobros
     }
 
