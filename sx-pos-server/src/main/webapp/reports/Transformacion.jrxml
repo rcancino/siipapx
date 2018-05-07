@@ -28,7 +28,7 @@
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT T.id as TRANSFORMACION_ID,T.tipo as CLASE,T.DOCUMENTO,T.FECHA,T.SUCURSAL_ID,T.COMENTARIO,T.tipo as CLASE
-,p.KILOS,t.fecha
+,(case when p.unidad='MIL' then a.CANTIDAD/1000 else a.CANTIDAD end)*P.KILOS AS KILOS,p.KILOS AS KxMLL,t.fecha
 ,(case when p.unidad='MIL' then a.CANTIDAD/1000 else a.CANTIDAD end) AS CANTIDAD,p.UNIDAD as UNIDAD_ID,a.partidas_idx+1 as RENGLON,p.CLAVE,p.DESCRIPCION,a.COMENTARIO AS COM_ART,t.tipo as TRTIP,t.FECHA,b.NOMBRE
 ,CASE WHEN T.POR_INVENTARIO IS TRUE THEN '*** POR INVENTARIO ***' ELSE  '' END  AS POR_INV
 FROM transformacion T
@@ -44,6 +44,7 @@ where T.ID=$P{ID}]]></queryString>
 	<field name="SUCURSAL_ID" class="java.lang.String"/>
 	<field name="COMENTARIO" class="java.lang.String"/>
 	<field name="KILOS" class="java.math.BigDecimal"/>
+	<field name="KxMLL" class="java.math.BigDecimal"/>
 	<field name="CANTIDAD" class="java.math.BigDecimal"/>
 	<field name="UNIDAD_ID" class="java.lang.String"/>
 	<field name="RENGLON" class="java.lang.Long"/>
@@ -397,7 +398,7 @@ where T.ID=$P{ID}]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COM_ART}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="527"
 						y="1"
