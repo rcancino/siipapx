@@ -9,5 +9,6 @@ json g.render(cliente, [excludes:['credito','direccion','medios']]){
     telefonos cliente.telefonos
     fax cliente.fax
     cfdiMail cliente.cfdiMail
+    medios g.render(cliente.medios)
 }
 
