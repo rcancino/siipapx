@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="PapelCFDI3"
+		 name="PapelCFDI3copia"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -2598,7 +2598,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<text><![CDATA[CLIENTE]]></text>
+				<text><![CDATA[COPIA]]></text>
 				</staticText>
 			</band>
 		</pageFooter>
@@ -2684,7 +2684,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<text><![CDATA[CLIENTE]]></text>
+				<text><![CDATA[COPIA]]></text>
 				</staticText>
 			</band>
 		</lastPageFooter>
