@@ -3,18 +3,18 @@ package sx.cxc
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Cliente
-import sx.core.Sucursal
-import sx.core.Venta
 import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
-class CuentaPorCobrarController extends RestfulController{
+class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
     static responseFormats = ['json']
 
     ReportService reportService
 
     CuentaPorCobrarService cuentaPorCobrarService
+
+    AntiguedadService antiguedadService
 
     CuentaPorCobrarController() {
         super(CuentaPorCobrar)
@@ -24,8 +24,8 @@ class CuentaPorCobrarController extends RestfulController{
     protected List listAllResources(Map params) {
 
         def query = CuentaPorCobrar.where {}
-        params.sort = params.sort ?:'lastUpdated'
-        params.order = params.order ?:'desc'
+        params.sort = params.sort ?:'fecha'
+        params.order = params.order ?:'asc'
         if(params.documento){
           int documento = params.int('documento')
           query = query.where { documento >= documento }
@@ -46,6 +46,13 @@ class CuentaPorCobrarController extends RestfulController{
         params.order = params.order ?:'asc'
         def cartera = params.cartera ?: 'CRE'
         def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.tipo = ? and c.total - c.pagos > 0 ", [cliente, cartera])
+        respond rows
+    }
+
+    def antiguedad(){
+        // Antiguedad de saldos
+        log.info('Generando antiguedad de saldos {}', params);
+        def rows = antiguedadService.antiguedad()
         respond rows
     }
 
