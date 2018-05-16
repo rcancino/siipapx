@@ -116,7 +116,9 @@ class CuentaPorCobrar {
 
     Integer getAtraso() {
         if (getSaldo() && vencimiento) {
-            return vencimiento - fecha
+            def hoy  = new Date()
+            def res =  hoy - vencimiento
+            return  res <= 0 ? 0 : res;
         }
         return 0
     }

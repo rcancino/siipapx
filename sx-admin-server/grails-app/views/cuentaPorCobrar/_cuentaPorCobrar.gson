@@ -13,6 +13,7 @@ json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','
     sucursal cuentaPorCobrar.sucursal.nombre
     if(cuentaPorCobrar.credito) {
         cobrador cuentaPorCobrar.cliente.credito.cobrador.sw2
+        plazo cuentaPorCobrar.cliente.credito.plazo
     }
     credito g.render(cuentaPorCobrar.credito)
 
