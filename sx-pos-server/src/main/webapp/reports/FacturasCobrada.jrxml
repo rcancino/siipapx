@@ -49,7 +49,8 @@ WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobra
 ,IFNULL(((   SELECT SUM(O.DIFERENCIA) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='CON' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 
 	AND O.sucursal_id=$P{SUCURSAL} AND DATE(O.primera_aplicacion) =$P{FECHA} AND  o.forma_de_pago NOT IN('PAGO_DIF','BONIFICACION','DEVOLUCION') AND O.ANTICIPO IS FALSE  )),0) AS DIF
-,CASE   WHEN o.forma_de_pago='EFECTIVO' THEN 1
+,CASE   WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
+	WHEN o.forma_de_pago='EFECTIVO' THEN 1
         WHEN o.forma_de_pago='CHEQUE'  THEN 2
         WHEN o.forma_de_pago='TRANSFERENCIA' THEN 3
         WHEN SUBSTR(o.forma_de_pago,1,17)='DEPOSITO_EFECTIVO' THEN 4.1
@@ -58,7 +59,6 @@ WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobra
         WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5.1
         WHEN o.forma_de_pago='TARJETA_AMEX' THEN 5.2
         WHEN ANTICIPO IS TRUE THEN 6
-        WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
         WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
         WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
 	   WHEN o.forma_de_pago='BONIFICACION'  THEN 9
@@ -803,7 +803,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP-X Rx]]></text>
+				<text><![CDATA[SIIPAP SX-rx]]></text>
 				</staticText>
 			</band>
 		</pageFooter>
@@ -919,7 +919,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP-X Rx]]></text>
+				<text><![CDATA[SIIPAP SX-rx]]></text>
 				</staticText>
 			</band>
 		</lastPageFooter>

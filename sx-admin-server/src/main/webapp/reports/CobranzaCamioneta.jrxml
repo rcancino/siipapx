@@ -38,7 +38,8 @@
 ,C.total-A.IMPORTE-o.diferencia  AS DIFERENCIA
 ,CASE 	WHEN o.anticipo is true then 'ANTICIPO' WHEN date(o.primera_aplicacion) <> a.FECHA THEN 'SALDO_A_FAVOR'	 WHEN (SELECT T.COBRO_ID FROM cobro_tarjeta T WHERE T.cobro_id=O.ID AND T.visa_master IS false) IS NOT NULL THEN 'TARJETA_AMEX' ELSE   o.forma_de_pago  END AS TIPO
 ,o.forma_de_pago TIPO_PAGO
-,CASE   WHEN o.forma_de_pago='EFECTIVO' THEN 1
+,CASE   WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
+	WHEN o.forma_de_pago='EFECTIVO' THEN 1
         WHEN o.forma_de_pago='CHEQUE'  THEN 2
         WHEN o.forma_de_pago='TRANSFERENCIA' THEN 3
         WHEN SUBSTR(o.forma_de_pago,1,17)='DEPOSITO_EFECTIVO' THEN 4.1
@@ -47,7 +48,6 @@
         WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5
         WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
         WHEN ANTICIPO IS TRUE THEN 6
-        WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
         WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
         WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
 	   WHEN o.forma_de_pago='BONIFICACION'  THEN 9
@@ -140,7 +140,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "BONIFICACION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_NODEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[$V{TOT_SAF}.add( $V{TOT_DEVOL} ).add( $V{TOTALDIFERENCIAP} ).add($V{TOTALDIFERENCIAG} ).add( $V{TOT_ANT} ).add($V{TOT_ESP} ).add($V{TOT_BONIF})]]></variableExpression>
+		<variableExpression><![CDATA[$V{TOT_SAF}.subtract( $V{TOT_DEVOL} ).add($V{TOTALDIFERENCIAG} ).add( $V{TOT_ANT} ).add($V{TOT_ESP} ).add($V{TOT_BONIF})]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[$V{TOT_EFEC}
@@ -741,7 +741,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP-X Rx]]></text>
+				<text><![CDATA[SIIPAP SX-rx]]></text>
 				</staticText>
 			</band>
 		</pageFooter>
@@ -857,7 +857,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP-X Rx]]></text>
+				<text><![CDATA[SIIPAP SX-rx]]></text>
 				</staticText>
 			</band>
 		</lastPageFooter>
@@ -1596,7 +1596,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 .subtract( $V{TOT_TAR_C} )
 .subtract($V{TOT_TAR_D} )
 .subtract($V{TOT_TAR_A} )
-.add($V{TOTALDIFERENCIAP})]]></textFieldExpression>
+.subtract($F{DIF})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
