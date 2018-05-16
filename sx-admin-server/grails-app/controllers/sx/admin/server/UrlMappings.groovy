@@ -97,9 +97,9 @@ class UrlMappings {
         "/api/cxc/cobro/reporteDeCobranza"(controller: "cobro", action: 'reporteDeCobranza', method: 'GET')
         "/api/cxc/cobro/reporteDeRelacionDePagos"(controller: "cobro", action: 'reporteDeRelacionDePagos', method: 'GET')
 
-
-
-
+        "/api/cobradores"(resources:"cobrador")
+        "/api/vendedores"(resources:"vendedor")
+        "/api/despachos"(resources:"despachoDeCobranza")
 
         "/api/cxc/notas"(resources: "notaDeCredito")
         "/api/cxc/notas/buscarRmd"(controller: "notaDeCredito", action: 'buscarRmd', method: 'GET')
@@ -117,6 +117,7 @@ class UrlMappings {
 
 
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/cuentasPorCobrar/antiguedad"(controller: 'cuentaPorCobrar', action: 'antiguedad', method: 'GET')
         "/api/cuentasPorCobrar/pendientes/$id"(controller: 'cuentaPorCobrar', action: 'pendientes', method: 'GET')
         "/api/cuentasPorCobrar/saldar/$id"(controller: 'cuentaPorCobrar', action: 'saldar', method: 'PUT')
 

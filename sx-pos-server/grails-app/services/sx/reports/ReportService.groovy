@@ -6,6 +6,7 @@ import grails.plugins.jasper.JasperReportDef
 import grails.plugins.jasper.JasperService
 
 import grails.gorm.transactions.Transactional
+import net.sf.jasperreports.export.PdfExporterConfiguration
 
 @Transactional
 @GrailsCompileStatic
@@ -36,4 +37,44 @@ class ReportService {
         ByteArrayOutputStream  stream=jasperService.generateReport(reportDef)
         return stream
     }
+
+    ByteArrayOutputStream imprimirFactura(String reportName, Map params, Collection data){
+
+        // log.debug("Ejecutando reporte {} con parametros: ${params} y data: ${data}", reportName)
+        log.debug("Ejecutando reporte {}", reportName)
+
+
+        def reportes = []
+
+        for(def i=1 ; i<=2 ; i++){
+
+
+            if(i == 1){
+                def reportDef1=new JasperReportDef(
+                        name:reportName,
+                        fileFormat: JasperExportFormat.PDF_FORMAT,
+                        parameters:params,
+                        reportData:data
+                )
+
+                reportes.add(reportDef1)
+
+            }
+
+            if(i == 2){
+                def reportDef2=new JasperReportDef(
+                        name:'PapelCFDI3copia',
+                        fileFormat: JasperExportFormat.PDF_FORMAT,
+                        parameters:params,
+                        reportData:data
+                )
+
+                reportes.add(reportDef2)
+            }
+        }
+        ByteArrayOutputStream  stream=jasperService.generateReport(reportes)
+        return stream
+    }
+
+
 }

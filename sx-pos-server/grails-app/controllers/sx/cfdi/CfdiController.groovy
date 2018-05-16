@@ -54,7 +54,8 @@ class CfdiController extends RestfulController{
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
         parametros.FACTURA_USD = realPath + '/facUSD.jpg'
-        return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        // return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        return reportService.imprimirFactura('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 
     private generarImpresionV32( Cfdi cfdi) {
