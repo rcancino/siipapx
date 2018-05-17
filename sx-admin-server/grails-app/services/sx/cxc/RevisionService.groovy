@@ -2,6 +2,7 @@ package sx.cxc
 
 
 import grails.gorm.transactions.Transactional
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.core.Cliente
 
 
@@ -97,12 +98,19 @@ class RevisionService {
                         " and c.total - c.pagos > 0 " +
                         " and c.uuid is not null " +
                         " and c.credito is null " +
+                        " and c.cancelada is null" +
                         " order by c.fecha desc",
                 ['CRE'])
         List generated = []
         rows.each {
-            registrarRevision(it)
-            generated << it
+            try{
+                registrarRevision(it)
+                generated << it
+            }catch (Exception ex) {
+                String msg = ExceptionUtils.getRootCauseMessage(ex)
+                log.debug('Error al generar registrar revision y cobro para : {}', it.id)
+                log.debug('Error: {}', msg)
+            }
         }
         return generated
     }

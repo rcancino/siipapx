@@ -60,7 +60,7 @@ class ClienteController extends RestfulController{
 
     }
     def cxc(Cliente cliente){
-        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
+        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.tipo = 'CRE' and c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
         respond rows
     }
 

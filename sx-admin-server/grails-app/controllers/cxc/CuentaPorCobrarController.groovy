@@ -63,4 +63,10 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         respond cxc
     }
 
+    def printAntiguedad() {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def pdf = reportService.run('AntiguedadSaldosGral.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
+    }
+
 }

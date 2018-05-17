@@ -20,7 +20,6 @@ class VentaCreditoController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        log.debug('Buscando revisiones params: {}', params)
         params.max = 5000
         def query = CuentaPorCobrar.where {credito != null}
         params.sort = params.sort ?:'lastUpdated'
