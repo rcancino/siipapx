@@ -53,6 +53,19 @@ class RevisionService {
         cxc.save failOnError: true, flush: true
     }
 
+    def actualizarRevision(VentaCredito credito) {
+        Date hoy = new Date()
+        Integer diaRevision = credito.diaRevision
+        Integer diaPago = credito.diaPago
+        credito.fechaRevision = getProximaRevision(hoy, diaRevision)
+        credito.reprogramarPago = getProximoPago(hoy, diaPago)
+        if(credito.fechaRevision >= credito.reprogramarPago) {
+            credito.reprogramarPago = getProximoPago(credito.fechaRevision, diaPago)
+        }
+        credito.save failOnError: true, flush: true
+        return credito
+    }
+
     def actualizar(CuentaPorCobrar cxc) {
         if(cxc.credito == null)
             return registrarRevision(cxc)

@@ -6,8 +6,8 @@ import sx.core.Cobrador
 import sx.core.Socio
 
 
-@ToString(excludes = ["id,version,dateCreated,lastUpdated"],includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = 'id,cxc')
+// @ToString(excludes = ["id,version,dateCreated, lastUpdated, cuentaPorCobrar"],includeNames=true,includePackage=false)
+@EqualsAndHashCode(includeFields = true,includes = 'id')
 class VentaCredito {
 
     String id
@@ -58,6 +58,8 @@ class VentaCredito {
 
     String updateUser
 
+    CuentaPorCobrar cuentaPorCobrar;
+
     static constraints = {
         comentarioReprogramarPago nullable:true
         fechaRecepcionCxc nullable:true
@@ -80,4 +82,6 @@ class VentaCredito {
         reprogramarPago type:'date'
 
     }
+
+    static belongsTo = [cuentaPorCobrar: CuentaPorCobrar];
 }

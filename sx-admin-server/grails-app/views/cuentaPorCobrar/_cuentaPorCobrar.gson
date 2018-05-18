@@ -12,8 +12,8 @@ json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','
     cfdi g.render(cuentaPorCobrar.cfdi)
     sucursal cuentaPorCobrar.sucursal.nombre
     if(cuentaPorCobrar.credito) {
-        cobrador cuentaPorCobrar.cliente.credito.cobrador.sw2
-        plazo cuentaPorCobrar.cliente.credito.plazo
+        cobrador cuentaPorCobrar.credito.cobrador.sw2
+        plazo cuentaPorCobrar.credito.plazo
     }
     credito g.render(cuentaPorCobrar.credito)
 

@@ -6,7 +6,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
-class VentaCreditoController extends RestfulController{
+class VentaCreditoController extends RestfulController<VentaCredito>{
 
     static responseFormats = ['json']
 
@@ -19,19 +19,18 @@ class VentaCreditoController extends RestfulController{
     }
 
     @Override
-    protected List listAllResources(Map params) {
-        params.max = 5000
-        def query = CuentaPorCobrar.where {credito != null}
+    protected List<VentaCredito> listAllResources(Map params) {
+        params.max = 50
+        // def query = CuentaPorCobrar.where {credito != null}
+        def query = VentaCredito.where{}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
-        if(params.documento){
-            int documento = params.int('documento')
-            query = query.where { documento >= documento }
-        }
-        if(params.cliente){
-            query = query.where { cliente.id == params.cliente}
-        }
         return query.list(params)
+    }
+
+    @Override
+    protected VentaCredito updateResource(VentaCredito resource) {
+        this.revisionService.actualizarRevision(resource)
     }
 
     def generar() {
