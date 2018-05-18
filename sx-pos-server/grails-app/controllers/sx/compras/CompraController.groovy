@@ -99,11 +99,9 @@ class CompraController extends RestfulController{
             Compra compra = command.compra
             command.partidas.each { String id ->
                 CompraDet det = compra.partidas.find { it.id == id}
-                if(det.getPorRecibir() > 0 ) {
-                    det.depurado = det.getPorRecibir()
-                    det.depuracion = new Date()
-                    compra.ultimaDepuracion = det.depuracion
-                }
+                det.depurado = det.getPorRecibir()
+                det.depuracion = new Date()
+                compra.ultimaDepuracion = det.depuracion
             }
             compra.actualizarStatus();
             compra.save failOnError: true, flush: true
