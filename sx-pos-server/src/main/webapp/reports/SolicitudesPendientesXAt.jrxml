@@ -39,9 +39,7 @@ JOIN producto P ON(P.ID=I.PRODUCTO_ID)
 join sucursal b on(B.ID=M.sucursal_solicita_id) 
 join sucursal S on(S.ID=M.sucursal_atiende_id) 
 left join traslado T on(T.solicitud_de_traslado_id=M.ID)
-where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND M.NO_ATENDER IS FALSE AND T.ID IS NULL
-
-]]></queryString>
+where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND M.NO_ATENDER IS FALSE AND T.ID IS NULL]]></queryString>
 
 	<field name="ID" class="java.lang.String"/>
 	<field name="SUC_SOL" class="java.lang.String"/>
@@ -107,7 +105,7 @@ where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ELABORO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="326"
 						y="2"

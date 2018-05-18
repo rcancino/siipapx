@@ -62,6 +62,30 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 	<sortField name="CLAVE" />
 
 
+		<group  name="SUC_ATIENDE" >
+			<groupExpression><![CDATA[]]></groupExpression>
+			<groupHeader>
+			<band height="16"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="272"
+						y="0"
+						width="124"
+						height="15"
+						key="textField"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SUC_ATD}]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="50"  isSplitAllowed="true" >
+			</band>
+			</groupFooter>
+		</group>
 		<group  name="SOLICITUD" >
 			<groupExpression><![CDATA[$F{DOCUMENTO}]]></groupExpression>
 			<groupHeader>
@@ -105,7 +129,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ELABORO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="326"
 						y="2"
@@ -117,19 +141,6 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{REFERENCIA}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="8"
-						y="3"
-						width="58"
-						height="15"
-						key="textField"/>
-					<box></box>
-					<textElement verticalAlignment="Top">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SUC_ATD}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
@@ -321,19 +332,6 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 						<font size="8"/>
 					</textElement>
 				<text><![CDATA[SOL]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="8"
-						y="4"
-						width="57"
-						height="12"
-						key="staticText-70"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<text><![CDATA[SUC. ATIENDE]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
