@@ -58,6 +58,17 @@ class CfdiController extends RestfulController{
         return reportService.imprimirFactura('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 
+    private generarImpresionParaMailV33( Cfdi cfdi, boolean envio = false) {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def data = V33PdfGenerator.getReportData(cfdi, envio)
+        Map parametros = data['PARAMETROS']
+        parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
+        parametros.FACTURA_USD = realPath + '/facUSD.jpg'
+        return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+
+    }
+
     private generarImpresionV32( Cfdi cfdi) {
     }
 
@@ -76,7 +87,7 @@ class CfdiController extends RestfulController{
 
         if (targetEmail) {
             def xml = cfdi.getUrl().getBytes()
-            def pdf = generarImpresionV33(cfdi, true).toByteArray()
+            def pdf = generarImpresionParaMailV33(cfdi, true).toByteArray()
 
             String message = """Apreciable cliente por este medio le hacemos llegar la factura electrónica de su compra. Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración 
                 la puede dirigir a: servicioaclientes@papelsa.com.mx 
