@@ -45,6 +45,16 @@ class VentaCreditoController extends RestfulController<VentaCredito>{
         respond status: 200
     }
 
+    def batchUpdate(BatchUpdateCommand command){
+        log.info('Batch update de {} facturas con {}', command.facturas.size(), command.template.fechaRecepcionCxc)
+        List<VentaCredito> facturas = command.facturas;
+        facturas.each {
+            bindData(it, command.template)
+            it.save flush: true
+        }
+        respond facturas
+    }
+
     def print() {
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         params.FECHA = new Date();
@@ -52,4 +62,15 @@ class VentaCreditoController extends RestfulController<VentaCredito>{
         def pdf = reportService.run('FacturasAcobroYRevision.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
     }
+}
+
+public class BatchUpdateCommand {
+    VentaCreditoCommand template;
+    List<VentaCredito> facturas;
+}
+
+public class VentaCreditoCommand {
+
+    Date fechaRecepcionCxc
+
 }
