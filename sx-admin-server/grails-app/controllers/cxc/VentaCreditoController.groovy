@@ -44,4 +44,12 @@ class VentaCreditoController extends RestfulController<VentaCredito>{
         revisionService.recalcularPendientes()
         respond status: 200
     }
+
+    def print() {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        params.FECHA = new Date();
+        params.COBRADOR_NOMBRE = '%'
+        def pdf = reportService.run('FacturasAcobroYRevision.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
+    }
 }
