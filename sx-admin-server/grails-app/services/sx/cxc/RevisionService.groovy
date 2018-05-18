@@ -57,7 +57,9 @@ class RevisionService {
         Date hoy = new Date()
         Integer diaRevision = credito.diaRevision
         Integer diaPago = credito.diaPago
-        credito.fechaRevision = getProximaRevision(hoy, diaRevision)
+        if(!credito.revisada) {
+            credito.fechaRevision = getProximaRevision(hoy, diaRevision)
+        }
         credito.reprogramarPago = getProximoPago(hoy, diaPago)
         if(credito.fechaRevision >= credito.reprogramarPago) {
             credito.reprogramarPago = getProximoPago(credito.fechaRevision, diaPago)
@@ -67,6 +69,9 @@ class RevisionService {
     }
 
     def actualizar(CuentaPorCobrar cxc) {
+        if (cxc.getSaldo() <= 0.0){
+            return cxc
+        }
         if(cxc.credito == null)
             return registrarRevision(cxc)
         Date vto = cxc.vencimiento

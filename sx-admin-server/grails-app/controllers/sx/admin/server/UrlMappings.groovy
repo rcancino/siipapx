@@ -126,6 +126,9 @@ class UrlMappings {
         "/api/cxc/ventaCredito/generar"(controller: 'ventaCredito', action: 'generar', method: 'POST')
         "/api/cxc/ventaCredito/recalcular"(controller: 'ventaCredito', action: 'generar', method: 'POST')
         "/api/cxc/ventaCredito/batchUpdate"(controller: 'ventaCredito', action: 'batchUpdate', method: 'POST')
+        "/api/cxc/ventaCredito/registrarRecepcionCxC"(controller: 'ventaCredito', action: 'registrarRecepcionCxC', method: 'PUT')
+        "/api/cxc/ventaCredito/cancelarRecepcionCxC"(controller: 'ventaCredito', action: 'cancelarRecepcionCxC', method: 'PUT')
+        "/api/cxc/ventaCredito/registrarRvisada"(controller: 'ventaCredito', action: 'registrarRvisada', method: 'PUT')
         "/api/cxc/ventaCredito/print"(controller: 'ventaCredito', action: 'print', method: 'GET')
 
 
