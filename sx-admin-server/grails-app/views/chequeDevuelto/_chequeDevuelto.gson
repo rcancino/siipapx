@@ -1,3 +1,4 @@
+import sx.cxc.ChequeDevuelto
 import groovy.transform.Field
 
 @Field ChequeDevuelto chequeDevuelto

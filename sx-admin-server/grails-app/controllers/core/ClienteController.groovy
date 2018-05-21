@@ -36,6 +36,7 @@ class ClienteController extends RestfulController{
             }
         }
         if(params.term){
+            log.debug('Busacando clientes: {}', params.term)
             def search = '%' + params.term + '%'
             query = query.where { nombre =~ search}
         }
@@ -60,8 +61,10 @@ class ClienteController extends RestfulController{
 
     }
     def cxc(Cliente cliente){
-        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.tipo = 'CRE' and c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
-        respond rows
+        def rows = CuentaPorCobrar
+                .findAll("from CuentaPorCobrar c  where c.tipo = 'CRE' and c.cliente = ? and c.total - c.pagos > 0 ", [cliente])
+
+        respond rows.sort {it.atraso}.reverse()
     }
 
     def notas(Cliente cliente){

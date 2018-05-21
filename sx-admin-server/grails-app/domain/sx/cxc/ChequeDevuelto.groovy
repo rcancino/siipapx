@@ -6,7 +6,7 @@ import groovy.transform.ToString
 
 @ToString(excludes = ["id,lastUpdated,dateCreated"],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
-@GrailsCompileStatic
+// @GrailsCompileStatic
 class ChequeDevuelto {
 
     String	id
