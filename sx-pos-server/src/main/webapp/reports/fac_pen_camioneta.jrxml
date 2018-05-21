@@ -45,7 +45,7 @@ s.ID= $P{SUCURSAL}
 and v.tipo='COD' 
 and  V.FECHA<=$P{FECHA} AND V.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA')
 union 
-select 'N' AS TIP,S.clave AS CLAVE,s.nombre as suc,a.fecha,A.referencia as FOLIO,l.CLAVE,l.NOMBRE,a.tipo_de_cambio as tc,NULL as dias_vencido
+select 'N' AS TIP,S.clave AS CLAVE,s.nombre as suc,a.fecha,ifnull(A.referencia,0) as FOLIO,l.CLAVE,l.NOMBRE,a.tipo_de_cambio as tc,0 as dias_vencido
 ,(a.importe-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.cobro_id AND T.FECHA<=$P{FECHA}),0))as saldo
 ,(a.importe-ifnull((select sum(t.importe)from aplicacion_de_cobro t where a.id=t.cobro_id AND T.FECHA<=$P{FECHA}),0))as saldo2,'' AS PAGO
 FROM cobro A join cliente l on (a.cliente_id=l.id) JOIN sucursal S  ON (a.sucursal_id=s.id)
