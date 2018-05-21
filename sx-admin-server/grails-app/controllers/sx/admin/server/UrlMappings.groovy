@@ -119,6 +119,7 @@ class UrlMappings {
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/antiguedad"(controller: 'cuentaPorCobrar', action: 'antiguedad', method: 'GET')
         "/api/cuentasPorCobrar/antiguedad/print"(controller: 'cuentaPorCobrar', action: 'printAntiguedad', method: 'GET')
+        "/api/cuentasPorCobrar/antiguedad/reporteDeCobranzaCOD"(controller: 'cuentaPorCobrar', action: 'reporteDeCobranzaCOD', method: 'GET')
         "/api/cuentasPorCobrar/pendientes/$id"(controller: 'cuentaPorCobrar', action: 'pendientes', method: 'GET')
         "/api/cuentasPorCobrar/saldar/$id"(controller: 'cuentaPorCobrar', action: 'saldar', method: 'PUT')
 
