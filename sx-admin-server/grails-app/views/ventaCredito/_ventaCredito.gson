@@ -16,5 +16,5 @@ json g.render(ventaCredito, [excludes:['dateCreated','lastUpdated','cobrador']])
     fecha ventaCredito.cuentaPorCobrar.fecha
     saldo ventaCredito.cuentaPorCobrar.saldo
     atraso ventaCredito.cuentaPorCobrar.atraso
-}
+} s
 

@@ -78,7 +78,7 @@ class CuentaPorCobrar {
 
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
-        tipo nullable:true, inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
+        tipo nullable:true, inList:['CON','COD','CRE','CHE','JUR','PSF','INE','OTR','ACF','ANT','AND']
         documento maxSize: 20
         uuid nullable:true, unique:true
         tipoDeCambio(scale:6)

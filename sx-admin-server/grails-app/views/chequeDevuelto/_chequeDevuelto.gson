@@ -1,0 +1,8 @@
+import groovy.transform.Field
+
+@Field ChequeDevuelto chequeDevuelto
+
+json g.render(chequeDevuelto, [excludes:['dateCreated','lastUpdated', 'version']]){
+
+}
+

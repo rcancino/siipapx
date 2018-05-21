@@ -131,6 +131,8 @@ class UrlMappings {
         "/api/cxc/ventaCredito/registrarRvisada"(controller: 'ventaCredito', action: 'registrarRvisada', method: 'PUT')
         "/api/cxc/ventaCredito/print"(controller: 'ventaCredito', action: 'print', method: 'GET')
 
+        // Cheques devueltos
+        "/api/cxc/cheques"(resources: "chequeDevuelto")
 
         //Existencias
         "/api/existencias"(resources: "existencia")
