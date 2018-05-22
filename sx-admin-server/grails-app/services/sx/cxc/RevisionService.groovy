@@ -9,13 +9,12 @@ class RevisionService {
 
     def buscarPendientes(){
         def rows = VentaCredito.findAll(
-                "from VentaCredito v join v.cuentaPorCobrar   c  " +
-                        " where  c.tipo = ? " +
-                        " and c.total - c.pagos > 0 " +
-                        " and c.cfdi.uuid is not null " +
-                        " and c.credito is not null " +
-                        " and c.cancelada is null" +
-                        " order by c.fecha desc",
+                "from VentaCredito v  " +
+                        " where  v.cuentaPorCobrar.tipo = ? " +
+                        " and v.cuentaPorCobrar.total - v.cuentaPorCobrar.pagos > 0 " +
+                        " and v.cuentaPorCobrar.cfdi.uuid is not null " +
+                        " and v.cuentaPorCobrar.cancelada is null" +
+                        " order by v.cuentaPorCobrar.fecha desc",
                 ['CRE'])
         return rows
     }

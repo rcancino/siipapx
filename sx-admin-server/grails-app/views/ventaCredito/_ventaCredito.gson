@@ -3,7 +3,7 @@ import sx.cxc.VentaCredito
 
 @Field VentaCredito ventaCredito
 
-json g.render(ventaCredito, [excludes:['dateCreated','lastUpdated','cobrador']]){
+json g.render(ventaCredito, [excludes:['dateCreated','lastUpdated','cobrador','cuentaPorCobrar']]){
     cliente ventaCredito.cuentaPorCobrar.cliente.id
     nombre ventaCredito.cuentaPorCobrar.cliente.nombre
     sucursal ventaCredito.cuentaPorCobrar.sucursal.nombre

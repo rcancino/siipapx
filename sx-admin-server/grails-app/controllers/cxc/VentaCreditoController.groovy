@@ -28,12 +28,15 @@ class VentaCreditoController extends RestfulController{
         return rows
         */
         params.max = 50
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
         def query = VentaCredito.where {}
         query.list(params)
     }
 
     def pendientes() {
         def rows = revisionService.buscarPendientes()
+        // log.debug('Registros encontrados: ', )
         respond rows
     }
 
