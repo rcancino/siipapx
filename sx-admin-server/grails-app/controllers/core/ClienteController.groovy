@@ -41,7 +41,7 @@ class ClienteController extends RestfulController{
             }
         }
         if(params.term){
-            log.debug('Busacando clientes: {}', params.term)
+            // log.debug('Busacando clientes: {}', params.term)
             def search = '%' + params.term + '%'
             query = query.where { nombre =~ search}
         }

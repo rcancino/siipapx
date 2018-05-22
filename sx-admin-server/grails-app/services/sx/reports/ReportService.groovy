@@ -8,7 +8,7 @@ import grails.plugins.jasper.JasperService
 import grails.gorm.transactions.Transactional
 
 @Transactional
-@GrailsCompileStatic
+// @GrailsCompileStatic
 class ReportService {
 
     JasperService jasperService

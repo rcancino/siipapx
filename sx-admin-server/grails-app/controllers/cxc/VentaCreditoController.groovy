@@ -3,11 +3,12 @@ package sx.cxc
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.transform.ToString
+import sx.core.Cliente
 import sx.core.Cobrador
 import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
-class VentaCreditoController extends RestfulController<VentaCredito>{
+class VentaCreditoController extends RestfulController{
 
     static responseFormats = ['json']
 
@@ -19,17 +20,24 @@ class VentaCreditoController extends RestfulController<VentaCredito>{
         super(VentaCredito)
     }
 
-    @Override
-    protected List<VentaCredito> listAllResources(Map params) {
+
+    protected List listAllResources(Map params) {
+        /*
+        def rows = revisionService.buscarPendientes()
+        log.debug('Registros pendientes de venta credito: {}' , rows.size())
+        return rows
+        */
         params.max = 50
-        // def query = CuentaPorCobrar.where {credito != null}
-        def query = VentaCredito.where{}
-        params.sort = params.sort ?:'lastUpdated'
-        params.order = params.order ?:'desc'
-        return query.list(params)
+        def query = VentaCredito.where {}
+        query.list(params)
     }
 
-    @Override
+    def pendientes() {
+        def rows = revisionService.buscarPendientes()
+        respond rows
+    }
+
+
     protected VentaCredito updateResource(VentaCredito resource) {
         this.revisionService.actualizarRevision(resource)
     }
@@ -87,10 +95,12 @@ class VentaCreditoController extends RestfulController<VentaCredito>{
         respond facturas
     }
 
-    def print() {
+    def print(RevisionCobroCommand command) {
+        log.info ('Command: {}', command)
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
-        params.FECHA = new Date();
-        params.COBRADOR_NOMBRE = '%'
+        params.FECHA = command.fecha
+        params.COBRADOR = command.cobrador ? command.cobrador.id : '%'
+        params.CLIENTE = command.cliente ? command.cliente.id : '%'
         def pdf = reportService.run('FacturasAcobroYRevision.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
     }
@@ -103,6 +113,23 @@ public class BatchUpdateCommand {
     static constraints = {
         template nullable: true
     }
+}
+
+
+public class RevisionCobroCommand {
+    Date fecha
+    Cliente cliente
+    Cobrador cobrador
+
+    static constraints = {
+        cliente nullable: true
+        cobrador nullable: true
+    }
+
+    String toString() {
+        "${fecha.format('dd/MM/yyyy')} ${cliente?.nombre} ${cobrador?.nombres}"
+    }
+
 }
 
 @ToString(includeNames=true,includePackage=false)

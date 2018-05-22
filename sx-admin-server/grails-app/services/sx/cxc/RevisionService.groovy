@@ -3,18 +3,29 @@ package sx.cxc
 
 import grails.gorm.transactions.Transactional
 import org.apache.commons.lang3.exception.ExceptionUtils
-import sx.core.Cliente
-import sx.core.Venta
 
 
 class RevisionService {
+
+    def buscarPendientes(){
+        def rows = VentaCredito.findAll(
+                "from VentaCredito v join v.cuentaPorCobrar   c  " +
+                        " where  c.tipo = ? " +
+                        " and c.total - c.pagos > 0 " +
+                        " and c.cfdi.uuid is not null " +
+                        " and c.credito is not null " +
+                        " and c.cancelada is null" +
+                        " order by c.fecha desc",
+                ['CRE'])
+        return rows
+    }
 
     def generar() {
         def rows = CuentaPorCobrar.findAll(
                 "from CuentaPorCobrar c  " +
                         " where  c.tipo = ? " +
                         " and c.total - c.pagos > 0 " +
-                        " and c.uuid is not null " +
+                        " and c.cfdi.uuid is not null " +
                         " and c.credito is null " +
                         " and c.cancelada is null" +
                         " order by c.fecha desc",

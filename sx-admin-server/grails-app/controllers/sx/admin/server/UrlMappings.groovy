@@ -124,6 +124,7 @@ class UrlMappings {
         "/api/cuentasPorCobrar/saldar/$id"(controller: 'cuentaPorCobrar', action: 'saldar', method: 'PUT')
 
         "/api/cxc/ventaCredito"(resources: 'ventaCredito')
+        "/api/cxc/ventaCredito/pendientes"(controller: 'ventaCredito', action: 'pendientes', method: 'GET')
         "/api/cxc/ventaCredito/generar"(controller: 'ventaCredito', action: 'generar', method: 'POST')
         "/api/cxc/ventaCredito/recalcular"(controller: 'ventaCredito', action: 'recalcular', method: 'POST')
         "/api/cxc/ventaCredito/batchUpdate"(controller: 'ventaCredito', action: 'batchUpdate', method: 'POST')
