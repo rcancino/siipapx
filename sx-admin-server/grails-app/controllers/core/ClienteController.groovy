@@ -20,7 +20,12 @@ class ClienteController extends RestfulController{
     ClienteController(){
         super(Cliente)
     }
-    
+
+    @Override
+    protected Object updateResource(Object resource) {
+        return super.updateResource(resource)
+    }
+
     @Override
     protected List listAllResources(Map params) {
         // log.debug('Buscando clientes: {}', params)

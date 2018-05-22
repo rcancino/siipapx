@@ -71,11 +71,15 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def reporteDeCobranzaCOD(CobranzaCodCommand command) {
-        params.FECHA = command.fecha.format('yyyy-MM-dd')
-        params.SUCURSAL = command.sucursal
+
+        def repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy-MM-dd')
+        repParams.SUCURSAL = command.sucursal.id
+        println 'Reporte de cobranza    ' +  repParams
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
-        def pdf = reportService.run('CarteraCOD_Emb.jrxml', params)
-        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
+        log.info('Parametros: {}', repParams)
+        def pdf = reportService.run('CarteraCOD_Emb.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CarteraCOD.pdf')
     }
 
 }
