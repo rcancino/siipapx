@@ -3,6 +3,7 @@ package sx.cxc
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Cliente
+import sx.core.Sucursal
 import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
@@ -69,4 +70,21 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
     }
 
+    def reporteDeCobranzaCOD(CobranzaCodCommand command) {
+
+        def repParams = [:]
+        repParams.FECHA = command.fecha.format('yyyy-MM-dd')
+        repParams.SUCURSAL = command.sucursal.id
+        println 'Reporte de cobranza    ' +  repParams
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        log.info('Parametros: {}', repParams)
+        def pdf = reportService.run('CarteraCOD_Emb.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CarteraCOD.pdf')
+    }
+
+}
+
+class CobranzaCodCommand {
+    Sucursal sucursal
+    Date fecha
 }

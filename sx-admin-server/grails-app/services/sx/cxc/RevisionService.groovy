@@ -4,24 +4,35 @@ package sx.cxc
 import grails.gorm.transactions.Transactional
 import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.core.Cliente
+import sx.core.Venta
 
 
 class RevisionService {
 
-    def actualizarPendientes() {
+    def generar() {
         def rows = CuentaPorCobrar.findAll(
                 "from CuentaPorCobrar c  " +
                         " where  c.tipo = ? " +
                         " and c.total - c.pagos > 0 " +
                         " and c.uuid is not null " +
                         " and c.credito is null " +
+                        " and c.cancelada is null" +
                         " order by c.fecha desc",
                 ['CRE'])
-        rows.each { CuentaPorCobrar cxc ->
-            registrarRevision(cxc)
+        List generated = []
+        rows.each {
+            try{
+                registrarRevision(it)
+                generated << it
+            }catch (Exception ex) {
+                String msg = ExceptionUtils.getRootCauseMessage(ex)
+                log.debug('Error al generar registrar revision y cobro para : {}', it.id)
+                log.debug('Error: {}', msg)
+            }
         }
-
+        return generated
     }
+
 
     @Transactional
     def registrarRevision(CuentaPorCobrar cxc) {
@@ -53,6 +64,8 @@ class RevisionService {
         cxc.save failOnError: true, flush: true
     }
 
+
+
     def actualizarRevision(VentaCredito credito) {
         Date hoy = new Date()
         Integer diaRevision = credito.diaRevision
@@ -66,21 +79,6 @@ class RevisionService {
         }
         credito.save failOnError: true, flush: true
         return credito
-    }
-
-    def actualizar(CuentaPorCobrar cxc) {
-        if (cxc.getSaldo() <= 0.0){
-            return cxc
-        }
-        if(cxc.credito == null)
-            return registrarRevision(cxc)
-        Date vto = cxc.vencimiento
-        Integer diaRevision = cxc.credito.diaRevision
-        Integer diaPago = cxc.credito.diaPago
-        cxc.credito.fechaRevision = getProximaRevision(vto, diaRevision)
-        cxc.credito.reprogramarPago = getProximoPago(vto, diaPago)
-        cxc.credito.save failOnError: true, flush: true
-        return cxc
     }
 
     def getProximaRevision(def fecha, Integer diaRevision){
@@ -109,52 +107,20 @@ class RevisionService {
         }
     }
 
-    def generar() {
-        def rows = CuentaPorCobrar.findAll(
-                "from CuentaPorCobrar c  " +
-                        " where  c.tipo = ? " +
-                        " and c.total - c.pagos > 0 " +
-                        " and c.uuid is not null " +
-                        " and c.credito is null " +
-                        " and c.cancelada is null" +
-                        " order by c.fecha desc",
-                ['CRE'])
-        List generated = []
-        rows.each {
-            try{
-                registrarRevision(it)
-                generated << it
-            }catch (Exception ex) {
-                String msg = ExceptionUtils.getRootCauseMessage(ex)
-                log.debug('Error al generar registrar revision y cobro para : {}', it.id)
-                log.debug('Error: {}', msg)
-            }
-        }
-        return generated
-    }
+
 
     def recalcularPendientes(Date fecha = new Date(), String comentarioRepPago = ''){
-        def rows = CuentaPorCobrar.findAll(
-                "from CuentaPorCobrar c  " +
-                        " where  c.credito != null and " +
+
+        def rows = VentaCredito.findAll(
+                "from VentaCredito c  " +
                         " c.tipo = ? " +
-                        " and c.credito is not null " +
-                        " and c.credito.revision = true " +
-                        " and c.total - c.pagos > 0 " +
-                        " and c.uuid is not null " +
+                        " and c.revision = true " +
+                        " and c.cxc.total - c.cxc.pagos > 0 " +
+                        " and c.cxc.uuid is not null " +
                         " order by c.fecha desc",
                 ['CRE'])
-        rows.each { CuentaPorCobrar cxc ->
-            VentaCredito credito = cxc.credito
-            if(!credito.revisada){
-                credito.fechaRevision = getProximaRevision(fecha, credito.diaRevision)
-                credito.save flush: true
-            } else {
-                credito.reprogramarPago = getProximoPago(fecha, credito.diaPago)
-                credito.comentarioReprogramarPago = comentarioRepPago
-                credito.save flush: true
-
-            }
+        rows.each { VentaCredito credito ->
+            actualizarRevision(credito)
         }
     }
 
