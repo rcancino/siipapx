@@ -1,6 +1,7 @@
 package com.luxsoft.utils
 
 import grails.databinding.BindingFormat
+import grails.web.databinding.WebDataBinding
 
 
 // import grails.validation.Validateable;
@@ -9,7 +10,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 // @Validateable
-class Periodo implements Comparable<Periodo>{
+class Periodo implements Comparable<Periodo>, WebDataBinding{
 	
 
 	Date fechaInicial

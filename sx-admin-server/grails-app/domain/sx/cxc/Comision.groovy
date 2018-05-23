@@ -41,7 +41,9 @@ class Comision {
 
     String tipo
 
-    String nombre
+    String comisionista
+
+    String clave
 
     Date cancelada
 
@@ -62,6 +64,7 @@ class Comision {
         updateUser nullable: true
         createUser nullable: true
         tipo unique: ['cxc']
+        clave maxSize: 5
     }
 
     static mapping = {
@@ -69,7 +72,8 @@ class Comision {
         fechaIni type:'date'
         fechaFin type:'date'
         cancelada type: 'date'
-        fechaPago type: 'date'
+        fechaCobro type: 'date'
+        pagoComision type: 'date'
 
     }
 
