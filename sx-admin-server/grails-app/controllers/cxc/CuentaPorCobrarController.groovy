@@ -107,6 +107,17 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
     }
 
+    def reporteExceptionesDescuentos(FacturasConNtaCommand command) {
+        def repParams = [:]
+        repParams.SUCURSAL = command.sucursal.id
+        repParams.FECHA_INI = command.fechaIni
+        repParams.FECHA_FIN = command.fechaFin
+        repParams.ORIGEN = command.origen
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def pdf = reportService.run('ExcepcionesEnDescuento.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'FacsCancPorNotaDev.pdf')
+    }
+
 
 
 
