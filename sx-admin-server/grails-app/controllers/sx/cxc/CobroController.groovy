@@ -1,14 +1,11 @@
 package sx.cxc
 
-import grails.gorm.transactions.Transactional
+
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
-import grails.web.databinding.WebDataBinding
-import org.apache.commons.lang.builder.ToStringBuilder
 import sx.core.AppConfig
 import sx.reports.ReportService
 import sx.core.Sucursal
-import sx.tesoreria.PorFechaCommand
 
 
 @Secured("hasRole('ROLE_CXC_USER')")
@@ -17,6 +14,8 @@ class CobroController extends RestfulController{
     CobroService cobroService
 
     ReportService reportService
+
+    ChequeDevueltoService chequeDevueltoService
 
     static responseFormats = ['json']
 
@@ -74,20 +73,26 @@ class CobroController extends RestfulController{
     }
 
     def cobrosMonetarios(CobranzaPorFechaCommand command) {
-        log.debug('Cobros monetarios{}', params)
-
+        log.info('Cobros {}', params)
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
         def query = Cobro.where { sucursal == AppConfig.first().sucursal }
         if(command.getFecha()) {
-            query = query.where {fecha == command.fecha}
+            // log.debug('Cobros por fecha Ini: {}, {}', command.fecha, command.fechaFin)
+            if(command.fechaFin == null )
+                command.fechaFin = command.fecha
+            query = query.where {fecha >= command.fecha && fecha <= command.fechaFin}
         }
 
         if(params.cartera) {
             query = query.where { tipo == params.cartera}
         }
+        if(params.importe) {
+            BigDecimal importe = params.importe as BigDecimal
+            query = query.where {importe == importe}
+         }
 
         query = query.where{formaDePago == 'CHEQUE' || formaDePago == 'EFECTIVO' || formaDePago == 'TARJETA_DEBITO' || formaDePago == 'TARJETA_CREDITO'}
         if(params.term) {
@@ -120,6 +125,14 @@ class CobroController extends RestfulController{
         respond cobro
     }
 
+    def registrarChequeDevuelto(Cobro cobro){
+        assert cobro.cheque, "El cobro debe de ser tipo cheque y tener registro de CobroCheque. Cobro tipo: ${cobro.tipo}"
+        this.chequeDevueltoService.registrarChequeDevuelto(cobro.cheque)
+        cobro.comentario = "CHEQUE DEVUELTO"
+        cobro.save flush: true
+        respond cobro
+    }
+
     def reporteDeCobranza(CobranzaPorFechaCommand command){
         def repParams = [FECHA: command.fecha]
         repParams.ORIGEN = params.cartera
@@ -144,6 +157,11 @@ class PorSucursalFechaRepCommand {
 
 class CobranzaPorFechaCommand {
     Date fecha
+    Date fechaFin
+
+    static constraints = {
+        fechaFin nullable: true
+    }
 }
 
 class RelacionPagosCommand {

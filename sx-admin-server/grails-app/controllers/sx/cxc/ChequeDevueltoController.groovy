@@ -1,4 +1,4 @@
-package sx.cx
+package sx.cxc
 
 import grails.compiler.GrailsCompileStatic
 import grails.rest.RestfulController

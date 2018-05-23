@@ -10,8 +10,9 @@ import sx.core.Folio
 @Transactional
 class ChequeDevueltoService {
 
+
+
     ChequeDevuelto registrarChequeDevuelto(CobroCheque cobroCheque) {
-        println 'Registrando CHE'
         CuentaPorCobrar cxc = new CuentaPorCobrar()
         cxc.cliente = cobroCheque.cobro.cliente
         cxc.sucursal = cobroCheque.cobro.sucursal
@@ -25,7 +26,6 @@ class ChequeDevueltoService {
         cxc.subtotal = cxc.importe
         cxc.impuesto = MonedaUtils.calcularImpuesto(cxc.importe)
         cxc.total = MonedaUtils.calcularTotal(cxc.importe + cxc.impuesto)
-        println 'Total CHE: ' + cxc.total;
         cxc.createUser = 'PENDIENTE'
         cxc.updateUser = 'PENDIENTE'
         cxc.save failOnError: true

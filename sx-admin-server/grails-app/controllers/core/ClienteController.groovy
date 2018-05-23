@@ -28,7 +28,7 @@ class ClienteController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('Buscando clientes: {}', params)
+
         def query = Cliente.where {}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -37,7 +37,7 @@ class ClienteController extends RestfulController{
                 query = query.where {credito != null && credito.lineaDeCredito != null}
             } else if (params.cartera.startsWith('CON') || params.cartera.startsWith('COD')) {
                 // log.debug('Buscando de contado: {}', params)
-                query = query.where {credito != null }
+                query = query.where {credito == null }
             }
         }
         if(params.term){

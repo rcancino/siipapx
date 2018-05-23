@@ -94,6 +94,7 @@ class UrlMappings {
         "/api/cxc/cobro/disponibles"(controller: "cobro", action: 'disponibles', method: 'GET')
         "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
         "/api/cxc/cobro/saldar/$id"(controller: "cobro", action: 'saldar', method: 'PUT')
+        "/api/cxc/cobro/registrarChequeDevuelto/$id"(controller: "cobro", action: 'registrarChequeDevuelto', method: 'PUT')
         "/api/cxc/cobro/reporteDeCobranza"(controller: "cobro", action: 'reporteDeCobranza', method: 'GET')
         "/api/cxc/cobro/reporteDeRelacionDePagos"(controller: "cobro", action: 'reporteDeRelacionDePagos', method: 'GET')
 
