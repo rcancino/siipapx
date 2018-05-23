@@ -119,8 +119,14 @@ class UrlMappings {
 
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/antiguedad"(controller: 'cuentaPorCobrar', action: 'antiguedad', method: 'GET')
+        /**  Reportes Antigueadd y CXC **/
         "/api/cuentasPorCobrar/antiguedad/print"(controller: 'cuentaPorCobrar', action: 'printAntiguedad', method: 'GET')
         "/api/cuentasPorCobrar/antiguedad/reporteDeCobranzaCOD"(controller: 'cuentaPorCobrar', action: 'reporteDeCobranzaCOD', method: 'GET')
+        "/api/cuentasPorCobrar/antiguedad/antiguedadPorCliente"(controller: 'cuentaPorCobrar', action: 'antiguedadPorCliente', method: 'GET')
+        "/api/cuentasPorCobrar/antiguedad/clientesSuspendidosCre"(controller: 'cuentaPorCobrar', action: 'clientesSuspendidosCre', method: 'GET')
+        "/api/cuentasPorCobrar/antiguedad/facturasConNotaDevolucion"(controller: 'cuentaPorCobrar', action: 'facturasConNotaDevolucion', method: 'GET')
+
+
         "/api/cuentasPorCobrar/pendientes/$id"(controller: 'cuentaPorCobrar', action: 'pendientes', method: 'GET')
         "/api/cuentasPorCobrar/saldar/$id"(controller: 'cuentaPorCobrar', action: 'saldar', method: 'PUT')
 

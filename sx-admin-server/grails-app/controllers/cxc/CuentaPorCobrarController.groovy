@@ -71,20 +71,60 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def reporteDeCobranzaCOD(CobranzaCodCommand command) {
-
         def repParams = [:]
         repParams.FECHA = command.fecha.format('yyyy-MM-dd')
         repParams.SUCURSAL = command.sucursal.id
-        println 'Reporte de cobranza    ' +  repParams
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
-        log.info('Parametros: {}', repParams)
         def pdf = reportService.run('CarteraCOD_Emb.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CarteraCOD.pdf')
     }
+
+    def antiguedadPorCliente(AntiguedadPorCteCommand command) {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def repParams = [:]
+        repParams.FECHA_CORTE = command.fecha
+        repParams.CLIENTE = command.cliente.id
+        def pdf = reportService.run('AntiguedadSaldosConCortePorCliente.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
+    }
+
+    def clientesSuspendidosCre() {
+        def repParams = [:]
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def pdf = reportService.run('ClientesSuspendidosCredito.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ClientesSuspendidosCredito.pdf')
+    }
+
+    def facturasConNotaDevolucion(FacturasConNtaCommand command) {
+        def repParams = [:]
+        repParams.SUCURSAL = command.sucursal.id
+        repParams.FECHA_INI = command.fechaIni
+        repParams.FECHA_FIN = command.fechaFin
+        repParams.ORIGEN = command.origen
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def pdf = reportService.run('FacsCancPorNotaDev.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'FacsCancPorNotaDev.pdf')
+
+    }
+
+
+
 
 }
 
 class CobranzaCodCommand {
     Sucursal sucursal
     Date fecha
+}
+
+class AntiguedadPorCteCommand {
+    Date fecha
+    Cliente cliente
+}
+
+class FacturasConNtaCommand {
+    Date fechaIni
+    Date fechaFin
+    Sucursal sucursal
+    String origen
 }
