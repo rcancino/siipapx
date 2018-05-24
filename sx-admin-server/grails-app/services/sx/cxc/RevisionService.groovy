@@ -3,6 +3,7 @@ package sx.cxc
 
 import grails.gorm.transactions.Transactional
 import org.apache.commons.lang3.exception.ExceptionUtils
+import sx.core.Venta
 
 
 class RevisionService {
@@ -19,8 +20,13 @@ class RevisionService {
         return rows
     }
 
-    def generar() {
-        def rows = CuentaPorCobrar.findAll(
+    /**
+     * Genera las entidades de VentaCredito para todas las cuentas por cobrar que lo requieran
+     *
+     * @return Lista de entidades VentaCredito generadas
+     */
+    List<VentaCredito> generar() {
+        List<CuentaPorCobrar> rows = CuentaPorCobrar.findAll(
                 "from CuentaPorCobrar c  " +
                         " where  c.tipo = ? " +
                         " and c.total - c.pagos > 0 " +
@@ -29,11 +35,10 @@ class RevisionService {
                         " and c.cancelada is null" +
                         " order by c.fecha desc",
                 ['CRE'])
-        List generated = []
+        List<VentaCredito> generated = []
         rows.each {
             try{
-                registrarRevision(it)
-                generated << it
+                generated << generarVentaCredito(it)
             }catch (Exception ex) {
                 String msg = ExceptionUtils.getRootCauseMessage(ex)
                 log.debug('Error al generar registrar revision y cobro para : {}', it.id)
@@ -43,9 +48,13 @@ class RevisionService {
         return generated
     }
 
-
+    /**
+     *
+     * @param cxc La cuenta por cobrar
+     * @return La VentaCredito correspondiente
+     */
     @Transactional
-    def registrarRevision(CuentaPorCobrar cxc) {
+    VentaCredito generaVentaCredito(CuentaPorCobrar cxc) {
         if(cxc.credito)
             return cxc
         VentaCredito credito = new VentaCredito()
@@ -72,11 +81,38 @@ class RevisionService {
 
         cxc.credito = credito
         cxc.save failOnError: true, flush: true
+        return credito
     }
 
+    /**
+     * Actualiza los correspondientes a reviision y cobro para las cuentas por cobrar
+     *
+     * @return Lista de ventaCredito de las cuentas actualizadas
+     */
+    public List<VentaCredito> actualizar(){
 
+        def rows = VentaCredito.findAll(
+                "from VentaCredito c  " +
+                        " c.cuentaPorCobrar.tipo = ? " +
+                        " and c.revision = true " +
+                        " and c.cuentaPorCobrar.total - c.cuentaPorCobrar.pagos > 0 " +
+                        " and c.cuentaPorCobrar.uuid is not null " +
+                        " order by c.cuentaPorCobrar.cliente.nombre asc",
+                ['CRE'])
+        List<VentaCredito> res = []
+        rows.each { VentaCredito credito ->
+            res << actualizarRevision(credito)
+        }
+        return res
+    }
 
-    def actualizarRevision(VentaCredito credito) {
+    /**
+     * Actualia los datos de revision y cobro de la cuenta por cobrar
+     *
+     * @param credito VentaCredito a actualizar
+     * @return
+     */
+    public VentaCredito actualizarRevision(VentaCredito credito) {
         Date hoy = new Date()
         Integer diaRevision = credito.diaRevision
         Integer diaPago = credito.diaPago
@@ -119,19 +155,6 @@ class RevisionService {
 
 
 
-    def recalcularPendientes(Date fecha = new Date(), String comentarioRepPago = ''){
 
-        def rows = VentaCredito.findAll(
-                "from VentaCredito c  " +
-                        " c.tipo = ? " +
-                        " and c.revision = true " +
-                        " and c.cxc.total - c.cxc.pagos > 0 " +
-                        " and c.cxc.uuid is not null " +
-                        " order by c.fecha desc",
-                ['CRE'])
-        rows.each { VentaCredito credito ->
-            actualizarRevision(credito)
-        }
-    }
 
 }

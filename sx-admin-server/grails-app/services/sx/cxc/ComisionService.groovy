@@ -1,10 +1,11 @@
 package sx.cxc
 
 import com.luxsoft.utils.MonedaUtils
+import org.apache.commons.lang3.exception.ExceptionUtils
 
 class ComisionService {
 
-    def generarComisionesCobrador(Date fechaIni, Date fechaFin){
+    public List<Comision> generarComisionesCobrador(Date fechaIni, Date fechaFin){
         def origen = 'CRE'
         def rows = AplicacionDeCobro.findAll(
                 "select a.cuentaPorCobrar.id, a.fecha, a.importe from AplicacionDeCobro a " +
@@ -23,7 +24,6 @@ class ComisionService {
             def data = it.value
             BigDecimal pagoComisionable = data.sum { r -> r[2]}
             Date pagoComision = data.first()[1]
-            println 'Cxc: '+ id + ' Fecha: ' +pagoComision + ' Total: '+ pagoComisionable + ' Raw: ' + data
             CuentaPorCobrar cxc = CuentaPorCobrar.get(id);
             Comision comision = new Comision()
             comision.cxc = cxc
@@ -37,7 +37,9 @@ class ComisionService {
             comision.total = cxc.total
             comision.atraso = cxc.atraso
             comision.comision = cxc.cliente.credito.cobrador.comision
-
+            if( cxc.cliente.clave == 'U050008') {
+                comision.comision = 0.05
+            }
             comision.tipo = 'COB'
             comision.fechaIni = fechaIni
             comision.fechaFin = fechaFin
@@ -47,8 +49,12 @@ class ComisionService {
             comision.pagoComisionable = pagoComisionable
             BigDecimal comisionImporte = comision.pagoComisionable * (comision.comision/100)
             comision.comisionImporte = MonedaUtils.round(comisionImporte)
-            comision.save failOnError: true, flush: true
-            comisiones << comision
+            try{
+                comision.save failOnError: true, flush: true
+                comisiones << comision
+            }catch (Exception sx) {
+                log.error(ExceptionUtils.getRootCauseMessage(ex))
+            }
         }
         return comisiones
 

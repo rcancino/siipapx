@@ -97,10 +97,18 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
     def facturasConNotaDevolucion(FacturasConNtaCommand command) {
         def repParams = [:]
-        repParams.SUCURSAL = command.sucursal.id
+
+        repParams.SUCURSAL = command.sucursal ? command.sucursal.id : '%'
         repParams.FECHA_INI = command.fechaIni
         repParams.FECHA_FIN = command.fechaFin
-        repParams.ORIGEN = command.origen
+        if(command.origen == 'CRE') {
+            repParams.ORIGEN = 'CRE'
+        } else if(command.origen == 'CON') {
+            repParams.ORIGEN = 'CO%'
+        } else {
+            repParams.ORIGEN = '%'
+        }
+
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def pdf = reportService.run('FacsCancPorNotaDev.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'FacsCancPorNotaDev.pdf')
@@ -109,7 +117,7 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
     def reporteExceptionesDescuentos(FacturasConNtaCommand command) {
         def repParams = [:]
-        repParams.SUCURSAL = command.sucursal.id
+        repParams.SUCURSAL = command.sucursal ? command.sucursal.id : '%'
         repParams.FECHA_INI = command.fechaIni
         repParams.FECHA_FIN = command.fechaFin
         repParams.ORIGEN = command.origen
@@ -126,6 +134,10 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 class CobranzaCodCommand {
     Sucursal sucursal
     Date fecha
+
+    static constraints = {
+        sucursal nullable: true
+    }
 }
 
 class AntiguedadPorCteCommand {
@@ -138,4 +150,8 @@ class FacturasConNtaCommand {
     Date fechaFin
     Sucursal sucursal
     String origen
+
+    static constraints = {
+        sucursal nullable: true
+    }
 }

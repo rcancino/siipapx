@@ -146,6 +146,7 @@ class UrlMappings {
 
         // Comisiones
         "/api/cxc/comisiones"(resources: 'comision')
+        "/api/cxc/comisiones/generarComisiones"(controller: 'comision', action: 'generarComisiones', method: 'GET')
 
         //Existencias
         "/api/existencias"(resources: "existencia")

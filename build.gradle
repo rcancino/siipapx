@@ -71,6 +71,10 @@ subprojects { project ->
             compile "org.springframework.boot:spring-boot-autoconfigure"
             compile "org.grails:grails-core"
             console "org.grails:grails-console"
+
+            compile 'org.codehaus.groovy:groovy-all:2.4.11'
+            compile 'org.apache.commons:commons-lang3:3.1'
+
         }
 
         if ( isGrailsApp ) {

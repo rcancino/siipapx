@@ -21,19 +21,6 @@ class VentaCreditoController extends RestfulController{
     }
 
 
-    protected List listAllResources(Map params) {
-        /*
-        def rows = revisionService.buscarPendientes()
-        log.debug('Registros pendientes de venta credito: {}' , rows.size())
-        return rows
-        */
-        params.max = 50
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
-        def query = VentaCredito.where {}
-        query.list(params)
-    }
-
     def pendientes() {
         def rows = revisionService.buscarPendientes()
         // log.debug('Registros encontrados: ', )
@@ -47,14 +34,14 @@ class VentaCreditoController extends RestfulController{
 
     def generar() {
         log.debug('Generando facturas a revision')
-        revisionService.generar();
-        respond status: 200
+        List res = revisionService.generar();
+        respond res
     }
 
     def recalcular() {
         log.debug('Recalculando fechas de revision y pago  para cuentas por cobrar')
-        revisionService.recalcularPendientes()
-        respond status: 200
+        List res = revisionService.actualizar()
+        respond res
     }
 
 
