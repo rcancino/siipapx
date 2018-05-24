@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="fac_pen_camionetaNew"
+		 name="CarteraCOD_Emb"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
@@ -36,7 +36,7 @@
 ,case when (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) end as dias_vencido
 ,c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0) as saldo
 ,CASE WHEN c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)<>V.TOTAL THEN '*'  ELSE '' END AS PAGO
-,c.fecha AS fecha
+,c.date_created AS fecha
 ,e.date_created as surtido,q.salida,e.arribo,e.recepcion,q.regreso
 ,f.nombre as chofer
 ,c.forma_de_pago as fpago
@@ -56,15 +56,15 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 	<field name="cargo_id" class="java.lang.String"/>
 	<field name="embarque_id" class="java.lang.String"/>
 	<field name="embarque" class="java.lang.Integer"/>
-	<field name="CVE_SUC" class="java.lang.String"/>
-	<field name="suc" class="java.lang.String"/>
 	<field name="docto" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
+	<field name="CVE_SUC" class="java.lang.String"/>
+	<field name="suc" class="java.lang.String"/>
 	<field name="dias_vencido" class="java.lang.Long"/>
 	<field name="saldo" class="java.math.BigDecimal"/>
 	<field name="PAGO" class="java.lang.String"/>
-	<field name="fecha" class="java.sql.Date"/>
+	<field name="fecha" class="java.sql.Timestamp"/>
 	<field name="surtido" class="java.sql.Timestamp"/>
 	<field name="salida" class="java.sql.Timestamp"/>
 	<field name="arribo" class="java.sql.Timestamp"/>

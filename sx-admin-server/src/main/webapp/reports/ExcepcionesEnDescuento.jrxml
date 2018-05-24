@@ -29,7 +29,6 @@
 	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT CASE WHEN F.TIPO='CON' THEN 'A' ELSE 'B' END AS ORDEN,(SELECT S.clave FROM sucursal S WHERE V.SUCURSAL_ID=S.ID) AS SUC
 ,F.SUCURSAL_ID,F.TIPO,F.forma_de_pago as FPAGO,f.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMBRE
 ,V.DESCUENTO,D.DESCUENTO_ORIGINAL,D.DESCUENTO,SUM(D.IMPORTE) AS IMP_DET,SUM(D.SUBTOTAL) AS SUBTOTAL,SUM(D.DESCUENTO_IMPORTE) AS IMP_DESCT
@@ -37,7 +36,7 @@
 ,UCASE(V.create_user) AS CREADO_USERID ,F.FORMA_DE_PAGO
 FROM VENTA V JOIN cuenta_por_cobrar F ON(V.cuenta_por_cobrar_id=F.ID) JOIN cliente C on(F.CLIENTE_ID=C.ID)
 JOIN venta_det D ON(D.VENTA_ID=V.ID) JOIN PRODUCTO P ON (P.ID=D.PRODUCTO_ID)
-WHERE F.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{SUCURSAL} AND F.TIPO LIKE $P{ORIGEN} AND 
+WHERE F.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{SUCURSAL} AND
 V.descuento<>V.descuento_original AND (V.TIPO IN('CON','COD') OR V.cheque_post_fechado IS TRUE) 
 AND P.INVENTARIABLE IS TRUE AND F.FORMA_DE_PAGO NOT LIKE 'TARJETA%'
 GROUP BY V.SUCURSAL_ID,F.TIPO,F.FORMA_dE_PAGO,F.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMBRE,V.DESCUENTO
@@ -116,22 +115,22 @@ GROUP BY V.SUCURSAL_ID,F.TIPO,F.FORMA_dE_PAGO,F.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMB
 				</line>
 				<staticText>
 					<reportElement
-						x="305"
+						x="211"
 						y="2"
-						width="60"
+						width="195"
 						height="9"
 						key="staticText-45"/>
 					<box></box>
-					<textElement textAlignment="Justified" verticalAlignment="Top">
+					<textElement textAlignment="Right" verticalAlignment="Top">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[TOTAL ORIGEN:]]></text>
+				<text><![CDATA[TOTAL TIPO DE VENTA :  ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="365"
+						x="406"
 						y="2"
-						width="50"
+						width="21"
 						height="9"
 						key="textField-13"/>
 					<box></box>
@@ -212,7 +211,7 @@ GROUP BY V.SUCURSAL_ID,F.TIPO,F.FORMA_dE_PAGO,F.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMB
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Oblique" isBold="false" isItalic="true" isUnderline="true"/>
 					</textElement>
-				<text><![CDATA[EXCEPCIONES EN DESCUENTO]]></text>
+				<text><![CDATA[EXCEPCIONES EN DESCUENTO  (CONTADO)]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -419,32 +418,6 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":
 $P{SUCURSAL}.equals("2")?"VERTIZ 176 (2)":
 $P{SUCURSAL}.equals("13")?"CF5FEBRERO (13)":"TODAS"]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="46"
-						y="24"
-						width="100"
-						height="14"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font fontName="Arial" size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORIGEN}.equals("%") ? "TODOS":$F{TIPO}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="5"
-						y="24"
-						width="41"
-						height="14"
-						key="staticText-41"/>
-					<box></box>
-					<textElement textAlignment="Left">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true"/>
-					</textElement>
-				<text><![CDATA[ORIGEN :]]></text>
-				</staticText>
 				<staticText>
 					<reportElement
 						x="389"

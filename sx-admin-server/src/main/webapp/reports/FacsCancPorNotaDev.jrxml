@@ -39,7 +39,8 @@ JOIN venta V ON(V.ID=D.VENTA_ID)
 JOIN cuenta_por_cobrar F ON(V.cuenta_por_cobrar_id=F.ID)
 JOIN cliente C on(F.CLIENTE_ID=C.ID)
 JOIN user U ON (U.username=V.create_user)
-where D.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{SUCURSAL} AND F.TIPO LIKE $P{ORIGEN}]]></queryString>
+where D.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{SUCURSAL} 
+AND F.TIPO LIKE $P{ORIGEN}]]></queryString>
 
 	<field name="SUC" class="java.lang.String"/>
 	<field name="RMD" class="java.lang.Long"/>
@@ -118,22 +119,22 @@ where D.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{
 				</line>
 				<staticText>
 					<reportElement
-						x="228"
+						x="216"
 						y="1"
-						width="60"
+						width="111"
 						height="9"
 						key="staticText-45"/>
 					<box></box>
-					<textElement textAlignment="Justified" verticalAlignment="Top">
+					<textElement textAlignment="Right" verticalAlignment="Top">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true"/>
 					</textElement>
-				<text><![CDATA[TOTAL ORIGEN:]]></text>
+				<text><![CDATA[TOTAL TIPO DE VENTA :  ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="288"
+						x="327"
 						y="1"
-						width="50"
+						width="19"
 						height="9"
 						key="textField-13"/>
 					<box></box>
@@ -372,15 +373,19 @@ where D.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{
 					<reportElement
 						x="56"
 						y="42"
-						width="63"
+						width="90"
 						height="13"
 						key="textField"/>
 					<box></box>
 					<textElement>
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}.equals("6")?"ANDRADE (3)":$P{SUCURSAL}.equals("3")?"TACUBA (12)":$P{SUCURSAL}.equals("2")?"CALLE 4 (10)":
-$P{SUCURSAL}.equals("5")?"BOLIVAR (5)":"TODAS"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64f8e0131")?"ANDRADE (3)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64e70012e")?"TACUBA (12)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64ce5012d")?"CALLE 4 (10)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64f460130")?"BOLIVAR (5)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec650760134")?"CF5FEBRERO (13)":
+"TODAS"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -393,7 +398,9 @@ $P{SUCURSAL}.equals("5")?"BOLIVAR (5)":"TODAS"]]></textFieldExpression>
 					<textElement>
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORIGEN}.equals("%") ? "TODOS":$F{TIPO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ORIGEN}.equals("%") ? "TODOS" : 
+$P{ORIGEN}.equals("CO%") ? "CONTADO" :
+$P{ORIGEN}.equals("CRE") ? "CREDITO" : ""]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
