@@ -45,7 +45,7 @@ class ComisionController extends RestfulController<Comision>{
         }
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def pdf = reportService.run('Comisiones.jrxml', repParams)
-        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'FacsCancPorNotaDev.pdf')
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Comisiones.pdf')
     }
 }
 

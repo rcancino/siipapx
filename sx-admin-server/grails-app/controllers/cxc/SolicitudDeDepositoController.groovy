@@ -61,7 +61,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     def pendientes() {
-        params.max = 150
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
 
@@ -74,7 +74,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
     def autorizadas(SolicitudFilter filter) {
         // log.info('Solicitudes {}', params)
-        params.max = 150
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
@@ -112,6 +112,11 @@ class SolicitudDeDepositoController extends RestfulController{
             query = query.where { cobro.primeraAplicacion == filter.fechaCobranza }
         }
 
+        if(filter.fechaCobranza) {
+            // log.debug('Buscando por fecha cobranza: {}', filter.fechaCobranza)
+            query = query.where { cobro.primeraAplicacion == filter.fechaCobranza }
+        }
+
         if (params.cliente) {
             // log.debug('Filtrando por cliente')
             String search = '%' + params.cliente + '%'
@@ -126,6 +131,11 @@ class SolicitudDeDepositoController extends RestfulController{
         if (params.banco) {
             String search = '%' + params.banco+ '%'
             query = query.where { cuenta.descripcion =~ search  }
+        }
+
+        if (params.formaDePago) {
+            String search = '%' + params.formaDePago+ '%'
+            query = query.where { cobro.formaDePago =~ search  }
         }
 
 

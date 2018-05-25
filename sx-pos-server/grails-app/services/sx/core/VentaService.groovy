@@ -302,6 +302,8 @@ class VentaService implements  EventPublisher{
     def cancelarCuentaPorCobrar(CuentaPorCobrar cxc, String usuario, String motivo) {
         cxc.importe = 0.0
         cxc.impuesto = 0.0
+        cxc.subtotal = 0.0
+        cxc.descuentoImporte = 0.0
         cxc.total = 0.0
         cxc.comentario = 'CANCELADA'
         cxc.cancelada = new Date()

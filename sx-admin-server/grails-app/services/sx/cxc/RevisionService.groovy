@@ -93,7 +93,7 @@ class RevisionService {
 
         def rows = VentaCredito.findAll(
                 "from VentaCredito c  " +
-                        " c.cuentaPorCobrar.tipo = ? " +
+                        " where c.cuentaPorCobrar.tipo = ? " +
                         " and c.revision = true " +
                         " and c.cuentaPorCobrar.total - c.cuentaPorCobrar.pagos > 0 " +
                         " and c.cuentaPorCobrar.uuid is not null " +
