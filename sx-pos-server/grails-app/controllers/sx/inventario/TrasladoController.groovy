@@ -139,4 +139,63 @@ class TrasladoController extends RestfulController {
         def pdf  = reportService.run('CFDITraslado.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CfdiTPS.pdf')
     }
+
+    def relacionTps(RelacionTrasladosReport command) {
+
+        def repParams = [:]
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['FECHA'] = command.fecha.format('yyyy/MM/dd')
+        println 'Ejecutando reporte de Relacion de TPS parametros: ' + repParams
+        def pdf = this.reportService.run('RelacionTPS', repParams)
+        def fileName = "RelacionTPS.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def relacionTpe(RelacionTrasladosReport command) {
+
+        def repParams = [:]
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['FECHA'] = command.fecha.format('yyyy/MM/dd')
+        println 'Ejecutando reporte de Relacion de TPS parametros: ' + repParams
+        def pdf = this.reportService.run('RelacionTPE', repParams)
+        def fileName = "RelacionTPE.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+
+    def solPendientesAtender(PeriodoSucursalReport command) {
+
+        def repParams = [:]
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['FECHA_INI'] = command.fechaIni.format('yyyy/MM/dd')
+        repParams['FECHA_FIN'] = command.fechaFin.format('yyyy/MM/dd')
+        println 'Ejecutando reporte de Solicitudes Pendientes parametros: ' + repParams
+        def pdf = this.reportService.run('SolicitudesPendientesXAt', repParams)
+        def fileName = "RelacionTPE.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def valesPendienteRecibir(PeriodoSucursalReport command) {
+
+        def repParams = [:]
+        repParams['SUCURSAL'] = command.sucursal.id
+        repParams['FECHA_INI'] = command.fechaIni.format('yyyy/MM/dd')
+        repParams['FECHA_FIN'] = command.fechaFin.format('yyyy/MM/dd')
+        println 'Ejecutando reporte de Solicitudes Pendientes parametros: ' + repParams
+        def pdf = this.reportService.run('ValesPendientesXRecibir', repParams)
+        def fileName = "RelacionTPE.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+}
+
+
+class RelacionTrasladosReport {
+    Date fecha
+    Sucursal sucursal
+}
+
+class PeriodoSucursalReport {
+    Date fechaIni
+    Date fechaFin
+    Sucursal sucursal
 }
