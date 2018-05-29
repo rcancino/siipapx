@@ -34,4 +34,6 @@ bootRun {
     //println 'Sysmte properties: ' +System.properties
     //println 'From admin gradle guild'
     // systemProperties = System.properties
+    systemProperties = System.properties
+
 }

@@ -7,7 +7,10 @@ import grails.plugin.springsecurity.annotation.Secured
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.rest.RestfulController
 import groovy.transform.ToString
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.core.Cliente
+import sx.core.Venta
+import sx.cxc.CuentaPorCobrar
 import sx.cxc.NotaDeCredito
 import sx.reports.ReportService
 
@@ -19,7 +22,13 @@ class CfdiController extends RestfulController{
 
     CfdiService cfdiService;
 
+    CfdiLocationService cfdiLocationService
+
     ReportService reportService
+
+    CfdiPrintService cfdiPrintService
+
+    CfdiMailService cfdiMailService
 
     static responseFormats = ['json']
 
@@ -37,14 +46,23 @@ class CfdiController extends RestfulController{
 
     @Transactional
     def print( Cfdi cfdi) {
-        def pdf = null
-        if(cfdi.versionCfdi == '3.3') {
-            pdf = generarImpresionV33(cfdi)
-        } else {
-            pdf = generarImpresionV32(cfdi)
-        }
-        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: cfdi.fileName)
-        //render [:]
+        log.info('Imprimiendo CFDI: ', params)
+        def pdf = cfdiPrintService.getPdf(cfdi)
+        render (file: pdf, contentType: 'application/pdf', filename: cfdi.fileName)
+    }
+
+    def descargarXml(Cfdi cfdi) {
+        def xml = cfdiLocationService.getXml(cfdi)
+        File file = File.createTempFile('temp_', 'xml')
+        file.setBytes(xml)
+
+        response.setHeader "Content-disposition", "attachment; filename=${cfdi.fileName}"
+        response.setHeader("Content-Length", "${file.length()}")
+        response.setContentType("text/xml")
+        InputStream contentStream = file.newInputStream()
+        response.outputStream << contentStream
+        webRequest.renderView = false
+        // render (file: file, contentType: 'text/xml', filename: cfdi.fileName)
     }
 
     private generarImpresionV33( Cfdi cfdi) {
@@ -109,10 +127,26 @@ class CfdiController extends RestfulController{
         respond cfdi
     }
 
-    def envioBatch(){
-        EnvioBatchCommand command = new EnvioBatchCommand()
-        command.properties = getObjectToBind()
-        log.debug('Envio batch de facturas {}', command)
+    def envioBatch( EnvioBatchCommand command){
+        log.info('Envio batch: {}', params)
+        log.info('Command {}', command)
+        if (command == null) {
+            notFound()
+            return
+        }
+        if (command.hasErrors()) {
+            respond command.errors
+            return
+        }
+        List<Cfdi> cfdis = []
+        command.facturas.each {
+            Cfdi c = Cfdi.get(it)
+            if (c.receptorRfc == command.cliente.rfc) {
+                cfdis<< c
+            }
+        }
+        cfdiMailService.envioBatch(cfdis, command.target, 'Envio automático');
+        // log.debug('Envio batch de facturas {}', command)
         respond 'OK', status:200
     }
 
@@ -122,7 +156,10 @@ class CfdiController extends RestfulController{
 public class EnvioBatchCommand {
     Cliente cliente
     List facturas;
-    String email
+    String target
 
+    static constraints = {
+        target email: true
+    }
 
 }

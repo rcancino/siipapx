@@ -1,5 +1,6 @@
 package sx.cxc
 
+import com.luxsoft.utils.Periodo
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.Cliente
@@ -25,8 +26,10 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     protected List listAllResources(Map params) {
 
         def query = CuentaPorCobrar.where {}
-        params.sort = params.sort ?:'fecha'
-        params.order = params.order ?:'asc'
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+
+
         if(params.documento){
           int documento = params.int('documento')
           query = query.where { documento >= documento }
@@ -35,6 +38,46 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
             query = query.where { cliente.id == params.cliente}
         }
         return query.list(params)
+    }
+
+    def search() {
+        log.debug('Buscando facturas {}', params)
+        def query = CuentaPorCobrar.where {}
+        params.sort = params.sort ?: 'lastUpdated'
+        params.order = params.order ?:'desc'
+        params.max = 50
+
+        if(params.cartera)
+            query = query.where{ tipo == params.cartera}
+
+        String nombre = params.nombre
+        if(nombre){
+            def search = '%' + nombre + '%'
+            query = query.where { cliente.nombre =~ search}
+        }
+
+        String sucursal = params.sucursal
+        if(sucursal){
+            def search = '%' + sucursal + '%'
+            query = query.where { sucursal.nombre =~ search}
+        }
+
+        Integer documento = params.getInt('documento')
+        if(documento)
+            query = query.where { documento == documento }
+
+        if(params.fechaInicial) {
+            Date fechaInicial = params.getDate('fechaInicial', 'yyyy-MM-dd')
+            log.info('Fecha inicial: {}', fechaInicial);
+            Date fechaFinal = params.getDate('fechaFinal', 'yyyy-MM-dd') ?: fechaInicial
+            log.info('Fecha final: {}', fechaFinal)
+            query = query.where { fecha >= fechaInicial && fecha <= fechaFinal}
+
+        }
+
+
+        respond query.list(params)
+
     }
 
     def pendientes(Cliente cliente) {

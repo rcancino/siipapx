@@ -52,8 +52,10 @@ class UrlMappings {
         //Comprobantes fiscales de proveedores CFDI's
         "/api/cfdis"(resources: "cfdi")
         "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
+        "/api/cfdis/descargarXml/$id?"(controller:"cfdi", action:"descargarXml", method: 'GET')
         "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
         "/api/cfdis/enviarEmail/$id?"(controller:"cfdi", action:"enviarEmail")
+        "/api/cfdis/envioBatch"(controller: "cfdi", action: 'envioBatch', method: 'PUT')
 
         // Compras
         "/api/compras"(resources: "compra")
@@ -118,6 +120,7 @@ class UrlMappings {
 
 
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
+        "/api/cuentasPorCobrar/search"(controller:'cuentaPorCobrar', action: 'search', method: 'GET')
         "/api/cuentasPorCobrar/antiguedad"(controller: 'cuentaPorCobrar', action: 'antiguedad', method: 'GET')
         /**  Reportes Antigueadd y CXC **/
         "/api/cuentasPorCobrar/antiguedad/print"(controller: 'cuentaPorCobrar', action: 'printAntiguedad', method: 'GET')

@@ -199,22 +199,6 @@ class CfdiService {
     }
 
 
-    def downloadXmlFromUUID(Cfdi cfdi) {
-        def res = cfdiEdicomService.getCfdiFromUUID(cfdi)
-        Map map = ZipUtils.descomprimir(res)
-        def entry = map.entrySet().iterator().next()
-        def dir = getCfdiLocation(cfdi)
-        String fileName = "${cfdi.serie}-${cfdi.folio}_SIGNED.xml"
-        File target = new File(dir, fileName)
-        FileUtils.writeByteArrayToFile(target, entry.getValue())
-        cfdi.url = target.toURI().toURL()
-        cfdi.fileName = fileName
-        cfdi.comentario = "Actualizado desde EDICOM"
-        cfdi.save flush: true
-    }
-
-
-
 
 
 }

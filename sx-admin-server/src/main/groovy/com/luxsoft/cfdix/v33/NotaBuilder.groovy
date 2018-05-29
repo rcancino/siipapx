@@ -171,7 +171,8 @@ class NotaBuilder {
             impuesto = MonedaUtils.round(impuesto)
 
             // this.descuentoAcumulado = this.descuentoAcumulado + descuento
-            concepto.descuento = descuento
+            if (descuento)
+                concepto.descuento = descuento
             concepto.claveProdServ = '84111506'
             concepto.claveUnidad = 'ACT'
             concepto.noIdentificacion = det.producto.clave

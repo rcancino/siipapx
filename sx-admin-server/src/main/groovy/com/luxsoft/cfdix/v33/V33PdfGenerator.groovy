@@ -1,5 +1,6 @@
 package com.luxsoft.cfdix.v33
 
+import groovy.util.logging.Slf4j
 import lx.cfdi.v33.CfdiUtils
 import org.apache.commons.io.FileUtils
 import sx.core.ClienteCredito
@@ -19,7 +20,7 @@ import sx.cfdi.CfdiTimbre
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 
-
+@Slf4j
 class V33PdfGenerator {
 
     final static SimpleDateFormat CFDI_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
@@ -31,9 +32,8 @@ class V33PdfGenerator {
      * @param envio Si el formato es para envio al cliente por lo tanto no presentar la leyenda de IMPRESO
      * @return
      */
-    static getReportData(Cfdi cfdi, Byte[] xmlFile, envio = false){
+    static getReportData(Cfdi cfdi, Byte[] xmlFile, envio = true){
 
-        // File xmlFile = FileUtils.toFile(cfdi.url)
         Comprobante comprobante = CfdiUtils.read(xmlFile)
 
         def conceptos = comprobante.conceptos.concepto
@@ -70,6 +70,7 @@ class V33PdfGenerator {
                 res.pedimento = data
             }
             if (venta) {
+                log.info('Preparando venta: {} con {} partidas', venta.id, venta.partidas.size());
                 VentaDet partida = venta.partidas.get(index++)
                 if (partida) {
                     if (partida.corte) {
@@ -91,7 +92,7 @@ class V33PdfGenerator {
         return data
     }
 
-    static getParametros(Cfdi cfdi, Comprobante comprobante, File xmlFile, boolean envio){
+    static getParametros(Cfdi cfdi, Comprobante comprobante, def xmlFile, boolean envio = true){
         def params=[:]
         params["VERSION"] = comprobante.version
         params["SERIE"] = comprobante.getSerie()
@@ -133,7 +134,7 @@ class V33PdfGenerator {
         if(cfdi.uuid!=null){
             def img = generarQR(cfdi)
             params.put("QR_CODE",img);
-            CfdiTimbre timbre = new CfdiTimbre(xmlFile.bytes)
+            CfdiTimbre timbre = new CfdiTimbre(xmlFile)
             params.put("FECHA_TIMBRADO", timbre.fechaTimbrado);
             params.put("FOLIO_FISCAL", timbre.uuid);
             params.put("SELLO_DIGITAL_SAT", timbre.selloSAT);
@@ -183,31 +184,19 @@ class V33PdfGenerator {
         parametros.PUESTO = venta.puesto ? 'PUESTO' : null
         parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'
         parametros.ELAB_VTA = venta.createUser ?: 'ND'
-        parametros.IMPRESO = venta.impreso
-        if(envio){
-            parametros.IMPRESO = null
-        }
-
+        parametros.IMPRESO = null
         parametros.FPAGO = venta.cuentaPorCobrar.formaDePago
         parametros.ENVIO = "LOCAL"
-
         if (venta.envio) {
             parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
             parametros.ENVIO = venta.envio.condiciones
-        }
-        if(venta.impreso == null) {
-            venta.impreso = new Date()
-            venta = venta.save flush:true
         }
         if (venta.tipo == 'CRE' && venta.cliente.credito) {
             ClienteCredito credito = venta.cliente.credito
             String cdp = "PLZ: ${credito.plazo} DIAS ${credito.venceFactura ? 'FAC' : 'REV'}D. REV:${credito.diaRevision} D.COB:${credito.diaCobro} VEND: ${venta.cliente?.vendedor?.sw2} COB: ${credito?.cobrador?.sw2}"
             parametros['CONDICIONES_PAGO'] = cdp
-
         }
-
         parametros.TELEFONOS = venta.cliente.getTelefonos().join('/')
-
         if(venta.moneda != MonedaUtils.PESOS) {
             parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetraDolares(venta.getTotal()));
         }
