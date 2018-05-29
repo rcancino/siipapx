@@ -31,7 +31,7 @@
 	<queryString><![CDATA[select 'F' AS TIP
 ,C.TIPO
 ,v.id as cargo_id,q.id as embarque_id,q.documento as embarque
-,c.documento as docto,l.clave,l.nombre
+,c.documento as docto,l.clave,v.nombre
 ,s.clave AS CVE_SUC,s.nombre as suc
 ,case when (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) end as dias_vencido
 ,c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0) as saldo
@@ -48,7 +48,7 @@ left join embarque q on(q.id=e.embarque_id)
 left join chofer f on (q.chofer_id=f.id)
 join sucursal s on (s.id=v.sucursal_id)
 join cliente l on (l.id=v.cliente_id)
-where V.SUCURSAL_ID=$P{SUCURSAL} and C.TIPO='COD' AND C.FECHA<=$P{FECHA}  AND C.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA')
+where V.SUCURSAL_ID=$P{SUCURSAL} and C.TIPO='COD' AND C.FECHA<=$P{FECHA}  AND C.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA') 
 AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0))>=1]]></queryString>
 
 	<field name="TIP" class="java.lang.String"/>
@@ -368,7 +368,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="670"
+						x="663"
 						y="58"
 						width="87"
 						height="20"
@@ -557,7 +557,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="670"
+						x="663"
 						y="2"
 						width="87"
 						height="12"
