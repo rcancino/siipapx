@@ -3,6 +3,7 @@ import sx.cxc.CuentaPorCobrar
 model {
     CuentaPorCobrar cuentaPorCobrar
 }
+
 json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','cliente','credito']]){
     nombre cuentaPorCobrar.cliente.nombre
     cliente g.render(cuentaPorCobrar.cliente, [includes: ['id', 'nombre', 'rfc']])
@@ -16,6 +17,6 @@ json g.render(cuentaPorCobrar, [excludes:['moneda','dateCreated','lastUpdated','
         plazo cuentaPorCobrar.credito.plazo
     }
     credito g.render(cuentaPorCobrar.credito)
+    temporal 'DATO TEMPORAL'
 
 }
-

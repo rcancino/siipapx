@@ -41,7 +41,6 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def search() {
-        log.debug('Buscando facturas {}', params)
         def query = CuentaPorCobrar.where {}
         params.sort = params.sort ?: 'lastUpdated'
         params.order = params.order ?:'desc'
@@ -68,13 +67,10 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
         if(params.fechaInicial) {
             Date fechaInicial = params.getDate('fechaInicial', 'yyyy-MM-dd')
-            log.info('Fecha inicial: {}', fechaInicial);
             Date fechaFinal = params.getDate('fechaFinal', 'yyyy-MM-dd') ?: fechaInicial
-            log.info('Fecha final: {}', fechaFinal)
             query = query.where { fecha >= fechaInicial && fecha <= fechaFinal}
 
         }
-
 
         respond query.list(params)
 

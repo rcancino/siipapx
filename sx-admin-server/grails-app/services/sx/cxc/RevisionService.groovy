@@ -3,7 +3,6 @@ package sx.cxc
 
 import grails.gorm.transactions.Transactional
 import org.apache.commons.lang3.exception.ExceptionUtils
-import sx.core.Venta
 
 
 class RevisionService {
@@ -54,7 +53,7 @@ class RevisionService {
      * @return La VentaCredito correspondiente
      */
     @Transactional
-    VentaCredito generaVentaCredito(CuentaPorCobrar cxc) {
+    VentaCredito generarVentaCredito(CuentaPorCobrar cxc) {
         if(cxc.credito)
             return cxc
         VentaCredito credito = new VentaCredito()

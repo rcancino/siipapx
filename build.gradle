@@ -151,13 +151,10 @@ subprojects { project ->
         }
 
         bootRun {
-            //systemProperties = System.properties
             jvmArgs('-Dspring.output.ansi.enabled=always')
-            jvmArgs = ['-Dspring.output.ansi.enabled=always']
             jvmArgs = ['-Xmx1024m']
-            // systemProperties = System.properties
-            addResources = true
-            // println 'From Main gradle guild'
+            systemProperties  System.properties
+            addResources true
             // println 'Min Heap size: '+minHeapSize
             // println 'Max Heap size: '+maxHeapSize
         }

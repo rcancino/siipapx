@@ -29,11 +29,9 @@ dependencies {
     compile 'com.github.groovy-wslite:groovy-wslite:1.1.2'
 }
 
-
+/*
 bootRun {
-    //println 'Sysmte properties: ' +System.properties
-    //println 'From admin gradle guild'
-    // systemProperties = System.properties
-    systemProperties = System.properties
-
+    systemProperties System.properties
+    addResources  true
 }
+*/
