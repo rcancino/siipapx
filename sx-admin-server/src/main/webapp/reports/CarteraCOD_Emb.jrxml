@@ -473,7 +473,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PAGO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="374"
 						y="2"
@@ -488,7 +488,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="433"
 						y="2"
@@ -501,7 +501,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{salida}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="492"
 						y="2"
