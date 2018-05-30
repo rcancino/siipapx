@@ -6,6 +6,9 @@ import grails.rest.*
 import grails.converters.*
 import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.reports.ReportService
+import sx.core.Sucursal
+
+
 
 @Secured("ROLE_INVENTARIO_USER")
 class TrasladoController extends RestfulController {

@@ -27,8 +27,8 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA_INI" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="FECHA_FIN" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT M.ID,b.NOMBRE AS SUC_SOL,S.NOMBRE AS SUC_ATD
 ,M.DOCUMENTO,M.FECHA,M.DATE_CREATED,M.UPDATE_USER AS ELABORO,M.REFERENCIA,I.PARTIDAS_IDX AS RENGLON,P.CLAVE,P.DESCRIPCION,P.UNIDAD
 ,(CASE WHEN P.UNIDAD='MIL' THEN I.SOLICITADO/1000 ELSE I.SOLICITADO END) AS SOLICITADO,M.COMENTARIO
@@ -255,7 +255,7 @@ where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -268,7 +268,7 @@ where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -533,7 +533,7 @@ where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -631,7 +631,7 @@ where S.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
