@@ -134,7 +134,8 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if (params.tipo) {
-            query = query.where { cobro.tipo =~ params.tipo  }
+            String tipo = params.tipo
+            query = query.where { cobro.tipo =~ tipo }
         }
 
         if (params.formaDePago) {

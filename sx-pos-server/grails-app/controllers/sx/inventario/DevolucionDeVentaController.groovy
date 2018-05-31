@@ -29,6 +29,7 @@ class DevolucionDeVentaController extends RestfulController {
 
         params.sort = 'lastUpdated'
         params.order = 'desc'
+        params.max = 50
         def query = DevolucionDeVenta.where {}
         if(params.documento) {
             def documento = params.int('documento')
