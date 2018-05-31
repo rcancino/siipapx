@@ -104,6 +104,9 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def printAntiguedad() {
+        Date fecha = params.getDate('fecha', 'dd/MM/yyyy')
+        params.CORTE = fecha
+        params.ORDER = 9
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def pdf = reportService.run('AntiguedadSaldosGral.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')

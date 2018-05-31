@@ -64,17 +64,17 @@ grails:
         defaultScope: singleton
     converters:
         encoding: UTF-8
-    views:
-        json:
-            compileStatic: true
-        gsp:
-            encoding: UTF-8
-            htmlcodec: xml
-            codecs:
-                expression: html
-                scriptlets: html
-                taglib: none
-                staticparts: none
+#    views:
+#        json:
+#            compileStatic: true
+#        gsp:
+#            encoding: UTF-8
+#            htmlcodec: xml
+#            codecs:
+#                expression: html
+#                scriptlets: html
+#                taglib: none
+#                staticparts: none
 
 ---
 hibernate:
