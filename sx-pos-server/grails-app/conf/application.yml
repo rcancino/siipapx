@@ -80,10 +80,9 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            #url: '${JDBC_URL}'
-            url: jdbc:mysql://localhost:3306/siipapx_tacuba?autoReconnect=false
+            url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=false
             username: root
-            password: shoto
+            password: sys
     test:
         dataSource:
             dbCreate: create-drop

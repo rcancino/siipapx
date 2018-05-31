@@ -65,6 +65,8 @@ grails:
     converters:
         encoding: UTF-8
     views:
+        json:
+            compileStatic: true
         gsp:
             encoding: UTF-8
             htmlcodec: xml

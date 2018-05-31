@@ -32,22 +32,29 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
         }
     }
     logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
+
+    logger("org.springframework.security", OFF, ['STDOUT'], false)
+    logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
+
+    logger("org.pac4j", OFF, ['STDOUT'], false)
+
+
+    logger("sx.core", DEBUG, ['STDOUT'], false)
+    logger("sx.tesoreria", DEBUG, ['STDOUT'], false)
+    logger("sx.cxc", DEBUG, ['STDOUT'], false)
+    logger("sx.cfdi", DEBUG, ['STDOUT'], false)
+    logger("sx.reports", DEBUG, ['STDOUT'], false)
+    logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
+    logger("com.luxsoft", DEBUG, ['STDOUT'], false)
+
+} else {
+    root(ERROR, ['STDOUT'])
 }
-root(ERROR, ['STDOUT'])
 
-logger("org.springframework.security", OFF, ['STDOUT'], false)
-logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
-logger("org.pac4j", OFF, ['STDOUT'], false)
 
-logger("org.springframework.security", OFF, ['STDOUT'], false)
-logger("grails.plugin.springsecurity", OFF, ['STDOUT'], false)
-logger("org.pac4j", OFF, ['STDOUT'], false)
 
-logger("sx.core", DEBUG, ['STDOUT'], false)
-logger("sx.tesoreria", DEBUG, ['STDOUT'], false)
-logger("sx.cxc", DEBUG, ['STDOUT'], false)
-logger("sx.cfdi", DEBUG, ['STDOUT'], false)
-logger("sx.reports", DEBUG, ['STDOUT'], false)
-logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
-logger("com.luxsoft", DEBUG, ['STDOUT'], false)
+
+
+
+
 
