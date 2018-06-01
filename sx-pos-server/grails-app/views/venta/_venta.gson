@@ -54,6 +54,4 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
         }
     }
 
-    
-
 }

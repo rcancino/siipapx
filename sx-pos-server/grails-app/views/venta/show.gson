@@ -3,7 +3,7 @@ import sx.core.Venta
 
 @Field Venta venta
 
-json g.render(venta, [deep: false, excludes:['moneda','partidas']]) {
+json g.render(venta, [deep: false, excludes:['moneda','partidas','complementoIne']]) {
    cliente g.render(venta.cliente)
     moneda venta.moneda.currencyCode
     partidas g.render(venta.partidas, [deep:true, excludes:['venta','socio']] )
@@ -30,7 +30,7 @@ json g.render(venta, [deep: false, excludes:['moneda','partidas']]) {
             nombre venta.socio.nombre
         }
     }
-    // envio g.render(venta.envio, [excludes: ['venta']])
+    complementoIne g.render(venta.complementoIne, [excludes: ['venta']])
 }
 
 

@@ -234,6 +234,8 @@ class UrlMappings {
         "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
         "/api/report/clientesNuevos"(controller: 'ventas', action: 'clientesNuevos', method: 'GET')
 
+        "/api/complementosIne"(resources:"complementoIne")
+        "/api/complementosIne/pendientes"(controller: "complementoIne", action: 'pendientes', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")
