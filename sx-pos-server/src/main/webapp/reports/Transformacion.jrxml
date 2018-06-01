@@ -57,6 +57,9 @@ where T.ID=$P{ID}]]></queryString>
 
 	<sortField name="RENGLON" />
 
+	<variable name="KILOS" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{KILOS}]]></variableExpression>
+	</variable>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -748,7 +751,33 @@ where T.ID=$P{ID}]]></queryString>
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="2"  isSplitAllowed="true" >
+			<band height="20"  isSplitAllowed="true" >
+				<staticText>
+					<reportElement
+						x="450"
+						y="4"
+						width="77"
+						height="11"
+						key="staticText-44"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[TOTAL KILOS :  ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="527"
+						y="4"
+						width="47"
+						height="11"
+						key="textField-11"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{KILOS}]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>
