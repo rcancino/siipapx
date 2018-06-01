@@ -93,6 +93,7 @@
 	<parameter name="FACTURA_USD" isForPrompting="false" class="java.lang.Object"/>
 	<parameter name="IMPRESO_IMAGEN" isForPrompting="false" class="java.lang.Object"/>
 	<parameter name="TELEFONOS" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="COMPLEMENTO_INE" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.math.BigDecimal"/>
@@ -126,7 +127,7 @@
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="305"  isSplitAllowed="true" >
+			<band height="330"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="506"
@@ -822,6 +823,41 @@
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FPAGO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="1"
+						y="304"
+						width="313"
+						height="13"
+						key="staticText-302"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font pdfFontName="Times-Roman" size="8"/>
+					</textElement>
+				<text><![CDATA[COMPLEMENTO INE   :   ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="316"
+						width="583"
+						height="14"
+						key="textField-241"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement>
+						<font size="5"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{COMPLEMENTO_INE}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
