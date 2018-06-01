@@ -1,7 +1,9 @@
 package com.luxsoft.cfdix.v33
 
 import lx.cfdi.v33.CfdiUtils
+import lx.cfdi.v33.ine.INE
 import org.apache.commons.io.FileUtils
+import sx.cfdi.ComplementoIne
 import sx.core.ClienteCredito
 import sx.core.Venta
 import sx.core.VentaDet
@@ -136,6 +138,31 @@ class V33PdfGenerator {
         }
         params.FECHA = comprobante.fecha
         cargarParametrosAdicionales(cfdi, params, envio)
+        if(comprobante.getComplemento()) {
+            comprobante.getComplemento().any.each {
+                if(it instanceof  INE) {
+                    INE ine = (INE)it;
+                    StringBuffer buffer = new StringBuffer()
+                    buffer.append("INE TipoProceso: ${ine.tipoProceso}")
+                    if(ine.tipoComite) {
+                        buffer.append(" TipoComite: ${ine.tipoComite}")
+                    }
+                    if(ine.idContabilidad) {
+                        buffer.append(" IdContabilidad: ${ine.idContabilidad}")
+                    }
+                    if(ine.entidad) {
+                        ine.entidad.each{ e ->
+                            buffer.append(" ClaveEntidad: ${e.claveEntidad}")
+                            if(e.contabilidad) {
+                                def contas = e.contabilidad.collect{wt -> wt.idContabilidad}.join(',')
+                                buffer.append(" idContabilidad: ${contas}")
+                            }
+                        }
+                    }
+                    params.COMPLEMENTO_INE = buffer.toString()
+                }
+            }
+        }
         return params;
     }
 
@@ -207,6 +234,7 @@ class V33PdfGenerator {
         if(venta.socio) {
             parametros.SOCIO = venta.socio.nombre
         }
+
     }
 
     static String format(def d){

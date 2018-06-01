@@ -30,7 +30,9 @@ json g.render(venta, [deep: false, excludes:['moneda','partidas','complementoIne
             nombre venta.socio.nombre
         }
     }
-    complementoIne g.render(venta.complementoIne, [excludes: ['venta']])
+    complementoIne g.render(venta.complementoIne, [deep:true, excludes: ['venta','partidas']]) {
+        partidas g.render(venta.complementoIne.partidas)
+    }
 }
 
 

@@ -19,7 +19,7 @@ class ComplementoIneEntidad {
     ComplementoIne complemento
 
     static constraints = {
-        ambito inList: ['Campaña', 'Precampaña']
+        ambito nullable: true, inList: ['Local', 'Federal']
         clave maxSize: 10
     }
 

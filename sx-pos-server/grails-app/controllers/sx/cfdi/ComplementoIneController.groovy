@@ -17,7 +17,7 @@ class ComplementoIneController extends RestfulController<ComplementoIne>{
         params.max = 50
         params.sort = 'fecha'
         params.order = 'asc'
-        def query = Venta.where{ventaIne == true }
+        def query = Venta.where{ventaIne == true &&   facturar == null }
         respond query.list(params)
     }
 }
