@@ -178,7 +178,7 @@ class UrlMappings {
         "/api/inventario/traslados/printCfdi"(controller: "traslado", action: 'printCfdi', method: 'GET')
         "/api/inventario/traslados/salida/$id"(controller: "traslado", action: 'salida', method: 'PUT')
         "/api/inventario/traslados/timbrar/$id"(controller: "traslado", action: 'timbrar', method: 'PUT')
-        "/api/inventario/traslados/entrada/$id"(controller: "traslado", action: 'entrada', method: 'PUT')S
+        "/api/inventario/traslados/entrada/$id"(controller: "traslado", action: 'entrada', method: 'PUT')
         "/api/inventario/traslados/reportes/relaciontps"(controller: "traslado", action: 'relacionTps', method: 'GET')
         "/api/inventario/traslados/reportes/relaciontpe"(controller: "traslado", action: 'relacionTpe', method: 'GET')
         "/api/inventario/traslados/reportes/valesxrecibir"(controller: "traslado", action: 'valesPendienteRecibir', method: 'GET')
@@ -219,6 +219,7 @@ class UrlMappings {
         "/api/embarques/embarques/buscarDevolucionesPendientes"(controller: 'embarque', action: 'buscarDevolucionesPendientes', method: 'GET')
         "/api/embarques/embarques/asignarFacturas"(controller: 'embarque', action: 'asignarFacturas', method: 'PUT')
         "/api/embarques/envios"(resources: 'envio')
+        "/api/embarques/embarques/reporteFacturaEnvio"(controller: "embarque", action: 'reporteFacturaEnvio', method: 'GET')
 
 
         "/api/report"(controller: 'reporte', action: 'run', method: 'GET')
