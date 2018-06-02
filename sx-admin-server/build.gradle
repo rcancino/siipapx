@@ -1,4 +1,5 @@
 apply plugin: 'project-report'
+apply plugin:"org.grails.grails-gsp"
 
 grails {
     plugins {

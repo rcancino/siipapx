@@ -8,10 +8,10 @@
 		 orientation="Portrait"
 		 pageWidth="612"
 		 pageHeight="792"
-		 columnWidth="552"
+		 columnWidth="574"
 		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
+		 leftMargin="19"
+		 rightMargin="19"
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="NoPages"
@@ -124,7 +124,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 						mode="Transparent"
 						x="2"
 						y="0"
-						width="68"
+						width="81"
 						height="11"
 						key="textField"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -140,7 +140,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="71"
+						x="83"
 						y="0"
 						width="142"
 						height="11"
@@ -158,7 +158,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="213"
+						x="225"
 						y="0"
 						width="27"
 						height="12"
@@ -175,7 +175,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="267"
+						x="279"
 						y="0"
 						width="25"
 						height="12"
@@ -188,7 +188,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="240"
+						x="252"
 						y="0"
 						width="27"
 						height="12"
@@ -205,7 +205,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 			<band height="12"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="353"
+						x="365"
 						y="1"
 						width="56"
 						height="11"
@@ -220,7 +220,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="225"
+						x="237"
 						y="0"
 						width="127"
 						height="12"
@@ -253,7 +253,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="423"
+						x="440"
 						y="0"
 						width="129"
 						height="15"
@@ -273,8 +273,8 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="337"
-						y="13"
+						x="354"
+						y="15"
 						width="214"
 						height="15"
 						forecolor="#000000"
@@ -312,8 +312,8 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="423"
-						y="28"
+						x="440"
+						y="30"
 						width="128"
 						height="16"
 						forecolor="#000000"
@@ -357,7 +357,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 						mode="Opaque"
 						x="2"
 						y="5"
-						width="68"
+						width="81"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -375,7 +375,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="71"
+						x="83"
 						y="5"
 						width="142"
 						height="12"
@@ -395,7 +395,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="267"
+						x="279"
 						y="5"
 						width="25"
 						height="12"
@@ -415,7 +415,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="292"
+						x="304"
 						y="5"
 						width="61"
 						height="12"
@@ -435,7 +435,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="240"
+						x="252"
 						y="5"
 						width="27"
 						height="12"
@@ -457,7 +457,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 						mode="Opaque"
 						x="0"
 						y="2"
-						width="552"
+						width="574"
 						height="0"
 						backcolor="#FFFFFF"
 						key="line-5"/>
@@ -466,9 +466,9 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="2"
+						x="0"
 						y="18"
-						width="552"
+						width="574"
 						height="0"
 						backcolor="#FFFFFF"
 						key="line-6"/>
@@ -477,7 +477,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="213"
+						x="225"
 						y="5"
 						width="27"
 						height="12"
@@ -497,7 +497,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="353"
+						x="365"
 						y="5"
 						width="56"
 						height="12"
@@ -517,9 +517,9 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="409"
+						x="421"
 						y="5"
-						width="142"
+						width="148"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -540,7 +540,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 			<band height="12"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="291"
+						x="303"
 						y="1"
 						width="62"
 						height="11"
@@ -553,7 +553,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="353"
+						x="365"
 						y="1"
 						width="56"
 						height="11"
@@ -566,7 +566,7 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="180"
+						x="192"
 						y="1"
 						width="87"
 						height="11"
@@ -586,9 +586,9 @@ GROUP BY I.PRODUCTO_ID]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="409"
+						x="427"
 						y="1"
-						width="143"
+						width="142"
 						height="11"
 						key="textField-33"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
