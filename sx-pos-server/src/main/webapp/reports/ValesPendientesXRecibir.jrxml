@@ -58,23 +58,24 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 	<field name="CORTES_INSTRUCCION" class="java.lang.String"/>
 	<field name="CLASIFICACION_VALE" class="java.lang.String"/>
 
+	<sortField name="SUC_ATD" />
 	<sortField name="DOCUMENTO" />
 	<sortField name="CLAVE" />
 
 
 		<group  name="SUC_ATIENDE" >
-			<groupExpression><![CDATA[]]></groupExpression>
+			<groupExpression><![CDATA[$F{SUC_ATD}]]></groupExpression>
 			<groupHeader>
 			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="272"
-						y="0"
-						width="124"
-						height="15"
+						x="279"
+						y="-2"
+						width="165"
+						height="17"
 						key="textField"/>
 					<box></box>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="12" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SUC_ATD}]]></textFieldExpression>
@@ -82,20 +83,20 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="50"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 			</groupFooter>
 		</group>
 		<group  name="SOLICITUD" >
 			<groupExpression><![CDATA[$F{DOCUMENTO}]]></groupExpression>
 			<groupHeader>
-			<band height="18"  isSplitAllowed="true" >
+			<band height="14"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="66"
 						y="3"
 						width="35"
-						height="15"
+						height="11"
 						key="textField"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
@@ -108,7 +109,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 						x="101"
 						y="2"
 						width="87"
-						height="15"
+						height="11"
 						key="textField"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
@@ -120,8 +121,8 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					<reportElement
 						x="188"
 						y="2"
-						width="136"
-						height="15"
+						width="82"
+						height="11"
 						key="textField"/>
 					<box></box>
 					<textElement verticalAlignment="Top">
@@ -131,10 +132,10 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="326"
+						x="272"
 						y="2"
 						width="97"
-						height="15"
+						height="11"
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Top">
@@ -350,7 +351,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 					<reportElement
 						x="188"
 						y="4"
-						width="138"
+						width="84"
 						height="12"
 						key="staticText-72"/>
 					<box></box>
@@ -361,7 +362,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</staticText>
 				<staticText>
 					<reportElement
-						x="326"
+						x="272"
 						y="4"
 						width="100"
 						height="12"
@@ -374,7 +375,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</staticText>
 				<staticText>
 					<reportElement
-						x="426"
+						x="372"
 						y="4"
 						width="70"
 						height="12"
@@ -387,7 +388,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</staticText>
 				<staticText>
 					<reportElement
-						x="496"
+						x="442"
 						y="4"
 						width="170"
 						height="12"
@@ -400,7 +401,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</staticText>
 				<staticText>
 					<reportElement
-						x="666"
+						x="612"
 						y="4"
 						width="62"
 						height="12"
@@ -417,7 +418,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 			<band height="13"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="403"
+						x="349"
 						y="1"
 						width="70"
 						height="12"
@@ -430,7 +431,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="473"
+						x="419"
 						y="1"
 						width="170"
 						height="12"
@@ -443,7 +444,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="666"
+						x="612"
 						y="1"
 						width="61"
 						height="12"
@@ -456,7 +457,7 @@ where B.ID=$P{SUCURSAL} AND  M.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="643"
+						x="589"
 						y="1"
 						width="23"
 						height="12"
