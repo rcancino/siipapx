@@ -23,11 +23,13 @@ class EnvioController extends RestfulController {
     
 
     protected Envio updateResource(Envio resource) {
+
         return super.updateResource(resource)
     }
 
 
     protected void deleteResource(Envio envio) {
+
         log.info('Eliminando envio: {}', envio);
     }
 

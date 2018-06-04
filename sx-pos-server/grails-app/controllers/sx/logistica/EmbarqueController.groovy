@@ -120,8 +120,9 @@ class EmbarqueController extends RestfulController {
     }
 
 
+
     private cargarEnvioParaVenta(DocumentSearchCommand command){
-        log.debug('Perarando envio {}', command)
+        log.debug('Preparando envio {}', command)
         def q = CondicionDeEnvio.where{
             venta.sucursal == command.sucursal && 
             venta.cuentaPorCobrar.documento == command.documento &&
@@ -194,7 +195,7 @@ class EmbarqueController extends RestfulController {
         }
         
         def q = CondicionDeEnvio.where{
-            venta.sucursal == command.sucursal && venta.documento == command.documento && venta.fecha == command.fecha
+            venta.sucursal == command.sucursal && venta.cuentaPorCobrar.documento == command.documento && venta.fecha == command.fecha
         }
         CondicionDeEnvio res = q.find()
         if (res == null) {
@@ -270,6 +271,40 @@ class EmbarqueController extends RestfulController {
         def pdf = this.reportService.run('EntregaPorChofer', repParams)
         def fileName = "EntregaPorChofer.pdf"
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def reporteFacturaEnvio(){
+
+        def venta=Venta.get(params.id)
+
+        def reportName="EntregaPorChofer.pdf"
+
+        def condicion=CondicionDeEnvio.findByVenta(venta)
+
+        if(condicion){
+
+            if(!condicion.asignado){
+                reportName="FacturaPorAsignar"
+            }
+            if(condicion.asignado && condicion.parcial){
+                reportName="EntregaParcialFactura"
+            }
+            if(condicion.asignado && !condicion.parcial){
+                reportName="EntregaTotalFactura"
+            }
+
+            def repParams = [:]
+            repParams['ID'] = params.id
+            println 'Ejecutando reporte de engregas por chofer con parametros: ' + repParams
+            def pdf = this.reportService.run(reportName, repParams)
+            def fileName = "FacturaEnvio.pdf"
+            render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+
+        }else{
+            notFound()
+            return
+        }
+
     }
 
     def documentosEnTransito() {
