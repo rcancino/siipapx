@@ -120,7 +120,7 @@ class RevisionService {
         }
         credito.reprogramarPago = getProximoPago(hoy, diaPago)
         if(credito.fechaRevision >= credito.reprogramarPago) {
-            credito.reprogramarPago = getProximoPago(credito.fechaRevision, diaPago)
+            credito.reprogramarPago = getProximoPago(credito.vencimiento, diaPago)
         }
         credito.save failOnError: true, flush: true
         return credito

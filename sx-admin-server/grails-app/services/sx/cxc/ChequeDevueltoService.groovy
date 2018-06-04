@@ -12,14 +12,14 @@ class ChequeDevueltoService {
 
 
 
-    ChequeDevuelto registrarChequeDevuelto(CobroCheque cobroCheque) {
+    ChequeDevuelto registrarChequeDevuelto(CobroCheque cobroCheque, Date fecha) {
         CuentaPorCobrar cxc = new CuentaPorCobrar()
         cxc.cliente = cobroCheque.cobro.cliente
         cxc.sucursal = cobroCheque.cobro.sucursal
         cxc.formaDePago = cobroCheque.cobro.formaDePago
         cxc.documento = Folio.nextFolio('CHEQUE_DEVUELTO', cxc.tipo)
         cxc.comentario = 'Cargo por cheque devuelto'
-        cxc.fecha = new Date()
+        cxc.fecha = fecha
         cxc.tipo = 'CHE'
         cxc.tipoDocumento = 'CHEQUE_DEVUELTO'
         cxc.importe = MonedaUtils.calcularImporteDelTotal(cobroCheque.cobro.importe)

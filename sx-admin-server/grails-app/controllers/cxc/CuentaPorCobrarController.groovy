@@ -46,8 +46,15 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         params.order = params.order ?:'desc'
         params.max = 50
 
-        if(params.cartera)
-            query = query.where{ tipo == params.cartera}
+        if(params.cartera){
+            def cart = params.cartera
+            if(cart == 'CON') {
+                query = query.where{ tipo == 'CON' || tipo == 'COD'}
+            } else {
+                query = query.where{ tipo == params.cartera}
+            }
+        }
+
 
         String nombre = params.nombre
         if(nombre){
