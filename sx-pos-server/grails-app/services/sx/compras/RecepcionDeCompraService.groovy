@@ -68,7 +68,7 @@ class RecepcionDeCompraService {
             inventario.documento = com.documento
             inventario.cantidad = det.cantidad
             inventario.comentario = det.comentario
-            inventario.fecha = com.fecha
+            inventario.fecha = new Date()
             inventario.producto = det.producto
             inventario.tipo = 'COM'
             inventario.renglon = renglon

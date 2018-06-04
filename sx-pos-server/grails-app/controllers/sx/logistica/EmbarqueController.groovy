@@ -275,31 +275,35 @@ class EmbarqueController extends RestfulController {
 
     def reporteFacturaEnvio(){
 
-        println "********************************"+params
         def venta=Venta.get(params.id)
 
         def reportName="EntregaPorChofer.pdf"
 
         def condicion=CondicionDeEnvio.findByVenta(venta)
 
-        if(!condicion.asignado){
+        if(condicion){
 
+            if(!condicion.asignado){
+                reportName="FacturaPorAsignar"
+            }
+            if(condicion.asignado && condicion.parcial){
+                reportName="EntregaParcialFactura"
+            }
+            if(condicion.asignado && !condicion.parcial){
+                reportName="EntregaTotalFactura"
+            }
+
+            def repParams = [:]
+            repParams['ID'] = params.id
+            println 'Ejecutando reporte de engregas por chofer con parametros: ' + repParams
+            def pdf = this.reportService.run(reportName, repParams)
+            def fileName = "FacturaEnvio.pdf"
+            render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+
+        }else{
+            notFound()
+            return
         }
-        if(condicion.parcial){
-
-        }
-        if(!condicion.parcial){
-
-        }
-
-        def repParams = [:]
-        repParams['ID'] = params.id
-        println 'Ejecutando reporte de engregas por chofer con parametros: ' + repParams
-        def pdf = this.reportService.run('FacturaEnvio', repParams)
-        def fileName = reportName
-        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
-
-
 
     }
 
