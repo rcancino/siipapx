@@ -77,8 +77,8 @@ FROM DUAL]]></queryString>
 ,(SELECT S.ASIGNADO_ID FROM surtido S WHERE V.ID=S.ORIGEN) AS SURTIDOR,(SELECT S.INICIADO FROM surtido S WHERE V.ID=S.ORIGEN) AS SURTIDO
 ,(case when p.unidad='MIL' then V.CANTIDAD/1000 else V.CANTIDAD end) AS CANT_FAC ,(case when p.unidad='MIL' then V.CANTIDAD/1000 else V.CANTIDAD end)*P.KILOS AS KILOS_FAC,T.PAQUETES
 ,(case when p.unidad='MIL' then V.CANTIDAD/1000 else V.CANTIDAD end) AS CANTIDAD,0 AS ENTREGADO_ANTERIOR,(case when p.unidad='MIL' then V.CANTIDAD/1000 else V.CANTIDAD end) AS CANT_VTA
-,((SELECT SUM((case when p.unidad='MIL' then V.CANTIDAD/1000 else V.CANTIDAD end)) FROM VENTA_DET y WHERE y.VENTA_ID=X.ID)) AS TOT_VTA
-,((SELECT SUM((case when p.unidad='MIL' then V.CANTIDAD/1000 else V.CANTIDAD end)*Z.KILOS) FROM VENTA_DET y JOIN PRODUCTO Z ON(Z.ID=Y.PRODUCTO_ID) WHERE y.VENTA_ID=X.ID)) AS KILOS_VTA
+,((SELECT SUM((case when Z.unidad='MIL' then y.CANTIDAD/1000 else y.CANTIDAD end)) FROM VENTA_DET y JOIN VENTA N ON(y.venta_id=N.ID) JOIN PRODUCTO Z ON(Z.ID=Y.PRODUCTO_ID) WHERE N.ID=X.ID)) AS TOT_VTA
+,((SELECT SUM((case when Z.unidad='MIL' then y.CANTIDAD/1000 else y.CANTIDAD end)*Z.KILOS) FROM VENTA_DET y JOIN VENTA N ON(y.venta_id=N.ID) JOIN PRODUCTO Z ON(Z.ID=Y.PRODUCTO_ID) WHERE N.ID=X.ID)) AS KILOS_VTA
 FROM  envio T JOIN embarque E ON(T.EMBARQUE_ID=E.ID)
 JOIN VENTA X ON(T.ORIGEN=X.ID) JOIN cuenta_por_cobrar Y ON(X.cuenta_por_cobrar_id=Y.ID) JOIN CLIENTE C ON(Y.cliente_id=C.ID)
 JOIN VENTA_DET V ON(V.VENTA_ID=T.ORIGEN) JOIN producto P ON(P.ID=V.PRODUCTO_ID)
@@ -1076,7 +1076,7 @@ WHERE T.PARCIAL IS false AND T.origen=$P{ID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -1208,7 +1208,7 @@ WHERE T.PARCIAL IS false AND T.origen=$P{ID}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
