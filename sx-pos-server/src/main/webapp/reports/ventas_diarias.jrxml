@@ -29,14 +29,10 @@
 	<parameter name="FECHA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[select 
-a.documento AS docto
-,CASE WHEN (SELECT X.date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) IS NULL THEN A.FECHA ELSE (SELECT date_created FROM CFDI X WHERE A.CFDI_ID=X.ID) END AS fecha
-,B.clave,B.nombre
+	<queryString><![CDATA[select a.documento AS docto,a.fecha,B.clave,B.nombre
 ,a.moneda,a.tipo_de_cambio as tc,a.subtotal*a.tipo_de_cambio as importe
 ,a.impuesto*a.tipo_de_cambio as impuesto,a.total*a.tipo_de_cambio as total
-,0 as anticipo
-,0 AS anticipo_aplicado
+,0 as anticipo,0 AS anticipo_aplicado
 ,a.documento as nfiscal,tipo as ORIGEN,S.NOMBRE,S.CLAVE
 ,(SELECT v.kilos FROM venta v where v.cuenta_por_cobrar_id=a.id )as KILOS
 ,(CASE 	WHEN CFDI_ID IS NULL AND (SELECT v.documento FROM venta v where v.cuenta_por_cobrar_id=a.id) IS NULL THEN 'S/VyT'
@@ -45,12 +41,12 @@ a.documento AS docto
 		ELSE '' END) AS TIMBRADA
 ,S.NOMBRE AS SUC
 ,(CASE WHEN A.CANCELADA IS NOT NULL THEN 'C' ELSE '' END) AS CANCELADA
-FROM  cuenta_por_cobrar A  JOIN sucursal S ON(A.SUCURSAL_ID=S.ID)  JOIN cliente B ON (A.CLIENTE_ID=B.ID)
-WHERE A.TIPO LIKE $P{ORIGEN} AND A.FECHA = $P{FECHA} AND S.ID= $P{SUCURSAL}
-ORDER BY A.documento,a.date_created]]></queryString>
+FROM  cuenta_por_cobrar a  JOIN sucursal S ON(a.SUCURSAL_ID=S.ID)  JOIN cliente B ON (a.CLIENTE_ID=B.ID)
+WHERE a.TIPO LIKE $P{ORIGEN} AND a.fecha = $P{FECHA} AND S.ID= $P{SUCURSAL}
+ORDER BY a.documento,a.date_created]]></queryString>
 
 	<field name="docto" class="java.lang.Long"/>
-	<field name="fecha" class="java.sql.Timestamp"/>
+	<field name="fecha" class="java.sql.Date"/>
 	<field name="clave" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="moneda" class="java.lang.String"/>
@@ -272,7 +268,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="459"
+						x="448"
 						y="42"
 						width="63"
 						height="13"
@@ -329,9 +325,9 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="190"
+						x="158"
 						y="58"
-						width="28"
+						width="57"
 						height="9"
 						key="staticText-15"/>
 					<box></box>
@@ -344,7 +340,7 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					<reportElement
 						x="119"
 						y="58"
-						width="63"
+						width="39"
 						height="9"
 						key="staticText-16"/>
 					<box></box>
@@ -367,9 +363,9 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</line>
 				<staticText>
 					<reportElement
-						x="222"
+						x="215"
 						y="58"
-						width="130"
+						width="137"
 						height="9"
 						key="staticText-31"/>
 					<box></box>
@@ -430,18 +426,18 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					</textElement>
 				<text><![CDATA[KILOS]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="522"
+						x="511"
 						y="42"
-						width="50"
+						width="64"
 						height="13"
 						key="textField"/>
 					<box></box>
 					<textElement>
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -512,11 +508,11 @@ ORDER BY A.documento,a.date_created]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{docto}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy HH.mm.ss" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="119"
 						y="-1"
-						width="68"
+						width="39"
 						height="10"
 						key="textField"/>
 					<box></box>
@@ -527,9 +523,9 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="190"
+						x="158"
 						y="-1"
-						width="28"
+						width="57"
 						height="10"
 						key="textField"/>
 					<box></box>
@@ -540,9 +536,9 @@ ORDER BY A.documento,a.date_created]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="222"
+						x="215"
 						y="-1"
-						width="129"
+						width="136"
 						height="10"
 						key="textField"/>
 					<box></box>
