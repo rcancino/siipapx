@@ -1,9 +1,11 @@
 package sx.cxc
 
 import com.luxsoft.utils.MonedaUtils
-import grails.compiler.GrailsCompileStatic
+
 import grails.gorm.transactions.Transactional
+import sx.core.Empresa
 import sx.core.Folio
+import sx.tesoreria.MovimientoDeCuenta
 
 
 // @GrailsCompileStatic
@@ -38,9 +40,29 @@ class ChequeDevueltoService {
         che.cheque = cobroCheque
         che.createUser = cxc.createUser
         che.updateUser = cxc.updateUser
+        // MovimientoDeCuenta egreso = registrarEgreso(che)
+        // egreso.save failOnError: true, flush: true
+        che.egreso = egreso;
         che.save failOnError: true, flush: true
         return che
 
+    }
+
+    def registrarEgreso(ChequeDevuelto chequeDevuelto) {
+        if(chequeDevuelto.egreso) return
+        Empresa empresa = Empresa.first()
+        MovimientoDeCuenta mov = new MovimientoDeCuenta()
+        mov.referencia = "${chequeDevuelto.cheque.numero} "
+        mov.tipo = 'CHE';
+        mov.fecha = chequeDevuelto.cxc.fecha
+        mov.formaDePago = 'CHEQUE'
+        mov.comentario = "CHEQUE DEVUELTO:  ${chequeDevuelto.cxc.sucursal.nombre} "
+        mov.cuenta = chequeDevuelto.cheque.ficha.cuentaDeBanco
+        mov.afavor = empresa.nombre
+        mov.importe = chequeDevuelto.cxc.total * -1
+        mov.moneda = mov.cuenta.moneda
+        mov.concepto = 'CHEQUE_DEVUELTO'
+        return mov
     }
 
     ChequeDevuelto save(ChequeDevuelto chequeDevuelto) {

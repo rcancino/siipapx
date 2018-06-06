@@ -73,7 +73,7 @@ class CobroController extends RestfulController{
     }
 
     def cobrosMonetarios(CobranzaPorFechaCommand command) {
-        log.debug('Cobros {}', params)
+        // log.debug('Cobros {}', params)
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -89,6 +89,10 @@ class CobroController extends RestfulController{
 
         if(params.cartera) {
             query = query.where { tipo == params.cartera}
+        }
+        if(params.formaDePago) {
+            def search = '%' + params.formaDePago + '%'
+            query = query.where { formaDePago =~ search}
         }
         if(params.importe) {
             BigDecimal importe = params.importe as BigDecimal
