@@ -30,32 +30,33 @@
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="PRODUCTO" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT e.anio as YEAR,e.MES,e.sucursal_nombre AS SUCURSAL,p.CLAVE,p.DESCRIPCION,p.UNIDAD,'EXI' as ORIGEN,'AAA' as TIPO,0 as DOCUMENTO,1 as RENGLON,e.FECHA,e.KILOS,e.existencia_inicial as CANTIDAD,e.existencia_inicial as SALDO,'INICIAL  :  ' as COMENTARIO,P.ANCHO,P.LARGO
+	<queryString><![CDATA[SELECT E.ID,e.anio as YEAR,e.MES,e.sucursal_nombre AS SUCURSAL,p.CLAVE,p.DESCRIPCION,p.UNIDAD,'EXI' as ORIGEN,'AAA' as TIPO,0 as DOCUMENTO,1 as RENGLON,e.FECHA,e.KILOS,e.existencia_inicial as CANTIDAD,e.existencia_inicial as SALDO,'INICIAL  :  ' as COMENTARIO,P.ANCHO,P.LARGO
 FROM existencia e join  producto p on (p.id=e.producto_id)
 where e.producto_id =$P{PRODUCTO}  AND e.sucursal_id=(SELECT sucursal_id FROM app_config) 
 and  e.fecha BETWEEN CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01) and ($P{FECHA_FIN}) 
 union
-SELECT year(i.fecha),month(i.fecha),i.sucursal_nombre,p.clave,p.descripcion,p.unidad
+SELECT I.ID,year(i.fecha),month(i.fecha),i.sucursal_nombre,p.clave,p.descripcion,p.unidad
 ,'','AAB' as tipo,0 as documento,1 as renglon,CONCAT(DATE(DATE_ADD($P{FECHA_INI}, INTERVAL -1 DAY))) as  fecha,sum(i.kilos),sum(i.cantidad) AS CANTIDAD,sum(i.cantidad) as SALDO,'MOVIMIENTOS INI +/-  :  ' as comentario,P.ANCHO,P.LARGO
 FROM inventario i join  producto p on (p.id=i.producto_id)
 where I.producto_id=$P{PRODUCTO} and DATE(i.fecha) BETWEEN CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01) and (DATE(DATE_ADD($P{FECHA_INI}, INTERVAL -1 DAY)))  AND i.sucursal_id=(SELECT sucursal_id FROM app_config)
 group by i.producto_id
 union
-SELECT year(i.fecha),month(i.fecha),i.sucursal_nombre,p.clave,p.descripcion,p.unidad,i.tipo_venta,i.tipo,i.documento,i.renglon,i.fecha,i.kilos,i.cantidad,0 AS SALDO,i.comentario,P.ANCHO,P.LARGO
+SELECT I.ID,year(i.fecha),month(i.fecha),i.sucursal_nombre,p.clave,p.descripcion,p.unidad,i.tipo_venta,i.tipo,i.documento,i.renglon,i.fecha,i.kilos,i.cantidad,0 AS SALDO,i.comentario,P.ANCHO,P.LARGO
 FROM inventario i join  producto p on (p.id=i.producto_id)
 where I.producto_id=$P{PRODUCTO} and DATE(i.fecha) BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} AND i.sucursal_id=(SELECT sucursal_id FROM app_config)
 union
-SELECT year(i.fecha) AS YEAR,month(i.fecha) AS MES,i.sucursal_nombre AS SUCURSAL,p.CLAVE,p.DESCRIPCION,p.UNIDAD
+SELECT I.ID,year(i.fecha) AS YEAR,month(i.fecha) AS MES,i.sucursal_nombre AS SUCURSAL,p.CLAVE,p.DESCRIPCION,p.UNIDAD
 ,'' AS ORIGEN,'ZZY' as TIPO,0 as DOCUMENTO,1 as RENGLON,CONCAT((DATE(DATE_ADD($P{FECHA_FIN}, INTERVAL 1 DAY))),' 00:00:00.0') as  FECHA,sum(i.kilos) AS KILOS,0 AS CANTIDAD,sum(i.cantidad) as SALDO,'MOVIMIENTOS FIN +/-  :  ' as COMENTARIO,P.ANCHO,P.LARGO
 FROM inventario i join  producto p on (p.id=i.producto_id)
 where I.producto_id=$P{PRODUCTO} and DATE(i.fecha) BETWEEN (DATE(DATE_ADD($P{FECHA_FIN}, INTERVAL 1 DAY))) and CONCAT(YEAR($P{FECHA_FIN}),'/',MONTH($P{FECHA_FIN}),'/',31)  AND i.sucursal_id=(SELECT sucursal_id FROM app_config)
 group by i.producto_id
 union
-SELECT e.anio,e.mes,e.sucursal_nombre,p.clave,p.descripcion,p.unidad,'' as tipo_venta,'ZZZ' as tipo,0 as documento,1 as renglon,CONCAT($P{FECHA_FIN},' 23:00:00.0') as fecha,e.kilos,0 AS CANTIDAD,e.cantidad AS SALDO,'FINAL  :  ' as comentario,P.ANCHO,P.LARGO
+SELECT E.ID,e.anio,e.mes,e.sucursal_nombre,p.clave,p.descripcion,p.unidad,'' as tipo_venta,'ZZZ' as tipo,0 as documento,1 as renglon,CONCAT($P{FECHA_FIN},' 23:00:00.0') as fecha,e.kilos,0 AS CANTIDAD,e.cantidad AS SALDO,'FINAL  :  ' as comentario,P.ANCHO,P.LARGO
 FROM existencia e join  producto p on (p.id=e.producto_id)
 where e.producto_id =$P{PRODUCTO}  AND e.sucursal_id=(SELECT sucursal_id FROM app_config) 
 and  e.fecha BETWEEN CONCAT(YEAR($P{FECHA_INI}),'/',MONTH($P{FECHA_INI}),'/',01) and ($P{FECHA_FIN})]]></queryString>
 
+	<field name="ID" class="java.lang.String"/>
 	<field name="YEAR" class="java.lang.Long"/>
 	<field name="MES" class="java.lang.Long"/>
 	<field name="SUCURSAL" class="java.lang.String"/>
