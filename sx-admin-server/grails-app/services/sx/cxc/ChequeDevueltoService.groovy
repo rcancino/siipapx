@@ -30,7 +30,7 @@ class ChequeDevueltoService {
         cxc.total = MonedaUtils.calcularTotal(cxc.importe + cxc.impuesto)
         cxc.createUser = 'PENDIENTE'
         cxc.updateUser = 'PENDIENTE'
-        cxc.save failOnError: true
+        cxc.save failOnError: true, flush: true
 
         ChequeDevuelto che = new ChequeDevuelto()
         che.comentario = ''
@@ -40,8 +40,8 @@ class ChequeDevueltoService {
         che.cheque = cobroCheque
         che.createUser = cxc.createUser
         che.updateUser = cxc.updateUser
-        // MovimientoDeCuenta egreso = registrarEgreso(che)
-        // egreso.save failOnError: true, flush: true
+        MovimientoDeCuenta egreso = registrarEgreso(che)
+        egreso.save failOnError: true, flush: true
         che.egreso = egreso;
         che.save failOnError: true, flush: true
         return che
@@ -49,7 +49,9 @@ class ChequeDevueltoService {
     }
 
     def registrarEgreso(ChequeDevuelto chequeDevuelto) {
+
         if(chequeDevuelto.egreso) return
+        assert chequeDevuelto.cheque.ficha, "Se requiere la ficha de deposito para el Cobro: ${chequeDevuelto.cheque.cobro.id}"
         Empresa empresa = Empresa.first()
         MovimientoDeCuenta mov = new MovimientoDeCuenta()
         mov.referencia = "${chequeDevuelto.cheque.numero} "
