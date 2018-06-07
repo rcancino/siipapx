@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:pago10="http://www.sat.gob.mx/Pagos" xmlns:ine="http://www.sat.gob.mx/ine" xmlns:nomina12="http://www.sat.gob.mx/nomina12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3.3" Serie="TAFACCRE" Folio="2215" Fecha="2018-06-07T17:40:52" Sello="LDNJ6f59v6MfAy2cdUrJyGVllS6jxNbmTC+X/QUaDXr45JdefC1W4+VvPfe4Glj8cOQl46zYjR1XgMIaRKaGeYy7qBwyMGiWg2PbcXWjdDpg5XeDVW6KhSSUW9Ec6/bxQi6ZLiTv8Nc39TAIDhL70HrWRjwEgIn58aYr5Sq5UfP7I3cHSaHj5EjOpQmO7CUCxJvBRaWafipqslibeXE3t+ujomFZt93J+8OK7ILRRwQvfGugiEgz5INt1Q3jc+f9BV84nwqEy3HMqVx/ocpNz/BYLAsSlyQNBZaxxde/6CHHuNLSJHI4WK6QlzeDRIrXgG8Ots6MNq3iyXljFQgYlg==" FormaPago="99" NoCertificado="00001000000403970040" Certificado="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" CondicionesDePago="Credito" SubTotal="15056.92" Descuento="3583.42" Moneda="MXN" Total="13309.27" TipoDeComprobante="I" MetodoPago="PPD" LugarExpedicion="02870" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd">
+    <cfdi:Emisor Rfc="PAP830101CR3" Nombre="PAPEL SA DE CV" RegimenFiscal="601"/>
+    <cfdi:Receptor Rfc="FDE9310013X7" Nombre="FAST DESING SA DE CV" UsoCFDI="G01"/>
+    <cfdi:Conceptos>
+        <cfdi:Concepto ClaveProdServ="14111519" NoIdentificacion="OPAPOL60" Cantidad="0.065" ClaveUnidad="MIL" Unidad="MIL" Descripcion="OPALINA PAP EUROPOLART 57X87 120G 60K" ValorUnitario="2836.00" Importe="184.34" Descuento="44.24">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="140.10" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="22.42"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111519" NoIdentificacion="OPAPOL60" Cantidad="0.066" ClaveUnidad="MIL" Unidad="MIL" Descripcion="OPALINA PAP EUROPOLART 57X87 120G 60K" ValorUnitario="2836.00" Importe="187.18" Descuento="44.92">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="142.26" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="22.76"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111507" NoIdentificacion="PHPCTA" Cantidad="50.000" ClaveUnidad="KGM" Unidad="MIL" Descripcion="B HP ULTRA BLANCO 92° 75G CARTA 37" ValorUnitario="118.00" Importe="5900.00" Descuento="1416.00">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="4484.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="717.44"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CBB5775" Cantidad="1.250" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CB BLANCO 57X87 ~75G~" ValorUnitario="2288.00" Importe="2860.00" Descuento="686.40">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="2173.60" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="347.78"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="24121503" NoIdentificacion="CJACTA2T" Cantidad="0.200" ClaveUnidad="MIL" Unidad="MIL" Descripcion="CJA CORRUG CTA 28.6X22X25 R9" ValorUnitario="7751.00" Importe="1550.20" Descuento="372.05">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="1178.15" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="188.50"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="24121503" NoIdentificacion="CJAOF2T" Cantidad="0.200" ClaveUnidad="MIL" Unidad="MIL" Descripcion="CJA CORRUG OF 34.6X22X25 R9" ValorUnitario="7952.00" Importe="1590.40" Descuento="381.70">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="1208.70" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="193.39"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="44121506" NoIdentificacion="BOSCTA63" Cantidad="1.000" ClaveUnidad="MIL" Unidad="MIL" Descripcion="SOB BOSTON BCO CARTA 63" ValorUnitario="403.00" Importe="403.00" Descuento="96.72">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="306.28" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="49.00"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CFC5775" Cantidad="0.625" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CF CANARIO 57X87 ~75G~" ValorUnitario="2073.00" Importe="1295.63" Descuento="310.95">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="984.68" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="157.55"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="60121103" NoIdentificacion="ALB61110" Cantidad="0.008" ClaveUnidad="MIL" Unidad="MIL" Descripcion="ALBANENE 61X91 110G" ValorUnitario="7473.00" Importe="59.78" Descuento="14.35">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="45.43" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="7.27"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14121904" NoIdentificacion="UNI50" Cantidad="0.117" ClaveUnidad="MIL" Unidad="MIL" Descripcion="BOND PAPSA BLANCO 70X95 75G 50K" ValorUnitario="1515.00" Importe="177.26" Descuento="42.54">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="134.72" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="21.56"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14121801" NoIdentificacion="POLM90" Cantidad="0.125" ClaveUnidad="MIL" Unidad="MIL" Descripcion="SUPPOLART MATE 70X95 130GR" ValorUnitario="2280.00" Importe="285.00" Descuento="68.40">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="216.60" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="34.66"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14121801" NoIdentificacion="POLM133" Cantidad="0.125" ClaveUnidad="MIL" Unidad="MIL" Descripcion="SUPPOLART MATE 70X95 200GR" ValorUnitario="3505.00" Importe="438.13" Descuento="105.15">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="332.98" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="53.28"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="73151802" NoIdentificacion="CORTE" Cantidad="1.000" ClaveUnidad="C62" Unidad="PZA" Descripcion="CORTE" ValorUnitario="126.00" Importe="126.00" Descuento="0.00">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="126.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="20.16"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+    </cfdi:Conceptos>
+    <cfdi:Impuestos TotalImpuestosTrasladados="1835.77">
+        <cfdi:Traslados>
+            <cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="1835.77"/>
+        </cfdi:Traslados>
+    </cfdi:Impuestos>
+</cfdi:Comprobante>

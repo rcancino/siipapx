@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:pago10="http://www.sat.gob.mx/Pagos" xmlns:ine="http://www.sat.gob.mx/ine" xmlns:nomina12="http://www.sat.gob.mx/nomina12" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3.3" Serie="TAFACCON" Folio="16165" Fecha="2018-06-07T17:10:40" Sello="jucafIwzxbNjFuGCAZSg7M3mp8a8jcUcDrXPWxpf2LqwqJPKPDvqkq/r8sPhKdorkpzvB7Q+JtHP9LDeuUfkZpoFvjD40WsC/1rnM+/KiAoFhOQPiopXCmc3OS++vrQ4NCDfDisOuPGgc+aG1OwhLiwb3bCJoX2hszLjzj1DIgAk6cBANrV8KIe3/HeTfrD0EnL68V1jwW1ZHuzYIrq2Ax1ir5ICZzvoPdDU4UH20oDruJ17yWSnzt6Om53s3XrK6XhtV0edesMB1LdeIKkqfsoAliCdlKvpX17EDfD/yQouWlpWeUZLCKLl3+txtZdoP1TvKQflp/6S6ffy3guiKg==" FormaPago="01" NoCertificado="00001000000403970040" Certificado="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" CondicionesDePago="Contado" SubTotal="627.46" Descuento="49.08" Moneda="MXN" Total="670.92" TipoDeComprobante="I" MetodoPago="PUE" LugarExpedicion="02870" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd">
+    <cfdi:Emisor Rfc="PAP830101CR3" Nombre="PAPEL SA DE CV" RegimenFiscal="601"/>
+    <cfdi:Receptor Rfc="FAVL800728NI6" Nombre="FRANCO VIEYRA LOANA NURITH" UsoCFDI="G01"/>
+    <cfdi:Conceptos>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CBB5775" Cantidad="0.040" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CB BLANCO 57X87 ~75G~" ValorUnitario="2126.00" Importe="85.04" Descuento="6.80">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="78.24" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="12.52"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CFR5775" Cantidad="0.040" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CF ROSA 57X87 ~75G~" ValorUnitario="1923.00" Importe="76.92" Descuento="6.15">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="70.77" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="11.32"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CBB5775" Cantidad="0.070" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CB BLANCO 57X87 ~75G~" ValorUnitario="2126.00" Importe="148.82" Descuento="11.91">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="136.91" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="21.91"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CFBA5775" Cantidad="0.070" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CFB AZUL 57X87 ~75G~" ValorUnitario="2401.00" Importe="168.07" Descuento="13.45">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="154.62" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="24.74"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="14111527" NoIdentificacion="CFR5775" Cantidad="0.070" ClaveUnidad="MIL" Unidad="MIL" Descripcion="A FORMU CF ROSA 57X87 ~75G~" ValorUnitario="1923.00" Importe="134.61" Descuento="10.77">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="123.84" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="19.81"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+        <cfdi:Concepto ClaveProdServ="73151802" NoIdentificacion="CORTE" Cantidad="1.000" ClaveUnidad="C62" Unidad="PZA" Descripcion="CORTE" ValorUnitario="14.00" Importe="14.00" Descuento="0.00">
+            <cfdi:Impuestos>
+                <cfdi:Traslados>
+                    <cfdi:Traslado Base="14.00" Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="2.24"/>
+                </cfdi:Traslados>
+            </cfdi:Impuestos>
+        </cfdi:Concepto>
+    </cfdi:Conceptos>
+    <cfdi:Impuestos TotalImpuestosTrasladados="92.54">
+        <cfdi:Traslados>
+            <cfdi:Traslado Impuesto="002" TipoFactor="Tasa" TasaOCuota="0.160000" Importe="92.54"/>
+        </cfdi:Traslados>
+    </cfdi:Impuestos>
+</cfdi:Comprobante>

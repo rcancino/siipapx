@@ -34,7 +34,13 @@ class SolicitudDeDepositoController extends RestfulController{
         params.order = params.order ?:'desc'
         def query = SolicitudDeDeposito.where {}
         if (params.cartera) {
-            query = query.where { tipo == params.cartera}
+            def cartera = params.cartera
+            if(cartera == 'CRE'){
+                query = query.where { tipo == 'CRE' || tipo == 'CHE' || tipo == 'JUR'}
+            } else {
+                query = query.where { tipo == cartera}
+            }
+
         }
         if (params.sucursal) {
             Sucursal suc = Sucursal.get(params.sucursal)
