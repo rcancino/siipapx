@@ -102,7 +102,7 @@ class ReportService {
 
             if(i == 2){
                 def reportDef2=new JasperReportDef(
-                        name:'PapelRemisionCopiaCFDI3.jrxml',
+                        name:'PapelRemisionCFDI3Copia.jrxml',
                         fileFormat: JasperExportFormat.PDF_FORMAT,
                         parameters:params,
                         reportData:data
