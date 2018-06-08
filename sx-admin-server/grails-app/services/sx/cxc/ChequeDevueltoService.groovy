@@ -27,7 +27,7 @@ class ChequeDevueltoService {
         cxc.importe = MonedaUtils.calcularImporteDelTotal(cobroCheque.cobro.importe)
         cxc.subtotal = cxc.importe
         cxc.impuesto = MonedaUtils.calcularImpuesto(cxc.importe)
-        cxc.total = MonedaUtils.calcularTotal(cxc.importe + cxc.impuesto)
+        cxc.total = cobroCheque.cobro.importe
         cxc.createUser = 'PENDIENTE'
         cxc.updateUser = 'PENDIENTE'
         cxc.save failOnError: true, flush: true
