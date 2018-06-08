@@ -146,6 +146,8 @@ class UrlMappings {
 
         // Cheques devueltos
         "/api/cxc/cheques"(resources: "chequeDevuelto")
+        "/api/cxc/cheques/reporteDeChequesDevueltos"(controller: "chequeDevuelto", action:'reporteDeChequesDevueltos', method: 'GET')
+
 
         // Comisiones
         "/api/cxc/comisiones"(resources: 'comision')

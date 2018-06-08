@@ -3,7 +3,7 @@ package sx.core
 import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-
+import sx.cfdi.ComplementoIne
 import sx.cxc.CuentaPorCobrar
 import sx.logistica.CondicionDeEnvio
 
@@ -112,6 +112,8 @@ class Venta {
 
     Boolean chequePostFechado = false;
 
+    Boolean ventaIne = false;
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -139,6 +141,8 @@ class Venta {
         socio nullable: true
         chequePostFechado nullable: true
         facturarUsuario nullable: true
+        ventaIne nullable: true
+        complementoIne nullable: true
     }
 
     static mapping = {
@@ -150,7 +154,7 @@ class Venta {
 
     static hasMany =[partidas:VentaDet]
 
-    static hasOne = [envio: CondicionDeEnvio]
+    static hasOne = [envio: CondicionDeEnvio, complementoIne: ComplementoIne]
 
     static transients = ['folio']
 

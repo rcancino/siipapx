@@ -39,6 +39,7 @@ class UrlMappings {
         "/api/cfdis"(resources: "cfdi")
         "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
         "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
+        "/api/cfdis/printRemision/$id"(controller: "cfdi", action: 'printRemision', method: 'GET')
         "/api/cfdis/enviarFacturaEmail"(controller: "cfdi", action: 'enviarFacturaEmail', method: 'PUT')
         "/api/cfdis/envioBatch"(controller: "cfdi", action: 'envioBatch', method: 'PUT')
 
@@ -235,6 +236,8 @@ class UrlMappings {
         "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
         "/api/report/clientesNuevos"(controller: 'ventas', action: 'clientesNuevos', method: 'GET')
 
+        "/api/complementosIne"(resources:"complementoIne")
+        "/api/complementosIne/pendientes"(controller: "complementoIne", action: 'pendientes', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")

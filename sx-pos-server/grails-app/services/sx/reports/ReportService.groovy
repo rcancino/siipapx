@@ -77,4 +77,42 @@ class ReportService {
     }
 
 
+    ByteArrayOutputStream imprimirRemision(String reportName, Map params, Collection data){
+
+        // log.debug("Ejecutando reporte {} con parametros: ${params} y data: ${data}", reportName)
+        log.debug("Ejecutando reporte {}", reportName)
+
+
+        def reportes = []
+
+        for(def i=1 ; i<=2 ; i++){
+
+
+            if(i == 1){
+                def reportDef1=new JasperReportDef(
+                        name:reportName,
+                        fileFormat: JasperExportFormat.PDF_FORMAT,
+                        parameters:params,
+                        reportData:data
+                )
+
+                reportes.add(reportDef1)
+
+            }
+
+            if(i == 2){
+                def reportDef2=new JasperReportDef(
+                        name:'PapelRemisionCFDI3Copia.jrxml',
+                        fileFormat: JasperExportFormat.PDF_FORMAT,
+                        parameters:params,
+                        reportData:data
+                )
+
+                reportes.add(reportDef2)
+            }
+        }
+        ByteArrayOutputStream  stream=jasperService.generateReport(reportes)
+        return stream
+    }
+
 }

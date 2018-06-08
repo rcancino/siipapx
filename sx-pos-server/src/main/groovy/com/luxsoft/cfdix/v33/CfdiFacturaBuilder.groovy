@@ -1,9 +1,15 @@
 package com.luxsoft.cfdix.v33
 
 import groovy.util.logging.Slf4j
+import lx.cfdi.v33.ine.INE
+import lx.cfdi.v33.ine.TAmbito
+import lx.cfdi.v33.ine.TClaveEntidad
+import lx.cfdi.v33.ine.TTipoComite
+import lx.cfdi.v33.ine.TTipoProc
 import org.apache.commons.logging.LogFactory
 import org.bouncycastle.util.encoders.Base64
-
+import sx.cfdi.ComplementoIne
+import sx.cfdi.ComplementoIneEntidad
 import sx.core.Empresa
 import sx.core.Venta
 import sx.cxc.AplicacionDeCobro
@@ -62,6 +68,9 @@ class CfdiFacturaBuilder {
                 .buildCertificado()
 
         // CfdiSellador33 sellador = new CfdiSellador33()
+        if(venta.ventaIne) {
+           buildComplementoIne()
+        }
         comprobante = sellador.sellar(comprobante, empresa)
         return comprobante
     }
@@ -273,6 +282,65 @@ class CfdiFacturaBuilder {
         return this
 
     }
+
+    def buildComplementoIne() {
+        ComplementoIne complementoIne = this.venta.complementoIne
+
+        INE ine = factory.createINE()
+        ine.version = '1.1'
+        switch (complementoIne.tipoDeProceso[0]) {
+            case 'O':
+                ine.tipoProceso = TTipoProc.ORDINARIO
+                break
+            case 'P':
+                ine.tipoProceso = TTipoProc.PRECAMPANA
+                break
+            case 'C':
+                ine.tipoProceso = TTipoProc.CAMPANA
+                break
+        }
+        if(complementoIne.tipoDeComite) {
+            switch (complementoIne.tipoDeComite) {
+                case 'Ejecutivo Nacional':
+                    ine.tipoComite = TTipoComite.EJECUTIVO_NACIONAL
+                    break
+                case 'Ejecutivo Estatal':
+                    ine.tipoComite = TTipoComite.EJECUTIVO_ESTATAL
+                    break
+                case 'Directivo Estatal':
+                    ine.tipoComite = TTipoComite.DIRECTIVO_ESTATAL
+                    break
+            }
+        }
+        if(complementoIne.contabilidad) {
+            ine.idContabilidad = complementoIne.contabilidad
+        }
+        if(complementoIne.partidas) {
+            INE.Entidad entidad = factory.createINEEntidad()
+            complementoIne.partidas.each { ComplementoIneEntidad e ->
+                entidad.claveEntidad = TClaveEntidad.valueOf(e.clave)
+                if(e.ambito) {
+                    entidad.ambito = e.ambito == 'Local' ? TAmbito.LOCAL : TAmbito.FEDERAL
+                }
+                if(e.contabilidad) {
+                    e.contabilidad.each { Integer cid ->
+                        INE.Entidad.Contabilidad contabilidad = factory.createINEEntidadContabilidad()
+                        contabilidad.idContabilidad = cid
+                        entidad.contabilidad.add(contabilidad)
+                    }
+                }
+
+            }
+            ine.entidad.add(entidad)
+        }
+
+
+        Comprobante.Complemento complemento = factory.createComprobanteComplemento()
+        complemento.any.add(ine)
+        comprobante.complemento = complemento
+
+    }
+
 
 
 
