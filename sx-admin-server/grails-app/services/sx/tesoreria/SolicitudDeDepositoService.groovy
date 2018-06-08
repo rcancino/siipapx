@@ -17,7 +17,10 @@ class SolicitudDeDepositoService {
         cobro.sucursal = solicitud.sucursal
         cobro.cliente = solicitud.cliente
         cobro.fecha = new Date()
-        cobro.tipo = solicitud.tipo == 'CRE' ? 'CRE' : 'CON'
+        cobro.tipo = solicitud.tipo
+        if(solicitud.tipo == 'NORMAL') {
+            cobro.tipo = 'CON'
+        }
         if (solicitud.transferencia > 0) {
             cobro.formaDePago = 'TRANSFERENCIA'
         } else {
