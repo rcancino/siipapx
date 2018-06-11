@@ -127,7 +127,7 @@ environments:
     queretaro:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://localhost/siipapx?autoReconnect=false
+            url: jdbc:mysql://10.10.9.1/siipapx?autoReconnect=false
             username: root
             password: sys
             properties:
