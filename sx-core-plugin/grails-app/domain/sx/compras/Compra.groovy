@@ -95,7 +95,7 @@ class Compra {
     }
 
     def actualizarStatus() {
-        this.pendiente = this.partidas.find {it.getPorRecibir() > 0 } ?: false
+        this.pendiente = this.partidas.find{it.getPorRecibir() > 0.0 } == null ? true: false
         // this.pendiente = this.isPendiente()
     }
 

@@ -111,9 +111,9 @@ environments:
         dataSources:
             dataSource:
                 dbCreate: none
-                url: jdbc:mysql://localhost/siipapx_dev?autoReconnect=true
+                url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=true
                 # url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=false
-                password: sys1
+                password: sys
                 properties:
                   maxActive: 3
                   maxIdle: 3
@@ -131,9 +131,8 @@ environments:
                   validationInterval: 15000
             importacion:
                 dbCreate: none
-                url: jdbc:mysql://localhost/sw2?autoReconnect=true
-                # url: jdbc:mysql://10.10.1.228/produccion?autoReconnect=false
-                password: sys1
+                url: jdbc:mysql://10.10.1.228/produccion?autoReconnect=true
+                password: sys
                 properties:
                   maxActive: 3
                   maxIdle: 3

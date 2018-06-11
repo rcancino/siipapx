@@ -62,6 +62,9 @@ class RecepcionDeCompraController extends  RestfulController{
 
     // @Override
     protected RecepcionDeCompra saveResource(RecepcionDeCompra resource) {
+
+        println "************ Salvando la COM"
+
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursal.clave
@@ -76,6 +79,9 @@ class RecepcionDeCompraController extends  RestfulController{
     }
 
     protected RecepcionDeCompra updateResource(RecepcionDeCompra resource) {
+
+        println  "*************************Inventariando la COM"
+
         if(params.inventariar){
             def renglon = 1;
             resource.partidas.each { det ->
