@@ -124,6 +124,27 @@ environments:
                 validationQuery: 'SELECT 1'
                 validationQueryTimeout: 3
                 validationInterval: 15000
+    queretaro:
+        dataSource:
+            dbCreate: update
+            url: jdbc:mysql://localhost/siipapx?autoReconnect=false
+            username: root
+            password: sys
+            properties:
+                maxActive: 10
+                maxIdle: 10
+                minIdle: 3
+                initialSize: 3
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+                maxWait: 10000
+                validationQuery: 'SELECT 1'
+                validationQueryTimeout: 3
+                validationInterval: 15000
 ---
 server:
   port: 9095
