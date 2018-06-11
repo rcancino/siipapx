@@ -4,10 +4,10 @@ import org.apache.commons.lang.exception.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.*
-import sx.cxc.ChequeDevuelto
+//import sx.cxc.ChequeDevuelto
 import sx.cxc.NotaDeCargo
 import sx.cxc.NotaDeCargoDet
-import sx.tesoreria.Cheque
+//import sx.tesoreria.Cheque
 
 /**
  * Created by rcancino on 16/08/16.
@@ -25,8 +25,8 @@ class ImportadorDeNotasDeCargo implements Importador, SW2Lookup{
     ImportadorDeCuentasPorCobrar importadorDeCuentasPorCobrar
 
 
-    @Autowired
-    ImportadorDeChequesDevueltos importadorDeChequesDevueltos
+  //  @Autowired
+  //  ImportadorDeChequesDevueltos importadorDeChequesDevueltos
 
     def importar(Date ini, Date fin){
         logger.info("Importando notas de cargo" )

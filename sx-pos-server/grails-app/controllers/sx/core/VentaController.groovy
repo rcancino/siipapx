@@ -331,6 +331,28 @@ class VentaController extends RestfulController{
         respond query.list(params)
     }
 
+    def buscarPartidas(Venta venta){
+
+        def partidas=[];
+
+        println "Buscando facturas"
+
+        venta.partidas.each{det ->
+
+            def part = new Partidas()
+
+            part.noIdentificacion=det.producto.clave
+            part.descripcion= det.producto.descripcion
+            part.unidad= det.producto.unidad
+            part.cantidad=det.cantidad
+            partidas.add(part)
+
+        }
+
+        respond partidas
+
+    }
+
 }
 
 @ToString(includeNames=true,includePackage=false)
@@ -350,4 +372,14 @@ class VentasFiltro {
         cliente nullable:true
         registros size:(1..500)
     }
+}
+
+
+@ToString(includeNames=true,includePackage=false)
+class Partidas{
+    String noIdentificacion
+    String descripcion
+    String unidad
+    BigDecimal cantidad
+
 }

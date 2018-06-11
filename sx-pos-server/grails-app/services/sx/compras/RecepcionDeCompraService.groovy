@@ -11,11 +11,11 @@ import sx.core.Producto
 @Transactional
 class RecepcionDeCompraService {
 
-    def recibir(Compra compra, String username){
+    def recibir(Compra compra, String username) {
         List<CompraDet> pendientes = compra.pendientes()
         log.debug('Generando COM automatico de compra {} con {} partidas pendientes', compra.folio, pendientes.size())
 
-        if(!pendientes) {
+        if (!pendientes) {
             log.debug('Compra sin pendientes por recibir')
             //compra.pendiente = false
             //compra.save flush: true
@@ -39,7 +39,13 @@ class RecepcionDeCompraService {
                 log.debug('Partida agregada de: {}', item)
             }
         }
-        return this.save(com, username)
+
+        def res = this.save(com, username)
+
+        afectarInventario(res)
+
+
+        return res
     }
 
     @Publisher('saveCom')
@@ -55,12 +61,15 @@ class RecepcionDeCompraService {
         }
         resource.updateUser = username
         resource = resource.save failOnError: true, flush: true
+        afectarInventario(resource)
         return resource
     }
 
 
     @Publisher
     def afectarInventario( RecepcionDeCompra com) {
+
+
         def renglon = 1;
         com.partidas.each { det ->
             Inventario inventario = new Inventario()
@@ -86,7 +95,16 @@ class RecepcionDeCompraService {
         Integer mes = hoy[Calendar.MONTH] + 1
         com.partidas.each { RecepcionDeCompraDet det ->
             Existencia existencia = Existencia.where { anio == ejercicio && mes == mes && producto == det.producto && sucursal == com.sucursal }.find()
-            assert existencia, "No existe la existencia del producto ${det.producto.clave} para ${ejercicio} - ${mes}"
+           // assert existencia, "No existe la existencia del producto ${det.producto.clave} para ${ejercicio} - ${mes}"
+            if(!existencia){
+                existencia = new Existencia()
+                existencia.anio = ejercicio
+                existencia.mes = mes
+                existencia.producto = det.producto
+                existencia.sucursal = com.sucursal
+                existencia.fecha = new Date()
+                existencia.cantidad = 0.0
+            }
             existencia.cantidad = existencia.cantidad + det.cantidad.abs()
             existencia.save failOnError: true, flush: true
             log.debug('Existencia actualizada: {}', existencia)

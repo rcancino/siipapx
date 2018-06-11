@@ -77,7 +77,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
 
             if(venta.tipo == 'CRE' || venta.tipo == 'PSF') {
                 println("importando venta de credito")
-                importadorDeVentasCredito.importar(venta)
+               /// importadorDeVentasCredito.importar(venta)
             }
 
             if(venta.total==0 && venta.tipo!='ANT'){
@@ -116,6 +116,7 @@ class ImportadorDeVentas implements Importador, SW2Lookup{
         }
         venta.cliente = cliente
         venta.vendedor = buscarVendedor(row.vendedor_id)
+        venta.vale= false
         importarPartidas(venta)
 
         venta.save failOnError:true, flush:true

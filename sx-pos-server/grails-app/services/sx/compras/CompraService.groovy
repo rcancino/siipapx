@@ -12,7 +12,13 @@ class CompraService {
         Compra.withNewSession {
             Compra compra = Compra.get(com.compra.id)
             compra.refresh()
-            compra.actualizarStatus()
+
+                if(compra.partidas.find{it.getPorRecibir()> 0.0 } == null){
+                compra.pendiente=false
+            }
+            else{
+                compra.pendiente=true
+            }
             compra.save flush: true
             log.debug('Status de compra {} actualizado', compra.folio)
         }

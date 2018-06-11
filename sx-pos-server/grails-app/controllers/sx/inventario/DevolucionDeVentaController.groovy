@@ -34,7 +34,7 @@ class DevolucionDeVentaController extends RestfulController {
         if(params.documento) {
             def documento = params.int('documento')
 
-            query = query.where {documento >=  documento}
+            query = query.where {documento ==  documento}
         }
         if(params.sucursal) {
             query = query.where { sucursal.id == params.sucursal}
