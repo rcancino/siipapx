@@ -73,12 +73,13 @@ class CobroController extends RestfulController{
     }
 
     def cobrosMonetarios(CobranzaPorFechaCommand command) {
-        log.info('Cobros {}', params)
+        // log.debug('Cobros {}', params)
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
-        def query = Cobro.where { sucursal == AppConfig.first().sucursal }
+        // def query = Cobro.where { sucursal == AppConfig.first().sucursal }
+        def query = Cobro.where {  }
         if(command.getFecha()) {
             // log.debug('Cobros por fecha Ini: {}, {}', command.fecha, command.fechaFin)
             if(command.fechaFin == null )
@@ -88,6 +89,10 @@ class CobroController extends RestfulController{
 
         if(params.cartera) {
             query = query.where { tipo == params.cartera}
+        }
+        if(params.formaDePago) {
+            def search = '%' + params.formaDePago + '%'
+            query = query.where { formaDePago =~ search}
         }
         if(params.importe) {
             BigDecimal importe = params.importe as BigDecimal
@@ -127,8 +132,9 @@ class CobroController extends RestfulController{
 
     def registrarChequeDevuelto(Cobro cobro){
         assert cobro.cheque, "El cobro debe de ser tipo cheque y tener registro de CobroCheque. Cobro tipo: ${cobro.tipo}"
-        this.chequeDevueltoService.registrarChequeDevuelto(cobro.cheque)
-        cobro.comentario = "CHEQUE DEVUELTO"
+        Date fecha = params.getDate('fecha', 'dd/MM/yyyy')
+        this.chequeDevueltoService.registrarChequeDevuelto(cobro.cheque, fecha)
+        cobro.comentario = "CHEQUE DEVUELTO EL: ${fecha.format('dd/MM/yyyy')}"
         cobro.save flush: true
         respond cobro
     }

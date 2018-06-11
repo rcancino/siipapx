@@ -22,21 +22,16 @@ import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 
 
-class V33PdfGenerator {
+class V33RemisionGenerator {
 
     final static SimpleDateFormat CFDI_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
-    static getReportData(Cfdi cfdi, envio = false){
+    static getReportData(Venta venta, envio = true){
 
+        Cfdi cfdi = venta.cuentaPorCobrar.cfdi
         File xmlFile = FileUtils.toFile(cfdi.url)
         Comprobante comprobante = CfdiUtils.read(xmlFile)
-
         def conceptos = comprobante.conceptos.concepto
-        Venta venta
-
-        if(cfdi.origen == 'VENTA') {
-            venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
-        }
         def index = 0
         def modelData=conceptos.collect { cc ->
             def traslado = cc.impuestos.traslados.traslado[0]

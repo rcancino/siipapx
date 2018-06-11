@@ -1,5 +1,6 @@
 package sx.cfdi
 
+import com.luxsoft.cfdix.v33.V33RemisionGenerator
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -134,6 +135,18 @@ class CfdiController extends RestfulController{
         cfdiService.envioBatch(cfdis, command.target, 'Envio automático');
         log.debug('Cfdis por enviar: {}', cfdis.size())
         respond 'OK', status:200
+    }
+
+    def printRemision( Venta venta) {
+        log.debug('Generando Remision: {}', params)
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def data = V33RemisionGenerator.getReportData(venta, true)
+        Map parametros = data['PARAMETROS']
+        parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
+        parametros.FACTURA_USD = realPath + '/facUSD.jpg'
+        def pdf =  reportService.imprimirRemision('PapelRemisionCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: venta.statusInfo())
     }
 
 }

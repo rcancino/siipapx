@@ -7,6 +7,7 @@ import grails.web.context.ServletContextHolder
 import groovy.xml.XmlUtil
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
+import lx.cfdi.v33.ine.IneUtils
 import org.apache.commons.lang3.StringEscapeUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -29,7 +30,7 @@ class CfdiService {
 
     def grailsResourceLocator
 
-    Cfdi generarCfdi(Comprobante comprobante, String tipo) {
+    Cfdi generarCfdi(Comprobante comprobante, String tipo, boolean ine = false) {
         Cfdi cfdi = new Cfdi()
         cfdi.tipoDeComprobante = tipo
         cfdi.fecha = Date.parse( "yyyy-MM-dd'T'HH:mm:ss", comprobante.fecha,)
@@ -43,8 +44,11 @@ class CfdiService {
         cfdi.fileName = getFileName(cfdi)
         // cfdi.url = "${getDirPath(cfdi)}/${getFileName(cfdi)}"
         try {
-            // save(comprobante, getDirPath(cfdi), cfdi.fileName)
-            saveXml(cfdi, CfdiUtils.toXmlByteArray(comprobante))
+            if(ine){
+                saveXml(cfdi, IneUtils.toXmlByteArray(comprobante))
+            }else {
+                saveXml(cfdi, CfdiUtils.toXmlByteArray(comprobante))
+            }
             cfdi.save failOnError: true, flush:true
             return cfdi
         }catch (Exception ex) {

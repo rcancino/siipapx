@@ -238,14 +238,16 @@ class VentaController extends RestfulController{
         respond query.list(params)
     }
 
-    @Transactional
+    // @Transactional
     def timbrar() {
         Venta venta = Venta.get(params.id)
         try {
-            def cfdi = ventaService.timbrar(venta)
+            def cfdi = ventaService.generarCfdi(venta)
+            cfdi = ventaService.timbrar(venta)
             respond cfdi
             return
         }catch (Exception ex) {
+            ex.printStackTrace()
             String m = ExceptionUtils.getRootCauseMessage(ex)
             respond( [message: m], status: HttpStatus.NOT_ACCEPTABLE )
         }

@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="PapelRemisionCFDI3"
+		 name="PapelRemisionCFDI3Copia"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -2089,7 +2089,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["CLIENTE"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["COPIA"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -2175,7 +2175,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["CLIENTE"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["COPIA"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
