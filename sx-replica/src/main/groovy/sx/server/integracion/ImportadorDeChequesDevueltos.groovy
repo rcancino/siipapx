@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import sx.core.*
 import sx.core.Cliente
 import sx.core.Sucursal
-import sx.cxc.ChequeDevuelto
+//import sx.cxc.ChequeDevuelto
 import sx.cxc.Cobro
 import sx.cxc.CobroCheque
 

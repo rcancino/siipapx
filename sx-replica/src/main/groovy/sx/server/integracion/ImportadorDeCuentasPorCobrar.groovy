@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import sx.core.Cliente
 import sx.core.Venta
-import sx.cxc.ChequeDevuelto
+//import sx.cxc.ChequeDevuelto
 import sx.cxc.CuentaPorCobrar
 import sx.cxc.DevolucionCliente
 import sx.cxc.NotaDeCargo
@@ -92,9 +92,9 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
 
             }
             if(cuentaPorCobrar.tipoDocumento=='CHEQUE_DEVUELTO'){
-                ChequeDevuelto cheque=ChequeDevuelto.where{sw2==cuentaPorCobrar.sw2}.find()
-                cheque.cuentaPorCobrar=cuentaPorCobrar
-                cheque.save failOnError: true, flush: true
+               // ChequeDevuelto cheque=ChequeDevuelto.where{sw2==cuentaPorCobrar.sw2}.find()
+              //  cheque.cuentaPorCobrar=cuentaPorCobrar
+               // cheque.save failOnError: true, flush: true
             }
             if(cuentaPorCobrar.tipoDocumento=='DEVOLUCION_CLIENTE'){
                 DevolucionCliente devolucionCliente=DevolucionCliente.where{sw2==cuentaPorCobrar.sw2}.find()
