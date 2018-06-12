@@ -26,12 +26,11 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL, S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="FECHA" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT e.sucursal_nombre as sucursal,e.anio as YEAR,e.MES,e.clave,p.descripcion,e.existencia_inicial,e.cantidad
-,ifnull((SELECT sum(i.cantidad) FROM inventario i where i.sucursal_id=$P{SUCURSAL} AND i.producto_id=p.id and month(i.fecha)=month(CURRENT_DATE) and year(i.fecha)=year(CURRENT_DATE) ),0) as movs
-FROM existencia e join producto p on(p.id=e.producto_id) WHERE e.sucursal_id=$P{SUCURSAL} AND ANIO=year(CURRENT_DATE) AND MES=month(CURRENT_DATE)  
-and e.existencia_inicial+ifnull((SELECT sum(i.cantidad) FROM inventario i where i.sucursal_id=$P{SUCURSAL} AND i.producto_id=p.id and month(i.fecha)=month(CURRENT_DATE) and year(i.fecha)=year(CURRENT_DATE)),0)-e.cantidad <>0
-]]></queryString>
+,ifnull((SELECT sum(i.cantidad) FROM inventario i where i.sucursal_id=(SELECT sucursal_id FROM app_config) AND i.producto_id=p.id and month(i.fecha)=month($P{FECHA}) and year(i.fecha)=year($P{FECHA}) ),0) as movs
+FROM existencia e join producto p on(p.id=e.producto_id) WHERE e.sucursal_id=(SELECT sucursal_id FROM app_config) AND ANIO=year($P{FECHA}) AND MES=month($P{FECHA})  
+and e.existencia_inicial+ifnull((SELECT sum(i.cantidad) FROM inventario i where i.sucursal_id=(SELECT sucursal_id FROM app_config) AND i.producto_id=p.id and month(i.fecha)=month($P{FECHA}) and year(i.fecha)=year($P{FECHA})),0)-e.cantidad <>0]]></queryString>
 
 	<field name="sucursal" class="java.lang.String"/>
 	<field name="YEAR" class="java.lang.Long"/>
@@ -485,7 +484,7 @@ and e.existencia_inicial+ifnull((SELECT sum(i.cantidad) FROM inventario i where 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -581,7 +580,7 @@ and e.existencia_inicial+ifnull((SELECT sum(i.cantidad) FROM inventario i where 
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
