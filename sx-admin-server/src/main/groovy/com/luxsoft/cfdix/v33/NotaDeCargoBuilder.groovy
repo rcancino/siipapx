@@ -215,17 +215,20 @@ class NotaDeCargoBuilder {
     }
 
     def buildRelacionados() {
-        Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
-        relacionados.tipoRelacion = '02'
-        this.nota.partidas.each { NotaDeCargoDet det ->
-            Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
-            def cxc = det.cuentaPorCobrar
-            def uuid = cxc.uuid
-            assert uuid, 'No existe UUID origen para la cxc :' + cxc.id
-            relacionado.UUID = uuid
-            relacionados.cfdiRelacionado.add(relacionado)
+        if(nota.tipo != 'CHE') {
+            Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
+            relacionados.tipoRelacion = '02'
+            this.nota.partidas.each { NotaDeCargoDet det ->
+                Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
+                def cxc = det.cuentaPorCobrar
+                def uuid = cxc.uuid
+                assert uuid, 'No existe UUID origen para la cxc :' + cxc.id
+                relacionado.UUID = uuid
+                relacionados.cfdiRelacionado.add(relacionado)
+            }
+            comprobante.cfdiRelacionados = relacionados
         }
-        comprobante.cfdiRelacionados = relacionados
+
     }
 
     def buildCertificado(){

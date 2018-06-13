@@ -110,11 +110,12 @@ class NotaDeCargoPdfGenerator {
         params['PINT_IVA']='16 '
         params["IVA"] = (comprobante?.getImpuestos()?.getTotalImpuestosTrasladados()?: 0.0) as String
 
-        String relacionados = comprobante.cfdiRelacionados.cfdiRelacionado.collect{it.UUID}.join(', ')
-        //println 'RELACIONADOS: '+ relacionados
-        params['RelacionUUID'] = relacionados
-        params['COMENTARIOS'] = nota.comentario
-        // Adiconales
+        if(nota.tipo != 'CHE'){
+            String relacionados = comprobante.cfdiRelacionados.cfdiRelacionado.collect{it.UUID}.join(', ')
+            //println 'RELACIONADOS: '+ relacionados
+            params['RelacionUUID'] = relacionados
+            params['COMENTARIOS'] = nota.comentario
+        }
         return params;
     }
 }
