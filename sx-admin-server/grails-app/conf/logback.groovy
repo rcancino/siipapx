@@ -58,6 +58,8 @@ if (Environment.isDevelopmentMode()) {
     logger("sx.reports", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft", DEBUG, ['STDOUT'], false)
+    logger("sx.integracion", DEBUG, ['STDOUT'], false)
+
 
 }
 root(ERROR, ['STDOUT'])

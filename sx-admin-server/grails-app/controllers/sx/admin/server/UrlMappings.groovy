@@ -63,6 +63,8 @@ class UrlMappings {
 
         // Ventas
         "/api/ventas"(resources:"venta")
+        "/api/ventas/ventasAcumuladas"(controller: 'ventaCredito', action: 'ventasAcumuladas', method: 'GET')
+        "/api/ventas/ventaPorFacturista"(controller: 'ventaCredito', action: 'ventaPorFacturista', method: 'GET')
 
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes"( controller: 'solicitudDeDeposito', action: 'pendientes')
