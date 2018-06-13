@@ -31,7 +31,6 @@
 	<parameter name="ACTIVO" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="LINEA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="CLASE" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="EXISTENCIA" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[select P.CLAVE,P.DESCRIPCION,L.LINEA,C.CLASE,E.CANTIDAD,S.sector_folio AS SECTOR
 ,P.ID as PRODUCTO_ID,CURRENT_DATE AS FECHA,J.NOMBRE AS suc,d.partidas_idx as ind,d.indice
@@ -359,7 +358,7 @@ ORDER BY L.linea,C.clase,P.CLAVE]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="264"
+						x="273"
 						y="6"
 						width="80"
 						height="16"
@@ -375,9 +374,9 @@ $P{ACTIVO}.equals( new String("AND ACTIVO IS FALSE") ) ? "NO" :
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="215"
+						x="212"
 						y="6"
-						width="49"
+						width="59"
 						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -387,7 +386,7 @@ $P{ACTIVO}.equals( new String("AND ACTIVO IS FALSE") ) ? "NO" :
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[ACTIVOS : ]]></text>
@@ -395,9 +394,9 @@ $P{ACTIVO}.equals( new String("AND ACTIVO IS FALSE") ) ? "NO" :
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="214"
+						x="211"
 						y="22"
-						width="50"
+						width="60"
 						height="16"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -407,14 +406,14 @@ $P{ACTIVO}.equals( new String("AND ACTIVO IS FALSE") ) ? "NO" :
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[DE LINEA : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="263"
+						x="272"
 						y="22"
 						width="81"
 						height="16"
@@ -498,6 +497,44 @@ $P{DELINEA}.equals( new String("AND DELINEA IS FALSE") ) ? "NO" :
 						<font pdfFontName="Helvetica" size="10" isBold="false" isItalic="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{suc}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="211"
+						y="38"
+						width="60"
+						height="16"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-92"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[EXISTENCIA : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="273"
+						y="38"
+						width="81"
+						height="16"
+						key="textField-38"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{EXISTENCIA}.equals( new String(" ") )? "TODOS":
+$P{EXISTENCIA}.equals( new String(" AND E.CANTIDAD > 0") ) ? "POSITIVOS" :
+$P{EXISTENCIA}.equals( new String(" AND E.CANTIDAD < 0") ) ? "NEGATIVOS" :
+$P{EXISTENCIA}.equals( new String(" AND E.CANTIDAD = 0") ) ? "EN_CERO" :
+"TODOS"
+]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
@@ -731,7 +768,7 @@ $P{DELINEA}.equals( new String("AND DELINEA IS FALSE") ) ? "NO" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -795,7 +832,7 @@ $P{DELINEA}.equals( new String("AND DELINEA IS FALSE") ) ? "NO" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
