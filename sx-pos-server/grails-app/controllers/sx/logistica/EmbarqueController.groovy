@@ -79,6 +79,10 @@ class EmbarqueController extends RestfulController {
                     // log.debug('Calculando valor de evnio TOTAL')
                     Venta venta = Venta.get(it.origen)
                     it.valor = venta.subtotal
+                    // FIX PENDIENTE DE VALIDAR
+                    it.documento = venta.cuentaPorCobrar.documento
+                    it.fechaDocumento = venta.fecha
+                    it.totalDocumento = venta.total
                 } else {
                     // log.debug(' Calculando valor de envio PARCIAL ')
                     def kilos = 0.0
@@ -92,6 +96,8 @@ class EmbarqueController extends RestfulController {
                     it.kilos = it.partidas.sum(0.0, { EnvioDet rr -> rr.kilos})
                     it.valor = it.partidas.sum(0.0, { EnvioDet rr -> rr.valor})
                 }
+
+
             }
         }
         resource.updateUser = getPrincipal().username
