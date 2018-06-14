@@ -31,7 +31,7 @@ class NotaDeCargoController extends RestfulController {
 
         nota.validate(['cliente','total'])
         if (nota.hasErrors()) {
-            transactionStatus.setRollbackOnly()
+            // transactionStatus.setRollbackOnly()
             respond nota.errors, view:'create' // STATUS CODE 422
             return
         }

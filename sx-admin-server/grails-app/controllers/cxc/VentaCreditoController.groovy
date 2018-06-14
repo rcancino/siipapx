@@ -5,6 +5,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import groovy.transform.ToString
 import sx.core.Cliente
 import sx.core.Cobrador
+import sx.core.Sucursal
 import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
@@ -94,6 +95,33 @@ class VentaCreditoController extends RestfulController{
         def pdf = reportService.run('FacturasAcobroYRevision.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Antiguead.pdf')
     }
+
+    def ventasAcumuladas(VentaAcumulada command) {
+        log.info('Venta acumulada {}', command)
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        params.FECHA_INI = command.fechaIni
+        params.FECHA_FIN = command.fechaFin
+        if(command.sucursal) {
+            params.SUCURSAL = command.sucursal.id
+            def pdf = reportService.run('VentasSucursal.jrxml', params)
+            render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'VentasSucursal.pdf')
+        } else {
+            def pdf = reportService.run('VentasEmpresa.jrxml', params)
+            render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'VentasEmpresa.pdf')
+        }
+
+    }
+
+    def ventaPorFacturista(VentaAcumulada command) {
+        log.info('Venta por facturista {}', command)
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        params.FECHA_INI = command.fechaIni
+        params.FECHA_FIN = command.fechaFin
+        params.SUCURSAL = command.sucursal.id
+        def pdf = reportService.run('VentasFacturista.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'VentasFacturista.pdf')
+
+    }
 }
 
 public class BatchUpdateCommand {
@@ -144,6 +172,19 @@ public class VentaCreditoCommand {
         comentario nullable: true
         comentarioReprogramarPago nullable:  true
     }
+}
+
+@ToString(includeNames=true,includePackage=false)
+public class VentaAcumulada {
+
+    Date fechaIni
+    Date fechaFin
+    Sucursal sucursal
+
+    static constraints = {
+        sucursal nullable:true
+    }
+
 }
 
 

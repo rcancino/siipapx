@@ -144,7 +144,7 @@ class NotaDeCreditoController extends RestfulController{
     }
 
     def buscarFacturasPendientes() {
-        // log.debug('Buscando facturas {}', params)
+        log.debug('Buscando facturas {}', params)
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
