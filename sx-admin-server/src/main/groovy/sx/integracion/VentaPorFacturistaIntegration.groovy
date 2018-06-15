@@ -41,10 +41,10 @@ class VentaPorFacturistaIntegration implements Integracion{
         ,SUM(case when v.tipo = 'CRE' then 1 else 0 end) as cre
         ,SUM(case when v.cancelada is not null then 1 else 0 end) as canc
         ,(SELECT count(*) FROM devolucion_de_venta d join venta x on(d.venta_id=x.id) where d.parcial is false and x.cuenta_por_cobrar_id is not null and x.update_user = v.update_user and date(d.fecha)='%FECHA%') as devs
-        ,count(*) as facs,sum(importe) as importe
+        ,count(*) as facs,sum(subtotal) as importe
         ,(SELECT count(*) FROM venta_det d join venta x on(d.venta_id=x.id) join cuenta_por_cobrar z on(x.cuenta_por_cobrar_id=z.id) where z.cfdi_id is not null and z.cancelada is null and x.update_user = v.update_user and date(z.fecha)='%FECHA%') as partidas
         ,0 as ped_fact,0 ped,0 pedMosCON,0 pedMosCOD,0 pedMosCRE,0 pedTelCON,0 pedTelCOD,0 pedTelCRE
-        FROM cuenta_por_cobrar V WHERE FECHA='%FECHA%'
+        FROM cuenta_por_cobrar V WHERE cfdi_id is not null and sw2 is null and FECHA='%FECHA%'
         GROUP BY fecha,sucursal_id,update_user
         ) AS A
         GROUP BY
