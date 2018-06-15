@@ -84,7 +84,7 @@ class VentaPorFacturistaIntegration implements Integracion{
 
     def actualizar(Date fecha) {
         log.info("Actualizando ventas por facturista ${fecha.format('dd/MM/yyyy')}")
-        List<Sucursal> sucursales = Sucursal.where{dbUrl != null}.list()
+        List<Sucursal> sucursales = Sucursal.where{dbUrl != null && nombre!= 'OFICINAS'}.list()
         sucursales.each { suc ->
             actualizar(suc, fecha)
         }
