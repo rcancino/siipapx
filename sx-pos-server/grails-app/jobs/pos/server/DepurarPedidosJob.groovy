@@ -9,7 +9,7 @@ class DepurarPedidosJob {
         def pedidos=Venta.where{sucursal == sucursal && cuentaPorCobrar == null && facturar == null && fecha < (new Date()-45) && noFacturable==false}
         pedidos.each{ pedido ->
             pedido.noFacturable=true;
-            spedido.save failOnError:true, flush:true
+            pedido.save failOnError:true, flush:true
 
         }
     }
