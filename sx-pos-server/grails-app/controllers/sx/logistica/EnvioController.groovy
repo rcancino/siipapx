@@ -52,6 +52,28 @@ class EnvioController extends RestfulController {
         respond venta.partidas
     }
 
+    def buscarCodigoPostal(){
+
+        println "Buscando codigos"
+        println params
+
+        def codigos = CodigosPostalesMx.findAllByCodigo(params.zip_code)
+
+        def res= new CodigoResponse()
+
+        codigos.each{ zip ->
+
+            println zip.colonia
+
+            res.municipio=zip.municipio
+            res.estado=zip.estado
+            res.colonias.add(zip.colonia)
+        }
+
+        respond res
+
+    }
+
     
 
 
@@ -67,5 +89,13 @@ class EnvioPartidasSearchCommand {
     String toString(){
         "Tipo:$tipo Docto:$documento Fecha:${fecha.format('dd/MM/yyyy')} Sucursal:$sucursal"
     }
+}
+
+class CodigoResponse{
+
+    String municipio
+    String estado
+    List colonias = []
+
 }
 

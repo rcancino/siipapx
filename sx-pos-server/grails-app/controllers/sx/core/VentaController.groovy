@@ -132,15 +132,24 @@ class VentaController extends RestfulController{
     }
 
     def pendientes(Sucursal sucursal) {
+
+        println  "*******"+params
         if (sucursal == null) {
             notFound()
             return
         }
-        params.max = params.registros ?:50
+        params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         log.info('Pendientes: {}', params)
-        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null}
+        def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null }
+
+        if( params.fechaInicial) {
+            Periodo periodo = new Periodo()
+            periodo.properties = params
+            query = query.where{ fecha >= periodo.fechaInicial && fecha<= periodo.fechaFinal}
+        }
+
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
@@ -353,6 +362,16 @@ class VentaController extends RestfulController{
 
         respond partidas
 
+    }
+
+    def noFacturables(){
+        def pedidos=Venta.where{sucursal == sucursal && cuentaPorCobrar == null && facturar == null && fecha > (new Date()-45) && noFacturable==false}
+
+        pedidos.each{ pedido ->
+          //  println pedido.documento+"  "+ pedido.fecha
+            pedido.noFacturable=true;
+            pedido.save failOnError:true, flush:true
+        }
     }
 
 }

@@ -114,6 +114,8 @@ class Venta {
 
     Boolean ventaIne = false;
 
+    Boolean noFacturable = false;
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -143,6 +145,7 @@ class Venta {
         facturarUsuario nullable: true
         ventaIne nullable: true
         complementoIne nullable: true
+        noFacturable nullable: true
     }
 
     static mapping = {

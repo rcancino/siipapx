@@ -124,14 +124,22 @@ class ExistenciaController extends RestfulController {
     }
 
     def reporteDeDiscrepancias() {
-        params.SUCURSAL = AppConfig.first().sucursal.id.toString()
-        def pdf =  reportService.run('DiscrepanciasDeInv', params)
+
+        def fecha=params.fecha
+        def repParams = [:]
+        repParams['SUCURSAL'] = AppConfig.first().sucursal.id.toString()
+        repParams['FECHA'] = fecha
+
+        println "**************************"+repParams
+        println "-----"+fecha.format('yyyy/MM/dd')
+
+        def pdf =  reportService.run('DiscrepanciasDeInv', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'DiscrepanciasDeInv.pdf')
     }
 
     def recortePorDetalle() {
         params.SUCURSAL = AppConfig.first().sucursal.id.toString()
-        def pdf =  reportService.run('RecorteXDetalle', params)
+        def pdf =  reportService.run('RecorteXDetalle', parametros)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RecortePorDetalle.pdf')
     }
 

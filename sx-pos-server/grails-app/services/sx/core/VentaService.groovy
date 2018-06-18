@@ -209,6 +209,7 @@ class VentaService implements  EventPublisher{
     def generarCfdi(Venta venta){
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
         def comprobante = cfdiFacturaBuilder.build(venta)
+
         def cfdi = cfdiService.generarCfdi(comprobante, 'I', venta.ventaIne)
         venta.cuentaPorCobrar.cfdi = cfdi
         venta.save flush: true

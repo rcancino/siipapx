@@ -97,6 +97,7 @@ class UrlMappings {
         "/api/ventas/cambioDeCliente/$id"( controller: 'venta', action: 'cambioDeCliente', method: 'PUT')
         "/api/ventas/pedidosPendientes/$id"( controller: 'venta', action: 'pedidosPendientes', method: 'GET')
         "/api/ventas/getPartidas/$id"(controller: 'venta', action: 'buscarPartidas', method: 'GET')
+        "/api/ventas/noFacturables"( controller: 'venta', action: 'noFacturables')
 
 
 
@@ -162,6 +163,7 @@ class UrlMappings {
         "/api/inventario/devoluciones/print"(controller: "devolucionDeVenta", action: 'print', method: 'GET')
         "/api/inventario/recalcular"(controller: 'existencia', action: 'recalcular', method: 'GET')
 
+
         // Decs
         "/api/inventario/decs"(resources: "devolucionDeCompra")
         "/api/inventario/decs/buscarCom"(controller: 'devolucionDeCompra', action: 'buscarCom', method: 'GET')
@@ -222,7 +224,7 @@ class UrlMappings {
         "/api/embarques/embarques/asignarFacturas"(controller: 'embarque', action: 'asignarFacturas', method: 'PUT')
         "/api/embarques/envios"(resources: 'envio')
         "/api/embarques/embarques/reporteFacturaEnvio"(controller: "embarque", action: 'reporteFacturaEnvio', method: 'GET')
-
+        "/api/embarques/codigos"(controller:"envio", action: " buscarCodigoPostal")
 
         "/api/report"(controller: 'reporte', action: 'run', method: 'GET')
         "/api/report/ventasDiarias"(controller: 'ventas', action: 'ventasDiarias', method: 'GET')
