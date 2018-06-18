@@ -768,7 +768,7 @@ $P{EXISTENCIA}.equals( new String(" AND E.CANTIDAD = 0") ) ? "EN_CERO" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -832,7 +832,7 @@ $P{EXISTENCIA}.equals( new String(" AND E.CANTIDAD = 0") ) ? "EN_CERO" :
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
