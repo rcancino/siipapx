@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="fac_pen_camionetaNew"
+		 name="fac_pen_camioneta"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Landscape"
@@ -31,11 +31,11 @@
 	<queryString><![CDATA[select 'F' AS TIP
 ,C.TIPO
 ,v.id as cargo_id,q.id as embarque_id,q.documento as embarque
-,s.clave AS CVE_SUC,s.nombre as suc
+,(select s.nombre from sucursal s where v.sucursal_id=s.id) as suc
 ,c.documento as docto,l.clave,l.nombre
 ,case when (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) end as dias_vencido
 ,c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0) as saldo
-,CASE WHEN v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)<>V.TOTAL THEN '*'  ELSE '' END AS PAGO
+,CASE WHEN ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)>0 THEN '*'  ELSE '' END AS PAGO
 ,c.fecha AS fecha
 ,e.date_created as surtido,q.salida,e.arribo,e.recepcion,q.regreso
 ,f.nombre as chofer
@@ -46,19 +46,17 @@ JOIN condicion_de_envio x on (x.venta_id=v.id)
 LEFT join ENVIO e on(e.origen=v.id)
 left join embarque q on(q.id=e.embarque_id)
 left join chofer f on (q.chofer_id=f.id)
-join sucursal s on (s.id=v.sucursal_id)
 join cliente l on (l.id=v.cliente_id)
 where V.SUCURSAL_ID=$P{SUCURSAL}
 and C.TIPO='COD' 
 AND V.FECHA<=$P{FECHA}  AND C.TIPO_DOCUMENTO IN ('NOTA_DE_CARGO','VENTA')
-AND (v.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0))>=1]]></queryString>
+AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0))>=1]]></queryString>
 
 	<field name="TIP" class="java.lang.String"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="cargo_id" class="java.lang.String"/>
 	<field name="embarque_id" class="java.lang.String"/>
 	<field name="embarque" class="java.lang.Integer"/>
-	<field name="CVE_SUC" class="java.lang.String"/>
 	<field name="suc" class="java.lang.String"/>
 	<field name="docto" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>

@@ -35,7 +35,7 @@
 ,(select s.nombre from sucursal s where v.sucursal_id=s.id) as suc
 ,case when (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) < 0 then 0 else  (ROUND(TO_DAYS($P{FECHA})-TO_DAYS(c.fecha),0)) end as dias_vencido
 ,c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0) as saldo
-,CASE WHEN c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)<>V.TOTAL THEN '*'  ELSE '' END AS PAGO
+,CASE WHEN ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)>0 THEN '*'  ELSE '' END AS PAGO
 ,c.date_created AS fecha
 ,e.date_created as surtido,q.salida,e.arribo,e.recepcion,q.regreso
 ,f.nombre as chofer
