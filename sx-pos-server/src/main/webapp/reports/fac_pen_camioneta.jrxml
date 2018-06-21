@@ -116,16 +116,16 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 			<band height="82"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="573"
+						x="307"
 						y="25"
-						width="184"
+						width="450"
 						height="15"
 						key="staticText-1"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Oblique" isBold="false" isItalic="true" isUnderline="true"/>
 					</textElement>
-				<text><![CDATA[FACTURAS PENDIENTES CAMIONETA]]></text>
+				<text><![CDATA[FACTURAS PENDIENTES DE PAGO CONTRA ENTREGA (COD)]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
