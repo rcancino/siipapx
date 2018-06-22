@@ -122,6 +122,21 @@ class VentaCreditoController extends RestfulController{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'VentasFacturista.pdf')
 
     }
+
+
+    def ventaPorCliente(VentaPorCliente command) {
+        log.info('Venta por facturista {}', command)
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        params.FECHA_INI = command.fechaIni
+        params.FECHA_FIN = command.fechaFin
+        params.CLIENTE = command.cliente.id
+        params.SUCURSAL = command.sucursal
+        params.ORIGEN = command.origen
+        def pdf = reportService.run('ventas_por_cliente.jrxml', params)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'VentaPorCliente.pdf')
+    }
+
+
 }
 
 public class BatchUpdateCommand {
@@ -184,6 +199,19 @@ public class VentaAcumulada {
     static constraints = {
         sucursal nullable:true
     }
+
+}
+
+@ToString(includeNames=true,includePackage=false)
+public class VentaPorCliente {
+
+    Date fechaIni
+    Date fechaFin
+    String origen
+    Cliente cliente
+    String sucursal
+
+    static constraints = {}
 
 }
 

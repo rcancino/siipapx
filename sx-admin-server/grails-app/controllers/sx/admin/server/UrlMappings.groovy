@@ -65,6 +65,7 @@ class UrlMappings {
         "/api/ventas"(resources:"venta")
         "/api/ventas/ventasAcumuladas"(controller: 'ventaCredito', action: 'ventasAcumuladas', method: 'GET')
         "/api/ventas/ventaPorFacturista"(controller: 'ventaCredito', action: 'ventaPorFacturista', method: 'GET')
+        "/api/ventas/ventaPorCliente"(controller: 'ventaCredito', action: 'ventaPorCliente', method: 'GET')
 
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
         "/api/tesoreria/solicitudes/pendientes"( controller: 'solicitudDeDeposito', action: 'pendientes')
@@ -149,6 +150,8 @@ class UrlMappings {
         // Cheques devueltos
         "/api/cxc/cheques"(resources: "chequeDevuelto")
         "/api/cxc/cheques/reporteDeChequesDevueltos"(controller: "chequeDevuelto", action:'reporteDeChequesDevueltos', method: 'GET')
+        "/api/cxc/cheques/estadoDeCuentaGeneralChe"(controller: "chequeDevuelto", action:'estadoDeCuentaGeneralChe', method: 'GET')
+        "/api/cxc/cheques/estadoDeCuentaDetChe"(controller: "chequeDevuelto", action:'estadoDeCuentaDetChe', method: 'GET')
 
 
         // Comisiones
