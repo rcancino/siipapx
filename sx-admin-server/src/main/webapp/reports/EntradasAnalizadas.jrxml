@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="DiarioDeEntradasAnalizadas"
+		 name="EntradasAnalizadas"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -37,7 +37,7 @@
 FROM  analisis_de_factura B JOIN cuenta_por_pagar C ON (B.FACTURA_ID=C.ID) JOIN analisis_de_factura_det A ON (A.ANALISIS_ID=B.ID)
 JOIN recepcion_de_compra_det R ON (A.com_id=R.ID) JOIN recepcion_de_compra RC ON(R.RECEPCION_ID=RC.ID) JOIN compra X ON(RC.COMPRA_ID=X.ID)
 JOIN inventario I ON(I.ID=R.INVENTARIO_ID) JOIN producto P ON(I.PRODUCTO_ID=P.ID) JOIN sucursal S ON(S.ID=I.SUCURSAL_ID)
-WHERE  DATE(I.FECHA) BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND S.ID=$P{SUCURSAL}
+WHERE  DATE(RC.FECHA) BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND S.ID=$P{SUCURSAL}
 GROUP BY C.ID,S.CLAVE,date(I.FECHA)]]></queryString>
 
 	<field name="ID" class="java.lang.String"/>
@@ -724,7 +724,7 @@ TOTAL]]></text>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP Sx-rx                   DiarioDeEntradasAnalizadas]]></text>
+				<text><![CDATA[SIIPAP Sx-rx                   EntradasAnalizadas]]></text>
 				</staticText>
 			</band>
 		</pageFooter>
@@ -851,7 +851,7 @@ TOTAL]]></text>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SIIPAP Sx-rx                   DiarioDeEntradasAnalizadas]]></text>
+				<text><![CDATA[SIIPAP Sx-rx                   EntradasAnalizadas]]></text>
 				</staticText>
 			</band>
 		</lastPageFooter>
