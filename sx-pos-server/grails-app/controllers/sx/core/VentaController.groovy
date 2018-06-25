@@ -155,7 +155,7 @@ class VentaController extends RestfulController{
             if(params.term.isInteger()) {
                 query = query.where{documento == params.term.toInteger()}
             } else {
-                query = query.where { nombre =~ search }
+                query = query.where { nombre =~ search || createUser =~ search }
             }
         }
         respond query.list(params)
@@ -356,6 +356,9 @@ class VentaController extends RestfulController{
             part.descripcion= det.producto.descripcion
             part.unidad= det.producto.unidad
             part.cantidad=det.cantidad
+            part.comentario=det.comentario
+            part.instruccion=det.corte? det.corte.instruccion : ''
+
             partidas.add(part)
 
         }
@@ -402,5 +405,7 @@ class Partidas{
     String descripcion
     String unidad
     BigDecimal cantidad
+    String comentario
+    String instruccion
 
 }

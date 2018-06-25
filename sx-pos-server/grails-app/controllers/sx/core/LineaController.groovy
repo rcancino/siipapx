@@ -13,11 +13,17 @@ class LineaController extends RestfulController{
         super(Linea)
     }
 
+
     protected List listAllResources(Map params) {
-        params.max = 500
-        params.sort = 'linea'
-        params.order = 'asc'
-        resource.list()
+        def query = Linea.where {}
+        params.sort = params.sort ?:'linea'
+        params.order = params.order ?:'asc'
+        params.max = 1000
+        if(params.term){
+            def search = '%' + params.term + '%'
+            query = query.where { linea =~ search }
+        }
+        return query.list(params)
     }
 
 

@@ -15,10 +15,15 @@ class ClaseController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        params.max = 500
-        params.sort = 'clase'
-        params.order = 'asc'
-        return super.listAllResources(params)
+        def query = Clase.where {}
+        params.sort = params.sort ?:'clase'
+        params.order = params.order ?:'asc'
+        params.max = 1000
+        if(params.term){
+            def search = '%' + params.term + '%'
+            query = query.where { clase =~ search }
+        }
+        return query.list(params)
     }
 
 }

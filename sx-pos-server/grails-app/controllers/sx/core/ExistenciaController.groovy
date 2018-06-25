@@ -139,7 +139,7 @@ class ExistenciaController extends RestfulController {
 
     def recortePorDetalle() {
         params.SUCURSAL = AppConfig.first().sucursal.id.toString()
-        def pdf =  reportService.run('RecorteXDetalle', parametros)
+        def pdf =  reportService.run('RecorteXDetalle', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RecortePorDetalle.pdf')
     }
 
