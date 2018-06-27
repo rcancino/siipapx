@@ -2,7 +2,6 @@ package sx.compras
 
 import sx.core.Inventario
 import sx.core.Producto
-import sx.cxp.AnalisisDevolucionCompra
 
 class DevolucionDeCompraDet {
 
@@ -11,7 +10,6 @@ class DevolucionDeCompraDet {
 
     DevolucionDeCompra devolucionDeCompra
 
-    AnalisisDevolucionCompra analisisDevolucion
 
     Inventario inventario
 
@@ -36,13 +34,11 @@ class DevolucionDeCompraDet {
     static belongsTo = [ devolucionDeCompra:DevolucionDeCompra ]
 
     static constraints = {
-        analisisDevolucion nullable: true
         comentario nullable: true
         inventario nullable: true
         sw2 nullable: true
         recepcionDeCompraDet nullable: true
 
-        analisisDevolucion nullable: true
     }
 
     static mapping = {

@@ -36,7 +36,7 @@ class MovimientoDeCuenta {
 
     Date lastUpdated
 
-    static belongsTo = [pago: PagoDeRequisicion, movimientoDeTesoreria: MovimientoDeTesoreria]
+    static belongsTo = [movimientoDeTesoreria: MovimientoDeTesoreria]
 
     //static mappedBy = [pago: 'egreso']
 
@@ -50,7 +50,6 @@ class MovimientoDeCuenta {
         comentario nullable: true
         concepto nullable:true,maxSize:50
         sw2 nullable:true
-        pago nullable: true
         movimientoDeTesoreria nullable: true
 
     }

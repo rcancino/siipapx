@@ -2,122 +2,102 @@ package sx.cxp
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import sx.cfdi.Acuse
-import sx.cfdi.ComprobanteFiscal
-import sx.core.Proveedor
-import sx.utils.MonedaUtils
 
-@ToString(includeNames=true,includePackage=false, includes = ['nombre', 'documento','fecha','total'])
-@EqualsAndHashCode(includeFields = true,includes = ['id'])
+
+import sx.core.Proveedor
+
+@ToString(includeNames=true,includePackage=false, includes = 'nombre, serie, folio, fecha ,total, uuid')
+@EqualsAndHashCode(includeFields = true,includes = 'id, uuid')
 class CuentaPorPagar {
 
     String id
 
     Proveedor proveedor
 
+    String nombre
+
     String tipo
 
-    String documento
+    String folio
 
-    Date fecha = new Date()
+    String serie
+
+    Date fecha
 
     Date vencimiento
 
-    Currency moneda = Currency.getInstance('MXN')
-
+    String moneda = Currency.getInstance('MXN').currencyCode
     BigDecimal tipoDeCambio=1.0
 
     //Importes
-    BigDecimal importe = 0.0
+    BigDecimal subTotal = 0.0
+    BigDecimal descuento = 0.0
+    BigDecimal impuestoTrasladado = 0.0
+    BigDecimal impuestoRetenido = 0.0
+    BigDecimal total = 0.0
 
-    BigDecimal impuestoTasa=MonedaUtils.IVA
+    BigDecimal descuentoFinanciero
+    Date descuentoFinancieroVto
 
-    BigDecimal impuesto=0.0
-
-    BigDecimal total=0.0
-
-    BigDecimal descuentof = 0
-
-    Date descuentofVto
-
-    BigDecimal retencionIvaTasa = 0
-
-    BigDecimal retencionIva = 0
-
-    BigDecimal retencionIsrTasa = 0
-
-    BigDecimal retencionIsr=0
-
-    //Datos de CFDI...
-    ComprobanteFiscal comprobante
+    String uuid
 
     String comentario
 
-    BigDecimal requisitado = 0.0
-
-    BigDecimal pendienteRequisitar = 0.0
-
-    BigDecimal pagosAplicados = 0.0
-
-    List gastos = []
-    
-    Long sw2
+    Boolean analizada = false
+    BigDecimal importaPorPagar = 0.0
 
     Date dateCreated
-
     Date lastUpdated
 
-    static hasMany =[gastos: Gasto]
+    String createUser
+    String updateUser
+
+    String sw2
+
+    ComprobanteFiscal comprobanteFiscal
 
     static constraints = {
         tipo inList:['COMPRAS', 'GASTOS']
+        folio maxSize: 10
+        serie maxSize: 10
+        moneda maxSize: 5
         tipoDeCambio(scale:6)
-        importe(scale:4)
-        impuesto(scale:4)
+        subTotal(scale:4)
+        descuento(scale: 4)
+        impuestoTrasladado(scale:4)
+        impuestoRetenido(sacle:4)
         total(scale:4)
-        retencionIsr(scale:4)
-        retencionIva(sacle:4)
         comentario(nullable:true)
-        vencimiento (validator:{vencimiento,cxp->
+        vencimiento (validator: { vencimiento, cxp ->
             if( (vencimiento <=> cxp.fecha) < 0 )
                 return "vencimientoInvalido"
             else return true
         })
-        descuentofVto nullable:true
-        comprobante nullable:true, unique:true
-        pagosAplicados nullable: true
+        descuentoFinanciero nullable:true
+        descuentoFinancieroVto nullable:true
+        uuid nullable:true, unique:true
         sw2 nullable:true
-
+        comprobanteFiscal nullable: true
     }
 
     static mapping ={
         id generator:'uuid'
-        gastos cascade: "all-delete-orphan"
+        // gastos cascade: "all-delete-orphan"
         //requisitado formula:'(select ifnull(sum(x.requisitado),0) from requisicion_det x where x.cuenta_por_pagar_id=id)'
         //pagosAplicados formula:'(select ifnull(sum(x.importe),0) from aplicacion_de_pago x where x.cuenta_por_pagar_id=id)'
         fecha type:'date' , index: 'CXP_IDX2'
         vencimiento type:'date', index: 'CXP_IDX2'
-        descuentofVto type:'date'
+        descuentoFinancieroVto type:'date'
     }
 
 
-
-    static transients = ['pagosAplicados','pendienteRequisitar','saldoActual','saldoAlCorte','saldo']
+    // static transients = ['pendienteRequisitar',]
 
     BigDecimal toPesos(String property){
         return "${property}" * tipoDeCambio
 
     }
 
-    public BigDecimal getPendienteRequisitar(){
-        def req=requisitado?:0.0
-        return total-req
-    }
-
-    public BigDecimal getSaldo(){
-        return total - pagosAplicados?:0.0
-    }
 
 
-    
 }

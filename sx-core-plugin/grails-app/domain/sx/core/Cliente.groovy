@@ -49,7 +49,7 @@ class Cliente {
 
     Set<ComunicacionEmpresa> medios = []
 
-    ClienteCredito credito
+    // ClienteCredito credito
 
     // Transient properties
     Set telefonos
