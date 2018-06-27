@@ -1235,13 +1235,13 @@ Tel. 53 42 71 66   Fax 24 65 03 88
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SUC_CLAVE}.equals( new Integer ("10"))?"CALLE 4 No.194-A COL. GRANJAS SAN ANTONIO" :
-$F{SUC_CLAVE}.equals( new Integer ("12"))?"BIOLOGO MAXIMINO MARTINEZ No.3902 COL. SAN SALVADOR XOCHIMANCA" :
-$F{SUC_CLAVE}.equals( new Integer ("5"))?"BOLIVAR 95-D COL. CENTRO" :
-$F{SUC_CLAVE}.equals( new Integer ("3"))?"DR. ANDRADE No. 78-84 COL. DOCTORES" :
-$F{SUC_CLAVE}.equals( new Integer ("13"))?"5 DE FEBRERO No.378 COL. OBRERA" :
-$F{SUC_CLAVE}.equals( new Integer ("14"))?"ANTONIO SOLIS No. 141 COL. OBRERA" :
-$F{SUC_CLAVE}.equals( new Integer ("9"))?"LOCAL" :
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SUC_CLAVE}.equals("10")?"CALLE 4 No.194-A COL. GRANJAS SAN ANTONIO" :
+$F{SUC_CLAVE}.equals("12")?"BIOLOGO MAXIMINO MARTINEZ No.3902 COL. SAN SALVADOR XOCHIMANCA" :
+$F{SUC_CLAVE}.equals("5")?"BOLIVAR 95-D COL. CENTRO" :
+$F{SUC_CLAVE}.equals("3")?"DR. ANDRADE No. 78-84 COL. DOCTORES" :
+$F{SUC_CLAVE}.equals("13")?"5 DE FEBRERO No.378 COL. OBRERA" :
+$F{SUC_CLAVE}.equals("14")?"ANTONIO SOLIS No. 141 COL. OBRERA" :
+$F{SUC_CLAVE}.equals("9")?"LOCAL" :
 ""]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >

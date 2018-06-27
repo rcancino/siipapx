@@ -1,5 +1,7 @@
 package pos.server
 
+import sx.core.Venta
+
 class DepurarPedidosJob {
     static triggers = {
         cron name:   'depPed',   startDelay: 10000, cronExpression: '0 0 21 * * ?'
