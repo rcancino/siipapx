@@ -30,7 +30,7 @@
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="SUCURSAL" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT CASE WHEN F.TIPO='CON' THEN 'A' ELSE 'B' END AS ORDEN,(SELECT S.clave FROM sucursal S WHERE V.SUCURSAL_ID=S.ID) AS SUC
-,F.SUCURSAL_ID,F.TIPO,F.forma_de_pago as FPAGO,f.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMBRE
+,F.SUCURSAL_ID,F.TIPO,F.forma_de_pago as FPAGO,f.DOCUMENTO,F.FECHA,C.CLAVE,V.NOMBRE
 ,V.DESCUENTO,D.DESCUENTO_ORIGINAL,D.DESCUENTO,SUM(D.IMPORTE) AS IMP_DET,SUM(D.IMPORTE*D.DESCUENTO_ORIGINAL/100) AS DESCTO_ORI,SUM(D.IMPORTE*D.DESCUENTO/100) AS DESCTO
 ,SUM(D.IMPORTE*D.DESCUENTO/100) - SUM(D.IMPORTE*D.DESCUENTO_ORIGINAL/100) AS IMP_DIF
 ,UCASE(V.create_user) AS CREADO_USERID ,F.FORMA_DE_PAGO
@@ -63,6 +63,8 @@ GROUP BY V.SUCURSAL_ID,F.TIPO,F.FORMA_dE_PAGO,F.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMB
 	<sortField name="ORDEN" />
 	<sortField name="TIPO" />
 	<sortField name="SUC" />
+	<sortField name="NOMBRE" />
+	<sortField name="DOCUMENTO" />
 
 	<variable name="IMPORTE_DET" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{IMP_DET}]]></variableExpression>
@@ -383,12 +385,12 @@ GROUP BY V.SUCURSAL_ID,F.TIPO,F.FORMA_dE_PAGO,F.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMB
 					<textElement>
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}.equals("6")?"ANDRADE (3)":
-$P{SUCURSAL}.equals("3")?"TACUBA (12)":
-$P{SUCURSAL}.equals("2")?"CALLE 4 (10)":
-$P{SUCURSAL}.equals("5")?"BOLIVAR (5)":
-$P{SUCURSAL}.equals("2")?"VERTIZ 176 (2)":
-$P{SUCURSAL}.equals("13")?"CF5FEBRERO (13)":"TODAS"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64f8e0131")?"ANDRADE (3)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64e70012e")?"TACUBA (12)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64ce5012d")?"CALLE 4 (10)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec64f460130")?"BOLIVAR (5)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec6512a0136")?"VERTIZ 176 (2)":
+$P{SUCURSAL}.equals("402880fc5e4ec411015e4ec650760134")?"CF5FEBRERO (13)":"TODAS"]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
