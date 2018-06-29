@@ -121,7 +121,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 			<band height="109"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="133"
+						x="128"
 						y="90"
 						width="48"
 						height="14"
@@ -174,7 +174,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<reportElement
 						x="61"
 						y="70"
-						width="20"
+						width="26"
 						height="14"
 						key="textField-4"/>
 					<box></box>
@@ -202,9 +202,9 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="83"
+						x="87"
 						y="70"
-						width="198"
+						width="194"
 						height="14"
 						key="textField-5"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -251,7 +251,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<reportElement
 						x="2"
 						y="90"
-						width="53"
+						width="48"
 						height="14"
 						key="staticText-6"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -259,14 +259,14 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
+					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
 				<text><![CDATA[FACTURA :  ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="55"
+						x="50"
 						y="90"
 						width="78"
 						height="14"
@@ -279,7 +279,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="229"
+						x="224"
 						y="90"
 						width="33"
 						height="14"
@@ -313,9 +313,9 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="320"
+						x="319"
 						y="90"
-						width="80"
+						width="81"
 						height="14"
 						key="staticText-9"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -330,7 +330,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="181"
+						x="176"
 						y="90"
 						width="46"
 						height="14"
@@ -369,13 +369,13 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="262"
+						x="257"
 						y="90"
-						width="29"
+						width="62"
 						height="14"
 						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
+					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{MONEDA}.equals( "MXN" ) ? $F{TOTAL}.multiply(($F{TC}) ) : 
