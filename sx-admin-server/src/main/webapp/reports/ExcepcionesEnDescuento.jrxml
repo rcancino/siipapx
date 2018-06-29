@@ -40,7 +40,7 @@ WHERE F.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND V.SUCURSAL_ID LIKE $P{
 V.descuento<>V.descuento_original AND (V.TIPO IN('CON','COD')) 
 AND P.INVENTARIABLE IS TRUE AND F.FORMA_DE_PAGO NOT LIKE 'TARJET%'
 GROUP BY V.SUCURSAL_ID,F.TIPO,F.FORMA_dE_PAGO,F.DOCUMENTO,F.FECHA,C.CLAVE,C.NOMBRE,V.DESCUENTO
-,D.DESCUENTO_ORIGINAL,D.DESCUENTO]]></queryString>
+]]></queryString>
 
 	<field name="ORDEN" class="java.lang.String"/>
 	<field name="SUC" class="java.lang.String"/>
