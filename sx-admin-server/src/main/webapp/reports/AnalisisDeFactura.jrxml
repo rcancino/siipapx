@@ -279,9 +279,9 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="224"
+						x="237"
 						y="90"
-						width="33"
+						width="38"
 						height="14"
 						key="staticText-7"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -292,7 +292,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
-				<text><![CDATA[TOTAL : ]]></text>
+				<text><![CDATA[TOTAL :   ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -313,7 +313,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="319"
+						x="338"
 						y="90"
 						width="81"
 						height="14"
@@ -332,7 +332,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<reportElement
 						x="176"
 						y="90"
-						width="46"
+						width="61"
 						height="14"
 						key="textField"/>
 					<box></box>
@@ -356,7 +356,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="401"
+						x="420"
 						y="90"
 						width="19"
 						height="14"
@@ -369,9 +369,9 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="257"
+						x="275"
 						y="90"
-						width="62"
+						width="63"
 						height="14"
 						key="textField"/>
 					<box></box>
@@ -397,9 +397,9 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</textField>
 				<staticText>
 					<reportElement
-						x="420"
+						x="439"
 						y="90"
-						width="60"
+						width="41"
 						height="14"
 						key="staticText-38"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -864,7 +864,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="###0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="452"
 						y="3"
