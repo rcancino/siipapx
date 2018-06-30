@@ -41,7 +41,7 @@
 	<parameter name="TESORERIA" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="AUTORIZADO" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT r.id,r.folio,r.nombre,r.fecha,r.fecha_de_pago,r.moneda,r.tipo_de_cambio,r.forma_de_pago,r.comentario,r.descuentof_importe
+	<queryString><![CDATA[SELECT r.id,r.folio,r.nombre,r.fecha,r.fecha_de_pago,r.moneda,r.tipo_de_cambio,r.forma_de_pago,r.comentario,r.descuentof
 ,concat(d.documento_serie,d.documento_folio) as documento,d.documento_fecha,'PAGO' AS concepto,d.apagar,d.documento_total,d.uuid,d.acuse
 FROM requisicion R 
 LEFT JOIN requisicion_det  D ON(D.requisicion_id=R.id) 
@@ -56,7 +56,7 @@ WHERE R.ID=$P{ID}]]></queryString>
 	<field name="tipo_de_cambio" class="java.math.BigDecimal"/>
 	<field name="forma_de_pago" class="java.lang.String"/>
 	<field name="comentario" class="java.lang.String"/>
-	<field name="descuentof_importe" class="java.math.BigDecimal"/>
+	<field name="descuentof" class="java.math.BigDecimal"/>
 	<field name="documento" class="java.lang.String"/>
 	<field name="documento_fecha" class="java.sql.Timestamp"/>
 	<field name="concepto" class="java.lang.String"/>
@@ -464,7 +464,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 					</textElement>
 				<text><![CDATA[D.F. : %]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="508"
 						y="67"
@@ -476,7 +476,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{descuentof_importe}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{descuentof}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
