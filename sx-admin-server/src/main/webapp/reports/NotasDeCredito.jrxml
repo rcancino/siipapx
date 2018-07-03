@@ -30,14 +30,14 @@
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="ORIGEN" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT a.id,a.serie,a.tipo,a.tipo_cartera,a.fecha,a.folio,y.clave,y.nombre,a.importe*a.tc as importe,a.impuesto*a.tc as impuesto,a.total*tc as total,a.moneda,a.tc,(CASE WHEN z.cancelado IS false THEN '' ELSE 'C' END) AS cancelado
-,b.id,ifnull(ap.importe*a.tc,0) as totDet,ifnull((ap.importe*a.tc)/1.16,0) as ivaDet,ifnull(((ap.importe*a.tc)/1.16)*0.16,0) as impDet ,s.nombre as sucursal
-,(case when B.importe-B.diferencia-IFNULL((SELECT SUM(R.IMPORTE) FROM aplicacion_de_cobro R WHERE R.cobro_id=B.ID AND FECHA=$P{FECHA_INI}),0)=0 and  z.cancelado is false then 'APLICADAS' ELSE 'POR APLICAR' END) AS aplicable
+,b.id,sum(ap.importe*a.tc)+b.diferencia as totDet,sum((ap.importe*a.tc)/1.16)+(b.diferencia/1.16) as impDet,sum(((ap.importe*a.tc)/1.16)*0.16)+((b.diferencia/1.16)*0.16) as ivaDet,s.nombre as sucursal
+,(case when B.importe-B.diferencia-IFNULL((SELECT SUM(R.IMPORTE) FROM aplicacion_de_cobro R WHERE R.cobro_id=B.ID AND FECHA<=$P{FECHA_FIN}),0)=0 and  z.cancelado is false then 'APLICADAS' ELSE 'POR APLICAR' END) AS aplicable
 FROM nota_de_credito A JOIN cfdi Z ON(A.cfdi_id=z.id) JOIN COBRO B ON(A.cobro_id=B.ID)  JOIN cliente y ON(a.cliente_id=y.id)
 LEFT JOIN aplicacion_de_cobro AP ON(B.ID=AP.COBRO_ID) LEFT JOIN cuenta_por_cobrar C ON (C.ID=AP.CUENTA_POR_COBRAR_ID) 
 LEFT join sucursal s on(c.sucursal_id=s.id)
 WHERE A.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} 
-AND A.tipo_cartera=$P{ORIGEN} 
-]]></queryString>
+AND A.tipo_cartera=$P{ORIGEN}
+group by a.id]]></queryString>
 
 	<field name="id" class="java.lang.String"/>
 	<field name="serie" class="java.lang.String"/>
@@ -54,8 +54,8 @@ AND A.tipo_cartera=$P{ORIGEN}
 	<field name="tc" class="java.math.BigDecimal"/>
 	<field name="cancelado" class="java.lang.String"/>
 	<field name="totDet" class="java.math.BigDecimal"/>
-	<field name="ivaDet" class="java.math.BigDecimal"/>
 	<field name="impDet" class="java.math.BigDecimal"/>
+	<field name="ivaDet" class="java.math.BigDecimal"/>
 	<field name="sucursal" class="java.lang.String"/>
 	<field name="aplicable" class="java.lang.String"/>
 
