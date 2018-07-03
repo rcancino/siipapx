@@ -8,10 +8,10 @@
 		 orientation="Portrait"
 		 pageWidth="612"
 		 pageHeight="792"
-		 columnWidth="552"
+		 columnWidth="574"
 		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
+		 leftMargin="19"
+		 rightMargin="19"
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="NoPages"
@@ -28,7 +28,7 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="MONEDA" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT B.FACTURA_ID,B.FOLIO,CONCAT(SERIE,'-',C.FOLIO) AS DOCUMENTO,C.FECHA,B.FECHA AS FECHA_ANA,(SELECT X.CLAVE FROM proveedor X WHERE C.PROVEEDOR_ID=X.ID) AS CLAVPROV,B.NOMBRE
+	<queryString><![CDATA[SELECT B.FACTURA_ID,B.FOLIO,CONCAT(IFNULL(SERIE,''),'-',IFNULL(C.FOLIO,'')) AS DOCUMENTO,C.FECHA,B.FECHA AS FECHA_ANA,(SELECT X.CLAVE FROM proveedor X WHERE C.PROVEEDOR_ID=X.ID) AS CLAVPROV,B.NOMBRE
 ,B.IMPORTE_FLETE AS FLETE,B.IMPUESTO_FLETE AS FLETE_IVA,B.RETENCION_FLETE AS FLETE_RET,C.TOTAL,C.MONEDA,C.TIPO_DE_CAMBIO AS TC,CASE WHEN R.SW2 IS TRUE THEN 1 ELSE 0 END IMPRESO
 ,S.CLAVE AS SUC,I.DOCUMENTO AS DOCTO_ENT,I.FECHA AS FECHA_ENTRADA,(SELECT S.CLAVE FROM SUCURSAL S WHERE X.SUCURSAL_ID=S.ID) AS SUCCOM,X.FOLIO AS COMPRA,X.FECHA AS COMPRA_F
 ,I.CLAVE AS PRODUCTO,I.DESCRIPCION,A.CANTIDAD/(CASE WHEN P.UNIDAD='MIL' THEN 1000 ELSE 1 END) AS CANTIDAD
@@ -121,7 +121,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 			<band height="109"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="128"
+						x="138"
 						y="90"
 						width="48"
 						height="14"
@@ -138,7 +138,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="289"
+						x="307"
 						y="25"
 						width="261"
 						height="18"
@@ -155,7 +155,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="237"
+						x="255"
 						y="2"
 						width="313"
 						height="22"
@@ -174,7 +174,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<reportElement
 						x="61"
 						y="70"
-						width="26"
+						width="31"
 						height="14"
 						key="textField-4"/>
 					<box></box>
@@ -202,9 +202,9 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="87"
+						x="92"
 						y="70"
-						width="194"
+						width="211"
 						height="14"
 						key="textField-5"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -219,7 +219,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="420"
+						x="438"
 						y="70"
 						width="60"
 						height="14"
@@ -236,7 +236,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="480"
+						x="498"
 						y="70"
 						width="68"
 						height="14"
@@ -268,7 +268,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<reportElement
 						x="50"
 						y="90"
-						width="78"
+						width="88"
 						height="14"
 						key="textField-6"/>
 					<box></box>
@@ -279,7 +279,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="237"
+						x="247"
 						y="90"
 						width="38"
 						height="14"
@@ -296,7 +296,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="289"
+						x="303"
 						y="70"
 						width="81"
 						height="14"
@@ -313,9 +313,9 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="338"
+						x="348"
 						y="90"
-						width="81"
+						width="86"
 						height="14"
 						key="staticText-9"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -326,11 +326,11 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
-				<text><![CDATA[MONEDA  ORIGEN: ]]></text>
+				<text><![CDATA[MONEDA  ORIGEN:  ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="176"
+						x="186"
 						y="90"
 						width="61"
 						height="14"
@@ -343,7 +343,7 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="370"
+						x="384"
 						y="70"
 						width="50"
 						height="14"
@@ -356,20 +356,20 @@ BigDecimal.valueOf(0.15) : BigDecimal.valueOf(0.16)]]></initialValueExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="420"
+						x="434"
 						y="90"
-						width="19"
+						width="23"
 						height="14"
 						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
+					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{MONEDA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="275"
+						x="285"
 						y="90"
 						width="63"
 						height="14"
@@ -383,7 +383,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{TOTAL}.multiply(($F{TC}) ) : $F{TOTAL}]]></textF
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="342"
+						x="360"
 						y="43"
 						width="208"
 						height="13"
@@ -397,7 +397,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</textField>
 				<staticText>
 					<reportElement
-						x="439"
+						x="457"
 						y="90"
 						width="41"
 						height="14"
@@ -414,7 +414,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="480"
+						x="498"
 						y="90"
 						width="68"
 						height="14"
@@ -476,7 +476,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 					<reportElement
 						x="245"
 						y="16"
-						width="147"
+						width="155"
 						height="11"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -634,9 +634,9 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</staticText>
 				<staticText>
 					<reportElement
-						x="452"
+						x="460"
 						y="5"
-						width="38"
+						width="48"
 						height="22"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -654,7 +654,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</staticText>
 				<staticText>
 					<reportElement
-						x="490"
+						x="508"
 						y="5"
 						width="60"
 						height="22"
@@ -674,7 +674,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</staticText>
 				<staticText>
 					<reportElement
-						x="407"
+						x="415"
 						y="5"
 						width="45"
 						height="22"
@@ -716,7 +716,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 					<reportElement
 						x="195"
 						y="5"
-						width="212"
+						width="220"
 						height="11"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -734,7 +734,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</staticText>
 				<staticText>
 					<reportElement
-						x="392"
+						x="400"
 						y="16"
 						width="15"
 						height="11"
@@ -814,7 +814,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 					<reportElement
 						x="245"
 						y="3"
-						width="147"
+						width="155"
 						height="11"
 						key="textField"/>
 					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -848,7 +848,7 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="407"
+						x="415"
 						y="3"
 						width="45"
 						height="11"
@@ -866,9 +866,9 @@ $P{MONEDA}.equals( "MXN" ) ? "(MONEDA NACIONAL)" : "(MONEDA ORIGEN)"]]></textFie
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="452"
+						x="460"
 						y="3"
-						width="37"
+						width="47"
 						height="11"
 						key="textField"/>
 					<box>					<pen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -885,7 +885,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{COSTO}.multiply( new BigDecimal($F{TC}.doubleVal
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="3"
 						width="61"
 						height="11"
@@ -904,7 +904,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="392"
+						x="400"
 						y="3"
 						width="15"
 						height="11"
@@ -976,7 +976,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="260"
+						x="246"
 						y="15"
 						width="48"
 						height="11"
@@ -996,7 +996,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="380"
+						x="398"
 						y="15"
 						width="76"
 						height="11"
@@ -1016,7 +1016,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="456"
+						x="474"
 						y="15"
 						width="83"
 						height="11"
@@ -1036,7 +1036,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="309"
+						x="295"
 						y="15"
 						width="31"
 						height="11"
@@ -1057,7 +1057,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 					<reportElement
 						x="0"
 						y="13"
-						width="552"
+						width="574"
 						height="0"
 						forecolor="#CCCCCC"
 						backcolor="#999999"
@@ -1067,7 +1067,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="538"
+						x="560"
 						y="4"
 						width="0"
 						height="19"
@@ -1103,7 +1103,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="260"
+						x="246"
 						y="14"
 						width="48"
 						height="11"
@@ -1123,7 +1123,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="380"
+						x="398"
 						y="14"
 						width="76"
 						height="11"
@@ -1143,7 +1143,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="456"
+						x="474"
 						y="14"
 						width="83"
 						height="11"
@@ -1163,7 +1163,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="309"
+						x="295"
 						y="14"
 						width="31"
 						height="11"
@@ -1184,7 +1184,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 					<reportElement
 						x="0"
 						y="12"
-						width="552"
+						width="574"
 						height="0"
 						forecolor="#CCCCCC"
 						backcolor="#999999"
@@ -1194,7 +1194,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="538"
+						x="560"
 						y="3"
 						width="0"
 						height="19"
@@ -1226,10 +1226,10 @@ $P{MONEDA}.equals( "MXN" ) ? $F{IMPORTE}.multiply( ($F{TC}) ) : $F{IMPORTE}]]></
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="192"  isSplitAllowed="true" >
+			<band height="158"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="3"
 						width="61"
 						height="14"
@@ -1248,7 +1248,7 @@ $P{MONEDA}.equals( "MXN" ) ? $V{IMP_ANALISIS}.multiply( ($F{TC}) ) : $V{IMP_ANAL
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="51"
 						width="61"
 						height="14"
@@ -1268,7 +1268,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply($F{IVA_ANALISIS})]]></textField
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="65"
 						width="61"
 						height="14"
@@ -1287,7 +1287,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE}.multiply( ($F{TC}))  : $F{FLETE}]]></text
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="127"
 						width="61"
 						height="14"
@@ -1307,7 +1307,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="141"
 						width="61"
 						height="14"
@@ -1331,7 +1331,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</textField>
 				<staticText>
 					<reportElement
-						x="342"
+						x="362"
 						y="3"
 						width="145"
 						height="14"
@@ -1350,7 +1350,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</staticText>
 				<staticText>
 					<reportElement
-						x="407"
+						x="427"
 						y="51"
 						width="80"
 						height="14"
@@ -1369,7 +1369,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</staticText>
 				<staticText>
 					<reportElement
-						x="407"
+						x="427"
 						y="65"
 						width="80"
 						height="14"
@@ -1388,7 +1388,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</staticText>
 				<staticText>
 					<reportElement
-						x="407"
+						x="427"
 						y="127"
 						width="80"
 						height="14"
@@ -1407,7 +1407,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</staticText>
 				<staticText>
 					<reportElement
-						x="370"
+						x="390"
 						y="141"
 						width="117"
 						height="14"
@@ -1426,7 +1426,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS}).multiply((BigDecimal.valueOf(1.00).add($
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="107"
 						width="61"
 						height="14"
@@ -1447,7 +1447,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{CARGOS}.doubleValue() * $F{TC}.doubleValue()  : 
 				</textField>
 				<staticText>
 					<reportElement
-						x="407"
+						x="427"
 						y="107"
 						width="80"
 						height="14"
@@ -1466,7 +1466,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{CARGOS}.doubleValue() * $F{TC}.doubleValue()  : 
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="79"
 						width="61"
 						height="14"
@@ -1485,7 +1485,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE_IVA}.multiply( ($F{TC}))  : $F{FLETE_IVA}]
 				</textField>
 				<staticText>
 					<reportElement
-						x="407"
+						x="427"
 						y="79"
 						width="80"
 						height="14"
@@ -1504,7 +1504,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE_IVA}.multiply( ($F{TC}))  : $F{FLETE_IVA}]
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="93"
 						width="61"
 						height="14"
@@ -1524,7 +1524,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE_RET}.doubleValue() * $F{TC}.doubleValue() 
 				</textField>
 				<staticText>
 					<reportElement
-						x="407"
+						x="427"
 						y="93"
 						width="80"
 						height="14"
@@ -1543,7 +1543,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE_RET}.doubleValue() * $F{TC}.doubleValue() 
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="17"
 						width="61"
 						height="14"
@@ -1561,7 +1561,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE_RET}.doubleValue() * $F{TC}.doubleValue() 
 				</textField>
 				<staticText>
 					<reportElement
-						x="342"
+						x="362"
 						y="17"
 						width="145"
 						height="14"
@@ -1580,7 +1580,7 @@ $P{MONEDA}.equals( "MXN" ) ? $F{FLETE_RET}.doubleValue() * $F{TC}.doubleValue() 
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="489"
+						x="507"
 						y="37"
 						width="61"
 						height="14"
@@ -1600,7 +1600,7 @@ $V{IMP_ANALISIS}.add($F{ACUM_ANALISIS})]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="342"
+						x="362"
 						y="37"
 						width="145"
 						height="14"
