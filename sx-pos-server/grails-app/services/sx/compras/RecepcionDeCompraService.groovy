@@ -9,9 +9,9 @@ import sx.core.Inventario
 import sx.core.Producto
 
 @Transactional
-class RecepcionDeCompraService {
+class RecepcionDeCompraService { 
 
-    def recibir(Compra compra, String username) {
+    def recibir(Compra compra, String username,remision,fechaR,comentario) {
         List<CompraDet> pendientes = compra.pendientes()
         log.debug('Generando COM automatico de compra {} con {} partidas pendientes', compra.folio, pendientes.size())
 
@@ -26,8 +26,9 @@ class RecepcionDeCompraService {
         com.sucursal = compra.sucursal
         com.fecha = new Date()
         com.compra = compra
-        com.remision = compra.folio
-        com.comentario = compra.comentario
+        com.remision =remision
+        com.fechaRemision=fechaR
+        com.comentario = comentario
         com.proveedor = compra.proveedor
         pendientes.each { CompraDet item ->
             if (item.getPorRecibir() > 0) {
