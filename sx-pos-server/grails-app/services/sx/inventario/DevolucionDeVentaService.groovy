@@ -23,11 +23,14 @@ class DevolucionDeVentaService {
             def descuentoImporte = subtotal * descuento
             def importe = MonedaUtils.round(subtotal - descuentoImporte)
             importeNeto = importeNeto + importe
-            // println "Importe en ventaDet ${it.ventaDet.subtotal} En rmd: ${importe}"
+           //  println "Importe en ventaDet ${it.ventaDet.subtotal} En rmd: ${importe}"
         }
         rmd.importe = importeNeto
         rmd.impuesto = MonedaUtils.calcularImpuesto(importeNeto)
         rmd.total = rmd.importe + rmd.impuesto
+        if(rmd.total != rmd.venta.total){
+            rmd.parcial=true
+        }
         rmd.save failOnError: true, flush: true
         if(rmd.cobro == null) {
             generarCobro(rmd)

@@ -47,6 +47,8 @@ class DevolucionDeVenta {
 
     Boolean parcial = false
 
+    Date cancelado
+
     static  hasMany = [partidas:DevolucionDeVentaDet]
 
     static constraints = {
@@ -60,6 +62,7 @@ class DevolucionDeVenta {
         fechaInventario nullable: true
         asignado nullable: true
         parcial nullable: true
+        cancelado nullable: true
     }
 
     static  mapping ={

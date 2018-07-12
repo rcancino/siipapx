@@ -12,7 +12,7 @@ import sx.core.Venta
 class SolicitudDeTraslado {
 
     String	id
-
+    
     Sucursal sucursalSolicita
 
     Sucursal	sucursalAtiende
@@ -47,6 +47,9 @@ class SolicitudDeTraslado {
 
     Date atender
 
+    Boolean cancelado=false
+    
+
     static hasMany = [partidas:SolicitudDeTrasladoDet]
 
     static constraints = {
@@ -61,6 +64,7 @@ class SolicitudDeTraslado {
         sw2 nullable: true
         fechaInventario nullable: true
         atender nullable: true
+        
     }
 
     static mapping = {

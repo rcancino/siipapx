@@ -59,6 +59,8 @@ class Traslado {
 
     String uuid
 
+    Date cancelado
+
     static hasMany = [partidas:TrasladoDet]
 
     static constraints = {
@@ -78,6 +80,7 @@ class Traslado {
         asignado nullable: true
         cfdi nullable: true
         uuid nullable: true
+        cancelado nullable: true
     }
 
     static mapping = {

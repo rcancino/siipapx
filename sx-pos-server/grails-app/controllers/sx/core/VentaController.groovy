@@ -95,12 +95,23 @@ class VentaController extends RestfulController{
     def cancelarEnvio() {
         Venta venta = Venta.get(params.id)
         log.debug('Cancelar envio para venta: {}', venta)
-        if(venta.envio) {
-            CondicionDeEnvio condicionDeEnvio= venta.envio
-            venta.envio = null
-            venta = venta.save failOnError: true, flush:true
-            condicionDeEnvio.venta = null
-            condicionDeEnvio.delete failOnError: true, flush: true
+
+        def asignada=Envio.findAllByOrigen(venta.id)
+
+        if(venta.envio ) {
+
+            if(!asignada){
+                    CondicionDeEnvio condicionDeEnvio= venta.envio
+                    venta.envio = null
+                    venta.cod= false
+                    venta = venta.save failOnError: true, flush:true
+                    condicionDeEnvio.venta = null
+                    
+                    condicionDeEnvio.delete failOnError: true, flush: true
+            }else{
+                println "Venta ya asignada no se puede cancelar el envio"
+            }
+            
         }
         respond venta
     }

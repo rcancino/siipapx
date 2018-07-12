@@ -87,13 +87,15 @@ class RecepcionDeCompraController extends  RestfulController{
         forward controller: 'compra', action: 'show', id: res.id
     }
 
-    def recibir(Compra compra) {
-        if (compra == null) {
+    def recibir(RecepcionCompraCommand command) {
+        if (command.compra == null) {
             notFound()
             return
         }
-        log.debug('Generando recepcion autormatica de compra: {}', compra.folio)
-        RecepcionDeCompra com = recepcionDeCompraService.recibir(compra, getPrincipal().username)
+        log.debug('Generando recepcion autormatica de compra: {}', command.compra.folio)
+        println "***  "+command.properties+"   ***"
+ 
+        RecepcionDeCompra com = recepcionDeCompraService.recibir(command.compra, getPrincipal().username,command.remision,command.fechaR,command.comentario)
         respond com
     }
 
@@ -146,6 +148,16 @@ class CompraParaComSearchCommand {
     }
 
     static constraints = {
+        
+    }
+}
+
+class RecepcionCompraCommand{
+    Compra compra
+    String remision
+    Date fechaR
+    String comentario
+     static constraints = {
         
     }
 }
