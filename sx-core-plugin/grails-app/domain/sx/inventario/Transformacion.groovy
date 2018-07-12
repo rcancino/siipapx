@@ -38,6 +38,7 @@ class Transformacion {
 
     Date fechaInventario
 
+    Date cancelado
 
     static  hasMany = [partidas:TransformacionDet]
 
@@ -54,6 +55,7 @@ class Transformacion {
         updateUser nullable: true
         porInventario nullable: true
         fechaInventario nullable: true
+        cancelado nullable: true
 
     }
 

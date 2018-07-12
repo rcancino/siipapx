@@ -286,10 +286,16 @@ class EmbarqueController extends RestfulController {
 
 
     def enviosPendientes() {
+
+        def list= [] 
         def q = CondicionDeEnvio.where{
             asignado == null || (asignado != null && parcial == true)
         }
-        def  list = q.list()
+         q.list().each{
+             if(it.venta.kilos!= Envio.findAllByOrigen(it.venta.id).sum(it.kilos){
+                 list.add(it)
+             }
+         }
         respond list 
     }
 

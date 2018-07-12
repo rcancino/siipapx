@@ -45,8 +45,8 @@ class CorteCobranzaService {
     def getCobrosRegistrados(CorteCobranza corte) {
         if (corte.formaDePago.startsWith('TARJETA')) {
             return Cobro.executeQuery(
-                    "select sum(c.importe) from Cobro c where c.sucursal=? and date(primeraAplicacion) = ? and c.formaDePago like ?",
-                    [corte.sucursal,corte.fecha, 'TARJETA_%'])[0]?:00
+                    "select sum(c.importe) from Cobro c where c.sucursal=? and (date(primeraAplicacion) = ? or (date(fecha)=? and anticipo is true)) and c.formaDePago like ?",
+                    [corte.sucursal,corte.fecha,corte.fecha, 'TARJETA_%'])[0]?:00
         }
         if (corte.formaDePago == 'DEPOSITO') {
             log.debug(' Buscando aplicaciones para {} {} tipo  {} {}', corte.sucursal.nombre, corte.fecha.format('dd/MM/yyyy'), corte.tipoDeVenta, corte.formaDePago)
@@ -79,9 +79,10 @@ class CorteCobranzaService {
             def pagosRegistrados = Cobro.executeQuery(
                     "select sum(c.importe) from Cobro c " +
                             " where c.sucursal=? " +
-                            "  and date(primeraAplicacion) = ? " +
+                            "  and (date(primeraAplicacion) = ? " +
+                            " or (date(fecha)=? and anticipo is true)) "+
                             "  and c.formaDePago = ?",
-                    [corte.sucursal,corte.fecha, corte.formaDePago])[0]?:00
+                    [corte.sucursal,corte.fecha,corte.fecha, corte.formaDePago])[0]?:00
             return pagosRegistrados
         }
 

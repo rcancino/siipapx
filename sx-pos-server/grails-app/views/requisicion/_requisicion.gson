@@ -1,5 +1,3 @@
-import sx.tesoreria.Requisicion
-
 model {
     Requisicion requisicion
 }

@@ -7,7 +7,7 @@ import sx.core.Producto
 import sx.core.Proveedor
 import sx.core.Sucursal
 import sx.core.Vendedor
-import sx.cxp.CuentaPorPagar
+
 import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 

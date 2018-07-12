@@ -2,7 +2,6 @@ package sx.compras
 
 import sx.core.Proveedor
 import sx.core.Sucursal
-import sx.cxp.NotaCxP
 
 class DevolucionDeCompra {
 
@@ -13,7 +12,7 @@ class DevolucionDeCompra {
 
     Proveedor proveedor
 
-    NotaCxP notaCxp
+    String notaCxp_id
 
     Long	documento = 0
 
@@ -45,7 +44,7 @@ class DevolucionDeCompra {
 
     static constraints = {
 
-        notaCxp nullable: true
+        notaCxp_id nullable: true
         referencia nullable: true
         fechaReferencia nullable: true
         comentario nullable: true

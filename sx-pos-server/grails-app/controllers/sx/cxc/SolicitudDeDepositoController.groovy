@@ -44,10 +44,13 @@ class SolicitudDeDepositoController extends RestfulController{
         }
 
         if(params.documento) {
-            query = SolicitudDeDeposito.where {folio == params.documento}
+            if(params.documento.isNumber()){
+                query = SolicitudDeDeposito.where {folio == params.documento}
+            }else{
+                query = SolicitudDeDeposito.where {createUser =~ params.documento  && fecha >= fechaInicial}
+            }
         }
 
-        
         return query.list(params)
     }
 

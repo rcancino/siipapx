@@ -32,6 +32,8 @@ class MovimientoDeAlmacen {
 
     Date fechaInventario
 
+    Date cancelado
+
     static hasMany = [partidas:MovimientoDeAlmacenDet]
 
     static constraints = {
@@ -42,6 +44,7 @@ class MovimientoDeAlmacen {
         createUser nullable: true
         updateUser nullable: true
         fechaInventario nullable: true
+        cancelado nullable: true
     }
 
     static mapping = {
