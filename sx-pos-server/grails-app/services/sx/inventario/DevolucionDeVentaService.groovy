@@ -23,7 +23,7 @@ class DevolucionDeVentaService {
             def descuentoImporte = subtotal * descuento
             def importe = MonedaUtils.round(subtotal - descuentoImporte)
             importeNeto = importeNeto + importe
-            // println "Importe en ventaDet ${it.ventaDet.subtotal} En rmd: ${importe}"
+           //  println "Importe en ventaDet ${it.ventaDet.subtotal} En rmd: ${importe}"
         }
         rmd.importe = importeNeto
         rmd.impuesto = MonedaUtils.calcularImpuesto(importeNeto)
