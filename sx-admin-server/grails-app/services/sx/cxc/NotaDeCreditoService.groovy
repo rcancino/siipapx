@@ -141,6 +141,10 @@ class NotaDeCreditoService {
         String serie = "DEV${nota.tipoCartera.toUpperCase()}"
         nota.serie = serie
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', serie)
+        nota.comentario = "RMD:${rmd.documento} ${rmd.venta.cuentaPorCobrar.tipo} " +
+                "F-${rmd.venta.cuentaPorCobrar.documento} " +
+                "(${rmd.venta.cuentaPorCobrar.fecha.format('dd/MM/yyyy')}) " +
+                "${rmd.sucursal.nombre}"
         if (nota.tipoCartera == 'CRE'){
             log.debug('Generando cobro para nota de devoluion tipo {}', nota.tipoCartera)
             Cobro cobro = generarCobro(nota)

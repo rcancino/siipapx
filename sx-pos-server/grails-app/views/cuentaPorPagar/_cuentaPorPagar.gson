@@ -1,5 +1,3 @@
-import sx.cxp.CuentaPorPagar
-
 model {
     CuentaPorPagar cuentaPorPagar
 }
