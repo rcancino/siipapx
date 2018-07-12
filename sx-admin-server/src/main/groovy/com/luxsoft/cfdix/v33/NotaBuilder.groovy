@@ -152,9 +152,11 @@ class NotaBuilder {
 
     def buildConceptosDevolucion(){
         /** Conceptos ***/
+
         this.totalImpuestosTrasladados = 0.0
         Comprobante.Conceptos conceptos = factory.createComprobanteConceptos()
         this.rmd.partidas.each { DevolucionDeVentaDet item ->
+            log.info('RmdDet: {}', item.id)
             VentaDet det = item.ventaDet
             Comprobante.Conceptos.Concepto concepto = factory.createComprobanteConceptosConcepto()
             def factor = det.producto.unidad == 'MIL' ? 1000 : 1
@@ -169,7 +171,7 @@ class NotaBuilder {
 
             def impuesto = subTot * MonedaUtils.IVA
             impuesto = MonedaUtils.round(impuesto)
-
+            log.debug("Importe: {}, Descuento: {} SubTotal: {}", importe, descuento, importe)
             // this.descuentoAcumulado = this.descuentoAcumulado + descuento
             if (descuento)
                 concepto.descuento = descuento
