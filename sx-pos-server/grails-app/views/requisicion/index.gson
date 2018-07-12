@@ -1,6 +1,0 @@
-model {
-    Iterable<Requisicion> requisicionList
-}
-
-json tmpl.requisicion(requisicionList ?: [])
-
