@@ -116,6 +116,7 @@ class NotaDeCargoPdfGenerator {
             params['RelacionUUID'] = relacionados
             params['COMENTARIOS'] = nota.comentario
         }
+        params['COMENTARIOS'] = nota.comentario
         return params;
     }
 }
