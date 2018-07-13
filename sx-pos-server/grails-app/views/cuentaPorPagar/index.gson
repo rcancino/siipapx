@@ -1,9 +1,0 @@
-model {
-    Iterable<CuentaPorPagar> cuentaPorPagarList
-}
-
-json tmpl.cuentaPorPagar(cuentaPorPagarList ?: [])
-//json g.render(template:"cuentaForList", collection: cuentaContableList, var:'cuentaContable')
-
-
-

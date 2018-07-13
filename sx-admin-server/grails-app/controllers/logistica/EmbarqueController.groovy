@@ -292,7 +292,7 @@ class EmbarqueController extends RestfulController {
             asignado == null || (asignado != null && parcial == true)
         }
          q.list().each{
-             if(it.venta.kilos!= Envio.findAllByOrigen(it.venta.id).sum(it.kilos){
+             if(it.venta.kilos!= Envio.findAllByOrigen(it.venta.id).sum(it.kilos)) {
                  list.add(it)
              }
          }
