@@ -788,8 +788,8 @@ $P{MONEDA}.equals( "MXN" ) ? $F{apagar}.multiply( new BigDecimal($F{tipo_de_camb
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica" size="8" isBold="false"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{moneda}.equals( "MXN" ) ? $F{documento_total}.multiply( new BigDecimal($F{tipo_de_cambio}.doubleValue()) ) : 
-$P{MONEDA}.equals( "MXN" ) ? $F{documento_total}.multiply( new BigDecimal($F{tipo_de_cambio}.doubleValue()) ) : $F{documento_total}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{moneda}.equals( "MXN" ) ? $F{total}.multiply( new BigDecimal($F{tipo_de_cambio}.doubleValue()) ) : 
+$P{MONEDA}.equals( "MXN" ) ? $F{total}.multiply( new BigDecimal($F{tipo_de_cambio}.doubleValue()) ) : $F{total}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
