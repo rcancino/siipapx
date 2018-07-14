@@ -164,10 +164,16 @@ class UrlMappings {
         "/api/existencias"(resources: "existencia")
         "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
 
+        //Bonificaciones mejores clientes
+        "/api/crm/bonoficacionesmc"(resources: "bonificacionMC"){
+            "/aplicaciones"(resources: 'bonificacionMCAplicacion', excludes:['create', 'edit','patch'])
+        }
+
         // Security
         "/api/security/users"(resources: "user")
         "/api/security/roles"(resources: "role")
         "/api/security/users/findByNip"( controller:'user', action: 'findByNip', method: 'GET')
+
 
         "/"(controller: 'application', action:'index')
         "500"(view: '/error')
