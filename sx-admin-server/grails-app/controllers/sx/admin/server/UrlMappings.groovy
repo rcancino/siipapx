@@ -165,9 +165,10 @@ class UrlMappings {
         "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
 
         //Bonificaciones mejores clientes
-        "/api/crm/bonoficacionesmc"(resources: "bonificacionMC"){
+        "/api/crm/mejoresClientes"(resources: "bonificacionMC"){
             "/aplicaciones"(resources: 'bonificacionMCAplicacion', excludes:['create', 'edit','patch'])
         }
+        "/api/crm/mejoresClientes/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'list')
 
         // Security
         "/api/security/users"(resources: "user")

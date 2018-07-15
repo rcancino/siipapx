@@ -9,4 +9,8 @@ class BonificacionMCController extends RestfulController<BonificacionMC> {
     BonificacionMCController() {
         super(BonificacionMC)
     }
+
+    def list(Integer ejercicio, Integer mes){
+        respond BonificacionMC.where{ejercicio == ejercicio && mes == mes}.list()
+    }
 }
