@@ -4,4 +4,6 @@ model {
 	BonificacionMC bonificacionMC
 }
 
-json g.render(bonificacionMC, [resolveTemplate: false])
+json g.render(bonificacionMC, [resolveTemplate: false]){
+	disponible bonificacionMC.getDisponible()
+}

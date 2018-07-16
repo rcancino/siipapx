@@ -34,6 +34,8 @@ class BonificacionMC {
 
     BigDecimal disponible
 
+    BigDecimal ajuste = 0.0
+
     Integer vigenciaDias = 90
 
     Date vencimiento
@@ -46,6 +48,10 @@ class BonificacionMC {
 
     Date ultimaAplicacion
 
+    Date autorizado
+
+    int posicion
+
     Date dateCreated
     Date lastUpdated
 
@@ -54,6 +60,8 @@ class BonificacionMC {
         suspendido nullable: true
         suspendidoComentario nullable: true
         ultimaAplicacion nullable: true
+        vencimiento nullable: true
+        autorizado nullable: true
     }
 
     static mapping = {
@@ -63,7 +71,12 @@ class BonificacionMC {
         suspendido type:'date'
         ultimaAplicacion type:'date'
         ultimaVenta type: 'date'
+        autorizado type: 'date'
     }
 
     static transients = ['disponible']
+
+    def getDisponible() {
+        return this.importe - this.aplicado - this.ajuste
+    }
 }
