@@ -168,8 +168,12 @@ class UrlMappings {
         "/api/crm/mejoresClientes"(resources: "bonificacionMC"){
             "/aplicaciones"(resources: 'bonificacionMCAplicacion', excludes:['create', 'edit','patch'])
         }
-        "/api/crm/mejoresClientes/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'list')
-        "/api/crm/mejoresClientes/generar/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'generar')
+        "/api/bonificacionesMC/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'list')
+        "/api/bonificacionesMC/generar/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'generar')
+        "/api/bonificacionesMC/autorizar/$id"(controller: 'bonificacionMC', action: 'autorizar')
+        "/api/bonificacionesMC/autorizarBatch/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'autorizarBatch')
+        "/api/bonificacionesMC/suspender/$id"(controller: 'bonificacionMC', action: 'suspender')
+        "/api/bonificacionesMC/print"(controller: 'bonificacionMC', action: 'print', method: 'GET')
 
         // Security
         "/api/security/users"(resources: "user")
