@@ -53,6 +53,7 @@ where ejercicio=$P{EJERCICIO} and mes=$P{MES}]]></queryString>
 	<field name="ajuste" class="java.math.BigDecimal"/>
 	<field name="suspendido_comentario" class="java.lang.String"/>
 
+	<sortField name="suspendido" order="Descending" />
 	<sortField name="ventas" order="Descending" />
 
 	<variable name="CONTAR" class="java.lang.Integer" resetType="Report" calculation="DistinctCount">
