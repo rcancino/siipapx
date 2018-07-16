@@ -1,27 +1,29 @@
 package sx.crm
 
+import com.luxsoft.utils.MonedaUtils
 import grails.gorm.transactions.Transactional
+import grails.transaction.NotTransactional
 import groovy.sql.Sql
 import org.apache.commons.lang.exception.ExceptionUtils
+import sx.core.Cliente
 
 import javax.sql.DataSource
 import java.sql.SQLException
 
-@Transactional
+// @Transactional
 class BonificacionMCService {
 
     DataSource dataSource
 
     String SQL ="""
             SELECT 
-        X.cliente_id
-        ,X.clave
+        X.cliente_id as clienteId
         ,X.nombre
-        ,(X.neto) as neto
-        ,(X.KILOS) as kilos
-        ,x.ult_vta
-        ,x.facs
-        ,x.suc
+        ,(X.neto) as ventas
+        ,(X.KILOS) as ventasKilos
+        ,x.ult_vta as ultimaVenta
+        ,x.facs as facturas
+        ,x.suc as sucursal
         FROM (
         select a.cliente_id 
         ,(SELECT x.clave FROM cliente x where x.ID=a.CLIENTE_ID) as clave
@@ -33,24 +35,34 @@ class BonificacionMCService {
         ,A.tipo
         ,(SELECT s.nombre FROM sucursal s where s.ID=a.sucursal_id) as suc 
         from cuenta_por_cobrar a  join venta v on(v.cuenta_por_cobrar_id=a.id)
-        where a.fecha between '2018-04-01' and '2018-04-30' AND A.TIPO IN('CON','COD')
+        where YEAR(a.fecha) = ? and MONTH(a.fecha) = ? AND A.TIPO IN('CON','COD')
         and a.cliente_id not in('402880fc5e4ec411015e4ec8fbbb045c','402880fc5e4ec411015e4ec9349204ae','402880fc5e4ec411015e4ecc5dfc0554')
         group by A.CLIENTE_ID
         order by a.cliente_id,a.fecha desc
         ) AS X
         group by X.cliente_id
         order by sum(X.neto) desc
-        limit 200
+        limit 200 
 
     """
-
+    @NotTransactional
     def generar(Integer ejercicio, Integer mes) {
         def found = BonificacionMC.where{ ejercicio == ejercicio && mes == mes}.find()
         if(!found) {
-            def rows = getRows(SQL, [])
+            def rows = getRows(SQL, [ejercicio, mes])
             rows.each { row ->
                 BonificacionMC bono = new BonificacionMC()
-                bono.properties == row
+                Cliente cliente = Cliente.get(row.clienteId)
+                bono.cliente = cliente
+                bono.nombre = cliente.nombre
+                bono.ejercicio = ejercicio
+                bono.mes = mes
+                bono.fecha = new Date()
+                bono.properties = row
+                bono.bono = 0.01
+                BigDecimal importe = bono.ventas * bono.bono
+                bono.importe = MonedaUtils.round(importe, 0)
+                bono.save failOnError:true, flush:true
             }
             return rows
         } else {

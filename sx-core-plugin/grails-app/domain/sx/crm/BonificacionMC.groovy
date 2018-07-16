@@ -10,15 +10,29 @@ class BonificacionMC {
 
     String id
 
-    Cliente cliente
-
-    String nombre
-
     Integer ejercicio
 
     Integer mes
 
+    Cliente cliente
+
+    String nombre
+
     Date fecha
+
+    BigDecimal ventas
+
+    BigDecimal ventasKilos
+
+    BigDecimal facturas
+
+    BigDecimal bono = 0.0
+
+    BigDecimal importe = 0.0
+
+    BigDecimal aplicado = 0.0
+
+    BigDecimal disponible
 
     Integer vigenciaDias = 90
 
@@ -28,20 +42,18 @@ class BonificacionMC {
 
     String suspendidoComentario
 
-    BigDecimal importe
+    Date ultimaVenta
 
-    BigDecimal aplicado
-
-    BigDecimal disponible
-
-    Date ultimoMovimiento
+    Date ultimaAplicacion
 
     Date dateCreated
     Date lastUpdated
 
     static constraints = {
         vencimiento nullable: true
-        suspendidoComentario nullbale: true
+        suspendido nullable: true
+        suspendidoComentario nullable: true
+        ultimaAplicacion nullable: true
     }
 
     static mapping = {
@@ -49,7 +61,8 @@ class BonificacionMC {
         fecha type:'date'
         vencimiento type:'date'
         suspendido type:'date'
-        ultimoMovimiento type:'date'
+        ultimaAplicacion type:'date'
+        ultimaVenta type: 'date'
     }
 
     static transients = ['disponible']
