@@ -132,6 +132,7 @@ class UrlMappings {
         "/api/cuentasPorCobrar/antiguedad/clientesSuspendidosCre"(controller: 'cuentaPorCobrar', action: 'clientesSuspendidosCre', method: 'GET')
         "/api/cuentasPorCobrar/antiguedad/facturasConNotaDevolucion"(controller: 'cuentaPorCobrar', action: 'facturasConNotaDevolucion', method: 'GET')
         "/api/cuentasPorCobrar/antiguedad/reporteExceptionesDescuentos"(controller: 'cuentaPorCobrar', action: 'reporteExceptionesDescuentos', method: 'GET')
+        "/api/cuentasPorCobrar/generarPagare"(controller: 'cuentaPorCobrar', action: 'generarPagare', method: 'GET')
 
 
         "/api/cuentasPorCobrar/pendientes/$id"(controller: 'cuentaPorCobrar', action: 'pendientes', method: 'GET')

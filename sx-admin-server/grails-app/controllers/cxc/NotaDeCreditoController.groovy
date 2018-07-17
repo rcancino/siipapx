@@ -81,7 +81,7 @@ class NotaDeCreditoController extends RestfulController{
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
-        def query = DevolucionDeVenta.where{ }
+        def query = DevolucionDeVenta.where{ cancelado == null}
 
         if (params.cartera != null) {
 
@@ -117,7 +117,7 @@ class NotaDeCreditoController extends RestfulController{
     def buscarRmdsPendientesContado(params){
         log.debug('Buscando RMDs de contado pendientes {}', params)
         def hql = " from DevolucionDeVenta d where d.venta.tipo != 'CRE' " +
-                "and d.cobro not in (select n.cobro from NotaDeCredito n where n.tipo = d.venta.tipo)"
+                "and d.cobro not in (select n.cobro from NotaDeCredito n )"
         if(params.term) {
             if(params.term.isInteger()) {
                 Long documento = params.getLong('term')
@@ -138,7 +138,12 @@ class NotaDeCreditoController extends RestfulController{
             return pendientes
         }
         */
-        def pendientes = DevolucionDeVenta.findAll(hql)
+        List pendientes = DevolucionDeVenta.findAll(hql)
+        def hql2 = " from DevolucionDeVenta d where d.venta.tipo != 'CRE' and d.cancelado is null " +
+                " and d.cobro in (select n.cobro from NotaDeCredito n where n.cfdi is null)"
+
+        def sinTimbrar = DevolucionDeVenta.findAll(hql2)
+        pendientes.addAll(sinTimbrar)
         return pendientes
 
     }
