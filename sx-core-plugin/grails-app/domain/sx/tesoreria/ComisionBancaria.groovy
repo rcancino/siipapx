@@ -2,7 +2,6 @@ package sx.tesoreria
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import sx.cxp.CuentaPorPagar
 
 @EqualsAndHashCode(includes='id')
 @ToString( excludes = "version, lastUpdated, dateCreated, cxc",includeNames=true,includePackage=false)
@@ -24,7 +23,7 @@ class ComisionBancaria {
 
     String referenciaBancaria
 
-    CuentaPorPagar cxp
+    String cxp
 
     Set<MovimientoDeCuenta> movimientos
 
