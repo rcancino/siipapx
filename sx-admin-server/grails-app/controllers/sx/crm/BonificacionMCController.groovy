@@ -28,8 +28,6 @@ class BonificacionMCController extends RestfulController<BonificacionMC> {
     }
 
     def suspender(BonificacionMC bonificacionMC) {
-        log.info('Suspender: {}', bonificacionMC)
-        log.info('Suspender: {}', params)
         String comentario = params.comentario
         respond bonificacionMCService.suspender(bonificacionMC, comentario)
     }

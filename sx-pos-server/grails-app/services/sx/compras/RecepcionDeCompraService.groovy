@@ -43,7 +43,7 @@ class RecepcionDeCompraService {
 
         def res = this.save(com, username)
 
-        afectarInventario(res)
+       // afectarInventario(res)
 
 
         return res
