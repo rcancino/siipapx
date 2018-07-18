@@ -59,11 +59,7 @@ trait SW2Lookup {
         return found
     }
 
-    CuentaPorPagar buscarCuentaPorPagar(def siipapId){
-        def found = CuentaPorPagar.where {sw2 == siipapId}.find()
-        assert found, "No existe la cuenta por pagar con ID en SW2 de: $siipapId, es probable que nose ha importado"
-        return found
-    }
+
 
     Banco buscarBanco(def siipapId){
         def found = Banco.where{sw2==siipapId}.find()

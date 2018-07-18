@@ -181,8 +181,8 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
 
         CuentaPorCobrar cxc = CuentaPorCobrar.get(params.id)
-        Map repParams = [id: params.id]
-        repParams.TELEFONOS = "Tels: ${cxc.cliente.telefonos.join(',')}"
+        Map repParams = [ID: params.id]
+        repParams.TELEFONOS = "Tels: " + cxc.cliente.telefonos.join(', ')
         repParams.IMPORTE_LETRA = ImporteALetra.aLetra(cxc.total)
         def pdf = reportService.run('Pagare.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pagare.pdf')
