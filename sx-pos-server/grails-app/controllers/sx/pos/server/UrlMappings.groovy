@@ -130,6 +130,9 @@ class UrlMappings {
         "/api/cxc/cobro/cambioDeCheque"(controller: 'cobro', action: 'cambioDeCheque')
         "/api/cxc/cobro/ventasFacturables"(controller: 'cobro', action: 'ventasFacturables', method: 'GET')
         "/api/cxc/cobro/buscarDisponibles/$id"(controller: 'cobro', action: 'buscarDisponibles')
+        "/api/cxc/cobro/buscarBonificacionesMC/$id"(controller: 'cobro', action: 'buscarBonificacionesMC')
+        "/api/cxc/cobro/generarDisponiblesMC/$id"(controller: 'cobro', action: 'generarDisponiblesMC')
+
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/buscarVenta/$id"(controller: 'cuentaPorCobrar', action: 'buscarVenta', method: 'GET')

@@ -5,9 +5,11 @@ import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 
 import groovy.transform.ToString
-
+import sx.core.AppConfig
 import sx.core.Venta
 import sx.core.VentaService
+import sx.crm.BonificacionMC
+import sx.crm.BonificacionMCAplicacion
 import sx.reportes.PorFechaCommand
 import sx.reports.ReportService
 import sx.tesoreria.Banco
@@ -22,6 +24,8 @@ class CobroController extends RestfulController{
     VentaService ventaService
 
     ReportService reportService
+
+    CajaBonificacionMCService cajaBonificacionMCService
 
     static responseFormats = ['json']
 
@@ -140,6 +144,25 @@ class CobroController extends RestfulController{
             return true
         }
         respond cobros
+    }
+
+    def buscarBonificacionesMC(Cliente cliente) {
+        Date fecha = new Date() // Date.parse('dd/MM/yyyy','15/10/2018')
+
+        def rows = BonificacionMC.findAll(
+                'from BonificacionMC b ' +
+                        ' where b.cliente = ? ' +
+                        ' and (b.importe - b.aplicado -b.ajuste) > 0 ' +
+                        ' and date(b.vencimiento) >= ? ',
+                [cliente, fecha])
+        // def disponible = rows.sum 0.0, {it.disponible}
+        respond rows
+    }
+
+    def generarDisponiblesMC(Cliente cliente) {
+        BigDecimal porAplicar = params.importe as BigDecimal
+        respond cajaBonificacionMCService.generarDisponibles(cliente, porAplicar)
+
     }
 
     def reporteDeAarqueoCaja(PorFechaCommand command) {
