@@ -165,7 +165,7 @@ class NotaDeCreditoService {
 
     def generarCfdi(NotaDeCredito nota) {
         Comprobante comprobante = this.notaBuilder.build(nota);
-        Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'E')
+        Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'E', 'NOTA_CREDITO')
         nota.cfdi = cfdi
         nota.save flush: true
         return nota

@@ -31,7 +31,7 @@ class CfdiService {
 
     def grailsApplication
 
-    Cfdi generarCfdi(Comprobante comprobante, String tipo) {
+    Cfdi generarCfdi(Comprobante comprobante, String tipo, String origen = 'VENTA') {
         Cfdi cfdi = new Cfdi()
         cfdi.tipoDeComprobante = tipo
         cfdi.fecha = Date.parse( "yyyy-MM-dd'T'HH:mm:ss", comprobante.fecha,)
@@ -42,6 +42,7 @@ class CfdiService {
         cfdi.receptor = comprobante.receptor.nombre
         cfdi.receptorRfc = comprobante.receptor.rfc
         cfdi.total = comprobante.total
+        cfdi.origen = origen
         cfdi.fileName = getFileName(cfdi)
         // cfdi.url = "${getDirPath(cfdi)}/${getFileName(cfdi)}"
         try {

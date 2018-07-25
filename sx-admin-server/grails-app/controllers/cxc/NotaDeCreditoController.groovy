@@ -149,19 +149,29 @@ class NotaDeCreditoController extends RestfulController{
     }
 
     def buscarFacturasPendientes() {
-        log.debug('Buscando facturas {}', params)
+
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
         def cartera = params.cartera ?: 'CRE'
+
         def cliente = params.cliente
         def facturas = [];
         if(params.term) {
             if(params.term.isInteger()) {
-                facturas = CuentaPorCobrar.findAll(
+                if(cartera == 'CON') {
+                    facturas = CuentaPorCobrar.findAll(
+                            "from CuentaPorCobrar c where c.cliente.id = ? and c.tipo in ('COD' , 'CON') and c.documento = ? " +
+                                    " and c.tipoDocumento != 'NOTA_DE_CARGO'",
+                            [cliente, params.term.toLong()],params)
+                } else {
+                    facturas = CuentaPorCobrar.findAll(
                         "from CuentaPorCobrar c where c.cliente.id = ? and c.tipo = ? and c.documento = ? " +
                                 " and c.tipoDocumento != 'NOTA_DE_CARGO'",
                         [cliente,cartera, params.term.toLong()],params)
+
+                }
+
             }
         } else {
             facturas = CuentaPorCobrar.findAll(

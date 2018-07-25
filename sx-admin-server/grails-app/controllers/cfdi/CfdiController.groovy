@@ -1,5 +1,6 @@
 package sx.cfdi
 
+import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.cfdix.v33.NotaPdfGenerator
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.annotation.Secured
@@ -11,6 +12,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.core.Cliente
 import sx.core.Venta
 import sx.cxc.CuentaPorCobrar
+import sx.cxc.NotaDeCargo
 import sx.cxc.NotaDeCredito
 import sx.reports.ReportService
 
@@ -66,12 +68,13 @@ class CfdiController extends RestfulController{
     }
 
     private generarImpresionV33( Cfdi cfdi) {
-        if (cfdi.tipoDeComprobante == 'I'){
+        if (cfdi.origen == 'VENTA'){
             return generarPdfFactura()
+        } else if(cfdi.origen == 'NOTA_CARGO'){
+            return generarPdfNotaDeCargo(cfdi)
         } else {
             return generarPdfNota(cfdi)
         }
-
     }
 
     private generarPdfFactura(Cfdi cfdi){
@@ -88,6 +91,15 @@ class CfdiController extends RestfulController{
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         NotaDeCredito nota = NotaDeCredito.where{cfdi == cfdi}.find()
         def data = NotaPdfGenerator.getReportData(nota)
+        Map parametros = data['PARAMETROS']
+        parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        return reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+    }
+
+    private generarPdfNotaDeCargo( Cfdi cfdi) {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        NotaDeCargo cargo = NotaDeCargo.where{cfdi == cfdi}.find()
+        def data = NotaDeCargoPdfGenerator.getReportData(cargo)
         Map parametros = data['PARAMETROS']
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
         return reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])

@@ -82,20 +82,21 @@ class VentaPorFacturistaIntegration implements Integracion{
         }
     }
 
-    def actualizar(Date fecha) {
+    def actualizar(Date fecha, boolean prune = true) {
         log.info("Actualizando ventas por facturista ${fecha.format('dd/MM/yyyy')}")
-        List<Sucursal> sucursales = Sucursal.where{dbUrl != null && nombre!= 'OFICINAS'}.list()
+        if(prune) {
+            deleteRecords(fecha)
+        }
+        List<Sucursal> sucursales = Sucursal.where{activa == true && dbUrl!= null && nombre!= 'OFICINAS'}.list()
         sucursales.each { suc ->
             actualizar(suc, fecha)
         }
         log.info("Ventas por facturista actualizadas para el ${fecha.format('dd/MM/yyyy')}")
     }
 
-    def actualizar(Sucursal sucursal, Date fecha, boolean prune = false) {
+    def actualizar(Sucursal sucursal, Date fecha) {
         try {
-            if(prune) {
-                deleteRecords(sucursal, fecha)
-            }
+
             def rows = readVentas(sucursal, fecha)
             rows.each { row ->
                 VentaPorFacturista vta = new VentaPorFacturista()
@@ -105,12 +106,13 @@ class VentaPorFacturistaIntegration implements Integracion{
             }
         }catch (Exception e){
             def message = ExceptionUtils.getRootCauseMessage(e)
-            log.error(message)
+            log.error('Error integrando ventas por facturista de la sucursal {} Msg: {}', sucursal.nombre, message)
         }
     }
 
-    def deleteRecords(Sucursal sucursal, Date fecha) {
-        VentaPorFacturista.executeUpdate("delete VentaPorFacturista v where date(v)=? and sucursal = ?",[fecha, sucursal])
+    def deleteRecords(Date fecha) {
+        def res = VentaPorFacturista.executeUpdate("delete VentaPorFacturista v where date(v.fecha)=?",[fecha])
+        log.info('{} registros eliminando para {}', res, fecha.format('dd/MM/yyyy'))
     }
 
     def insertVentas(List rows) {

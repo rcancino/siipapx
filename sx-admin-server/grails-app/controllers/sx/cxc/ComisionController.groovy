@@ -29,7 +29,7 @@ class ComisionController extends RestfulController<Comision>{
     }
 
     def generarComisiones(GenerarComisionesCommand command) {
-        List res = comisionService.generarComisionesCobrador(command.fechaInicial, command.fechaFinal)
+        List res = comisionService.generarComisionesCobrador(command.tipo, command.fechaInicial, command.fechaFinal)
         respond res
 
     }
