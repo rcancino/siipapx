@@ -154,3 +154,7 @@ grails:
     cors:
         enabled: true
 ---
+environments:
+    certificacion:
+        server:
+            port: 9199

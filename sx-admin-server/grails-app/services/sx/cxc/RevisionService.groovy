@@ -55,7 +55,7 @@ class RevisionService {
     @Transactional
     VentaCredito generarVentaCredito(CuentaPorCobrar cxc) {
         if(cxc.credito)
-            return cxc
+            return cxc.credito
         VentaCredito credito = new VentaCredito()
         // Propiedades
         credito.diaPago = cxc.cliente.credito.diaCobro
@@ -71,7 +71,7 @@ class RevisionService {
         credito.vencimiento = vto
 
         // Se congela la fecha original de revision
-        credito.fechaRevisionCxc = getProximaRevision(vto, cxc.cliente.credito.diaRevision.intValue())
+        credito.fechaRevisionCxc = getProximaRevision(cxc.fecha, cxc.cliente.credito.diaRevision.intValue())
         credito.fechaRevision = credito.fechaRevisionCxc
 
         // Se congela la fecha orignal de pago

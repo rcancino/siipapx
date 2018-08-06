@@ -24,7 +24,7 @@
 	<import value="net.sf.jasperreports.engine.data.*" />
 
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["IMPAP, S.A. DE C.V."]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["PAPEL, S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="PROVEEDOR" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="COMENTARIO" isForPrompting="false" class="java.lang.String"/>

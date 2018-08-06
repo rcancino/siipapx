@@ -134,7 +134,7 @@ class NotaDeCargoService {
 
     def generarCfdi(NotaDeCargo nota) {
         Comprobante comprobante = this.notaDeCargoBuilder.build(nota);
-        Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'E')
+        Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'I', 'NOTA_CARGO')
         nota.cfdi = cfdi
         nota.save flush: true
         return nota

@@ -59,7 +59,7 @@ class CfdiFacturaBuilder {
         // assert empresa, 'La empresa no esta registrada...'
         buildComprobante()
                 .buildFormaDePago()
-            //.ajustarFormaDePago()
+                .ajustarFormaDePago()
                 .buildEmisor()
                 .buildReceptor()
                 .buildConceptos()
@@ -172,9 +172,10 @@ class CfdiFacturaBuilder {
     }
 
     def ajustarFormaDePago(){
+        log.info('Ajustando forma de pago en funcion de lo cobrado.....')
         if (this.venta.tipo != 'CRE' ) {
             def max  = AplicacionDeCobro
-                    .executeQuery("select a.cobro from AplicacionDeCobro a where a.cuentaPorCobrar.id = ? order by a.importe desc" ,
+                    .executeQuery("select a from AplicacionDeCobro a where a.cuentaPorCobrar.id = ? order by a.importe desc" ,
                     [venta.cuentaPorCobrar.id ])[0]
             if(max) {
                 switch (max.cobro.formaDePago) {
@@ -205,6 +206,7 @@ class CfdiFacturaBuilder {
             }
 
         }
+        return this;
     }
 
     def buildConceptos(){

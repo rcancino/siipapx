@@ -37,9 +37,8 @@
 ,c.clave,c.cliente,c.documento_tipo,c.documento,c.fecha_cobro,c.pago_comisionable,c.comision,c.comision_importe
 from comision c 
 WHERE c.tipo=$P{TIPO} AND c.clave LIKE $P{COMISIONISTA} AND c.fecha_ini=$P{FECHA_INI} AND c.fecha_fin=$P{FECHA_FIN}
-ORDER BY c.tipo,c.clave,c.documento
-limit 1000
-]]></queryString>
+ORDER BY c.tipo,c.clave,c.cliente,c.documento
+limit 1000]]></queryString>
 
 	<field name="tipo" class="java.lang.String"/>
 	<field name="clave" class="java.lang.String"/>

@@ -140,7 +140,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 		<variableExpression><![CDATA[( $F{TIPO} .equals( "BONIFICACION" ) ? $F{COBRADO} : BigDecimal.ZERO )]]></variableExpression>
 	</variable>
 	<variable name="TOTAL_NODEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
-		<variableExpression><![CDATA[$V{TOT_SAF}.subtract( $V{TOT_DEVOL} ).add($V{TOTALDIFERENCIAG} ).add( $V{TOT_ANT} ).add($V{TOT_ESP} ).add($V{TOT_BONIF})]]></variableExpression>
+		<variableExpression><![CDATA[$V{TOT_SAF}.add( $V{TOT_DEVOL} ).add($V{TOTALDIFERENCIAG} ).add( $V{TOT_ANT} ).add($V{TOT_ESP} ).add($V{TOT_BONIF})]]></variableExpression>
 	</variable>
 	<variable name="TOT_DEPOSITABLE" class="java.math.BigDecimal" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[$V{TOT_EFEC}

@@ -1,5 +1,6 @@
 package sx.cxc
 
+import com.luxsoft.utils.ImporteALetra
 import com.luxsoft.utils.Periodo
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
@@ -173,6 +174,18 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def pdf = reportService.run('ExcepcionesEnDescuento.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'FacsCancPorNotaDev.pdf')
+    }
+
+
+    def generarPagare() {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+
+        CuentaPorCobrar cxc = CuentaPorCobrar.get(params.id)
+        Map repParams = [ID: params.id]
+        repParams.TELEFONOS = "Tels: " + cxc.cliente.telefonos.join(', ')
+        repParams.IMPORTE_LETRA = ImporteALetra.aLetra(cxc.total)
+        def pdf = reportService.run('Pagare.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pagare.pdf')
     }
 
 

@@ -81,7 +81,7 @@ class NotaDeCreditoController extends RestfulController{
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
 
-        def query = DevolucionDeVenta.where{ }
+        def query = DevolucionDeVenta.where{ cancelado == null}
 
         if (params.cartera != null) {
 
@@ -117,7 +117,7 @@ class NotaDeCreditoController extends RestfulController{
     def buscarRmdsPendientesContado(params){
         log.debug('Buscando RMDs de contado pendientes {}', params)
         def hql = " from DevolucionDeVenta d where d.venta.tipo != 'CRE' " +
-                "and d.cobro not in (select n.cobro from NotaDeCredito n where n.tipo = d.venta.tipo)"
+                "and d.cobro not in (select n.cobro from NotaDeCredito n )"
         if(params.term) {
             if(params.term.isInteger()) {
                 Long documento = params.getLong('term')
@@ -138,25 +138,40 @@ class NotaDeCreditoController extends RestfulController{
             return pendientes
         }
         */
-        def pendientes = DevolucionDeVenta.findAll(hql)
+        List pendientes = DevolucionDeVenta.findAll(hql)
+        def hql2 = " from DevolucionDeVenta d where d.venta.tipo != 'CRE' and d.cancelado is null " +
+                " and d.cobro in (select n.cobro from NotaDeCredito n where n.cfdi is null)"
+
+        def sinTimbrar = DevolucionDeVenta.findAll(hql2)
+        pendientes.addAll(sinTimbrar)
         return pendientes
 
     }
 
     def buscarFacturasPendientes() {
-        log.debug('Buscando facturas {}', params)
+
         params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'asc'
         def cartera = params.cartera ?: 'CRE'
+
         def cliente = params.cliente
         def facturas = [];
         if(params.term) {
             if(params.term.isInteger()) {
-                facturas = CuentaPorCobrar.findAll(
+                if(cartera == 'CON') {
+                    facturas = CuentaPorCobrar.findAll(
+                            "from CuentaPorCobrar c where c.cliente.id = ? and c.tipo in ('COD' , 'CON') and c.documento = ? " +
+                                    " and c.tipoDocumento != 'NOTA_DE_CARGO'",
+                            [cliente, params.term.toLong()],params)
+                } else {
+                    facturas = CuentaPorCobrar.findAll(
                         "from CuentaPorCobrar c where c.cliente.id = ? and c.tipo = ? and c.documento = ? " +
                                 " and c.tipoDocumento != 'NOTA_DE_CARGO'",
                         [cliente,cartera, params.term.toLong()],params)
+
+                }
+
             }
         } else {
             facturas = CuentaPorCobrar.findAll(

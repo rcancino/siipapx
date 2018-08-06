@@ -35,6 +35,9 @@ class BonificacionMCAplicacion {
 
     static constraints = {
         uuid nullable: true
+        notaFolio nullable: true
+        notaSerie nullable: true
+        notaFecha nullable: true
         createUser nullable: true
         updateUser nullable: true
     }
