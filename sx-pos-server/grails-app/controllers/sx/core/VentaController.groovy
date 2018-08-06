@@ -160,15 +160,24 @@ class VentaController extends RestfulController{
             periodo.properties = params
             query = query.where{ fecha >= periodo.fechaInicial && fecha<= periodo.fechaFinal}
         }
-
-        if(params.term) {
-            def search = '%' + params.term + '%'
-            if(params.term.isInteger()) {
-                query = query.where{documento == params.term.toInteger()}
-            } else {
-                query = query.where { nombre =~ search || createUser =~ search }
+        try{
+            if(params.term) {
+                def search = '%' + params.term + '%'
+                //
+                if(params.term.isNumber() ) {
+                    if(params.term.isInteger() ) {
+                        query = query.where{documento == params.term.toInteger()}
+                    }else{
+                       query = query.where{total == new BigDecimal(params.term)} 
+                    }
+                } else {
+                    query = query.where { nombre =~ search || createUser =~ search }
+                }
             }
+        }catch(Exception e){
+            e.printStackTrace()
         }
+      
         respond query.list(params)
     }
 

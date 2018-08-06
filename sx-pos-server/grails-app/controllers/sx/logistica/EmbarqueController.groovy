@@ -129,15 +129,21 @@ class EmbarqueController extends RestfulController {
 
     private cargarEnvioParaVenta(DocumentSearchCommand command){
         log.debug('Preparando envio {}', command)
-        def q = CondicionDeEnvio.where{
+      /*  def q = CondicionDeEnvio.where{
             venta.sucursal == command.sucursal && 
             venta.cuentaPorCobrar.documento == command.documento &&
-            venta.fecha == command.fecha
-        }
-        q = q.where {
+            venta.cuentaPorCobrar.fecha == command.fecha
+
+             q = q.where {
             asignado == null || (asignado != null && parcial == true)
         }
-        CondicionDeEnvio res = q.find()
+        }*/
+
+        def params=[command.sucursal,command.documento,command.fecha]
+
+        def q=CondicionDeEnvio.find(" from CondicionDeEnvio c  where c.venta.sucursal=? and c.venta.cuentaPorCobrar.documento=? and c.venta.cuentaPorCobrar.fecha=? and (asignado=null or parcial=true) ",params)
+       
+        CondicionDeEnvio res = q
         if (res == null) {
             notFound()
             return
