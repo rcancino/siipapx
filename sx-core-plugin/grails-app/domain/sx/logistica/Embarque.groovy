@@ -30,6 +30,8 @@ class Embarque {
 
     List partidas = []
 
+    String empleado
+
     Date dateCreated
 
     Date lastUpdated
@@ -50,6 +52,7 @@ class Embarque {
         salida nullable: true
         createUser nullable: true
         updateUser nullable: true
+        empleado nullable:true
     }
 
     static mapping= {

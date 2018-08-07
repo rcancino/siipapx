@@ -19,12 +19,6 @@ class CobroService {
                 aplicacion.importe = importe
                 aplicacion.formaDePago = cobro.formaDePago
                 cobro.addToAplicaciones(aplicacion)
-
-                // Saldos <= 1 peso
-                def saldoNuevo = saldo - importe
-                if (saldoNuevo > 0 && saldoNuevo <= 1.0) {
-                    generarCobroDeDiferencia(cxc, saldoNuevo, cobro)
-                }
                 if(!cobro.primeraAplicacion) {
                     cobro.primeraAplicacion = aplicacion.fecha
                 }
@@ -47,6 +41,14 @@ class CobroService {
                 saldo = saldo - importe
             }
         }
+
+             // Saldos <= 1 peso
+              if(cobros[0]){
+                     if (saldo > 0 && saldo <= 1.0) {
+                    generarCobroDeDiferencia(cxc, saldo, cobros[0])
+                }
+              }
+               
         return cxc
     }
 
