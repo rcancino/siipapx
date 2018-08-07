@@ -15,6 +15,9 @@ class CompraDet {
     Compra compra
 
     Producto producto
+    String clave
+    String descripcion
+    String unidad
 
     Sucursal sucursal
 
@@ -58,6 +61,9 @@ class CompraDet {
 
     static constraints = {
         comentario nullable: true
+        clave nullable: true, maxSize: 20
+        descripcion nullable: true
+        unidad nullable: true, maxSize: 10
         depuracion nullable: true
         sw2 nullable:true
     }

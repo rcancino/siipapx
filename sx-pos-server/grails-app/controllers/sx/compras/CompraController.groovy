@@ -56,7 +56,14 @@ class CompraController extends RestfulController{
         compra.sucursal = AppConfig.first().sucursal
         compra.partidas.each { CompraDet det ->
             det.sucursal = compra.sucursal
+            det.clave = det.producto.clave
+            det.descripcion = det.producto.descripcion
+            det.unidad = det.producto.unidad
+
         }
+        compra.nombre = compra.proveedor.nombre
+        compra.rfc = compra.proveedor.rfc
+        compra.clave = compra.proveedor.clave
         return compra
     }
 

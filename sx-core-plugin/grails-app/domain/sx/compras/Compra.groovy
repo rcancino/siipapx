@@ -18,6 +18,12 @@ class Compra {
 
 	Proveedor proveedor
 
+    String nombre
+
+    String clave
+
+    String rfc
+
     Sucursal sucursal
 
 	Long folio
@@ -80,6 +86,9 @@ class Compra {
         createdBy nullable: true
         lastUpdatedBy nullable: true
         cerrada nullable: true
+        nombre nullable:true
+        clave nullable:true, maxSize: 15
+        rfc nullable:true, maxSize: 14
 
     }
 
