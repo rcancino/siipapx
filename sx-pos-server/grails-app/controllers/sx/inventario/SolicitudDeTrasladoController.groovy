@@ -53,6 +53,8 @@ class SolicitudDeTrasladoController extends  RestfulController{
 
 
     protected SolicitudDeTraslado saveResource(SolicitudDeTraslado resource) {
+
+        println resource
         def username = getPrincipal().username
         if(resource.id == null) {
             def serie = resource.sucursalSolicita.clave
@@ -61,7 +63,7 @@ class SolicitudDeTrasladoController extends  RestfulController{
             resource.partidas.each { SolicitudDeTrasladoDet it ->
                 it.comentario = resource.comentario
                 it.recibido = it.solicitado
-
+                
             }
         }
         resource.updateUser = username

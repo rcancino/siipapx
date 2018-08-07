@@ -58,6 +58,11 @@ class InventarioController extends RestfulController {
         respond inventarios:inventarios, inventarioCount:100
     }
 
+    def puestos(){
+        def ventas=VentaDet.find("from VentaDet v where v.venta.puesto is not null and v.venta.cuentaPorCobrar is null")
+        respond ventas;
+    }
+
     def printKardex(KardexCommand command) {
         log.debug('Imprimiendo kardex de: {}', command);
         log.debug('Kardex params: {}', params);

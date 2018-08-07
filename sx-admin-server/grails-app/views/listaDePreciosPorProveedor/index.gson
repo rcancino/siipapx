@@ -1,5 +1,3 @@
-import sx.compras.ListaDePreciosPorProveedor
-
 model {
     Iterable<ListaDePreciosPorProveedor> listaDePreciosPorProveedorList
 }

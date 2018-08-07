@@ -39,6 +39,8 @@ class RecepcionDeCompra {
 
     String updateUser
 
+    Date cancelado
+
     String sw2
 
     Date fechaInventario
@@ -56,6 +58,7 @@ class RecepcionDeCompra {
         createUser nullable: true
         updateUser nullable: true
         fechaInventario nullable: true
+        cancelado nullable:true
     }
 
 
