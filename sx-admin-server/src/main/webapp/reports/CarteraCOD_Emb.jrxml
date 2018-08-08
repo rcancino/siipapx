@@ -38,7 +38,7 @@
 ,CASE WHEN ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=t.cuenta_por_cobrar_id AND T.FECHA<=$P{FECHA}),0)>0 THEN '*'  ELSE '' END AS PAGO
 ,c.date_created AS fecha
 ,e.date_created as surtido,q.salida,e.arribo,e.recepcion,q.regreso
-,f.nombre as chofer
+,(case WHEN F.ID='3ba15bf0-e40e-11e7-b1f8-b4b52f67eab0' then concat('Empl: ',ifnull(q.empleado,f.nombre)) else f.nombre end) as chofer
 ,c.forma_de_pago as fpago
 ,c.update_user
 from venta v 
@@ -227,7 +227,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 					<reportElement
 						x="96"
 						y="58"
-						width="180"
+						width="171"
 						height="20"
 						key="staticText-31"/>
 					<box></box>
@@ -238,7 +238,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="330"
+						x="317"
 						y="58"
 						width="46"
 						height="20"
@@ -251,7 +251,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="397"
+						x="384"
 						y="58"
 						width="23"
 						height="20"
@@ -264,7 +264,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="376"
+						x="363"
 						y="58"
 						width="21"
 						height="20"
@@ -303,7 +303,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<staticText>
 					<reportElement
-						x="420"
+						x="407"
 						y="58"
 						width="59"
 						height="20"
@@ -316,7 +316,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="479"
+						x="466"
 						y="58"
 						width="59"
 						height="20"
@@ -329,7 +329,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="538"
+						x="525"
 						y="58"
 						width="59"
 						height="20"
@@ -342,9 +342,9 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="597"
+						x="584"
 						y="58"
-						width="56"
+						width="69"
 						height="20"
 						key="staticText-49"/>
 					<box></box>
@@ -381,9 +381,9 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<staticText>
 					<reportElement
-						x="276"
+						x="267"
 						y="58"
-						width="54"
+						width="50"
 						height="20"
 						key="staticText-52"/>
 					<box></box>
@@ -430,7 +430,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 					<reportElement
 						x="96"
 						y="2"
-						width="180"
+						width="171"
 						height="12"
 						key="textField">
 							<printWhenExpression><![CDATA[new Boolean($V{CUENTAPAG}.longValue()<=1)]]></printWhenExpression>
@@ -443,7 +443,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="330"
+						x="317"
 						y="2"
 						width="40"
 						height="12"
@@ -458,7 +458,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="397"
+						x="384"
 						y="2"
 						width="23"
 						height="12"
@@ -473,7 +473,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="376"
+						x="363"
 						y="2"
 						width="21"
 						height="12"
@@ -488,7 +488,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd-MM-yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="420"
+						x="407"
 						y="2"
 						width="59"
 						height="12"
@@ -503,7 +503,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd-MM-yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="479"
+						x="466"
 						y="2"
 						width="59"
 						height="12"
@@ -516,7 +516,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd-MM-yy HH.mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="538"
+						x="525"
 						y="2"
 						width="59"
 						height="12"
@@ -529,9 +529,9 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="597"
+						x="584"
 						y="2"
-						width="56"
+						width="69"
 						height="12"
 						key="textField-13"/>
 					<box></box>
@@ -583,9 +583,9 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="276"
+						x="267"
 						y="2"
-						width="54"
+						width="50"
 						height="12"
 						key="textField-16"/>
 					<box></box>
@@ -812,7 +812,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 			<band height="15"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="261"
+						x="248"
 						y="5"
 						width="67"
 						height="9"
@@ -825,7 +825,7 @@ AND (c.total-ifnull((select sum(t.importe)from aplicacion_de_cobro t where c.id=
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="332"
+						x="319"
 						y="5"
 						width="37"
 						height="9"

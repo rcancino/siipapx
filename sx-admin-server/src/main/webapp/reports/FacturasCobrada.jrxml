@@ -808,12 +808,12 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 			</band>
 		</pageFooter>
 		<lastPageFooter>
-			<band height="17"  isSplitAllowed="true" >
+			<band height="219"  isSplitAllowed="true" >
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
 						x="13"
-						y="2"
+						y="204"
 						width="551"
 						height="0"
 						forecolor="#666666"
@@ -825,7 +825,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<reportElement
 						mode="Opaque"
 						x="239"
-						y="4"
+						y="206"
 						width="48"
 						height="10"
 						forecolor="#666666"
@@ -845,7 +845,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<reportElement
 						mode="Transparent"
 						x="292"
-						y="4"
+						y="206"
 						width="31"
 						height="11"
 						forecolor="#666666"
@@ -865,7 +865,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<reportElement
 						mode="Opaque"
 						x="390"
-						y="4"
+						y="206"
 						width="75"
 						height="12"
 						forecolor="#666666"
@@ -885,7 +885,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<reportElement
 						mode="Transparent"
 						x="480"
-						y="4"
+						y="206"
 						width="84"
 						height="12"
 						forecolor="#666666"
@@ -905,7 +905,7 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					<reportElement
 						mode="Opaque"
 						x="14"
-						y="4"
+						y="206"
 						width="87"
 						height="11"
 						forecolor="#666666"
@@ -921,10 +921,6 @@ where o.fecha=$P{FECHA} and o.sucursal_id=$P{SUCURSAL} and e.cambio_por_efectivo
 					</textElement>
 				<text><![CDATA[SIIPAP SX-rx]]></text>
 				</staticText>
-			</band>
-		</lastPageFooter>
-		<summary>
-			<band height="200"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="409"
@@ -1918,6 +1914,10 @@ $F{DEPOSITABLE}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEP_MIX}]]></textFieldExpression>
 				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>

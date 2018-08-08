@@ -746,12 +746,12 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 			</band>
 		</pageFooter>
 		<lastPageFooter>
-			<band height="17"  isSplitAllowed="true" >
+			<band height="187"  isSplitAllowed="true" >
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
 						x="5"
-						y="2"
+						y="173"
 						width="575"
 						height="0"
 						forecolor="#666666"
@@ -763,7 +763,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="230"
-						y="4"
+						y="175"
 						width="48"
 						height="10"
 						forecolor="#666666"
@@ -783,7 +783,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Transparent"
 						x="283"
-						y="4"
+						y="175"
 						width="31"
 						height="11"
 						forecolor="#666666"
@@ -803,7 +803,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="381"
-						y="4"
+						y="175"
 						width="75"
 						height="12"
 						forecolor="#666666"
@@ -823,7 +823,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Transparent"
 						x="496"
-						y="4"
+						y="175"
 						width="81"
 						height="12"
 						forecolor="#666666"
@@ -843,7 +843,7 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					<reportElement
 						mode="Opaque"
 						x="27"
-						y="4"
+						y="175"
 						width="87"
 						height="11"
 						forecolor="#666666"
@@ -859,10 +859,6 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					</textElement>
 				<text><![CDATA[SIIPAP SX-rx]]></text>
 				</staticText>
-			</band>
-		</lastPageFooter>
-		<summary>
-			<band height="166"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="376"
@@ -1715,6 +1711,10 @@ WHERE C.TIPO='COD' AND C.sucursal_id=$P{SUCURSAL} AND A.FECHA=$P{FECHA} AND C.ti
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOT_DEP_MIX}]]></textFieldExpression>
 				</textField>
+			</band>
+		</lastPageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>
