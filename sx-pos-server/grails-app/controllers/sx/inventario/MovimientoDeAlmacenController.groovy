@@ -9,6 +9,8 @@ import sx.core.ExistenciaService
 import sx.core.Folio
 import sx.core.Inventario
 import sx.reports.ReportService
+import sx.core.VentaDet
+import com.luxsoft.utils.Periodo
 
 @Secured("ROLE_INVENTARIO_USER")
 class MovimientoDeAlmacenController extends RestfulController {
@@ -25,6 +27,7 @@ class MovimientoDeAlmacenController extends RestfulController {
 
     @Override
     protected List listAllResources(Map params) {
+
         params.sort = 'lastUpdated'
         params.order = 'desc'
         def query = MovimientoDeAlmacen.where {sucursal == AppConfig.first().sucursal}
@@ -42,6 +45,33 @@ class MovimientoDeAlmacenController extends RestfulController {
             }
         }
         return query.list(params)
+    }
+
+
+     def List puestos(params){
+        println('Buscando puestos ' + params)
+        
+        params.sort = 'lastUpdated'
+        params.order = 'desc'
+         params.max = 500
+
+        
+        def query = VentaDet.where { venta.puesto != null && venta.cuentaPorCobrar == null && producto.inventariable == true}
+        if(params.term) {
+            //def search = '%' + params.term + '%'
+            if(params.term.isInteger()) {
+                query = query.where { venta.documento == params.term.toInteger() }
+            } else {
+                query = query.where { producto.clave =~  params.term}
+            }
+        }
+        if( params.fechaInicial) {
+            Periodo periodo = new Periodo()
+            periodo.properties = params
+            query = query.where{ venta.fecha >= periodo.fechaInicial && venta.fecha<= periodo.fechaFinal}
+        }
+        respond query.list(params)
+        
     }
 
     // @Override
@@ -86,4 +116,6 @@ class MovimientoDeAlmacenController extends RestfulController {
         def pdf =  reportService.run('MovGenerico.jrxml', params)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'Pedido.pdf')
     }
+
+ 
 }

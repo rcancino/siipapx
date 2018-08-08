@@ -37,6 +37,8 @@ class MovimientoDeAlmacenController extends RestfulController {
         return query.list(params)
     }
 
+ 
+
     // @Override
     protected MovimientoDeAlmacen saveResource(MovimientoDeAlmacen resource) {
         def username = getPrincipal().username
