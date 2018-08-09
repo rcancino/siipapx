@@ -1,6 +1,0 @@
-model {
-    Iterable<ListaDePreciosPorProveedor> listaDePreciosPorProveedorList
-}
-
-json tmpl.listaDePreciosPorProveedor(listaDePreciosPorProveedorList ?: [])
-
