@@ -37,3 +37,10 @@ bootRun {
     systemProperties = System.properties
 }
 */
+
+war {
+    String env = System.getProperty('grails.env') ?: 'prod'
+    war.baseName = "sx-pos-server-${env}"
+    war.version = ''
+}
+
