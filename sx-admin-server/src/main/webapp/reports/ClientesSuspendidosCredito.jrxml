@@ -31,6 +31,7 @@
 ,SUM(v.total-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=V.ID),0)) AS SALDO
 ,MAX(V.FECHA) AS ULT_VTA,C.VENDEDOR_ID AS VEND
 ,(SELECT X.NOMBRES FROM vendedor X WHERE X.ID=C.VENDEDOR_ID ) AS VENDEDOR
+,SUM(CASE WHEN (TO_DAYS(CURRENT_DATE)-TO_DAYS(V.VENCIMIENTO))>0 THEN (V.TOTAL-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=V.ID AND B.FECHA<=CURRENT_DATE ),0)) ELSE 0 END) AS VENCIDO
 FROM CUENTA_POR_COBRAR V 
 JOIN CLIENTE_CREDITO R ON(R.CLIENTE_ID=V.CLIENTE_ID) 
 JOIN CLIENTE C ON(C.ID=R.CLIENTE_ID)
@@ -52,9 +53,10 @@ ORDER BY 7 DESC]]></queryString>
 	<field name="ULT_VTA" class="java.sql.Date"/>
 	<field name="VEND" class="java.lang.String"/>
 	<field name="VENDEDOR" class="java.lang.String"/>
+	<field name="VENCIDO" class="java.math.BigDecimal"/>
 
-	<variable name="SALDO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{SALDO}]]></variableExpression>
+	<variable name="VENCIDO" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{VENCIDO}]]></variableExpression>
 	</variable>
 	<variable name="CONTAR" class="java.lang.Integer" resetType="Report" calculation="Count">
 		<variableExpression><![CDATA[$F{CLAVE}]]></variableExpression>
@@ -187,7 +189,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="44"
+						x="64"
 						y="5"
 						width="177"
 						height="11"
@@ -206,7 +208,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="221"
+						x="241"
 						y="5"
 						width="21"
 						height="11"
@@ -225,7 +227,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="242"
+						x="262"
 						y="5"
 						width="21"
 						height="11"
@@ -244,26 +246,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="263"
-						y="5"
-						width="50"
-						height="11"
-						key="staticText-16"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[LIMITE]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="313"
+						x="283"
 						y="5"
 						width="19"
 						height="11"
@@ -282,7 +265,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="381"
+						x="351"
 						y="5"
 						width="33"
 						height="11"
@@ -301,7 +284,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="414"
+						x="384"
 						y="5"
 						width="52"
 						height="11"
@@ -315,7 +298,7 @@ ORDER BY 7 DESC]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[SALDO]]></text>
+				<text><![CDATA[VENCIDO]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
@@ -342,7 +325,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="7"
+						x="27"
 						y="5"
 						width="37"
 						height="11"
@@ -361,7 +344,7 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="332"
+						x="302"
 						y="5"
 						width="49"
 						height="11"
@@ -380,9 +363,9 @@ ORDER BY 7 DESC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="466"
+						x="436"
 						y="5"
-						width="108"
+						width="120"
 						height="11"
 						key="staticText-33"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -402,7 +385,7 @@ ORDER BY 7 DESC]]></queryString>
 			<band height="12"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="44"
+						x="64"
 						y="1"
 						width="177"
 						height="11"
@@ -419,7 +402,7 @@ ORDER BY 7 DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="221"
+						x="241"
 						y="1"
 						width="21"
 						height="11"
@@ -436,7 +419,7 @@ ORDER BY 7 DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="242"
+						x="262"
 						y="1"
 						width="21"
 						height="11"
@@ -451,26 +434,9 @@ ORDER BY 7 DESC]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{VTO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="263"
-						y="1"
-						width="50"
-						height="11"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{LIMITE}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="313"
+						x="283"
 						y="1"
 						width="19"
 						height="11"
@@ -487,7 +453,7 @@ ORDER BY 7 DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="381"
+						x="351"
 						y="1"
 						width="33"
 						height="11"
@@ -504,7 +470,7 @@ ORDER BY 7 DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="414"
+						x="384"
 						y="1"
 						width="52"
 						height="11"
@@ -517,11 +483,11 @@ ORDER BY 7 DESC]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SALDO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VENCIDO}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="7"
+						x="27"
 						y="1"
 						width="37"
 						height="11"
@@ -538,7 +504,7 @@ ORDER BY 7 DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="332"
+						x="302"
 						y="1"
 						width="49"
 						height="11"
@@ -555,9 +521,9 @@ ORDER BY 7 DESC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="469"
+						x="439"
 						y="1"
-						width="108"
+						width="120"
 						height="11"
 						key="textField-13"/>
 					<box>					<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -794,7 +760,7 @@ ORDER BY 7 DESC]]></queryString>
 			<band height="14"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="414"
+						x="384"
 						y="0"
 						width="52"
 						height="13"
@@ -808,12 +774,12 @@ ORDER BY 7 DESC]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{SALDO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{VENCIDO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="367"
+						x="337"
 						y="0"
 						width="47"
 						height="13"
