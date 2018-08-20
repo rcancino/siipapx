@@ -22,6 +22,8 @@ class AplicacionDeCobro {
 
     String	sw2
 
+    String recibo
+
     Date dateCreated
 
     Date lastUpdated
@@ -36,6 +38,7 @@ class AplicacionDeCobro {
         createUser nullable: true
         updateUser nullable: true
         formaDePago nullable: true
+        recibo nullable: true
     }
 
     static mapping = {

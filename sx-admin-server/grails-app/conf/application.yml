@@ -92,6 +92,7 @@ environments:
         dataSource:
             dbCreate: update
             url: jdbc:mysql://localhost/siipapx_oficinas?autoReconnect=false
+            #url: jdbc:mysql://10.10.1.225/qro_ofi?autoReconnect=false
             username: root
             password: sys
     test:

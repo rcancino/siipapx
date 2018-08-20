@@ -68,7 +68,7 @@ class Cfdi {
         tipoDeComprobante inList:['I','E','T','P','N']
         sw2 nullable: true
         versionCfdi inList: ['3.2', '3.3']
-        origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO']
+        origen inList:['VENTA','NOTA_CARGO','NOTA_CREDITO','TRASLADO', 'COBROS']
         cancelado nullable: true
         status nullable: true
         email nullable: true

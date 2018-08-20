@@ -30,8 +30,9 @@ class CfdiLocationService {
 
     def getCfdiLocation(Cfdi cfdi) {
         def year = cfdi.fecha[Calendar.YEAR]
-        def month = cfdi.fecha[Calendar.MONTH]
-        def dir = new File(getCfdiMainDir(), "${year}/${month}")
+        def month = cfdi.fecha[Calendar.MONTH] + 1
+        def day = cfdi.fecha[Calendar.DATE]
+        def dir = new File(getCfdiMainDir(), "${cfdi.emisor}/${year}/${month}/${day}")
         dir.mkdirs()
         return dir
     }

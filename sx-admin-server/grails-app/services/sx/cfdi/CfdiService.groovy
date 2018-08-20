@@ -9,6 +9,7 @@ import grails.web.context.ServletContextHolder
 import groovy.xml.XmlUtil
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
+import lx.cfdi.v33.pagos.PagosUtils
 import org.apache.commons.lang3.StringEscapeUtils
 import org.apache.commons.lang3.StringUtils
 import org.grails.core.io.ResourceLocator
@@ -44,10 +45,15 @@ class CfdiService {
         cfdi.total = comprobante.total
         cfdi.origen = origen
         cfdi.fileName = getFileName(cfdi)
-        // cfdi.url = "${getDirPath(cfdi)}/${getFileName(cfdi)}"
         try {
-            // save(comprobante, getDirPath(cfdi), cfdi.fileName)
-            saveXml(cfdi, CfdiUtils.toXmlByteArray(comprobante))
+            byte[] data
+            if(cfdi.tipoDeComprobante == 'P') {
+                println 'CFDI de comprobante....'
+                data = PagosUtils.toXmlByteArray(comprobante)
+            } else {
+                data = CfdiUtils.toXmlByteArray(comprobante)
+            }
+            saveXml(cfdi, data)
             cfdi.save failOnError: true, flush:true
             return cfdi
         }catch (Exception ex) {
