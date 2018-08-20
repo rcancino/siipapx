@@ -37,7 +37,6 @@
 from recepcion_de_compra a 
  join compra b on (a.compra_id=b.id)
  join proveedor Z on(Z.id=b.proveedor_id)
- join proveedor_compras Y on(Y.proVEEDOR_ID=Z.ID)
  join recepcion_de_compra_det c on(a.ID=c.RECEPCION_ID)
  join sucursal s on (a.SUCURSAL_ID=S.ID)
  left join compra_det x on(c.compra_det_id=x.ID)
