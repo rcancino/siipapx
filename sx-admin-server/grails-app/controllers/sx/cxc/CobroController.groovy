@@ -1,6 +1,7 @@
 package sx.cxc
 
-
+import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
+import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import sx.core.AppConfig
@@ -25,9 +26,9 @@ class CobroController extends RestfulController{
 
     @Override
     protected List listAllResources(Map params) {
-        // log.debug('List {}', params)
+        log.debug('List {}', params)
         def query = Cobro.where {}
-        params.max = 100
+        params.max = 10
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         if(params.cartera) {
@@ -40,20 +41,18 @@ class CobroController extends RestfulController{
             def search = '%' + params.term + '%'
             query = query.where { cliente.nombre =~ search || formaDePago =~ search }
         }
-
-        String hql = "from Cobro c where c where "
         return query.list(params)
     }
 
     def disponibles() {
         log.debug('Disponibles {}', params)
-        String hql = 'from Cobro c where c.importe - c.aplicado > 0  and tipo like ? order by fecha asc'
-        params.max = 100
+        String hql = 'from Cobro c where c.importe - c.aplicado -c.diferencia > 0  and tipo like ? order by fecha asc'
+        params.max = 300
         String cartera = params.cartera ?: '%'
 
         if(params.term) {
             def search = '%' + params.term + '%'
-            hql = 'from Cobro c where c.importe - c.aplicado > 0  and tipo like ? ' +
+            hql = 'from Cobro c where c.importe - c.aplicado - c.diferencia > 0  and tipo like ? ' +
                     ' and c.cliente.nombre like ? ' +
                     ' order by fecha asc'
             respond Cobro.findAll(hql, [cartera, search], params)
@@ -153,6 +152,22 @@ class CobroController extends RestfulController{
         repParams.COBRADOR = command.cobrador == 0 ? '%': command.cobrador.toString()
         def pdf =  reportService.run('RelacionDePagos.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RelacionDePagos.pdf')
+    }
+
+    def timbrar(Cobro cobro) {
+        assert !cobro.cfdi, 'Cobro ya timbrada'
+        cobro = cobroService.timbrar(nota)
+        respond cobro
+    }
+
+    def printReciboFiscalDePago(Cobro cobro) {
+        assert cobro.cfdi, 'Cobro sin timbrar: ' + cobro.id
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        def data = ReciboDePagoPdfGenerator.getReportData(cobro)
+        Map parametros = data['PARAMETROS']
+        parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
+        def pdf  = reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ReciboDePago.pdf')
     }
 }
 

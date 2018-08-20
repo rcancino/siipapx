@@ -1,6 +1,7 @@
 package com.luxsoft.cfdix.v33
 
 import groovy.util.logging.Slf4j
+import lx.cfdi.v33.CfdiUtils
 import org.bouncycastle.util.encoders.Base64
 
 import lx.cfdi.utils.DateUtils
@@ -48,6 +49,7 @@ class NotaDeCargoBuilder {
         .buildCertificado()
         .buildRelacionados()
         comprobante = sellador.sellar(comprobante, empresa)
+        // CfdiUtils.serialize(comprobante)
         return comprobante
     }
     def buildComprobante(){

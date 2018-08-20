@@ -2,6 +2,7 @@ package sx.cxc
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import sx.cfdi.Cfdi
 import sx.core.Cliente
 import sx.core.Sucursal
 
@@ -63,6 +64,8 @@ class  Cobro {
 
     String ingreso
 
+    Cfdi cfdi
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static hasMany =[aplicaciones: AplicacionDeCobro]
@@ -84,6 +87,7 @@ class  Cobro {
         diferencia nullable: true
         comentario nullable: true
         tipoDeCambio(scale:6)
+        cfdi nullable: true
     }
 
     static mapping={

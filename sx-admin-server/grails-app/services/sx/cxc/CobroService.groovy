@@ -1,9 +1,21 @@
 package sx.cxc
 
+import com.luxsoft.cfdix.v33.ReciboDePagoBuilder
 import grails.gorm.transactions.Transactional
+import lx.cfdi.v33.Comprobante
+import org.apache.commons.lang3.exception.ExceptionUtils
+import sx.cfdi.Cfdi
+import sx.cfdi.CfdiService
+import sx.cfdi.CfdiTimbradoService
 
 @Transactional
 class CobroService {
+
+    ReciboDePagoBuilder reciboDePagoBuilder
+
+    CfdiService cfdiService
+
+    CfdiTimbradoService cfdiTimbradoService
 
     def save(Cobro cobro) {
         if(cobro.cheque) {
@@ -86,6 +98,29 @@ class CobroService {
             } else {
                 cobro.tarjeta.comision = 3.80
             }
+        }
+    }
+
+
+    def generarCfdi(Cobro cobro) {
+        Comprobante comprobante = this.reciboDePagoBuilder.build(cobro);
+        Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'P', 'COBROS')
+        cobro.cfdi = cfdi
+        cobro.save flush: true
+        return cobro
+    }
+
+    def timbrar(Cobro cobro){
+        try {
+            if(!cobro.cfdi) {
+                cobro = generarCfdi(cobro)
+            }
+            def cfdi = cobro.cfdi
+            cfdi = cfdiTimbradoService.timbrar(cfdi)
+            return nota
+        } catch (Throwable ex){
+            ex.printStackTrace()
+            throw  new NotaDeCargoException(ExceptionUtils.getRootCauseMessage(ex))
         }
     }
 

@@ -5,6 +5,7 @@ model {
 }
 json g.render(cobro, [excludes:['moneda','cliente', 'sucursal']]){
     cliente g.render(cobro.cliente, [includes: ['id', 'nombre', 'rfc']])
+    nombre cobro.cliente.nombre
     moneda cobro.moneda.currencyCode
     disponible cobro.getDisponible()
     sucursal {
