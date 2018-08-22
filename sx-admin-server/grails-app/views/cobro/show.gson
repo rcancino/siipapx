@@ -17,6 +17,9 @@ json g.render(cobro, [deep:true,excludes:['cliente','sucursal','aplicaciones','m
         cheque g.render(cobro.cheque)
         bancoOrigen cobro.cheque.bancoOrigen.nombre
     }
+    if(cobro.cfdi) {
+        recibo cobro.cfdi.uuid
+    }
 
 }
 

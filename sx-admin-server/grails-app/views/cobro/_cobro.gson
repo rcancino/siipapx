@@ -17,5 +17,8 @@ json g.render(cobro, [excludes:['moneda','cliente', 'sucursal']]){
         bancoOrigen cobro.cheque.bancoOrigen.nombre
     }
     ingreso cobro.getIngreso()
+    if(cobro.cfdi) {
+        recibo cobro.cfdi.uuid
+    }
 }
 

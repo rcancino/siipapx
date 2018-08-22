@@ -4,6 +4,7 @@ import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
+import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.core.AppConfig
 import sx.reports.ReportService
 import sx.core.Sucursal
@@ -28,7 +29,7 @@ class CobroController extends RestfulController{
     protected List listAllResources(Map params) {
         log.debug('List {}', params)
         def query = Cobro.where {}
-        params.max = 10
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         if(params.cartera) {
@@ -155,13 +156,11 @@ class CobroController extends RestfulController{
     }
 
     def timbrar(Cobro cobro) {
-        assert !cobro.cfdi, 'Cobro ya timbrada'
-        cobro = cobroService.timbrar(nota)
-        respond cobro
+        cobro = cobroService.timbrar(cobro)
+        forward action: 'show', id: cobro.id
     }
 
     def printReciboFiscalDePago(Cobro cobro) {
-        assert cobro.cfdi, 'Cobro sin timbrar: ' + cobro.id
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def data = ReciboDePagoPdfGenerator.getReportData(cobro)
         Map parametros = data['PARAMETROS']
@@ -169,7 +168,20 @@ class CobroController extends RestfulController{
         def pdf  = reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ReciboDePago.pdf')
     }
-}
+
+    def aplicar(AplicarCobroCommand command) {
+        log.debug('Aplicar cobro: {} a cuentas: {}', command.cobro.id, command.cuentas.collect{it.id}.join(','))
+        Cobro cobro = cobroService.registrarAplicacion(command.cobro, command.cuentas, command.fecha)
+        cobro.refresh()
+        forward action: 'show', id: command.cobro.id
+    }
+
+    def handleException(Exception e) {
+        String message = ExceptionUtils.getRootCauseMessage(e)
+        log.error(message)
+        respond([message: message], status: 500)
+    }
+ }
 
 class PorSucursalFechaRepCommand {
     Sucursal sucursal
@@ -189,6 +201,12 @@ class RelacionPagosCommand {
     Date fecha
     String origen
     Integer cobrador
+}
+
+class AplicarCobroCommand {
+    Cobro cobro
+    List<CuentaPorCobrar> cuentas
+    Date fecha
 }
 
 

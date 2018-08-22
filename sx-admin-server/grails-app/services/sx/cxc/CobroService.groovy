@@ -7,6 +7,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
+import sx.core.Folio
 
 @Transactional
 class CobroService {
@@ -53,7 +54,33 @@ class CobroService {
         return cxc
     }
 
-    def registrarAplicacion(Cobro cobro){
+    def registrarAplicacion(Cobro cobro, List<CuentaPorCobrar> pendientes, Date fecha = new Date()){
+
+        def disponible = cobro.disponible
+        if (disponible <= 0)
+            return cobro
+        pendientes.each { cxc ->
+            def saldo = cxc.saldo
+            if (disponible > 0) {
+                def importe = saldo <= disponible ? saldo : disponible
+                AplicacionDeCobro aplicacion = new AplicacionDeCobro()
+                aplicacion.importe = importe
+                aplicacion.formaDePago = cobro.formaDePago
+                aplicacion.cuentaPorCobrar = cxc
+                aplicacion.fecha = fecha
+                cobro.addToAplicaciones(aplicacion)
+                if(cobro.primeraAplicacion == null)
+                    cobro.primeraAplicacion = fecha
+                disponible = disponible - importe
+            }
+        }
+        if(!cobro.comentario)
+            cobro.comentario = "Ult. aplic. ${fecha.format('dd/MM/yyyy')}"
+        cobro.save flush: true
+        return cobro
+    }
+
+    def registrarAplicacion2(Cobro cobro){
 
         def disponible = cobro.disponible
         if (disponible <= 0)
@@ -103,25 +130,32 @@ class CobroService {
 
 
     def generarCfdi(Cobro cobro) {
-        Comprobante comprobante = this.reciboDePagoBuilder.build(cobro);
+        validarParaTimbrado(cobro)
+        Comprobante comprobante = this.reciboDePagoBuilder.build(cobro)
+        comprobante.folio = Folio.nextFolio('CFDI','PAGO')
         Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'P', 'COBROS')
         cobro.cfdi = cfdi
+
         cobro.save flush: true
         return cobro
     }
 
     def timbrar(Cobro cobro){
-        try {
-            if(!cobro.cfdi) {
-                cobro = generarCfdi(cobro)
-            }
-            def cfdi = cobro.cfdi
-            cfdi = cfdiTimbradoService.timbrar(cfdi)
-            return nota
-        } catch (Throwable ex){
-            ex.printStackTrace()
-            throw  new NotaDeCargoException(ExceptionUtils.getRootCauseMessage(ex))
+        if(!cobro.cfdi) {
+            log.info('Generando Recibo electronico de pago cobro: {}', cobro.id)
+            cobro = generarCfdi(cobro)
         }
+        cfdiTimbradoService.timbrar(cobro.cfdi)
+        cobro.refresh()
+        return cobro
+    }
+
+    def validarParaTimbrado(Cobro cobro) {
+        assert cobro.disponible == 0.0, 'El cobro debe estar totalmente aplicado'
+        def sinCfdi = cobro.aplicaciones.find {AplicacionDeCobro det -> det.cuentaPorCobrar.cfdi == null}
+        assert sinCfdi == null , 'El cobro no debe tener aplicaciones a facturas sin timbrar'
+        List<AplicacionDeCobro> contado = cobro.aplicaciones.find{AplicacionDeCobro det -> det.cuentaPorCobrar.tipo == 'CON' }
+        assert contado == null, 'El cobro no debe tener aplicaciones de contado'
     }
 
 

@@ -101,7 +101,8 @@ class ReciboDePagoBuilder {
             Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
             def cxc = det.cuentaPorCobrar
             def uuid = cxc.uuid
-            assert uuid, 'No existe UUID origen para la cxc :' + cxc.id
+            if(!uuid)
+                throw new RuntimeException("La cuenta por cobrar ${cxc.id} no tiene uuid ")
             relacionado.UUID = uuid
             relacionados.cfdiRelacionado.add(relacionado)
         }
@@ -156,14 +157,17 @@ class ReciboDePagoBuilder {
             }
             relacionado.metodoDePagoDR = 'PPD'
             relacionado.numParcialidad = 1
-            println 'Total cxc: ' + cxc.total
-            println 'Pago '+ aplicacion.importe
-            println 'Sald anterior: ' +(cxc.total - aplicacion.importe)
+
             BigDecimal saldoAnterior = (cxc.total - aplicacion.importe)?: cxc.total
+            if(saldoAnterior <= 1) {
+                saldoAnterior = cxc.total
+            }
+            BigDecimal saldoInsoluto = saldoAnterior - aplicacion.importe
+            println "Importe saldo anterior: ${saldoAnterior} Pago: ${aplicacion.importe} Sdo Insoluto: ${saldoInsoluto}"
             relacionado.impSaldoAnt = saldoAnterior
             relacionado.impPagado = aplicacion.importe
+            // relacionado.impSaldoInsoluto = saldoInsoluto
             relacionado.impSaldoInsoluto = relacionado.impSaldoAnt - relacionado.impPagado
-
 
             pago.doctoRelacionado.add(relacionado)
 

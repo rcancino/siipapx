@@ -85,6 +85,7 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def pendientes(Cliente cliente) {
+
         if (cliente == null) {
             notFound()
             return
@@ -94,6 +95,7 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         params.order = params.order ?:'asc'
         def cartera = params.cartera ?: 'CRE'
         def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.tipo = ? and c.total - c.pagos > 0 ", [cliente, cartera])
+        log.debug('Cuentas por cobrar para: {} : {}', cliente.nombre, rows.size())
         respond rows
     }
 
