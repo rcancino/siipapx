@@ -52,6 +52,8 @@ class  Cobro {
 
     BigDecimal disponible = 0
 
+    BigDecimal saldo = 0.0
+
     BigDecimal diferencia = 0.0
 
     Date diferenciaFecha
@@ -98,6 +100,7 @@ class  Cobro {
         formaDePago index: 'COBRO_IDX3'
         aplicaciones cascade: "all-delete-orphan"
         aplicado formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cobro_id=id)'
+        saldo formula:'importe - diferencia - (select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cobro_id=id)'
         diferenciaFecha type: 'date'
     }
 

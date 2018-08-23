@@ -2,11 +2,14 @@ package sx.cxc
 
 import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
+import com.luxsoft.utils.Periodo
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
+import groovy.transform.ToString
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.http.HttpStatus
 import sx.core.AppConfig
+import sx.core.Cliente
 import sx.reports.ReportService
 import sx.core.Sucursal
 
@@ -46,9 +49,27 @@ class CobroController extends RestfulController{
         return query.list(params)
     }
 
-    def search() {
-        log.debug('Search: {}', params)
-        respond status: HttpStatus.OK
+    def search(CobroSearchCommand command) {
+        // log.debug('Search: {}', command)
+        params.max = command.registros
+        params.sort = params.sort ?:'fecha'
+        params.order = params.order ?:'asc'
+
+        def query = Cobro.where {}
+        if(params.cartera) {
+            query = query.where { tipo == params.cartera}
+        }
+        if(command.periodo) {
+            query = query.where { fecha >= command.periodo.fechaInicial}
+            query = query.where { fecha <= command.periodo.fechaFinal}
+        }
+        if(command.pendientes) {
+            query = query.where { saldo > 0.0}
+        }
+        if(command.cliente) {
+            query = query.where {cliente == command.cliente}
+        }
+        respond query.list(params)
     }
 
     def disponibles() {
@@ -213,6 +234,22 @@ class AplicarCobroCommand {
     Cobro cobro
     List<CuentaPorCobrar> cuentas
     Date fecha
+}
+
+@ToString(includeNames=true,includePackage=false)
+class CobroSearchCommand {
+    String cartera
+    boolean pendientes = true
+    Integer registros = 10
+    Periodo periodo
+    Cliente cliente
+
+
+    static constraints = {
+        periodo nullable: true
+        cliente nullable: true
+    }
+
 }
 
 
