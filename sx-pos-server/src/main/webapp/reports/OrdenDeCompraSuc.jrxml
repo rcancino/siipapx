@@ -39,14 +39,14 @@
 ,(SELECT Y.descripcion_proveedor FROM proveedor_producto Y WHERE a.id=Y.PRODUCTO_ID  AND p.id=Y.PROVEEDOR_ID) AS DESCRIPROV,sum(d.SOLICITADO) AS SOLICITADO
 ,A.UNIDAD,(D.COSTO)AS PRECIO_UNITARIO,SUM(D.importe_neto) AS IMPORTE,c.COMENTARIO,d.comentario as COMENT_DET,CONCAT(P.DIRECCION_CALLE,', ',P.DIRECCION_COLONIA,', ',P.DIRECCION_CODIGO_POSTAL,',',P.DIRECCION_MUNICIPIO ) AS DIRECCION
 ,CONCAT(p.telefono1,'   ',p.telefono2,'  ',p.telefono3) AS TELEFONO,c.importe_neto as SUBTOTAL,c.IMPUESTOS,c.TOTAL
-,(SELECT (CASE when X.IMPRIMIR_COSTO is true then 'SI' else 'NO' end) FROM proveedor_compras X WHERE X.PROVEEDOR_ID=P.ID ) as IMPRIMIR_COSTO
+,(CASE when p.IMPRIMIR_COSTO is true then 'SI' else 'NO' end) as IMPRIMIR_COSTO
 ,(CASE WHEN C.CONSOLIDADA is true THEN 'SI' ELSE 'NO' END) AS CONSOLIDADA
 FROM compra c
 JOIN compra_det d ON (c.id=d.compra_id) 
 join producto a ON(a.id=d.producto_id)
 JOIN proveedor p ON (p.id=c.proveedor_id) 
 JOIN sucursal S ON (s.id=c.sucursal_id) 
-where c.id=$P{ID}
+where c.id=$P{ID} AND d.depuracion is  null
 GROUP BY a.clave
 ORDER BY a.clave]]></queryString>
 
