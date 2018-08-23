@@ -5,6 +5,7 @@ import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang3.exception.ExceptionUtils
+import org.springframework.http.HttpStatus
 import sx.core.AppConfig
 import sx.reports.ReportService
 import sx.core.Sucursal
@@ -43,6 +44,11 @@ class CobroController extends RestfulController{
             query = query.where { cliente.nombre =~ search || formaDePago =~ search }
         }
         return query.list(params)
+    }
+
+    def search() {
+        log.debug('Search: {}', params)
+        respond status: HttpStatus.OK
     }
 
     def disponibles() {
@@ -127,7 +133,7 @@ class CobroController extends RestfulController{
     def saldar(Cobro cobro){
         log.debug('Saldando cobro: {}', cobro)
         cobro = cobroService.saldar(cobro)
-        respond cobro
+        forward action: 'show', id: cobro.id
     }
 
     def registrarChequeDevuelto(Cobro cobro){
@@ -178,7 +184,7 @@ class CobroController extends RestfulController{
 
     def handleException(Exception e) {
         String message = ExceptionUtils.getRootCauseMessage(e)
-        log.error(message)
+        log.error(message, e)
         respond([message: message], status: 500)
     }
  }

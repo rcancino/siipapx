@@ -12,6 +12,7 @@ import lx.cfdi.v33.CTipoFactor
 import lx.cfdi.v33.CUsoCFDI
 import lx.cfdi.v33.Comprobante
 import lx.cfdi.v33.ObjectFactory
+import sx.core.Folio
 import sx.cxc.AplicacionDeCobro
 import sx.cxc.Cobro
 import sx.core.Empresa
@@ -51,7 +52,7 @@ class ReciboDePagoBuilder {
         comprobante.version = "3.3"
         comprobante.tipoDeComprobante = CTipoDeComprobante.P
         comprobante.serie = "PAG-${cobro.sucursal.nombre.substring(0,2)}"
-        comprobante.folio = 1
+        comprobante.folio = Folio.nextFolio('CFDI','PAGO')
         comprobante.setFecha(DateUtils.getCfdiDate(new Date()))
         comprobante.moneda =  'XXX'
         comprobante.subTotal = 0
@@ -131,8 +132,11 @@ class ReciboDePagoBuilder {
             pago.tipoCambioP = cobro.tipoDeCambio
         }
         List<AplicacionDeCobro> aplicaciones = this.cobro.aplicaciones.findAll{it.recibo == null}
-        pago.monto = aplicaciones.sum 0.0, {it.importe}
-        log.debug('Monto del pago: {}', pago.monto)
+
+        BigDecimal monto = this.cobro.importe
+        log.debug('Monto del pago: {}', monto)
+        pago.monto = monto
+
         pago.numOperacion = this.cobro.referencia
         if(this.cobro.cheque) {
             CobroCheque cheque = this.cobro.cheque
@@ -147,7 +151,6 @@ class ReciboDePagoBuilder {
             Pagos.Pago.DoctoRelacionado relacionado = factory.createPagosPagoDoctoRelacionado()
 
             CuentaPorCobrar cxc = aplicacion.cuentaPorCobrar
-            assert cxc.uuid, "Cuenta por cobrar ${cxc.id} no timbrada"
             relacionado.idDocumento = cxc.uuid
             relacionado.folio = cxc.folio
             relacionado.serie = cxc.cfdi.serie
@@ -157,16 +160,19 @@ class ReciboDePagoBuilder {
             }
             relacionado.metodoDePagoDR = 'PPD'
             relacionado.numParcialidad = 1
-
+            /*
             BigDecimal saldoAnterior = (cxc.total - aplicacion.importe)?: cxc.total
             if(saldoAnterior <= 1) {
                 saldoAnterior = cxc.total
             }
+            */
+            BigDecimal saldoAnterior = cxc.total
             BigDecimal saldoInsoluto = saldoAnterior - aplicacion.importe
-            println "Importe saldo anterior: ${saldoAnterior} Pago: ${aplicacion.importe} Sdo Insoluto: ${saldoInsoluto}"
+
+
+            log.debug("Imp Fac: ${cxc.total} Importe saldo anterior: ${saldoAnterior} Pago: ${aplicacion.importe} Sdo Insoluto: ${saldoInsoluto}")
             relacionado.impSaldoAnt = saldoAnterior
             relacionado.impPagado = aplicacion.importe
-            // relacionado.impSaldoInsoluto = saldoInsoluto
             relacionado.impSaldoInsoluto = relacionado.impSaldoAnt - relacionado.impPagado
 
             pago.doctoRelacionado.add(relacionado)

@@ -132,7 +132,6 @@ class CobroService {
     def generarCfdi(Cobro cobro) {
         validarParaTimbrado(cobro)
         Comprobante comprobante = this.reciboDePagoBuilder.build(cobro)
-        comprobante.folio = Folio.nextFolio('CFDI','PAGO')
         Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'P', 'COBROS')
         cobro.cfdi = cfdi
 

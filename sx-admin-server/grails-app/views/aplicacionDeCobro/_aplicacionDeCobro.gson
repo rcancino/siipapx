@@ -12,5 +12,6 @@ json g.render(aplicacionDeCobro, [excludes:['cuentaPorCobrar']]){
     totalDocumento aplicacionDeCobro.cuentaPorCobrar.total
     pagosDocumento aplicacionDeCobro.cuentaPorCobrar.pagos
     saldoDocumento aplicacionDeCobro.cuentaPorCobrar.saldo
+    uuidDocumento aplicacionDeCobro.cuentaPorCobrar.uuid
 }
 
