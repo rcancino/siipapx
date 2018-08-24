@@ -43,7 +43,7 @@ class ReciboDePagoBuilder {
         .buildRelacionados()
         .buildComplementoPago()
         comprobante = sellador.sellar(comprobante, empresa)
-        log.debug('CFDI generado {}', CfdiUtils.serialize(comprobante))
+        // log.debug('CFDI generado {}', CfdiUtils.serialize(comprobante))
         return comprobante
     }
     def buildComprobante(){
@@ -51,8 +51,9 @@ class ReciboDePagoBuilder {
         this.comprobante = factory.createComprobante()
         comprobante.version = "3.3"
         comprobante.tipoDeComprobante = CTipoDeComprobante.P
-        comprobante.serie = "PAG-${cobro.sucursal.nombre.substring(0,2)}"
-        comprobante.folio = Folio.nextFolio('CFDI','PAGO')
+        String serie = "PAG${cobro.tipo}"
+        comprobante.serie = serie
+        comprobante.folio = Folio.nextFolio('CFDI',serie)
         comprobante.setFecha(DateUtils.getCfdiDate(new Date()))
         comprobante.moneda =  'XXX'
         comprobante.subTotal = 0
@@ -96,6 +97,7 @@ class ReciboDePagoBuilder {
     }
 
     def buildRelacionados() {
+        /*
         Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
         relacionados.tipoRelacion = '04'
         this.cobro.aplicaciones.each { AplicacionDeCobro det ->
@@ -108,6 +110,8 @@ class ReciboDePagoBuilder {
             relacionados.cfdiRelacionado.add(relacionado)
         }
         comprobante.cfdiRelacionados = relacionados
+        */
+
         return this
     }
 
@@ -152,7 +156,7 @@ class ReciboDePagoBuilder {
 
             CuentaPorCobrar cxc = aplicacion.cuentaPorCobrar
             relacionado.idDocumento = cxc.uuid
-            relacionado.folio = cxc.folio
+            relacionado.folio = cxc.documento
             relacionado.serie = cxc.cfdi.serie
             relacionado.monedaDR = cxc.moneda.currencyCode
             if(this.cobro.moneda.currencyCode != 'MXN') {
@@ -170,7 +174,7 @@ class ReciboDePagoBuilder {
             BigDecimal saldoInsoluto = saldoAnterior - aplicacion.importe
 
 
-            log.debug("Imp Fac: ${cxc.total} Importe saldo anterior: ${saldoAnterior} Pago: ${aplicacion.importe} Sdo Insoluto: ${saldoInsoluto}")
+            // log.debug("Imp Fac: ${cxc.total} Importe saldo anterior: ${saldoAnterior} Pago: ${aplicacion.importe} Sdo Insoluto: ${saldoInsoluto}")
             relacionado.impSaldoAnt = saldoAnterior
             relacionado.impPagado = aplicacion.importe
             relacionado.impSaldoInsoluto = relacionado.impSaldoAnt - relacionado.impPagado

@@ -37,7 +37,11 @@ class CobroController extends RestfulController{
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         if(params.cartera) {
-            query = query.where { tipo == params.cartera}
+            String tipoCartera = params.cartera
+            if(tipoCartera == 'CON') {
+                tipoCartera = 'COD'
+            }
+            query = query.where { tipo == tipoCartera}
         }
         if(params.sucursal) {
             query = query.where {sucursal == Sucursal.get(params.sucursal)}
@@ -57,7 +61,11 @@ class CobroController extends RestfulController{
 
         def query = Cobro.where {}
         if(params.cartera) {
-            query = query.where { tipo == params.cartera}
+            String tipoCartera = params.cartera
+            if(tipoCartera == 'CON') {
+                tipoCartera = 'COD'
+            }
+            query = query.where { tipo == tipoCartera}
         }
         if(command.periodo) {
             query = query.where { fecha >= command.periodo.fechaInicial}
@@ -187,25 +195,25 @@ class CobroController extends RestfulController{
         forward action: 'show', id: cobro.id
     }
 
-    def printReciboFiscalDePago(Cobro cobro) {
+    def imprimirRecibo(Cobro cobro) {
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def data = ReciboDePagoPdfGenerator.getReportData(cobro)
         Map parametros = data['PARAMETROS']
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
-        def pdf  = reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
-        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ReciboDePago.pdf')
+        def pdf  = reportService.run('ReciboDePagoCFDI33.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ReciboDePagoCFDI33.pdf')
     }
 
     def aplicar(AplicarCobroCommand command) {
         log.debug('Aplicar cobro: {} a cuentas: {}', command.cobro.id, command.cuentas.collect{it.id}.join(','))
-        Cobro cobro = cobroService.registrarAplicacion(command.cobro, command.cuentas, command.fecha)
+        Cobro cobro = cobroService.registrarAplicacion(command.cobro, command.cuentas)
         cobro.refresh()
         forward action: 'show', id: command.cobro.id
     }
 
     def handleException(Exception e) {
         String message = ExceptionUtils.getRootCauseMessage(e)
-        log.error(message, e)
+        log.error(message, ExceptionUtils.getRootCause(e))
         respond([message: message], status: 500)
     }
  }
@@ -233,7 +241,6 @@ class RelacionPagosCommand {
 class AplicarCobroCommand {
     Cobro cobro
     List<CuentaPorCobrar> cuentas
-    Date fecha
 }
 
 @ToString(includeNames=true,includePackage=false)

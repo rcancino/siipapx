@@ -54,7 +54,7 @@ class CobroService {
         return cxc
     }
 
-    def registrarAplicacion(Cobro cobro, List<CuentaPorCobrar> pendientes, Date fecha = new Date()){
+    def registrarAplicacion(Cobro cobro, List<CuentaPorCobrar> pendientes){
 
         def disponible = cobro.disponible
         if (disponible <= 0)
@@ -67,7 +67,7 @@ class CobroService {
                 aplicacion.importe = importe
                 aplicacion.formaDePago = cobro.formaDePago
                 aplicacion.cuentaPorCobrar = cxc
-                aplicacion.fecha = fecha
+                aplicacion.fecha = cobro.fecha
                 cobro.addToAplicaciones(aplicacion)
                 if(cobro.primeraAplicacion == null)
                     cobro.primeraAplicacion = fecha

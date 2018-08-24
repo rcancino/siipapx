@@ -2,8 +2,11 @@ package com.luxsoft.cfdix.v33
 
 
 import com.luxsoft.utils.ImporteALetra
+import groovy.util.logging.Slf4j
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
+import lx.cfdi.v33.Pagos
+import lx.cfdi.v33.Pagos.Pago.DoctoRelacionado
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 import org.apache.commons.io.FileUtils
@@ -18,39 +21,42 @@ import java.text.MessageFormat
 /**
  *
  */
+@Slf4j
 class ReciboDePagoPdfGenerator {
 
-    static getReportData(Cobro nota){
-        assert nota.cfdi
+    static getReportData(Cobro nota) {
         Cfdi cfdi = nota.cfdi
         File xmlFile = FileUtils.toFile(cfdi.url)
         Comprobante comprobante = CfdiUtils.read(xmlFile)
+        Pagos pagos = (Pagos)comprobante.complemento.any[0]
+        def relacionados = pagos.pago.doctoRelacionado
 
-        def conceptos = comprobante.conceptos.concepto
+        def modelData = relacionados.get(0).collect { DoctoRelacionado cc ->
 
-        def index = 0
-        def modelData=conceptos.collect { cc ->
-            def traslado = cc.impuestos.traslados.traslado[0]
             def res=[
-                    'cantidad' : cc.getCantidad(),
-                    'NoIdentificacion' : cc.noIdentificacion,
-                    'descripcion' : cc.descripcion,
-                    'unidad': cc.unidad,
-                    'ValorUnitario':cc.valorUnitario,
-                    'Importe':cc.importe,
-                    'ClaveProdServ': cc.claveProdServ,
-                    'ClaveUnidad': cc.claveUnidad,
-                    'Descuento': '0.0',
-                    'Impuesto': traslado.impuesto.toString(),
-                    'TasaOCuota': traslado.tasaOCuota.toString(),
-                    'TipoFactor': traslado.tipoFactor.value().toString(),
-                    'Base': traslado.base,
-                    'TrasladoImporte': traslado.importe
+                    'IdDocumento': cc.idDocumento,
+                    'Serie' : cc.serie,
+                    'Folio': cc.folio,
+                    'MonedaDR': cc.monedaDR.toString(),
+                    'MetodoDePagoDR': cc.metodoDePagoDR.toString(),
+                    'NumParcialidad': cc.numParcialidad.toString(),
+                    'ImpPagado': cc.impPagado,
+                    'ImpSaldoAnt': cc.impSaldoAnt,
+                    'ImpSaldoInsoluto': cc.impSaldoInsoluto,
             ]
             return res
         }
-        def params = getParametros(nota,cfdi, comprobante, xmlFile)
+
         def data = [:]
+
+        def params = getParametros(nota, cfdi, comprobante, xmlFile)
+        params['FECHA_PAGO'] = pagos.pago.get(0).fechaPago
+        params['FORMA_DE_PAGO'] = pagos.pago.get(0).formaDePagoP
+        params['MONEDAP'] = pagos.pago.get(0).monedaP.toString()
+        params['MONTO'] = pagos.pago.get(0).monto
+        params['NUM_OPERACION'] = pagos.pago.get(0).numOperacion
+        params['SUBTOTAL'] = comprobante.subTotal.toString()
+        params["IMP_CON_LETRA"] = ImporteALetra.aLetra(pagos.pago.get(0).monto)
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
 
@@ -67,6 +73,7 @@ class ReciboDePagoPdfGenerator {
 
     static getParametros(Cobro nota, Cfdi cfdi, Comprobante comprobante, File xmlFile){
         def params=[:]
+
         params["VERSION"] = comprobante.version
         params["SERIE"] = comprobante.getSerie()
         params["FOLIO"] = comprobante.getFolio()
@@ -79,7 +86,7 @@ class ReciboDePagoPdfGenerator {
         params["RECEPTOR_DIRECCION"] = 'ND'
         params["METODO_PAGO"] = comprobante.metodoPago.toString()
         params["FORMA_PAGO"] = comprobante.formaPago
-        params["IMP_CON_LETRA"] = ImporteALetra.aLetra(comprobante.getTotal());
+
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['UsoCFDI'] = comprobante.receptor.usoCFDI.value().toString()
         params['Moneda'] = comprobante.moneda.value().toString()
@@ -101,7 +108,7 @@ class ReciboDePagoPdfGenerator {
             params.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
             params.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
             params.put("RfcProvCertif", timbre.rfcProvCertif)
-            params.put("TIPO_DE_COMPROBANTE", "I (Ingreso)")
+            params.put("TIPO_DE_COMPROBANTE", "P (Pago)")
         }
         params.FECHA = comprobante.fecha
         BigDecimal descuento = comprobante.getDescuento() ?: 0.0
@@ -110,12 +117,13 @@ class ReciboDePagoPdfGenerator {
         params.IMPORTE_BRUTO = (comprobante.getSubTotal() - descuento) as String
         params['PINT_IVA']='16 '
         params["IVA"] = (comprobante?.getImpuestos()?.getTotalImpuestosTrasladados()?: 0.0) as String
+        if(comprobante?.cfdiRelacionados?.tipoRelacion){
+            params["TIPO_DE_RELACION"] = comprobante.cfdiRelacionados.tipoRelacion
+            String relacionados = comprobante.cfdiRelacionados.cfdiRelacionado.collect{it.UUID}.join(', ')
+            params['RelacionUUID'] = relacionados
 
-        String relacionados = comprobante.cfdiRelacionados.cfdiRelacionado.collect{it.UUID}.join(', ')
-        //println 'RELACIONADOS: '+ relacionados
-        params['RelacionUUID'] = relacionados
-
-        params['COMENTARIOS'] = nota.comentario
+        }
+       params['COMENTARIOS'] = nota.comentario
         params['COMENTARIOS'] = nota.comentario
 
         return params;
