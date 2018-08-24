@@ -45,7 +45,7 @@
 	<parameter name="SERIE" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="MONEDAP" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="NUM_OPERACION" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="MONTO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="MONTO" isForPrompting="true" class="java.math.BigDecimal"/>
 	<parameter name="TOTAL" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="DESTINATARIO" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="QR_CODE" isForPrompting="false" class="java.lang.Object"/>
@@ -889,7 +889,7 @@
 					<textElement textAlignment="Left">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="9" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{MONTO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{MONTO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
