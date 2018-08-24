@@ -65,6 +65,7 @@
 	<parameter name="UsoCFDI" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="TIPO_DE_COMPROBANTE" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="LOGO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="RelacionUUID" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="IdDocumento" class="java.lang.String"/>
 	<field name="Serie" class="java.lang.String"/>
@@ -84,7 +85,7 @@
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="222"  isSplitAllowed="true" >
+			<band height="245"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="522"
@@ -484,6 +485,74 @@
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO_DE_COMPROBANTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="109"
+						y="225"
+						width="40"
+						height="11"
+						key="staticText-271">
+							<printWhenExpression><![CDATA[new Boolean($P{RelacionUUID})]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[TIPO = ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="149"
+						y="225"
+						width="19"
+						height="11"
+						key="textField-224">
+							<printWhenExpression><![CDATA[new Boolean($P{RelacionUUID})]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO_DE_RELACION}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="1"
+						y="222"
+						width="108"
+						height="15"
+						key="staticText-273">
+							<printWhenExpression><![CDATA[new Boolean($P{RelacionUUID})]]></printWhenExpression>
+						</reportElement>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Times-Roman" size="8"/>
+					</textElement>
+				<text><![CDATA[   UUID   RELACIONADOS    : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="1"
+						y="237"
+						width="579"
+						height="8"
+						key="textField-225"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Left">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RelacionUUID}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
@@ -1361,32 +1430,6 @@
 					</textElement>
 				<text><![CDATA[MON]]></text>
 				</staticText>
-				<staticText>
-					<reportElement
-						x="522"
-						y="169"
-						width="40"
-						height="11"
-						key="staticText-271"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<text><![CDATA[TIPO = ]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="560"
-						y="169"
-						width="19"
-						height="11"
-						key="textField-224"/>
-					<box></box>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO_DE_RELACION}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						x="6"
