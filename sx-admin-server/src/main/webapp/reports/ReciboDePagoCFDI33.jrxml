@@ -512,7 +512,7 @@
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="203"  isSplitAllowed="true" >
+			<band height="206"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="257"
@@ -1027,14 +1027,14 @@
 						x="257"
 						y="3"
 						width="317"
-						height="129"
+						height="130"
 						key="rectangle-11"/>
 					<graphicElement stretchType="NoStretch"/>
 				</rectangle>
 				<staticText>
 					<reportElement
 						x="28"
-						y="176"
+						y="180"
 						width="162"
 						height="26"
 						key="staticText-255"/>
@@ -1052,7 +1052,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="68"
-						y="150"
+						y="154"
 						width="39"
 						height="11"
 						key="textField-209"/>
@@ -1065,7 +1065,7 @@
 				<textField isStretchWithOverflow="true" pattern="#,##0.000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="166"
-						y="150"
+						y="154"
 						width="23"
 						height="11"
 						key="textField-210"/>
@@ -1080,7 +1080,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="331"
-						y="150"
+						y="154"
 						width="44"
 						height="11"
 						key="textField-211"/>
@@ -1095,7 +1095,7 @@
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="515"
-						y="150"
+						y="154"
 						width="23"
 						height="11"
 						key="textField-212"/>
@@ -1108,7 +1108,7 @@
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="438"
-						y="150"
+						y="154"
 						width="23"
 						height="11"
 						key="textField-213"/>
@@ -1121,7 +1121,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="236"
-						y="150"
+						y="154"
 						width="25"
 						height="11"
 						key="textField-214"/>
@@ -1134,7 +1134,7 @@
 				<staticText>
 					<reportElement
 						x="28"
-						y="150"
+						y="154"
 						width="40"
 						height="11"
 						key="staticText-256"/>
@@ -1147,7 +1147,7 @@
 				<staticText>
 					<reportElement
 						x="107"
-						y="150"
+						y="154"
 						width="59"
 						height="11"
 						key="staticText-257"/>
@@ -1160,7 +1160,7 @@
 				<staticText>
 					<reportElement
 						x="189"
-						y="150"
+						y="154"
 						width="47"
 						height="11"
 						key="staticText-258"/>
@@ -1173,7 +1173,7 @@
 				<staticText>
 					<reportElement
 						x="261"
-						y="150"
+						y="154"
 						width="70"
 						height="11"
 						key="staticText-259"/>
@@ -1186,7 +1186,7 @@
 				<staticText>
 					<reportElement
 						x="375"
-						y="150"
+						y="154"
 						width="63"
 						height="11"
 						key="staticText-260"/>
@@ -1199,7 +1199,7 @@
 				<staticText>
 					<reportElement
 						x="461"
-						y="150"
+						y="154"
 						width="54"
 						height="11"
 						key="staticText-261"/>
@@ -1212,7 +1212,7 @@
 				<staticText>
 					<reportElement
 						x="28"
-						y="136"
+						y="140"
 						width="510"
 						height="14"
 						key="staticText-262"/>
@@ -1230,7 +1230,7 @@
 				<staticText>
 					<reportElement
 						x="333"
-						y="176"
+						y="180"
 						width="31"
 						height="26"
 						key="staticText-263"/>
@@ -1249,7 +1249,7 @@
 				<staticText>
 					<reportElement
 						x="364"
-						y="176"
+						y="180"
 						width="58"
 						height="26"
 						key="staticText-264"/>
@@ -1267,7 +1267,7 @@
 				<staticText>
 					<reportElement
 						x="422"
-						y="176"
+						y="180"
 						width="58"
 						height="26"
 						key="staticText-265"/>
@@ -1285,7 +1285,7 @@
 				<staticText>
 					<reportElement
 						x="480"
-						y="176"
+						y="180"
 						width="58"
 						height="26"
 						key="staticText-266"/>
@@ -1303,7 +1303,7 @@
 				<staticText>
 					<reportElement
 						x="227"
-						y="176"
+						y="180"
 						width="37"
 						height="26"
 						key="staticText-267"/>
@@ -1321,7 +1321,7 @@
 				<staticText>
 					<reportElement
 						x="190"
-						y="176"
+						y="180"
 						width="37"
 						height="26"
 						key="staticText-268"/>
@@ -1339,7 +1339,7 @@
 				<staticText>
 					<reportElement
 						x="289"
-						y="176"
+						y="180"
 						width="44"
 						height="26"
 						key="staticText-269"/>
@@ -1357,7 +1357,7 @@
 				<staticText>
 					<reportElement
 						x="264"
-						y="176"
+						y="180"
 						width="25"
 						height="26"
 						key="staticText-270"/>
@@ -1375,7 +1375,7 @@
 				<staticText>
 					<reportElement
 						x="478"
-						y="165"
+						y="169"
 						width="40"
 						height="11"
 						key="staticText-271"/>
@@ -1388,7 +1388,7 @@
 				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="516"
-						y="165"
+						y="169"
 						width="19"
 						height="11"
 						key="textField-224"/>
@@ -1401,7 +1401,7 @@
 				<staticText>
 					<reportElement
 						x="28"
-						y="163"
+						y="167"
 						width="510"
 						height="14"
 						key="staticText-272"/>
@@ -1433,7 +1433,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{Folio}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="333"
 						y="1"
