@@ -831,7 +831,7 @@
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="4"
+						y="3"
 						width="243"
 						height="129"
 						key="rectangle-9"
