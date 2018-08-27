@@ -206,7 +206,7 @@ class VentaService implements  EventPublisher{
         return pedido
     }
 
-    def generarCfdi(Venta venta){
+    def generarCfdi_Bak(Venta venta){
         assert venta.cuentaPorCobrar, " La venta ${venta.documento} no se ha facturado"
         def comprobante = cfdiFacturaBuilder.build(venta)
 
@@ -216,20 +216,25 @@ class VentaService implements  EventPublisher{
         return cfdi
     }
 
+    @Transactional
     def timbrar(Venta venta){
-        log.debug("Timbrando  {}", venta.statusInfo());
-        assert venta.cuentaPorCobrar, "La venta ${venta} no se ha facturado"
-        assert !venta.cuentaPorCobrar?.cfdi?.uuid, "La venta ${venta} ya esta timbrada "
-        def cfdi = venta.cuentaPorCobrar.cfdi
-        if (cfdi == null) {
-            cfdi = generarCfdi(venta)
-        }
+        log.debug("Timbrando  {}", venta.statusInfo())
+        def cxc = venta.cuentaPorCobrar
+        def cfdi = generarCfdi(venta)
         cfdi = cfdiTimbradoService.timbrar(cfdi)
-        venta.cuentaPorCobrar.uuid = cfdi.uuid
-        venta.save flush:true
-        return cfdi;
+        cxc.save flush:true
+        return cfdi
     }
 
+    @Transactional
+    def generarCfdi(Venta venta){
+        def cxc = venta.cuentaPorCobrar
+        def comprobante = cfdiFacturaBuilder.build(venta)
+        def cfdi = cfdiService.generarCfdi(comprobante, 'I', venta.ventaIne)
+        cxc.cfdi = cfdi
+        cxc.save()
+        return cfdi
+    }
 
     def logEntity(Venta venta) {
         /*

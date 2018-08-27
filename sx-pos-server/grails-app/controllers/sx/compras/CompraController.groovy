@@ -73,6 +73,9 @@ class CompraController extends RestfulController{
         resource.partidas.each {
             if(it.sucursal == null)
                 it.sucursal = resource.sucursal
+            it.clave = it.producto.clave
+            it.descripcion = it.producto.descripcion
+            it.unidad = it.producto.unidad
         }
         resource.save flush: true
     }

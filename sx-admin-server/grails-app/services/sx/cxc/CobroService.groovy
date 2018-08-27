@@ -26,6 +26,9 @@ class CobroService {
             cobro.referencia = cobro.tarjeta.validacion.toString()
         }
         setComisiones(cobro)
+        if(cobro.id == null) {
+            cobro.fecha = new Date()
+        }
         cobro.save flush:true
 
     }
@@ -55,7 +58,7 @@ class CobroService {
     }
 
     def registrarAplicacion(Cobro cobro, List<CuentaPorCobrar> pendientes){
-
+        def fecha = new Date()
         def disponible = cobro.disponible
         if (disponible <= 0)
             return cobro
@@ -67,15 +70,15 @@ class CobroService {
                 aplicacion.importe = importe
                 aplicacion.formaDePago = cobro.formaDePago
                 aplicacion.cuentaPorCobrar = cxc
-                aplicacion.fecha = cobro.fecha
+                aplicacion.fecha = fecha
+
                 cobro.addToAplicaciones(aplicacion)
                 if(cobro.primeraAplicacion == null)
                     cobro.primeraAplicacion = fecha
+
                 disponible = disponible - importe
             }
         }
-        if(!cobro.comentario)
-            cobro.comentario = "Ult. aplic. ${fecha.format('dd/MM/yyyy')}"
         cobro.save flush: true
         return cobro
     }

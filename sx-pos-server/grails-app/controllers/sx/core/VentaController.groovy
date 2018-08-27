@@ -271,7 +271,7 @@ class VentaController extends RestfulController{
     def timbrar() {
         Venta venta = Venta.get(params.id)
         try {
-            def cfdi = ventaService.generarCfdi(venta)
+            // def cfdi = ventaService.generarCfdi(venta)
             cfdi = ventaService.timbrar(venta)
             respond cfdi
             return

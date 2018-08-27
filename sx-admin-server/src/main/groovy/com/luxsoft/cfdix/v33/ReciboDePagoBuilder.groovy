@@ -129,7 +129,7 @@ class ReciboDePagoBuilder {
         pagos.version = '1.0'
 
         Pagos.Pago pago = factory.createPagosPago()
-        pago.fechaPago = DateUtils.getCfdiDate(cobro.fecha) // Preguntar
+        pago.fechaPago = DateUtils.getCfdiDate(cobro.primeraAplicacion) // Preguntar
         pago.formaDePagoP = getFormaDePago()
         pago.monedaP = cobro.moneda.currencyCode
         if(this.cobro.moneda.currencyCode != 'MXN') {

@@ -53,7 +53,7 @@ class CfdiService {
             return cfdi
         }catch (Exception ex) {
             //ex.printStackTrace()
-            throw ex;
+            throw ex
         }
 
     }
