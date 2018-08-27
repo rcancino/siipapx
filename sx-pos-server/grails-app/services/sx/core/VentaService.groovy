@@ -220,8 +220,9 @@ class VentaService implements  EventPublisher{
     def timbrar(Venta venta){
         log.debug("Timbrando  {}", venta.statusInfo())
         def cxc = venta.cuentaPorCobrar
-        def cfdi = generarCfdi(venta)
-        cfdi = cfdiTimbradoService.timbrar(cfdi)
+        def cfdi = cxc.cfdi
+            cfdi.receptorRfc=cxc.cliente.rfc
+         cfdi = cfdiTimbradoService.timbrar(cfdi)
         cxc.save flush:true
         return cfdi
     }
@@ -232,7 +233,7 @@ class VentaService implements  EventPublisher{
         def comprobante = cfdiFacturaBuilder.build(venta)
         def cfdi = cfdiService.generarCfdi(comprobante, 'I', venta.ventaIne)
         cxc.cfdi = cfdi
-        cxc.save()
+        cxc.save(flush: true)
         return cfdi
     }
 

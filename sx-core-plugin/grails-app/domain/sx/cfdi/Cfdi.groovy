@@ -64,7 +64,7 @@ class Cfdi {
         url url:true
         fileName maxSize:150
         folio nullable:true,maxSize:30
-        serie unique: ['folio'], nullable:true,maxSize:30
+        serie unique: 'folio', nullable:true,maxSize:30
         tipoDeComprobante inList:['I','E','T','P','N']
         sw2 nullable: true
         versionCfdi inList: ['3.2', '3.3']
@@ -78,7 +78,7 @@ class Cfdi {
 
     static  mapping={
         id generator:'uuid'
-        folio: ['serie']
+       
 
     }
 
