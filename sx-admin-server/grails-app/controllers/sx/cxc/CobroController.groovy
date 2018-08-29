@@ -54,12 +54,13 @@ class CobroController extends RestfulController{
     }
 
     def search(CobroSearchCommand command) {
-        // log.debug('Search: {}', command)
+        log.debug('Search: {}', command)
         params.max = command.registros
         params.sort = params.sort ?:'fecha'
         params.order = params.order ?:'asc'
 
-        def query = Cobro.where {}
+        def query = Cobro.where { (formaDePago != 'PAGO_DIF') && (formaDePago != 'DEVOLUCION') && (formaDePago != 'BONIFICACION')}
+        //  query = query.where {formaDePago != 'DEVOLUCION' || formaDePago != 'BONIFICACION' }
         if(params.cartera) {
             String tipoCartera = params.cartera
             if(tipoCartera == 'CON') {
@@ -97,6 +98,7 @@ class CobroController extends RestfulController{
         }
 
     }
+
 
 
     protected Object createResource() {
@@ -195,6 +197,14 @@ class CobroController extends RestfulController{
         forward action: 'show', id: cobro.id
     }
 
+    def timbradoBatch(TimbradoBatchCommand command) {
+        List<Cobro> timbrados = []
+        command.cobros.each {
+            timbrados << cobroService.timbrar(it)
+        }
+        respond timbrados
+    }
+
     def imprimirRecibo(Cobro cobro) {
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         def data = ReciboDePagoPdfGenerator.getReportData(cobro)
@@ -210,6 +220,17 @@ class CobroController extends RestfulController{
         cobro.refresh()
         forward action: 'show', id: command.cobro.id
     }
+
+    def eliminarAplicacion(AplicacionDeCobro aplicacionDeCobro) {
+        if(aplicacionDeCobro == null) {
+            notFound()
+            return
+        }
+        Cobro cobro = cobroService.eliminarAplicacion(aplicacionDeCobro)
+        cobro.refresh()
+        forward action: 'show', id: cobro.id
+    }
+
 
     def handleException(Exception e) {
         String message = ExceptionUtils.getRootCauseMessage(e)
@@ -257,6 +278,10 @@ class CobroSearchCommand {
         cliente nullable: true
     }
 
+}
+
+class TimbradoBatchCommand {
+    List<Cobro> cobros
 }
 
 

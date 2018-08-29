@@ -83,6 +83,19 @@ class CobroService {
         return cobro
     }
 
+    def eliminarAplicacion(AplicacionDeCobro aplicacionDeCobro) {
+        Cobro cobro = aplicacionDeCobro.cobro
+        if(cobro.cfdi) {
+            throw new RuntimeException("Cobro con recibo de pago (CFDI)  ${cobro.cfdi.uuid} ya generado NO SE PUEDENDEN MODIFICAR APLICACIONES")
+        }
+        cobro.removeFromAplicaciones(aplicacionDeCobro)
+        if(!cobro.aplicaciones) {
+            cobro.primeraAplicacion = null
+        }
+        cobro.save flush: true
+        return cobro
+    }
+
     def registrarAplicacion2(Cobro cobro){
 
         def disponible = cobro.disponible

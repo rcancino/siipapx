@@ -85,7 +85,7 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def pendientes(Cliente cliente) {
-
+        log.info('Pendientes {}', params)
         if (cliente == null) {
             notFound()
             return
