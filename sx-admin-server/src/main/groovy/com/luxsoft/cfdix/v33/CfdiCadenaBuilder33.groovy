@@ -20,7 +20,7 @@ class CfdiCadenaBuilder33 {
 	private Transformer transformer;
 
 	String build(Comprobante comprobante){
-		log.debug('Generando cadena original para comprobante {}', comprobante.folio)
+		// log.debug('Generando cadena original para comprobante {}', comprobante.folio)
 		// Build transformer
 		Transformer transformer = getTransformer()
 
@@ -33,7 +33,7 @@ class CfdiCadenaBuilder33 {
 
 		transformer.transform(xmlSource, target)
 		String cadena = writer.toString()
-		log.debug('Cadena generada: {}', cadena)
+		log.debug('Cadena original generada: OK')
 		return cadena
 	}
 

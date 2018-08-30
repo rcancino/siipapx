@@ -56,6 +56,8 @@ class UrlMappings {
         "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
         "/api/cfdis/enviarEmail/$id?"(controller:"cfdi", action:"enviarEmail")
         "/api/cfdis/envioBatch"(controller: "cfdi", action: 'envioBatch', method: 'PUT')
+        "/api/cfdis/envioBatchNormal"(controller: "cfdi", action: 'envioBatchNormal', method: 'PUT')
+
 
         // Compras
         "/api/compras"(resources: "compra")

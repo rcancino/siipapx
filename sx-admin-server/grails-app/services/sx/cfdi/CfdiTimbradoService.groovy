@@ -42,7 +42,7 @@ class CfdiTimbradoService {
      */
     def timbrarEdicom(Cfdi cfdi) {
         File file = FileUtils.toFile(cfdi.url)
-        log.debug('Timbrando archivo {}' ,file.getPath())
+        // log.debug('Timbrando archivo {}' ,file.getPath())
         byte[] res = null;
         if (this.isTimbradoDePrueba()) {
             log.debug('Timbrado de prueba')
@@ -51,7 +51,7 @@ class CfdiTimbradoService {
         } else {
             res = cfdiEdicomService.getCfdi(file.bytes)
         }
-        log.debug('Timbrado exitoso')
+
         Map map = ZipUtils.descomprimir(res)
 
         def entry = map.entrySet().iterator().next()
@@ -59,7 +59,7 @@ class CfdiTimbradoService {
         File target = new File(file.getParent(), targetName)
 
         FileUtils.writeByteArrayToFile(target, entry.getValue())
-        log.debug('Archivo timbrado generado: {}', target.getPath())
+        log.debug('Timbrado OK Archio: {}', target.getPath())
         CfdiTimbre timbre = new CfdiTimbre(entry.getValue())
         cfdi.uuid = timbre.uuid
         cfdi.url = target.toURI().toURL()

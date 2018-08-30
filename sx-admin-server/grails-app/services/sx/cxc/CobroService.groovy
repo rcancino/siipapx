@@ -7,6 +7,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
+import sx.core.Cliente
 import sx.core.Folio
 
 @Transactional
@@ -147,17 +148,17 @@ class CobroService {
 
     def generarCfdi(Cobro cobro) {
         validarParaTimbrado(cobro)
+        log.debug(' Generando recibo electronico de pago para cobro: {}', cobro.id)
         Comprobante comprobante = this.reciboDePagoBuilder.build(cobro)
         Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'P', 'COBROS')
+        log.debug('CFDI generado {}', cfdi.id)
         cobro.cfdi = cfdi
-
         cobro.save flush: true
         return cobro
     }
 
     def timbrar(Cobro cobro){
         if(!cobro.cfdi) {
-            log.info('Generando Recibo electronico de pago cobro: {}', cobro.id)
             cobro = generarCfdi(cobro)
         }
         cfdiTimbradoService.timbrar(cobro.cfdi)
@@ -171,6 +172,38 @@ class CobroService {
         assert sinCfdi == null , 'El cobro no debe tener aplicaciones a facturas sin timbrar'
         List<AplicacionDeCobro> contado = cobro.aplicaciones.find{AplicacionDeCobro det -> det.cuentaPorCobrar.tipo == 'CON' }
         assert contado == null, 'El cobro no debe tener aplicaciones de contado'
+    }
+
+    def envioDeRecibo(Cobro cobro, String targetEmail) {
+        if(cobro.cfdi == null) {
+            throw new RuntimeException("Cobro ${cobro.id} no tiene recibo (CFDI) generado")
+        }
+        if(!targetEmail) {
+            Cliente cliente = cobro.cliente
+            if(!cliente.cfdiValidado) {
+                throw new RuntimeException("El Cliente ${cliente.nombre} no tiene su Email validado, no se puede mandar el correo")
+            }
+            targetEmail = cliente.getCfdiMail()
+        }
+        Cfdi cfdi = cobro.cfdi
+        String message = """Apreciable cliente por este medio le hacemos llegar un comprobante fiscal digital (CFDI) . Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración
+                la puede dirigir a: servicioaclientes@papelsa.com.mx
+            """
+        def xml = cfdi.getUrl().getBytes()
+        def pdf = generarImpresionV33(cfdi).toByteArray()
+        sendMail {
+            multipart false
+            to targetEmail
+            from 'facturacion@papelsa.mobi'
+            subject "CFDI ${cfdi.serie}-${cfdi.folio}"
+            text message
+            attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
+            attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
+        }
+        cfdi.enviado = new Date()
+        cfdi.email = targetEmail
+        cfdi.save flush: true
+        log.debug('CFDI: {} enviado a: {}', cfdi.uuid, targetEmail)
     }
 
 

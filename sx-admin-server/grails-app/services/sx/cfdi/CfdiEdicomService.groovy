@@ -20,7 +20,6 @@ class CfdiEdicomService {
 
     @CompileDynamic
     def getCfdiTest(byte[] data){
-        log.debug("Timbrando" )
         Empresa empresa = getEmpresa()
         String url = 'http://cfdi.service.ediwinws.edicom.com'
         SOAPResponse response = client.send(SOAPAction: url, sslTrustAllCerts:true){

@@ -47,7 +47,7 @@ class ReciboDePagoBuilder {
         return comprobante
     }
     def buildComprobante(){
-        log.info("Generando Recibo de pago CFDI 3.3 para Cobro {} {} - {} ", cobro.tipo)
+        // log.info("Generando Recibo de pago CFDI 3.3 para Cobro {} {} - {} ", cobro.tipo)
         this.comprobante = factory.createComprobante()
         comprobante.version = "3.3"
         comprobante.tipoDeComprobante = CTipoDeComprobante.P
@@ -138,7 +138,6 @@ class ReciboDePagoBuilder {
         List<AplicacionDeCobro> aplicaciones = this.cobro.aplicaciones.findAll{it.recibo == null}
 
         BigDecimal monto = this.cobro.importe
-        log.debug('Monto del pago: {}', monto)
         pago.monto = monto
 
         pago.numOperacion = this.cobro.referencia

@@ -2,15 +2,19 @@ package sx.cfdi
 
 import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.cfdix.v33.NotaPdfGenerator
+import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
 import com.luxsoft.cfdix.v33.V33PdfGenerator
 import grails.rest.RestfulController
+import grails.transaction.NotTransactional
 import groovy.transform.ToString
 import org.apache.commons.lang3.exception.ExceptionUtils
+import org.springframework.http.HttpStatus
 import sx.core.Cliente
 import sx.core.Venta
+import sx.cxc.Cobro
 import sx.cxc.CuentaPorCobrar
 import sx.cxc.NotaDeCargo
 import sx.cxc.NotaDeCredito
@@ -72,6 +76,8 @@ class CfdiController extends RestfulController{
             return generarPdfFactura()
         } else if(cfdi.origen == 'NOTA_CARGO'){
             return generarPdfNotaDeCargo(cfdi)
+        } else if(cfdi.tipoDeComprobante == 'P' ){
+            return generarPdfReciboDePago(cfdi)
         } else {
             return generarPdfNota(cfdi)
         }
@@ -105,14 +111,27 @@ class CfdiController extends RestfulController{
         return reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
     }
 
+    private generarPdfReciboDePago( Cfdi cfdi) {
+        def realPath = servletContext.getRealPath("/reports") ?: 'reports'
+        Cobro cobro = Cobro.where{cfdi == cfdi}.find()
+        def data = ReciboDePagoPdfGenerator.getReportData(cobro)
+        Map parametros = data['PARAMETROS']
+        parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
+       return reportService.run('ReciboDePagoCFDI33.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+    }
+
     def enviarEmail(Cfdi cfdi) {
 
         String targetEmail = params.target
+        Cliente cliente = Cliente.where {rfc == cfdi.receptorRfc}.find()
         if(!targetEmail) {
-            Cliente cliente = Cliente.where {rfc == cfdi.receptorRfc}.find()
             if (cliente) {
                 targetEmail = cliente.getCfdiMail()
             }
+        }
+        // En caso de ser el correo del cliente y no estar validado
+        if(params.target == targetEmail && !cliente.cfdiValidado) {
+            throw new RuntimeException("Correo ${targetEmail} de cliente ${cliente.nombre} no ha sido validado")
         }
 
         if (targetEmail) {
@@ -162,16 +181,66 @@ class CfdiController extends RestfulController{
         respond 'OK', status:200
     }
 
+    @NotTransactional
+    def envioBatchNormal(EnvioBatchCommand command) {
+        log.debug('Envio batch: {}', command)
+        List<Cfdi> enviados = []
+        command.facturas.each {
+            Cfdi cfdi = Cfdi.get(it)
+            Cliente cliente = Cliente.where {rfc == cfdi.receptorRfc}.find()
+            def targetEmail = cliente.getCfdiMail()
+            log.debug('Enviando cfdi: {} a : {} ', cfdi.id, cliente.nombre)
+            if(cliente.cfdiMail && cliente.cfdiValidado) {
+
+                String message = """Apreciable cliente por este medio le hacemos llegar un comprobante fiscal digital (CFDI) . Este correo se envía de manera autmática favor de no responder a la dirección del mismo. Cualquier duda o aclaración
+                la puede dirigir a: servicioaclientes@papelsa.com.mx
+                """
+                def xml = cfdi.getUrl().getBytes()
+                def pdf = generarImpresionV33(cfdi).toByteArray()
+
+                sendMail {
+                    multipart false
+                    to targetEmail
+                    from 'facturacion@papelsa.mobi'
+                    subject "CFDI ${cfdi.serie}-${cfdi.folio}"
+                    text message
+                    attach("${cfdi.serie}-${cfdi.folio}.xml", 'text/xml', xml)
+                    attach("${cfdi.serie}-${cfdi.folio}.pdf", 'application/pdf', pdf)
+                }
+                cfdi.enviado = new Date()
+                cfdi.email = targetEmail
+                cfdi.save flush: true
+
+                enviados << cfdi
+            } else {
+                cfdi.email = targetEmail
+                cfdi.comentario = "NO ENVIADO CORREO: ${targetEmail} NO VALIDADO"
+                cfdi.save flush: true
+                log.debug('CANCELADO correo: {}  NO validado {}', targetEmail, cliente.cfdiValidado )
+            }
+        }
+        respond enviados
+    }
+
+    def handleException(Exception e) {
+        String message = ExceptionUtils.getRootCauseMessage(e)
+        log.error(message, ExceptionUtils.getRootCause(e))
+        respond([message: message], status: 500)
+    }
+
 }
 
 @ToString(includeNames = true)
 public class EnvioBatchCommand {
     Cliente cliente
-    List facturas;
+    List facturas
     String target
 
     static constraints = {
         target email: true
+        cliente nullable: true
+        target nullable: true
     }
 
 }
+

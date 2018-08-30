@@ -21,7 +21,7 @@ public class CfdiSellador33 {
 	private Signature signature
 
 	Comprobante sellar(Comprobante comprobante, Empresa empresa){
-		log.debug('Sellando comprobante: {}', comprobante.folio)
+		// log.debug('Sellando comprobante: {}', comprobante.folio)
 		String cadenaOriginal = cadenaBuilder.build(comprobante)
 
 		final byte[] input=cadenaOriginal.getBytes("UTF-8")
@@ -33,7 +33,7 @@ public class CfdiSellador33 {
 		final byte[] signedData=signature.sign()
 		final byte[] encoedeData=Base64.encode(signedData)
 		String sello = new String(encoedeData,"UTF-8")
-		log.debug('Sello generado  {}', sello)
+		log.debug('Sello digital generado  OK')
 		comprobante.sello = sello
 		return comprobante
 	}

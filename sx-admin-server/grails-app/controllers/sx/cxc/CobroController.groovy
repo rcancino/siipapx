@@ -54,13 +54,12 @@ class CobroController extends RestfulController{
     }
 
     def search(CobroSearchCommand command) {
-        log.debug('Search: {}', command)
+        // log.debug('Search: {}', command)
         params.max = command.registros
         params.sort = params.sort ?:'fecha'
         params.order = params.order ?:'asc'
 
-        def query = Cobro.where { (formaDePago != 'PAGO_DIF') && (formaDePago != 'DEVOLUCION') && (formaDePago != 'BONIFICACION')}
-        //  query = query.where {formaDePago != 'DEVOLUCION' || formaDePago != 'BONIFICACION' }
+        def query = Cobro.where { formaDePago != 'PAGO_DIF' }
         if(params.cartera) {
             String tipoCartera = params.cartera
             if(tipoCartera == 'CON') {
