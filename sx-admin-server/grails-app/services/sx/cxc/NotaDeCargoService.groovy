@@ -21,11 +21,12 @@ class NotaDeCargoService {
     NotaDeCargoBuilder notaDeCargoBuilder
 
     NotaDeCargo save(NotaDeCargo nota){
-        if (!nota.id){
-            nota.folio = Folio.nextFolio('NOTA_DE_CARGO', nota.serie)
-            nota.sucursal = AppConfig.first().sucursal
-            nota.createUser = 'admin'
+        if(nota.id) {
+            throw new RuntimeException('Nota ya ha sido salvada')
         }
+        nota.folio = Folio.nextFolio('NOTA_DE_CARGO', nota.serie)
+        nota.sucursal = AppConfig.first().sucursal
+        nota.createUser = 'admin'
         nota.updateUser = 'admin'
         nota.usoDeCfdi = nota.usoDeCfdi ?: 'G01'
         actualizarPartidas(nota)
@@ -34,10 +35,51 @@ class NotaDeCargoService {
         } else {
             calcularProrrateo(nota)
         }
-        nota.importe = nota.partidas.sum 0.0, {it.importe}
-        nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
-        nota.total = nota.partidas.sum 0.0, {it.total}
+        if(nota.partidas) {
+            nota.importe = nota.partidas.sum 0.0, {it.importe}
+            nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
+            nota.total = nota.partidas.sum 0.0, {it.total}
+        } else {
+            if(nota.total <= 0.0) {
+                throw new RuntimeException('Nota de cargo sin conceptos debe tener el importe debe ser mayor a 0')
+            }
+            generarConceptoUnico(nota)
+            nota.importe = nota.partidas.sum 0.0, {it.importe}
+            nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
+            nota.total = nota.partidas.sum 0.0, {it.total}
+        }
         generarCuentaPorCobrar(nota)
+        nota.save failOnError: true, flush:true
+    }
+
+    NotaDeCargo update(NotaDeCargo nota){
+        if(nota.id == null) {
+            throw new RuntimeException('Nota de cargo no se ha salvado')
+        }
+        nota.updateUser = 'admin'
+        if(nota.tipo != 'CHE') {
+            if (nota.tipoDeCalculo == 'PORCENTAJE') {
+                calcularPorentaje(nota)
+            } else {
+                calcularProrrateo(nota)
+            }
+            nota.importe = nota.partidas.sum 0.0, {it.importe}
+            nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
+            nota.total = nota.partidas.sum 0.0, {it.total}
+        } else {  // Cheques devueltos
+            log.info('Actualizando nota de cargo tipo CHE')
+            if(nota.total <= 0.0) {
+                throw new RuntimeException('Nota de cargo sin conceptos debe tener el importe debe ser mayor a 0')
+            }
+            if(!nota.partidas) {
+                generarConceptoUnico(nota)
+            }
+            actualizarConceptoUnico(nota)
+            nota.importe = nota.partidas.sum 0.0, {it.importe}
+            nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
+            nota.total = nota.partidas.sum 0.0, {it.total}
+
+        }
         nota.save failOnError: true, flush:true
     }
 
@@ -135,8 +177,12 @@ class NotaDeCargoService {
     def generarCfdi(NotaDeCargo nota) {
         Comprobante comprobante = this.notaDeCargoBuilder.build(nota);
         Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'I', 'NOTA_CARGO')
+        nota.cuentaPorCobrar.cfdi = cfdi
+        nota.cuentaPorCobrar.uuid = cfdi.uuid
         nota.cfdi = cfdi
         nota.save flush: true
+        //Cxc
+
         return nota
     }
 
@@ -151,6 +197,43 @@ class NotaDeCargoService {
         } catch (Throwable ex){
             ex.printStackTrace()
             throw  new NotaDeCargoException(ExceptionUtils.getRootCauseMessage(ex))
+        }
+    }
+
+    def generarConceptoUnico(NotaDeCargo nota) {
+        if(!nota.partidas) {
+            log.info('Generando concepto unico para nora tipo {} N.Cargo ID: {}', nota.tipo, nota.id)
+            NotaDeCargoDet det = new NotaDeCargoDet()
+            det.comentario = nota.comentario
+            det.total = nota.total
+            det.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
+            det.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
+            det.total = nota.importe + nota.impuesto
+            det.documento = nota.folio
+            det.documentoTipo = nota.tipo
+            det.documentoSaldo = 0.0
+            det.documentoTotal = 0.0
+            det.documentoFecha = nota.fecha
+            det.sucursal = nota.sucursal.nombre
+            det.
+            nota.addToPartidas(det)
+        }
+    }
+
+    def actualizarConceptoUnico(NotaDeCargo nota) {
+        if(nota.partidas && nota.tipo == 'CHE') {
+            NotaDeCargoDet det = nota.partidas[0]
+            det.comentario = nota.comentario
+            det.total = nota.total
+            det.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
+            det.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
+            det.total = nota.importe + nota.impuesto
+            det.documento = nota.folio
+            det.documentoTipo = nota.tipo
+            det.documentoSaldo = nota.total
+            det.documentoTotal = nota.total
+            det.documentoFecha = nota.fecha
+            det.sucursal = nota.sucursal.nombre
         }
     }
 

@@ -17,7 +17,11 @@ class Proveedor {
 
     Boolean activo = true
 
+    Boolean nacional = true
+
     String tipo = 'COMPRAS'
+
+    String comentario
 
     String telefono1
 
@@ -25,32 +29,46 @@ class Proveedor {
 
     String telefono3
 
-    boolean nacional = true
-
     String	cuentaBancaria
 
     Integer plazo = 0
+
+    BigDecimal limiteDeCredito = 0.0
 
     Direccion direccion
 
     Long sw2
 
+    BigDecimal descuentoF = 0.0
+
+    Long diasDF = 0
+
+    Boolean	fechaRevision = true
+
+    Boolean	imprimirCosto = false
+
+
     Date dateCreated
 
     Date lastUpdated
+
+    String createUser
+    String updateUser
 
     static constraints = {
         rfc size:12..13
         nombre unique: true
         clave unique: true
-        tipo inList:['COMPRAS','GASTOS','COMPRA_NACIONAL','COMPRA_IMPORTACION','GASTOS_FLETES','GASTOS_PROFESIONALES','GASTOS_SERVICIOS',
-                     'GASTOS_BIENES','GASTOS_ BIENES_Y_SERVICIOS']
-        sw2 nullable: true
+        tipo inList:['COMPRAS','GASTOS', 'MIXTO']
         telefono1 nullable:true ,maxSize:30
         telefono2 nullable:true ,maxSize:30
         telefono3 nullable:true ,maxSize:30
         cuentaBancaria nullable: true
         direccion nullable: true
+        sw2 nullable: true
+        updateUser nullable: true
+        createUser nullable: true
+        comentario nullable: true
     }
 
     static embedded = ['direccion']

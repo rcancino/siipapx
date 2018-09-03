@@ -28,7 +28,6 @@ class NotaDeCargoController extends RestfulController {
     @Override
     Object save() {
         NotaDeCargo nota = createResource()
-
         nota.validate(['cliente','total'])
         if (nota.hasErrors()) {
             // transactionStatus.setRollbackOnly()
@@ -38,29 +37,10 @@ class NotaDeCargoController extends RestfulController {
         nota = notaDeCargoService.save(nota);
         respond nota, [status: CREATED, view:'show']
     }
-    /*
-    @Override
-    Object update() {
-        NotaDeCargo nota = NotaDeCargo.get(params.id)
-        if (nota == null) {
-            transactionStatus.setRollbackOnly()
-            notFound()
-            return
-        }
-        nota.properties = getObjectToBind()
-        if (nota.hasErrors()) {
-            transactionStatus.setRollbackOnly()
-            respond nota.errors, view:'edit' // STATUS CODE 422
-            return
-        }
-        nota = notaDeCargoService.save(nota)
-        respond nota, [status: OK]
-    }
-    */
 
     @Override
     protected Object updateResource(Object resource) {
-        notaDeCargoService.save(resource)
+        notaDeCargoService.update(resource)
     }
 
     @Override
