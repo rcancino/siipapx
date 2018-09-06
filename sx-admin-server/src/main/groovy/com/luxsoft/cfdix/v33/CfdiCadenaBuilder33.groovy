@@ -39,7 +39,6 @@ class CfdiCadenaBuilder33 {
 
 	public Transformer getTransformer() {
 		if (!this.transformer) {
-			log.debug('Generando javax.xml.transform.Transformer para {}', this.xsltUrl)
 			TransformerFactory factory=TransformerFactory.newInstance()
 			StreamSource source	= new StreamSource(xsltUrl)
 			this.transformer = factory.newTransformer(source)

@@ -68,18 +68,17 @@ class NotaDeCargoService {
             nota.total = nota.partidas.sum 0.0, {it.total}
         } else {  // Cheques devueltos
             log.info('Actualizando nota de cargo tipo CHE')
-            if(nota.total <= 0.0) {
-                throw new RuntimeException('Nota de cargo sin conceptos debe tener el importe debe ser mayor a 0')
-            }
             if(!nota.partidas) {
                 generarConceptoUnico(nota)
+            } else {
+                actualizarConceptoUnico(nota)
             }
-            actualizarConceptoUnico(nota)
             nota.importe = nota.partidas.sum 0.0, {it.importe}
             nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
             nota.total = nota.partidas.sum 0.0, {it.total}
 
         }
+        actualizarCuentaPorCobrar(nota)
         nota.save failOnError: true, flush:true
     }
 
@@ -164,6 +163,15 @@ class NotaDeCargoService {
         return nota
     }
 
+    def actualizarCuentaPorCobrar(NotaDeCargo nota) {
+        CuentaPorCobrar cxc = nota.cuentaPorCobrar
+        cxc.importe = nota.importe
+        cxc.impuesto = nota.impuesto
+        cxc.subtotal = nota.importe
+        cxc.total = nota.total
+        cxc.save()
+    }
+
     def delete(NotaDeCargo nota){
         if(nota.cfdi) {
           throw new NotaDeCargoException("Nota de cargo ya timbrada no se puedd eliminar")
@@ -202,20 +210,22 @@ class NotaDeCargoService {
 
     def generarConceptoUnico(NotaDeCargo nota) {
         if(!nota.partidas) {
-            log.info('Generando concepto unico para nora tipo {} N.Cargo ID: {}', nota.tipo, nota.id)
+            log.info('Generando concepto unico para nora tipo {} N.Cargo ', nota.tipo)
             NotaDeCargoDet det = new NotaDeCargoDet()
             det.comentario = nota.comentario
-            det.total = nota.total
-            det.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
-            det.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
-            det.total = nota.importe + nota.impuesto
+
+            BigDecimal total = nota.total
+            det.total = total
+            det.importe = MonedaUtils.calcularImporteDelTotal(total)
+            det.impuesto = MonedaUtils.calcularImpuesto(det.importe)
+            det.total = det.importe + det.impuesto
+
             det.documento = nota.folio
             det.documentoTipo = nota.tipo
             det.documentoSaldo = 0.0
             det.documentoTotal = 0.0
             det.documentoFecha = nota.fecha
             det.sucursal = nota.sucursal.nombre
-            det.
             nota.addToPartidas(det)
         }
     }
@@ -224,10 +234,13 @@ class NotaDeCargoService {
         if(nota.partidas && nota.tipo == 'CHE') {
             NotaDeCargoDet det = nota.partidas[0]
             det.comentario = nota.comentario
-            det.total = nota.total
-            det.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
-            det.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
-            det.total = nota.importe + nota.impuesto
+
+            BigDecimal total = nota.total
+            det.total = total
+            det.importe = MonedaUtils.calcularImporteDelTotal(total)
+            det.impuesto = MonedaUtils.calcularImpuesto(det.importe)
+            det.total = det.importe + det.impuesto
+
             det.documento = nota.folio
             det.documentoTipo = nota.tipo
             det.documentoSaldo = nota.total
