@@ -158,7 +158,7 @@ class ReciboDePagoBuilder {
             relacionado.folio = cxc.documento
             relacionado.serie = cxc.cfdi.serie
             relacionado.monedaDR = cxc.moneda.currencyCode
-            if(this.cobro.moneda.currencyCode != 'MXN') {
+            if(this.cobro.moneda.currencyCode != cxc.moneda.currencyCode) {
                 relacionado.tipoCambioDR = cxc.tipoDeCambio
             }
             relacionado.metodoDePagoDR = 'PPD'

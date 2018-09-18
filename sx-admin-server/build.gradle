@@ -8,6 +8,8 @@ grails {
     }
 }
 
+version "1.0.1"
+
 dependencies {
     //compile project(':sx-core-plugin')
     compile 'org.grails.plugins:spring-security-core:3.2.0'
