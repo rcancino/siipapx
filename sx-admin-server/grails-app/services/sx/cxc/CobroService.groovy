@@ -77,6 +77,14 @@ class CobroService {
                 if(cobro.primeraAplicacion == null)
                     cobro.primeraAplicacion = fecha
 
+                if( cxc.tipo == 'CHE' ){
+
+                    def cliente = cxc.cliente
+                    cliente.chequeDevuelto =  cliente.chequeDevuelto - importe 
+                    cliente.save flush: true
+
+                }
+
                 disponible = disponible - importe
             }
         }
@@ -89,11 +97,20 @@ class CobroService {
         if(cobro.cfdi) {
             throw new RuntimeException("Cobro con recibo de pago (CFDI)  ${cobro.cfdi.uuid} ya generado NO SE PUEDENDEN MODIFICAR APLICACIONES")
         }
+
+        def importeApl=aplicacionDeCobro.importe
+        def cxcTipo=aplicacionDeCobro.cuentaPorCobrar.tipo
+
         cobro.removeFromAplicaciones(aplicacionDeCobro)
         if(!cobro.aplicaciones) {
             cobro.primeraAplicacion = null
         }
         cobro.save flush: true
+        if(cxcTipo == 'CHE'){
+             def cliente =cobro.cliente
+            cliente.chequeDevuelto=cliente.chequeDevuelto+importeApl
+            cliente.save flush: true
+        }
         return cobro
     }
 

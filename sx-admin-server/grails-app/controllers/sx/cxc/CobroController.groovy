@@ -172,11 +172,14 @@ class CobroController extends RestfulController{
         this.chequeDevueltoService.registrarChequeDevuelto(cobro.cheque, fecha)
         cobro.comentario = "CHEQUE DEVUELTO EL: ${fecha.format('dd/MM/yyyy')}"
         cobro.save flush: true
+       def cliente =cobro.cliente
+        cliente.chequeDevuelto=cliente.chequeDevuelto+cobro.importe
+        cliente.save flush: true
         respond cobro
     }
 
     def reporteDeCobranza(CobranzaPorFechaCommand command){
-        def repParams = [FECHA: command.fecha]
+        def repParams = [FECHA: command.fecha] 
         repParams.ORIGEN = params.cartera
         def pdf =  reportService.run('CobranzaCxc.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CobranzaCxc.pdf')
