@@ -167,7 +167,9 @@ class CobroService {
     }
 
     def validarParaTimbrado(Cobro cobro) {
-        assert cobro.disponible == 0.0, 'El cobro debe estar totalmente aplicado'
+        if(!cobro.aplicaciones) {
+            throw new RuntimeException("El cobro debe tener al menos una a plicacion")
+        }
         def sinCfdi = cobro.aplicaciones.find {AplicacionDeCobro det -> det.cuentaPorCobrar.cfdi == null}
         assert sinCfdi == null , 'El cobro no debe tener aplicaciones a facturas sin timbrar'
         List<AplicacionDeCobro> contado = cobro.aplicaciones.find{AplicacionDeCobro det -> det.cuentaPorCobrar.tipo == 'CON' }

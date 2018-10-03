@@ -12,6 +12,7 @@ import lx.cfdi.v33.CTipoFactor
 import lx.cfdi.v33.CUsoCFDI
 import lx.cfdi.v33.Comprobante
 import lx.cfdi.v33.ObjectFactory
+import sx.cfdi.Cfdi
 import sx.core.Folio
 import sx.cxc.AplicacionDeCobro
 import sx.cxc.Cobro
@@ -137,7 +138,7 @@ class ReciboDePagoBuilder {
         }
         List<AplicacionDeCobro> aplicaciones = this.cobro.aplicaciones.findAll{it.recibo == null}
 
-        BigDecimal monto = this.cobro.importe
+        BigDecimal monto = this.cobro.aplicado
         pago.monto = monto
 
         pago.numOperacion = this.cobro.referencia
@@ -154,7 +155,11 @@ class ReciboDePagoBuilder {
             Pagos.Pago.DoctoRelacionado relacionado = factory.createPagosPagoDoctoRelacionado()
 
             CuentaPorCobrar cxc = aplicacion.cuentaPorCobrar
-            relacionado.idDocumento = cxc.uuid
+            Cfdi cfdi = cxc.cfdi
+            if(!cfdi) {
+                throw new RuntimeException("La cuenta por cobrar ${cxc.tipo} ${cxc.documento} no tiene CFDI")
+            }
+            relacionado.idDocumento = cfdi.uuid
             relacionado.folio = cxc.documento
             relacionado.serie = cxc.cfdi.serie
             relacionado.monedaDR = cxc.moneda.currencyCode
@@ -163,21 +168,22 @@ class ReciboDePagoBuilder {
             }
             relacionado.metodoDePagoDR = 'PPD'
             relacionado.numParcialidad = 1
-            /*
-            BigDecimal saldoAnterior = (cxc.total - aplicacion.importe)?: cxc.total
-            if(saldoAnterior <= 1) {
-                saldoAnterior = cxc.total
-            }
-            */
+
             BigDecimal saldoAnterior = cxc.total
-            BigDecimal saldoInsoluto = saldoAnterior - aplicacion.importe
 
+            List<AplicacionDeCobro> aplicacionesAnteriores =
+                    AplicacionDeCobro.where {cuentaPorCobrar == cxc && id != aplicacion.id && cobro.cfdi != null}.list()
 
-            // log.debug("Imp Fac: ${cxc.total} Importe saldo anterior: ${saldoAnterior} Pago: ${aplicacion.importe} Sdo Insoluto: ${saldoInsoluto}")
+            BigDecimal pagosAnteriores = aplicacionesAnteriores.sum 0.0 ,{ it.importe}
+
+            if(pagosAnteriores > 0) {
+                saldoAnterior = cxc.total - pagosAnteriores
+            }
+
             relacionado.impSaldoAnt = saldoAnterior
             relacionado.impPagado = aplicacion.importe
             relacionado.impSaldoInsoluto = relacionado.impSaldoAnt - relacionado.impPagado
-
+            log.debug("Imp Fac: ${cxc.total} Importe saldo anterior: ${saldoAnterior } Pago: ${aplicacion.importe} Sdo Insoluto: ${relacionado.impSaldoInsoluto}")
             pago.doctoRelacionado.add(relacionado)
 
         }

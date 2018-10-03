@@ -162,7 +162,9 @@ class CfdiTimbradoService {
     }
 
     Boolean isTimbradoDePrueba() {
-        return Environment.current != Environment.PRODUCTION
+        Boolean produccion = (Environment.current == Environment.PRODUCTION)
+        Boolean queretaro = Environment.current.name == 'queretaro'
+        return !(produccion || queretaro)
     }
 
     Empresa getEmpresa() {

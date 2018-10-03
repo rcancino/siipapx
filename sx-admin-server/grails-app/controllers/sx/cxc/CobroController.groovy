@@ -54,7 +54,7 @@ class CobroController extends RestfulController{
     }
 
     def search(CobroSearchCommand command) {
-        // log.debug('Search: {}', command)
+        log.debug('Search: {}', command)
         params.max = command.registros
         params.sort = params.sort ?:'fecha'
         params.order = params.order ?:'asc'
@@ -232,6 +232,7 @@ class CobroController extends RestfulController{
 
 
     def handleException(Exception e) {
+        e.printStackTrace()
         String message = ExceptionUtils.getRootCauseMessage(e)
         log.error(message, ExceptionUtils.getRootCause(e))
         respond([message: message], status: 500)

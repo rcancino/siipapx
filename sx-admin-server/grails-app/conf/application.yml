@@ -91,8 +91,10 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://localhost/siipapx_oficinas?autoReconnect=false
+            #url: jdbc:mysql://localhost/siipapx_oficinas?autoReconnect=false
             #url: jdbc:mysql://10.10.1.225/qro_ofi?autoReconnect=false
+            #url: jdbc:mysql://localhost/siipapx_queretaro?autoReconnect=true
+            url: jdbc:mysql://10.10.1.229/siipapx_queretaro_ofi?autoReconnect=true
             username: root
             password: sys
     test:
@@ -129,6 +131,7 @@ environments:
         dataSource:
             dbCreate: update
             url: jdbc:mysql://10.10.9.1/siipapx?autoReconnect=false
+            #url: jdbc:mysql://localhost/siipapx_tacuba?autoReconnect=false
             username: root
             password: sys
             properties:
@@ -146,6 +149,12 @@ environments:
                 validationQuery: 'SELECT 1'
                 validationQueryTimeout: 3
                 validationInterval: 15000
+    certificacion:
+            dataSource:
+                dbCreate: update
+                url: jdbc:mysql://localhost/siipapx_oficinas?autoReconnect=true
+                username: root
+                password: sys
 ---
 server:
   port: 9095

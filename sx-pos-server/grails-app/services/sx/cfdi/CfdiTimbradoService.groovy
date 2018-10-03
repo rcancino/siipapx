@@ -5,9 +5,8 @@ import grails.util.Environment
 import org.apache.commons.io.FileUtils
 
 import com.luxsoft.utils.ZipUtils
-import org.bouncycastle.util.encoders.Base64
+
 import sx.cfdi.providers.edicom.CFDi
-import sx.cfdi.providers.edicom.CancelaResponse
 import sx.core.Empresa
 
 /*
@@ -154,7 +153,9 @@ class CfdiTimbradoService {
     }
 
     Boolean isTimbradoDePrueba() {
-        return Environment.current != Environment.PRODUCTION
+        Boolean produccion = (Environment.current == Environment.PRODUCTION)
+        Boolean queretaro = Environment.current.name == 'queretaro'
+        return !(produccion || queretaro)
     }
 
     Empresa getEmpresa() {
