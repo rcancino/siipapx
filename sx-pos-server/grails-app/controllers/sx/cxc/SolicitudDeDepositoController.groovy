@@ -6,6 +6,8 @@ import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang3.time.DateUtils
 import sx.core.Folio
 import sx.core.Sucursal
+import sx.tesoreria.Banco
+import sx.tesoreria.CuentaDeBanco
 
 @Secured("hasRole('ROLE_POS_USER')")
 class SolicitudDeDepositoController extends RestfulController{
@@ -91,6 +93,25 @@ class SolicitudDeDepositoController extends RestfulController{
         }
         respond query.list(params)
     }
+
+
+    def buscarDuplicada(){
+       // log.debug('Buscando posible solicitud duplicada {}',params)
+
+        def bancoOri = Banco.get(params.bancoOri)
+            def bancoDes = CuentaDeBanco.get(params.bancoDes)
+            def fechaDep = params.fechaDep
+            def importe = params.importe
+
+        def duplicada = SolicitudDeDeposito.where{
+            total == importe && banco == bancoOri && cuenta == bancoDes && fechaDeposito == fechaDep
+        }.find()
+         //log.debug('Duplicada: ', duplicada)
+
+        respond duplicada?: ['OK']
+    }
+
+
     
 }
 

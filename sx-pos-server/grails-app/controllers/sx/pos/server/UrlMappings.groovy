@@ -109,6 +109,7 @@ class UrlMappings {
         "/api/socios"(resources:"socio")
 
         "/api/tesoreria/solicitudes"(resources:"solicitudDeDeposito")
+       "/api/tesoreria/solicitudes/buscarDuplicada"( controller: 'solicitudDeDeposito', action: 'buscarDuplicada')
         "/api/tesoreria/solicitudes/pendientes/$id"( controller: 'solicitudDeDeposito', action: 'pendientes')
         "/api/tesoreria/corteCobranza"(resources:"corteCobranza")
         "/api/tesoreria/corteCobranza/cortes"(controller:"corteCobranza", action: 'cortes', method: 'GET')
