@@ -7,7 +7,7 @@ import sx.core.Cliente
 import sx.core.Venta
 //import sx.cxc.ChequeDevuelto
 import sx.cxc.CuentaPorCobrar
-import sx.cxc.DevolucionCliente
+
 import sx.cxc.NotaDeCargo
 
 /**
@@ -96,11 +96,7 @@ class ImportadorDeCuentasPorCobrar implements Importador, SW2Lookup{
               //  cheque.cuentaPorCobrar=cuentaPorCobrar
                // cheque.save failOnError: true, flush: true
             }
-            if(cuentaPorCobrar.tipoDocumento=='DEVOLUCION_CLIENTE'){
-                DevolucionCliente devolucionCliente=DevolucionCliente.where{sw2==cuentaPorCobrar.sw2}.find()
-                devolucionCliente.cuentaPorCobrar=cuentaPorCobrar
-                devolucionCliente.save failOnError: true, flush: true
-            }
+
 
             return cuentaPorCobrar
 

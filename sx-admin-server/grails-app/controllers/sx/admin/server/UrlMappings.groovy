@@ -109,6 +109,8 @@ class UrlMappings {
         "/api/cxc/cobro/reporteDeRelacionDePagos"(controller: "cobro", action: 'reporteDeRelacionDePagos', method: 'GET')
         "/api/cxc/cobro/timbrar/$id"(controller: 'cobro', action: 'timbrar', method: 'PUT')
         "/api/cxc/cobro/timbradoBatch"(controller: 'cobro', action: 'timbradoBatch', method: 'PUT')
+        "/api/cxc/cobro/reporteDeRecibosPendientes"(controller: "cobro", action: 'reporteDeRecibosPendientes', method: 'GET')
+
 
         "/api/cxc/cobro/search"(controller: 'cobro', action: 'search', method: 'GET')
         "/api/cxc/cobro/imprimirRecibo/$id"(controller: 'cobro', action: 'imprimirRecibo', method: 'GET')

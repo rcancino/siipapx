@@ -191,6 +191,17 @@ class CobroController extends RestfulController{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'RelacionDePagos.pdf')
     }
 
+    def reporteDeRecibosPendientes(){
+        log.debug('Rep: {}', params)
+        Periodo periodo = new Periodo()
+        bindData(periodo, params)
+        def repParams = [:]
+        repParams['FECHA_INI'] = periodo.fechaInicial
+        repParams['FECHA_FIN'] = periodo.fechaFinal
+        def pdf =  reportService.run('CobrosPendientesDeCFDIdeCOD.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CFDIs pendientes.pdf')
+    }
+
     def timbrar(Cobro cobro) {
         cobro = cobroService.timbrar(cobro)
         forward action: 'show', id: cobro.id

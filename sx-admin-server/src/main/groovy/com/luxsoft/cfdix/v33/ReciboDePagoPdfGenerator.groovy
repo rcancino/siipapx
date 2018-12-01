@@ -56,7 +56,11 @@ class ReciboDePagoPdfGenerator {
         params['MONTO'] = pagos.pago.get(0).monto
         params['NUM_OPERACION'] = pagos.pago.get(0).numOperacion
         params['SUBTOTAL'] = comprobante.subTotal.toString()
-        params["IMP_CON_LETRA"] = ImporteALetra.aLetra(pagos.pago.get(0).monto)
+        // params["IMP_CON_LETRA"] = ImporteALetra.aLetra(pagos.pago.get(0).monto)
+        if (nota.moneda.currencyCode == 'USD') {
+            params["IMP_CON_LETRA"] = ImporteALetra.aLetraDolares(comprobante.getTotal())
+        } else
+            params["IMP_CON_LETRA"] = ImporteALetra.aLetra(comprobante.getTotal())
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
 

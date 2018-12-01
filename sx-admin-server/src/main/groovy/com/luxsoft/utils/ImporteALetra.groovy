@@ -340,12 +340,32 @@ class ImporteALetra {
 		return MessageFormat.format(num_letras, ok)
 	}
 
+	public String convertirLetrasDolares(final BigDecimal importe){
+		//println "El importe a convertir en letras es: " +importe
+		double  val1=importe.abs().doubleValue()
+		int entero=importe.intValue()
+		double cent=val1-(double)entero
+		long valor=Math.round(cent * 100)
+		final String svalor=String.valueOf(valor)
+		final String ok=StringUtils.leftPad(svalor,2,'0')
+		num_letras = decmillon(importe.intValue())
+		num_letras+=" DOLARES AMERICANOS {0}/100 USD"
+		//println "Importe con letra  " +num_letras
+		return MessageFormat.format(num_letras, ok)
+	}
+
 	private static ImporteALetra INSTANCE
 
 	public static String aLetra(final BigDecimal importe){
 		if(INSTANCE==null)
 			INSTANCE=new ImporteALetra()
 		return INSTANCE.convertirLetras(importe)
+	}
+
+	public static String aLetraDolares(final BigDecimal importe){
+		if(INSTANCE==null)
+			INSTANCE=new ImporteALetra()
+		return INSTANCE.convertirLetrasDolares(importe)
 	}
 
 }

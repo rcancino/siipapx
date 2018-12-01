@@ -78,7 +78,10 @@ class NotaPdfGenerator {
         params["RECEPTOR_DIRECCION"] = 'ND'
         params["METODO_PAGO"] = comprobante.metodoPago.toString()
         params["FORMA_PAGO"] = comprobante.formaPago
-        params["IMP_CON_LETRA"] = ImporteALetra.aLetra(comprobante.getTotal());
+        if (nota.moneda.currencyCode == 'USD') {
+            params["IMP_CON_LETRA"] = ImporteALetra.aLetraDolares(comprobante.getTotal())
+        } else
+            params["IMP_CON_LETRA"] = ImporteALetra.aLetra(comprobante.getTotal());
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['UsoCFDI'] = comprobante.receptor.usoCFDI.value().toString()
         params['Moneda'] = comprobante.moneda.value().toString()

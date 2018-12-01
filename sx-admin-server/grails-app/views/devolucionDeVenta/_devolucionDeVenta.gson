@@ -19,6 +19,8 @@ json g.render(devolucionDeVenta){
             id devolucionDeVenta.venta.cliente.id
             nombre devolucionDeVenta.venta.cliente.nombre
         }
+        moneda devolucionDeVenta?.venta?.moneda?.currencyCode
+        tipoDeCambio devolucionDeVenta?.venta?.tipoDeCambio
     }
     factura devolucionDeVenta?.venta?.cuentaPorCobrar?.documento
     nota g.render(devolucionDeVenta.findNota())

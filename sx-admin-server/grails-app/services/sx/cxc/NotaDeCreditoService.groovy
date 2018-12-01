@@ -8,6 +8,7 @@ import com.luxsoft.cfdix.v33.NotaBuilder
 
 import sx.core.Folio
 import sx.cfdi.Cfdi
+import sx.core.Venta
 import sx.inventario.DevolucionDeVenta
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
@@ -134,6 +135,17 @@ class NotaDeCreditoService {
         nota.cliente = rmd.venta.cliente
         nota.sucursal = rmd.sucursal
         nota.tipo = 'DEVOLUCION'
+        if(rmd.venta.moneda != 'MXN') {
+            Venta venta = rmd.venta
+            nota.moneda = rmd.venta.moneda
+            if(venta.cuentaPorCobrar.saldo <= 0.0) {
+                // Venta Pagada
+                AplicacionDeCobro apliacion = AplicacionDeCobro.where{cuentaPorCobrar == venta.cuentaPorCobrar}.find()
+                nota.tc =apliacion.cobro.tipoDeCambio
+            } else {
+                nota.tc = rmd.venta.tipoDeCambio
+            }
+        }
 
         nota.importe = rmd.importe
         nota.impuesto = rmd.impuesto
