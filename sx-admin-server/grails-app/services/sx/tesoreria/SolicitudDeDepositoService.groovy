@@ -112,4 +112,14 @@ class SolicitudDeDepositoService {
             }
         }
     }
+
+    /**
+     * Genera la descripcion adecuada para el estado de cuenta
+     *
+     * @param ingreso
+     */
+    def generarConceptoDeReporte(MovimientoDeCuenta ingreso) {
+        String c = "Deposito suc: ${ingreso.sucursal}"
+        ingreso.conceptoReporte = c
+    }
 }

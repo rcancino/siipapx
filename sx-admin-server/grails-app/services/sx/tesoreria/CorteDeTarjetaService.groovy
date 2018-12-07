@@ -196,6 +196,7 @@ class CorteDeTarjetaService {
 
             }
             MovimientoDeCuenta mov = new MovimientoDeCuenta()
+            mov.sucursal = corte.sucursal.nombre
             mov.referencia = "${aplicacion.tipo}"
             mov.tipo = aplicacion.visaMaster ? 'VISA-MASTERCARD' : 'AMEX'
             mov.fecha = corte.corte
@@ -206,6 +207,7 @@ class CorteDeTarjetaService {
             mov.importe = importe
             mov.moneda = mov.cuenta.moneda
             mov.concepto = 'VENTAS'
+            mov.conceptoReporte = "Deposito suc: ${mov.sucursal}"
             mov.save failOnError: true, flush: true
             aplicacion.ingreso = mov;
 
