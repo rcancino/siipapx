@@ -38,6 +38,7 @@ class MovimientoDeCuenta {
 
     String conceptoReporte
     String sucursal
+    boolean porIdentificar = false
 
     static belongsTo = [movimientoDeTesoreria: MovimientoDeTesoreria]
 
@@ -56,6 +57,7 @@ class MovimientoDeCuenta {
         movimientoDeTesoreria nullable: true
         conceptoReporte nullable: true
         sucursal nullable: true
+        porIdentificar nullable: true
 
     }
 

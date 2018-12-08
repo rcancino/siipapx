@@ -1,5 +1,6 @@
 package sx.tesoreria
 
+import com.luxsoft.utils.Periodo
 import grails.gorm.transactions.Transactional
 import sx.core.Empresa
 import sx.cxc.Cobro
@@ -44,7 +45,7 @@ class SolicitudDeDepositoService {
             transferencia.folio = solicitud.folio
             transferencia.cobro = cobro
             transferencia.save flush: true
-            if(cobro.tipo == 'CRE') {
+            if(['CRE','CHE','JUR'].contains(cobro.tipo)) {
                 registrarIngreso(cobro)
             }
 
@@ -58,7 +59,7 @@ class SolicitudDeDepositoService {
             deposito.folio = solicitud.folio
             deposito.cobro = cobro
             deposito.save failOnError: true, flush: true
-            if(cobro.tipo == 'CRE') {
+            if(['CRE','CHE','JUR'].contains(cobro.tipo)) {
                 registrarIngreso(cobro)
             }
         }
@@ -66,16 +67,12 @@ class SolicitudDeDepositoService {
     }
 
     def registrarIngreso(Cobro cobro){
-        /*log.debug('Registrando ingreso para cobro: {}', cobro)
-        log.debug('Forma de pago: {}', cobro.formaDePago)
-        log.debug('Transferencia: {}', cobro.transferencia)
-        log.debug('Deposito: {}', cobro.deposito)
-        */
         if(cobro.ingreso == null){
             Empresa empresa = Empresa.first()
             if(cobro.deposito) {
                 CobroDeposito deposito = cobro.deposito
                 MovimientoDeCuenta mov = new MovimientoDeCuenta()
+                mov.sucursal = cobro.sucursal.nombre
                 mov.referencia = "Deposito: ${deposito.folio} "
                 mov.tipo = cobro.tipo;
                 mov.fecha = cobro.fecha
@@ -86,8 +83,17 @@ class SolicitudDeDepositoService {
                 mov.importe = cobro.importe
                 mov.moneda = deposito.cuentaDestino.moneda
                 mov.concepto = 'VENTAS'
+                mov.conceptoReporte = "Deposito suc: ${mov.sucursal}"
+
+                if(cobro.primeraAplicacion) {
+                    // Si el mes  de la fechaDeposito es < al mes de la primera aplicacion
+                    int mpa = Periodo.obtenerMes(cobro.primeraAplicacion)
+                    int mdp = Periodo.obtenerMes(deposito.fechaDeposito)
+                    mov.porIdentificar = mpa != mdp
+                }
+
                 mov.save failOnError: true, flush: true
-                deposito.ingreso = mov;
+                deposito.ingreso = mov
                 cobro.save flush: true
                 return mov
 
@@ -95,16 +101,25 @@ class SolicitudDeDepositoService {
                 log.debug('Transferencia: {}', cobro.transferencia)
                 CobroTransferencia transferencia = cobro.transferencia
                 MovimientoDeCuenta mov = new MovimientoDeCuenta()
+                mov.sucursal = cobro.sucursal.nombre
                 mov.referencia = "Deposito: ${transferencia.folio} "
                 mov.tipo = cobro.tipo;
                 mov.fecha = cobro.fecha
                 mov.formaDePago = cobro.formaDePago
                 mov.comentario = "Transferencia ${cobro.tipo} ${cobro.sucursal.nombre} "
+                if(cobro.primeraAplicacion) {
+                    // Si el mes  de la fechaDeposito es < al mes de la primera aplicacion
+                    int mpa = Periodo.obtenerMes(cobro.primeraAplicacion)
+                    int mdp = Periodo.obtenerMes(transferencia.fechaDeposito)
+                    mov.porIdentificar = mpa != mdp
+                }
                 mov.cuenta = transferencia.cuentaDestino
                 mov.afavor = empresa.nombre
                 mov.importe = cobro.importe
                 mov.moneda = transferencia.cuentaDestino.moneda
                 mov.concepto = 'VENTAS'
+                mov.conceptoReporte = "Deposito suc: ${mov.sucursal}"
+                mov.porIdentifica =
                 mov.save failOnError: true, flush: true
                 transferencia.ingreso = mov;
                 cobro.save flush: true
