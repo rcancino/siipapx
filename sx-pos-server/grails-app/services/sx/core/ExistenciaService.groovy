@@ -70,11 +70,17 @@ class ExistenciaService {
                 int ejercicio = it.fecha[Calendar.YEAR]
                 int mes = it.fecha[Calendar.MONTH] + 1
                 Existencia e = findExitencia(it.producto, ejercicio, mes)
-                if (e) {
-                    e.cantidad += it.cantidad
-                    // e.traslado += it.cantidad
+    
+                if(!e) {
+                e = new Existencia(anio: ejercicio, mes: mes, producto: it.producto, sucursal: it.sucursal)
+                e.nacional = it.producto.nacional
+                e.kilos = it.producto.kilos
+                e.cantidad = 0.0
+                e.existenciaInicial = 0.0
                 }
-                e.save()
+            e.cantidad = e.cantidad + it.cantidad.abs()
+            e.save flush: true
+                
             }
         }
     }

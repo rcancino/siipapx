@@ -10,7 +10,7 @@ class CuentaContableController extends RestfulController{
     static responseFormats = ['json']
 
     public CuentaContableController(){
-        super(CuentaContable)
+        //super(CuentaContable)
     }
 
     @Override

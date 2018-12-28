@@ -11,7 +11,7 @@ class PolizaController extends RestfulController{
     def polizaService
 
     public PolizaController(){
-        super(Poliza)
+       // super(Poliza)
     }
 
 

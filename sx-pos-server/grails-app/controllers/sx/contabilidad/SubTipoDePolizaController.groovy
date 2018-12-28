@@ -7,7 +7,7 @@ class SubTipoDePolizaController extends RestfulController{
     static responseFormats = ['json']
 
     public SubTipoDePolizaController(){
-        super(SubTipoDePoliza)
+        //super(SubTipoDePoliza)
     }
 
 
