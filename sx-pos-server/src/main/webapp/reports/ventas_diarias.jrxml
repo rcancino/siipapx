@@ -35,13 +35,13 @@
 ,0 as anticipo,0 AS anticipo_aplicado
 ,a.documento as nfiscal,tipo as ORIGEN,S.NOMBRE,S.CLAVE
 ,(SELECT v.kilos FROM venta v where v.cuenta_por_cobrar_id=a.id )as KILOS
-,(CASE 	WHEN CFDI_ID IS NULL AND (SELECT v.documento FROM venta v where v.cuenta_por_cobrar_id=a.id) IS NULL THEN 'S/VyT'
-		WHEN CFDI_ID IS NULL THEN 'S/T*' 
+,(CASE 	WHEN f.uuid IS NULL AND (SELECT v.documento FROM venta v where v.cuenta_por_cobrar_id=a.id) IS NULL THEN 'S/VyT'
+		WHEN f.uuid IS NULL THEN 'S/T*' 
 		WHEN (SELECT v.documento FROM venta v where v.cuenta_por_cobrar_id=a.id) is null THEN 'S/V=' 
 		ELSE '' END) AS TIMBRADA
 ,S.NOMBRE AS SUC
 ,(CASE WHEN A.CANCELADA IS NOT NULL THEN 'C' ELSE '' END) AS CANCELADA
-FROM  cuenta_por_cobrar a  JOIN sucursal S ON(a.SUCURSAL_ID=S.ID)  JOIN cliente B ON (a.CLIENTE_ID=B.ID)
+FROM  cuenta_por_cobrar a  JOIN sucursal S ON(a.SUCURSAL_ID=S.ID)  JOIN cliente B ON (a.CLIENTE_ID=B.ID)  left join cfdi f on(a.cfdi_id=f.id)
 WHERE A.TIPO IN ('COD','CON','CRE') AND A.SW2 IS NULL AND  a.TIPO LIKE $P{ORIGEN} AND a.fecha = $P{FECHA} AND S.ID= $P{SUCURSAL}
 ORDER BY a.documento,a.date_created]]></queryString>
 

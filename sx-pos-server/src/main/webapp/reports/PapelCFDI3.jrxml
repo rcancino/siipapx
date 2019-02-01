@@ -1342,11 +1342,11 @@
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="143"  isSplitAllowed="true" >
+			<band height="154"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="352"
-						y="14"
+						y="25"
 						width="229"
 						height="13"
 						key="textField"/>
@@ -1363,7 +1363,7 @@
 				<staticText>
 					<reportElement
 						x="69"
-						y="129"
+						y="140"
 						width="57"
 						height="14"
 						key="staticText-91"/>
@@ -1381,7 +1381,7 @@
 				<staticText>
 					<reportElement
 						x="174"
-						y="129"
+						y="140"
 						width="274"
 						height="14"
 						key="staticText-92"/>
@@ -1399,7 +1399,7 @@
 				<staticText>
 					<reportElement
 						x="506"
-						y="129"
+						y="140"
 						width="74"
 						height="14"
 						key="staticText-93"/>
@@ -1417,7 +1417,7 @@
 				<staticText>
 					<reportElement
 						x="448"
-						y="129"
+						y="140"
 						width="58"
 						height="14"
 						key="staticText-95"/>
@@ -1436,7 +1436,7 @@
 					<reportElement
 						mode="Opaque"
 						x="352"
-						y="1"
+						y="12"
 						width="229"
 						height="13"
 						key="staticText-115"/>
@@ -1454,7 +1454,7 @@
 					<reportElement
 						mode="Opaque"
 						x="351"
-						y="79"
+						y="90"
 						width="230"
 						height="13"
 						key="staticText-176"/>
@@ -1471,7 +1471,7 @@
 				<staticText>
 					<reportElement
 						x="126"
-						y="129"
+						y="140"
 						width="48"
 						height="14"
 						key="staticText-184"/>
@@ -1489,7 +1489,7 @@
 				<staticText>
 					<reportElement
 						x="11"
-						y="129"
+						y="140"
 						width="58"
 						height="14"
 						key="staticText-193"/>
@@ -1507,7 +1507,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="351"
-						y="92"
+						y="103"
 						width="230"
 						height="22"
 						key="textField-157"/>
@@ -1520,7 +1520,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="497"
-						y="80"
+						y="91"
 						width="81"
 						height="11"
 						key="textField-158"/>
@@ -1533,7 +1533,7 @@
 				<staticText>
 					<reportElement
 						x="462"
-						y="80"
+						y="91"
 						width="36"
 						height="11"
 						key="staticText-209"/>
@@ -1546,7 +1546,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="3"
-						y="42"
+						y="53"
 						width="143"
 						height="10"
 						forecolor="#000000"
@@ -1561,7 +1561,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="27"
-						y="52"
+						y="63"
 						width="61"
 						height="10"
 						forecolor="#000000"
@@ -1576,7 +1576,7 @@
 				<staticText>
 					<reportElement
 						x="3"
-						y="52"
+						y="63"
 						width="24"
 						height="10"
 						key="staticText-218"/>
@@ -1589,7 +1589,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="58"
-						y="62"
+						y="73"
 						width="28"
 						height="10"
 						forecolor="#000000"
@@ -1604,7 +1604,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="126"
-						y="52"
+						y="63"
 						width="19"
 						height="10"
 						forecolor="#000000"
@@ -1619,7 +1619,7 @@
 				<staticText>
 					<reportElement
 						x="4"
-						y="62"
+						y="73"
 						width="54"
 						height="10"
 						key="staticText-219"/>
@@ -1632,7 +1632,7 @@
 				<staticText>
 					<reportElement
 						x="85"
-						y="52"
+						y="63"
 						width="41"
 						height="10"
 						key="staticText-220"/>
@@ -1645,7 +1645,7 @@
 				<textField isStretchWithOverflow="false" pattern="yyyy-MM-dd'T'HH:mm:ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="36"
-						y="72"
+						y="83"
 						width="109"
 						height="13"
 						forecolor="#000000"
@@ -1660,7 +1660,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="129"
-						y="62"
+						y="73"
 						width="16"
 						height="10"
 						forecolor="#000000"
@@ -1675,7 +1675,7 @@
 				<staticText>
 					<reportElement
 						x="3"
-						y="72"
+						y="83"
 						width="33"
 						height="13"
 						key="staticText-221"/>
@@ -1688,7 +1688,7 @@
 				<staticText>
 					<reportElement
 						x="89"
-						y="62"
+						y="73"
 						width="40"
 						height="10"
 						key="staticText-222"/>
@@ -1701,7 +1701,7 @@
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="3"
-						y="0"
+						y="11"
 						width="143"
 						height="42"
 						key="image-2"/>
@@ -1713,7 +1713,7 @@
 					<reportElement
 						mode="Opaque"
 						x="90"
-						y="94"
+						y="105"
 						width="87"
 						height="8"
 						forecolor="#000000"
@@ -1731,7 +1731,7 @@
 					<reportElement
 						mode="Opaque"
 						x="90"
-						y="100"
+						y="111"
 						width="87"
 						height="27"
 						forecolor="#000000"
@@ -1752,7 +1752,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="180"
-						y="94"
+						y="105"
 						width="79"
 						height="8"
 						forecolor="#000000"
@@ -1770,7 +1770,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="180"
-						y="100"
+						y="111"
 						width="79"
 						height="27"
 						forecolor="#000000"
@@ -1791,7 +1791,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="263"
-						y="94"
+						y="105"
 						width="84"
 						height="8"
 						forecolor="#000000"
@@ -1809,7 +1809,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="263"
-						y="100"
+						y="111"
 						width="84"
 						height="27"
 						forecolor="#000000"
@@ -1830,7 +1830,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Opaque"
 						x="2"
-						y="94"
+						y="105"
 						width="86"
 						height="8"
 						forecolor="#000000"
@@ -1846,7 +1846,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Opaque"
 						x="3"
-						y="100"
+						y="111"
 						width="85"
 						height="27"
 						forecolor="#000000"
@@ -1866,7 +1866,7 @@ C.P. 02870  TEL/FAX: 5342-7166]]></text>
 					<reportElement
 						mode="Transparent"
 						x="2"
-						y="1"
+						y="12"
 						width="144"
 						height="85"
 						key="rectangle-11"
@@ -1877,7 +1877,7 @@ C.P. 02870  TEL/FAX: 5342-7166]]></text>
 					<reportElement
 						mode="Opaque"
 						x="151"
-						y="62"
+						y="73"
 						width="93"
 						height="27"
 						forecolor="#000000"
@@ -1898,7 +1898,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="151"
-						y="54"
+						y="65"
 						width="93"
 						height="8"
 						forecolor="#000000"
@@ -1916,7 +1916,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="250"
-						y="62"
+						y="73"
 						width="93"
 						height="27"
 						forecolor="#000000"
@@ -1931,13 +1931,13 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 				<text><![CDATA[5 DE FEBRERO No. 378
 COL. OBRERA
 DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO.
-C.P. 06800  TEL/FAX: 5740-7777]]></text>
+C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="250"
-						y="54"
+						y="65"
 						width="93"
 						height="8"
 						forecolor="#000000"
@@ -1954,7 +1954,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="260"
-						y="17"
+						y="28"
 						width="90"
 						height="18"
 						key="textField-194"/>
@@ -1967,7 +1967,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="280"
-						y="1"
+						y="14"
 						width="63"
 						height="13"
 						key="textField-195"/>
@@ -1980,7 +1980,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="485"
-						y="40"
+						y="51"
 						width="95"
 						height="13"
 						key="textField-234"/>
@@ -1998,7 +1998,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="485"
-						y="27"
+						y="38"
 						width="95"
 						height="13"
 						key="staticText-273"/>
@@ -2016,7 +2016,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="408"
-						y="27"
+						y="38"
 						width="44"
 						height="13"
 						key="staticText-274"/>
@@ -2033,7 +2033,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="408"
-						y="40"
+						y="51"
 						width="44"
 						height="13"
 						key="textField-235"/>
@@ -2051,7 +2051,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="352"
-						y="27"
+						y="38"
 						width="56"
 						height="13"
 						key="staticText-275"/>
@@ -2068,7 +2068,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="352"
-						y="40"
+						y="51"
 						width="56"
 						height="13"
 						key="textField-236"/>
@@ -2085,7 +2085,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="452"
-						y="40"
+						y="51"
 						width="33"
 						height="13"
 						key="textField-237"/>
@@ -2103,7 +2103,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="452"
-						y="27"
+						y="38"
 						width="33"
 						height="13"
 						key="staticText-276"/>
@@ -2121,7 +2121,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="351"
-						y="53"
+						y="64"
 						width="229"
 						height="13"
 						key="staticText-277"/>
@@ -2138,7 +2138,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="351"
-						y="66"
+						y="77"
 						width="229"
 						height="13"
 						key="textField-238"/>
@@ -2155,8 +2155,8 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 				<rectangle>
 					<reportElement
 						mode="Transparent"
-						x="153"
-						y="1"
+						x="152"
+						y="12"
 						width="101"
 						height="46"
 						key="rectangle-13"/>
@@ -2166,7 +2166,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="19"
+						y="30"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2187,7 +2187,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="11"
+						y="22"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2205,7 +2205,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="19"
+						y="30"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2220,13 +2220,13 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 				<text><![CDATA[5 DE FEBRERO No. 378
 COL. OBRERA
 DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO.
-C.P. 06800  TEL/FAX: 5740-7777]]></text>
+C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="11"
+						y="22"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2244,7 +2244,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="11"
+						y="22"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2262,7 +2262,7 @@ C.P. 06800  TEL/FAX: 5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="19"
+						y="30"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2283,7 +2283,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="11"
+						y="22"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2301,7 +2301,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="19"
+						y="30"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2322,7 +2322,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="11"
+						y="22"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2340,7 +2340,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="19"
+						y="30"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2361,7 +2361,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Opaque"
 						x="155"
-						y="2"
+						y="13"
 						width="98"
 						height="8"
 						forecolor="#000000"
@@ -2379,7 +2379,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="380"
-						y="114"
+						y="125"
 						width="200"
 						height="13"
 						key="textField-239"/>
@@ -2397,7 +2397,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Transparent"
 						x="351"
-						y="2"
+						y="13"
 						width="229"
 						height="126"
 						key="rectangle-15"/>
@@ -2406,7 +2406,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<staticText>
 					<reportElement
 						x="352"
-						y="114"
+						y="125"
 						width="30"
 						height="13"
 						key="staticText-299"/>
@@ -2419,7 +2419,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="259"
-						y="35"
+						y="46"
 						width="90"
 						height="18"
 						key="textField-240"/>
@@ -2429,6 +2429,44 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PUESTO}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="22"
+						y="1"
+						width="256"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-303"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[ ****  NUEVA LINEA TELEFONICA EN SUCURSAL 5 DE FEBRERO  :   ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="278"
+						y="1"
+						width="73"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-304"/>
+					<box>					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[ 8114 5435   ****]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>

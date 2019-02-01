@@ -53,14 +53,14 @@ class CorteDeTarjetaService {
         comisionDebito.importe = debitoComision
         comisionDebito.visaMaster = true
         comisionDebito.debitoCredito = true
-        comisionDebito.tipo = TipoDeAplicacion.DEBITO_COMISON
+        comisionDebito.tipo = TipoDeAplicacion.DEBITO_COMISION
         corte.addToAplicaciones(comisionDebito)
 
         CorteDeTarjetaAplicacion comisionDebitoIva = new CorteDeTarjetaAplicacion()
         comisionDebitoIva.importe = debitoComisionIva
         comisionDebitoIva.visaMaster = true
         comisionDebitoIva.debitoCredito = true
-        comisionDebitoIva.tipo = TipoDeAplicacion.DEBITO_COMISON_IVA
+        comisionDebitoIva.tipo = TipoDeAplicacion.DEBITO_COMISION_IVA
         corte.addToAplicaciones(comisionDebitoIva)
 
         // CREDITO
@@ -177,7 +177,7 @@ class CorteDeTarjetaService {
                     comentario = "Comisión por tarjeta CREDITO "
                     importe = importe * -1
                     break
-                case TipoDeAplicacion.DEBITO_COMISON:
+                case TipoDeAplicacion.DEBITO_COMISION:
                     comentario = 'Comision por tarjeta de DEBITO'
                     importe = importe * -1
                     break
@@ -185,7 +185,7 @@ class CorteDeTarjetaService {
                     comentario = "IVA Comision tarjeta AMEX}"
                     importe = importe * -1
                     break
-                case TipoDeAplicacion.DEBITO_COMISON_IVA:
+                case TipoDeAplicacion.DEBITO_COMISION_IVA:
                     comentario = "IVA Comision tarjeta DEBITO}"
                     importe = importe * -1
                     break
