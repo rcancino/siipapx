@@ -33,13 +33,13 @@ class SolicitudDeTrasladoController extends  RestfulController{
         params.max = 50
         def query = SolicitudDeTraslado.where {}
         if(params.sucursal){
-            query = query.where {sucursalSolicita.id ==  params.sucursal}
+            query = query.where {sucursalSolicita.id ==  params.sucursal && cancelado == false}
         }
         if( params.sucursalAtiende) {
-            query = query.where {sucursalAtiende.id ==  params.sucursalAtiende}
+            query = query.where {sucursalAtiende.id ==  params.sucursalAtiende && cancelado == false}
         }
         if (params.porAtender) {
-            query = query.where {atender == null}
+            query = query.where {atender == null && cancelado == false}
         }
         if(params.documento) {
             def documento = params.int('documento')

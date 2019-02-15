@@ -34,15 +34,15 @@ class TrasladoController extends RestfulController {
 
         def query = Traslado.where { }
         if(params.sucursal){
-            query = query.where {sucursal.id ==  params.sucursal}
+            query = query.where {sucursal.id ==  params.sucursal && cancelado == null}
         }
         if(params.tipo) {
-            query = query.where {tipo == params.tipo}
+            query = query.where {tipo == params.tipo && cancelado == null}
         }
         if (params.boolean('pendientes')) {
             params.sort = 'documento'
             params.order = 'asc'
-            query = query.where {fechaInventario == null}
+            query = query.where {fechaInventario == null && cancelado == null}
         }
         if(params.term){
 
