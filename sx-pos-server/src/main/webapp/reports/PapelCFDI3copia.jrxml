@@ -856,8 +856,9 @@
 						height="30"
 						forecolor="#999999"
 						key="rectangle-12"
+						stretchType="RelativeToBandHeight"
 						positionType="FixRelativeToBottom"/>
-					<graphicElement stretchType="NoStretch"/>
+					<graphicElement stretchType="RelativeToBandHeight"/>
 				</rectangle>
 				<staticText>
 					<reportElement
@@ -1165,7 +1166,7 @@
 					</textElement>
 				<text><![CDATA[Instruccion de Corte]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="436"
 						y="14"
