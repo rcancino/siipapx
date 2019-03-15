@@ -4,7 +4,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 @ToString( excludes = "id, version", includeNames=true,includePackage=false)
-@EqualsAndHashCode(includeFields = true,includes = ['id','cxc'])
+@EqualsAndHashCode(includeFields = true, includes = ['id','cxc'])
 class Juridico {
 
     String id

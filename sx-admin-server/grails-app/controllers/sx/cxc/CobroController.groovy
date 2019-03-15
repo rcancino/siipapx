@@ -1,13 +1,14 @@
 package sx.cxc
 
-import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
+
 import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
 import com.luxsoft.utils.Periodo
+import grails.compiler.GrailsCompileStatic
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.transform.ToString
 import org.apache.commons.lang3.exception.ExceptionUtils
-import org.springframework.http.HttpStatus
+
 import sx.core.AppConfig
 import sx.core.Cliente
 import sx.reports.ReportService
@@ -15,7 +16,8 @@ import sx.core.Sucursal
 
 
 @Secured("hasRole('ROLE_CXC_USER')")
-class CobroController extends RestfulController{
+// @GrailsCompileStatic
+class CobroController extends RestfulController<Cobro>{
 
     CobroService cobroService
 
@@ -30,7 +32,7 @@ class CobroController extends RestfulController{
     }
 
     @Override
-    protected List listAllResources(Map params) {
+    protected List<Cobro> listAllResources(Map params) {
         log.debug('List {}', params)
         def query = Cobro.where {}
         params.max = 100
@@ -60,6 +62,7 @@ class CobroController extends RestfulController{
         params.order = params.order ?:'asc'
 
         def query = Cobro.where { formaDePago != 'PAGO_DIF' }
+        /*
         if(params.cartera) {
             String tipoCartera = params.cartera
             if(tipoCartera == 'CON') {
@@ -67,11 +70,26 @@ class CobroController extends RestfulController{
             }
             query = query.where { tipo == tipoCartera}
         }
+        */
+
+        if(params.cartera){
+            def cart = params.cartera
+            log.info('Cartera: {}', cart)
+            switch (cart) {
+                case 'CON':
+                    query = query.where{ tipo == 'CON' || tipo == 'COD'}
+                    break
+                default:
+                    query = query.where{ tipo == cart}
+            }
+        }
+
         if(command.periodo) {
             query = query.where { fecha >= command.periodo.fechaInicial}
             query = query.where { fecha <= command.periodo.fechaFinal}
         }
         if(command.pendientes) {
+
             query = query.where { saldo > 0.0}
         }
         if(command.cliente) {
@@ -100,7 +118,7 @@ class CobroController extends RestfulController{
 
 
 
-    protected Object createResource() {
+    protected Cobro createResource() {
         log.debug('Generando cobro: {}', params)
         Cobro cobro =  new Cobro()
         bindData cobro, getObjectToBind()
@@ -147,12 +165,12 @@ class CobroController extends RestfulController{
 
 
 
-    protected Object saveResource(Cobro resource) {
+    protected Cobro saveResource(Cobro resource) {
         return cobroService.save(resource)
     }
 
 
-    protected Object updateResource(Cobro resource) {
+    protected Cobro updateResource(Cobro resource) {
         if (resource.pendientesDeAplicar) {
             // log.debug('Facturas por aplicar : {}', resource.pendientesDeAplicar)
             return cobroService.registrarAplicacion(resource)

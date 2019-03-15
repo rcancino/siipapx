@@ -1,5 +1,6 @@
 package sx.cxc
 
+import grails.rest.Resource
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 

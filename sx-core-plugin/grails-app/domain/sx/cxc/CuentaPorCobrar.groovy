@@ -76,6 +76,8 @@ class CuentaPorCobrar {
 
     VentaCredito credito
 
+    Date juridico = null
+
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
         tipo nullable:true, inList:['CON','COD','CRE','CHE','JUR','PSF','INE','OTR','ACF','ANT','AND']
@@ -92,6 +94,7 @@ class CuentaPorCobrar {
         cancelacionMotivo nullable: true
         credito nullable: true
         vencimiento nullable: true
+        juridico nullable: true
     }
 
 
@@ -102,6 +105,7 @@ class CuentaPorCobrar {
         cliente index: 'CXC_IDX3'
         cancelada type: 'date'
         pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
+        juridico type: 'date'
     }
 
     static transients = ['saldo','folio','atraso']

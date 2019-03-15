@@ -117,7 +117,7 @@ class UrlMappings {
 
         "/api/cobradores"(resources:"cobrador")
         "/api/vendedores"(resources:"vendedor")
-        "/api/despachos"(resources:"despachoDeCobranza")
+        "/api/cxc/despachos"(resources:"despachoDeCobranza")
 
         "/api/cxc/notas"(resources: "notaDeCredito")
         "/api/cxc/notas/buscarRmd"(controller: "notaDeCredito", action: 'buscarRmd', method: 'GET')
@@ -187,6 +187,9 @@ class UrlMappings {
         "/api/bonificacionesMC/autorizarBatch/$ejercicio/$mes"(controller: 'bonificacionMC', action: 'autorizarBatch')
         "/api/bonificacionesMC/suspender/$id"(controller: 'bonificacionMC', action: 'suspender')
         "/api/bonificacionesMC/print"(controller: 'bonificacionMC', action: 'print', method: 'GET')
+
+
+        "/api/cxc/juridico"(resources: "Juridico")
 
         // Security
         "/api/security/users"(resources: "user")

@@ -1,6 +1,7 @@
 package sx.cxc
 
 import com.luxsoft.cfdix.v33.ReciboDePagoBuilder
+import grails.compiler.GrailsCompileStatic
 import grails.gorm.transactions.Transactional
 import lx.cfdi.v33.Comprobante
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -19,7 +20,7 @@ class CobroService {
 
     CfdiTimbradoService cfdiTimbradoService
 
-    def save(Cobro cobro) {
+    Cobro save(Cobro cobro) {
         if(cobro.cheque) {
             cobro.referencia = cobro.cheque.numero
         }
@@ -84,7 +85,7 @@ class CobroService {
         return cobro
     }
 
-    def eliminarAplicacion(AplicacionDeCobro aplicacionDeCobro) {
+    Cobro eliminarAplicacion(AplicacionDeCobro aplicacionDeCobro) {
         Cobro cobro = aplicacionDeCobro.cobro
         if(cobro.cfdi) {
             throw new RuntimeException("Cobro con recibo de pago (CFDI)  ${cobro.cfdi.uuid} ya generado NO SE PUEDENDEN MODIFICAR APLICACIONES")

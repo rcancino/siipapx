@@ -42,19 +42,29 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def search() {
-        def query = CuentaPorCobrar.where {}
+        def query = CuentaPorCobrar.where { }
         params.sort = params.sort ?: 'lastUpdated'
         params.order = params.order ?:'desc'
         params.max = 50
 
+        log.info("Search: {}", params)
+
+
+
         if(params.cartera){
             def cart = params.cartera
-            if(cart == 'CON') {
-                query = query.where{ tipo == 'CON' || tipo == 'COD'}
-            } else {
-                query = query.where{ tipo == params.cartera}
+            switch (cart) {
+                case 'CON':
+                    query = query.where{ tipo == 'CON' || tipo == 'COD' && juridico == null}
+                    break
+                case 'JUR':
+                    query = query.where{juridico != null}
+                    break
+                default:
+                    query = query.where{ tipo == cart && juridico == null}
             }
         }
+
 
 
         String nombre = params.nombre
@@ -94,7 +104,15 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         params.sort = params.sort ?:'fecha'
         params.order = params.order ?:'asc'
         def cartera = params.cartera ?: 'CRE'
-        def rows = CuentaPorCobrar.findAll("from CuentaPorCobrar c  where c.cliente = ? and c.tipo = ? and c.total - c.pagos > 0 ", [cliente, cartera])
+        def rows = CuentaPorCobrar.findAll(
+                "from CuentaPorCobrar c  where c.cliente = ? and c.tipo = ? and c.total - c.pagos > 0 ",
+                [cliente, cartera])
+        if(cartera == 'JUR') {
+            rows = CuentaPorCobrar.findAll(
+                    "from CuentaPorCobrar c  where c.cliente = ?  and c.total - c.pagos > 0 ",
+                    [cliente])
+        }
+
         log.debug('Cuentas por cobrar para: {} : {}', cliente.nombre, rows.size())
         respond rows
     }
