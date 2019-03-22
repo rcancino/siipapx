@@ -36,9 +36,12 @@
 ,a.id as id,C.documento AS DOCTO,C.FECHA AS FECHA,l.CLAVE,l.NOMBRE
 ,o.forma_de_pago as ABN_DESCRIPCION,c.TOTAL AS VENTA,a.IMPORTE AS COBRADO
 ,C.total-A.IMPORTE-o.diferencia  AS DIFERENCIA
-,CASE 	WHEN o.anticipo is true then 'ANTICIPO' WHEN date(o.primera_aplicacion) <> a.FECHA THEN 'SALDO_A_FAVOR'	 WHEN (SELECT T.COBRO_ID FROM cobro_tarjeta T WHERE T.cobro_id=O.ID AND T.visa_master IS false) IS NOT NULL THEN 'TARJETA_AMEX' ELSE   o.forma_de_pago  END AS TIPO
+,CASE 	WHEN o.forma_de_pago='DEVOLUCION'  THEN 'DEVOLUCION' WHEN o.forma_de_pago='BONIFICACION'  THEN 'BONIFICACION' WHEN o.anticipo is true then 'ANTICIPO' WHEN date(o.primera_aplicacion) <> a.FECHA THEN 'SALDO_A_FAVOR'	 
+	WHEN (SELECT T.COBRO_ID FROM cobro_tarjeta T WHERE T.cobro_id=O.ID AND T.visa_master IS false) IS NOT NULL THEN 'TARJETA_AMEX' ELSE   o.forma_de_pago  END AS TIPO
 ,o.forma_de_pago TIPO_PAGO
-,CASE   WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
+,CASE   WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
+	WHEN o.forma_de_pago='BONIFICACION'  THEN 9
+	WHEN date(o.primera_aplicacion) <> a.FECHA THEN 7.1
 	WHEN o.forma_de_pago='EFECTIVO' THEN 1
         WHEN o.forma_de_pago='CHEQUE'  THEN 2
         WHEN o.forma_de_pago='TRANSFERENCIA' THEN 3
@@ -49,8 +52,6 @@
         WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
         WHEN ANTICIPO IS TRUE THEN 6
         WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
-        WHEN o.forma_de_pago='DEVOLUCION'  THEN 8
-	   WHEN o.forma_de_pago='BONIFICACION'  THEN 9
  ELSE 10 END AS ORDEN_PAGO
 ,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
 WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobrar C ON(A.cuenta_por_cobrar_id=C.ID) WHERE A.cobro_id=O.ID AND A.FECHA=$P{FECHA} AND C.TIPO='COD' AND C.tipo_documento IN ('VENTA','NOTA_DE_CARGO')) 

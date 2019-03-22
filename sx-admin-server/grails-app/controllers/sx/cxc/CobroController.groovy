@@ -77,7 +77,7 @@ class CobroController extends RestfulController<Cobro>{
             log.info('Cartera: {}', cart)
             switch (cart) {
                 case 'CON':
-                    query = query.where{ tipo == 'CON' || tipo == 'COD'}
+                    query = query.where{ tipo == 'COD'}
                     break
                 default:
                     query = query.where{ tipo == cart}
