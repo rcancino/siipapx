@@ -53,41 +53,64 @@ class NotaDeCreditoService {
     }
 
     def calcularProrrateo(NotaDeCredito nota) {
+
         BigDecimal importe = nota.total
         boolean sobreSaldo = nota.baseDelCalculo == 'Saldo' ? true : false
         List<CuentaPorCobrar> facturas = nota.partidas.collect{ it.cuentaPorCobrar}
+
         log.debug('Generando bonificaion por {} facturas', facturas.size())
+
         if(sobreSaldo) {
             def facSinSaldo = facturas.find { it.saldo <= 0.0}
             if(facSinSaldo) sobreSaldo = false; // Debemos usar el Total
         }
+
         BigDecimal base = facturas.sum 0.0,{ item-> sobreSaldo ? item.getSaldo() : item.getTotal()}
 
         log.debug("Importe a prorratear: ${importe} Base del prorrateo ${base}")
         def acu = 0.0
+
         nota.partidas.each {  NotaDeCreditoDet det ->
+
             CuentaPorCobrar cxc = det.cuentaPorCobrar
+
             def monto = sobreSaldo ? cxc.getSaldo(): cxc.total
+
             def por = monto / base
+
             def asignado = MonedaUtils.round(importe * por)
 
-            log.debug('Procesando factura {} Asignando {} a NotaDet', cxc.documento, asignado)
-
             acu = acu + asignado
+
             det.cuentaPorCobrar = cxc
+
             det.tipoDeDocumento = cxc.tipo
+
             det.fechaDocumento = cxc.fecha
+
             det.documento = cxc.documento
+
             det.sucursal = cxc.sucursal.nombre
+
             det.importe = asignado
+
             det.totalDocumento = cxc.total
+
             det.saldoDocumento = cxc.getSaldo()
+
+            det.base = MonedaUtils.calcularImporteDelTotal(det.importe)
+            det.impuesto = MonedaUtils.calcularImpuesto(det.base)
+            det.importe = det.base + det.impuesto
+
+            log.debug('Procesando factura {} Asignando {} a NotaDet', cxc.documento, asignado)
             log.debug('Asignando partida {}', cxc.documento)
+
         }
-        // println 'Acu: '+acu
-        nota.total = importe
-        nota.importe = MonedaUtils.calcularImporteDelTotal(nota.total)
-        nota.impuesto = MonedaUtils.calcularImpuesto(nota.importe)
+
+        nota.importe = nota.partidas.sum 0.0, {it.base}
+        nota.impuesto = nota.partidas.sum 0.0, {it.impuesto}
+        nota.total = nota.partidas.sum 0.0, {it.importe}
+
         log.debug('Partidas totales de la nota: {}', nota.partidas.size())
         return nota
     }

@@ -46,7 +46,7 @@ class NotaDeCredito {
 
     String comentario
 
-    List partidas = []
+    List<NotaDeCreditoDet> partidas = []
 
     Cfdi cfdi
 

@@ -213,9 +213,11 @@ class NotaBuilder {
         /** Conceptos ***/
         this.totalImpuestosTrasladados = 0.0
         Comprobante.Conceptos conceptos = factory.createComprobanteConceptos()
+
         this.nota.partidas.each { NotaDeCreditoDet item ->
 
             Comprobante.Conceptos.Concepto concepto = factory.createComprobanteConceptosConcepto()
+
             def importe = MonedaUtils.calcularImporteDelTotal(item.importe)
 
             def impuesto = importe * MonedaUtils.IVA
@@ -251,6 +253,7 @@ class NotaBuilder {
             this.descuentoAcumulado = 0
 
         }
+
         comprobante.conceptos = conceptos
         return this
     }
@@ -305,7 +308,7 @@ class NotaBuilder {
 
                 Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
                 def cxc = det.cuentaPorCobrar
-                def uuid = cxc.uuid
+                def uuid = cxc.cfdi.uuid
                 assert uuid, 'No existe UUID origen para la cxc :' + cxc.id
                 relacionado.UUID = uuid
                 relacionados.cfdiRelacionado.add(relacionado)

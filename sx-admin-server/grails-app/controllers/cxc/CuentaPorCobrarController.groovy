@@ -54,6 +54,9 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
         if(params.cartera){
             def cart = params.cartera
             switch (cart) {
+                case 'CRE':
+                    query = query.where{ tipo == 'CRE' && juridico == null}
+                    break
                 case 'CON':
                     query = query.where{ tipo == 'CON' || tipo == 'COD' && juridico == null}
                     break

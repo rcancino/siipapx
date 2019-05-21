@@ -1617,7 +1617,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SERIE}.equals( "CAR" ) ? "NOTA DE CARGO" : "NOTA DE CREDITO"]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SERIE}.startsWith( "C" ) ? "NOTA DE CARGO" : "NOTA DE CREDITO"]]></textFieldExpression>
 				</textField>
 			</band>
 		</columnHeader>

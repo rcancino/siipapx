@@ -14,7 +14,7 @@ class JuridicoController extends RestfulController<Juridico> {
 
     @Override
     protected List<Juridico> listAllResources(Map params) {
-        log.info('List: {}', params)
+        // log.info('List: {}', params)
         return super.listAllResources(params)
     }
 
@@ -32,10 +32,11 @@ class JuridicoController extends RestfulController<Juridico> {
 
     @Override
     protected Juridico saveResource(Juridico resource) {
+        log.info('Salvando juridico: {}', resource)
         CuentaPorCobrar cxc = resource.cxc
         cxc.juridico = resource.traspaso
         cxc.save flush: true
-        resource.save flush: true
-        resource.save flush: true
+        resource.save failOnError: true, flush: true
+        // resource.save flush: true
     }
 }
