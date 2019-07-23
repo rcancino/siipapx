@@ -67,7 +67,7 @@ class SurtidoService {
         }
     }
 
-    @Subscriber
+    //@Subscriber
     public onGenerarTps(Traslado  origen ){
         log.debug('Atendiendo solicitud de traslado: {}', origen.documento);
 

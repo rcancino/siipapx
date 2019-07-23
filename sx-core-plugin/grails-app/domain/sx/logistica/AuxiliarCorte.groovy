@@ -3,17 +3,15 @@ package sx.logistica
 import sx.security.User
 
 class AuxiliarCorte {
+    String id
 
-
-    String	id
-
-    Corte	corte
+    Corte corte
 
     User auxiliarCorte
 
-    String	tipo
+    String tipo
 
-    Date	dateCreated
+    Date dateCreated
 
 
 

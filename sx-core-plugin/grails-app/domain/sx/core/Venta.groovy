@@ -116,6 +116,8 @@ class Venta {
 
     Boolean noFacturable = false;
 
+    Boolean surtido = false
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
@@ -131,7 +133,7 @@ class Venta {
         sucursalVenta nullable:true
         cuentaPorCobrar nullable: true
         sucursalVale nullable:true
-        clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA']
+        clasificacionVale inList: ['SIN_VALE','ENVIA_SUCURSAL','PASA_CAMIONETA','RECOGE_CLIENTE','EXISTENCIA_VENTA','VALE']
         createUser nullable:true, maxSize: 100
         updateUser nullable:true, maxSize: 100
         sw2 nullable:true

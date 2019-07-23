@@ -8,23 +8,25 @@ import sx.core.Producto
 import sx.security.User
 
 @GrailsCompileStatic
-@ToString( includes = "producto, asignado",includeNames=true,includePackage=false)
-@EqualsAndHashCode(includes = 'id, producto, asignado')
+@ToString( includes = "clave",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes = 'id')
 class Corte {
 
     String	id
 
-    InstruccionCorte instruccionCorte
+    String clave
 
-    Surtido surtido
+    String descripcion
 
-    Producto producto
+    String origen
 
-    User	asignado
+    String instruccion
+
+    User	cortador
 
     User	empacador
 
-    User	canceladoUsuario
+    User	cancelo
 
     Date	inicio
 
@@ -36,24 +38,49 @@ class Corte {
 
     Date	cancelado
 
-    Date	asignacion
+    Date	asignado
+
+    Surtido surtido
+
+    String  estado
+
+    Long factura
+
+    Long venta
+
+    BigDecimal cantidad
+
+    Boolean parcial = false
+
+    Boolean parcializado = false
+
+    List    auxiliares = []
+
+    static belongsTo = [surtido: Surtido]
+
+    static hasMany = [auxiliares:AuxiliarCorte]
 
     static constraints = {
-        instruccionCorte nullable: true
+        cortador nullable: true
         asignado nullable: true
         empacador nullable: true
-        canceladoUsuario nullable: true
+        cancelo nullable: true
         inicio nullable: true
         fin nullable: true
         empacadoFin nullable: true
         empacadoInicio nullable: true
         cancelado nullable: true
-        asignacion nullable: true
+        auxiliares nullable: true
+        origen nullable: true
+        instruccion nullable:true
+        factura nullable:true
+        venta nullable:true
+        cantidad nullable:true
     }
 
     static mapping = {
-        id generator: 'uuid'
+        id generator:'uuid'
+        auxiliares cascade: "all-delete-orphan"
+        cancelado type:'date'
     }
-
-    static belongsTo = [surtido:Surtido]
 }

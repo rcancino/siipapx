@@ -5,115 +5,133 @@ import groovy.transform.ToString
 
 import sx.security.User
 
-@EqualsAndHashCode(includes='nombre,rfc')
-@ToString( includes = "origen,entidad,nombre,documento",includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes='nombre')
+@ToString( includes = "origen,tipo,nombre,documento",includeNames=true,includePackage=false)
 class Surtido {
+   
+    String id
 
-    String	id
+    String origen
 
-    String	origen
+    String tipo
 
-    String	entidad
+    String nombre
 
-    String	nombre
+    String comentario
 
-    String	comentario
-
-    Boolean	entregaLocal	 = true
+    Boolean	entregaLocal = true
 
     Boolean	parcial	 = false
 
-    Long	documento	 = 0
+    Long documento = 0
 
-    String	tipoDeVenta
+    String tipoDeVenta
 
-    Date	fecha
+    Date fecha
 
-    Long	folioFac	 = 0
+    Long folioFac = 0
 
-    User	userLastUpdate
+    User facturo
 
-    String	clasificacionVale
+    String clasificacionVale
 
-    User	asignado
+    User asignado
 
-    Date	iniciado
+    Date inicio
 
-    Date	corteFin
+    User cerro
 
-    Date	corteInicio
+    Date cerrado
 
-    Date	asignacionCorte
+    User reviso
 
-    User	cerro
+    Date revisado
 
-    Date	cierreSurtido
+    User entrego
 
-    User	revisionUsuario
+    Date entregado
 
-    Date	revision
+    User depuro
 
-    User	entrego
+    Date depurado
 
-    Date	entregado
+    User cancelo
 
-    User	depuradoUsuario
+    Date cancelado
 
-    Date	depurado
+    User cortador
 
-    Boolean	reimportado	 = false
+    Date asignadoCorte
 
-    BigDecimal	kilos	 = 0
+    Date corteInicio
 
-    Integer	prods	 = 0
+    Date corteFin
 
-    BigDecimal	tiempoSurtido	 = 0
+    BigDecimal kilos = 0
 
-    String	comportamiento
+    Integer	prods = 0
 
-    BigDecimal	kilosCorte	 = 0
+    BigDecimal tiempoSurtido = 0
 
-    Integer	prodsCorte	 = 0
+    BigDecimal kilosCorte = 0
 
-    User	cortador
+    Integer	prodsCorte = 0
 
-    BigDecimal	tiempoCorte	 = 0
+    BigDecimal tiempoCorte = 0
+
+    String estado
+
+    User autorizo
 
 
-    Boolean	valido	 = false
+    List<Corte> cortes =[]
 
-    List<Corte> cortes = []
+    List<AuxiliarCorte> auxiliares= []
+
+    List<SurtidoDet> parciales= []
+
+
+    static hasMany = [cortes:Corte,auxiliares :AuxiliarSurtido, parciales: SurtidoDet]
 
 
     static constraints = {
+
         comentario nullable: true
         asignado nullable: true
-        iniciado nullable: true
+        inicio nullable: true
         corteFin nullable: true
         corteInicio nullable: true
-        asignacionCorte nullable: true
+        asignadoCorte nullable: true
         cerro   nullable: true
-        cierreSurtido nullable: true
-        revisionUsuario nullable: true
-        revision nullable: true
+        cerrado nullable: true
+        reviso nullable: true
+        revisado nullable: true
         entrego nullable: true
         entregado nullable: true
-        depuradoUsuario nullable: true
+        depuro nullable: true
         depurado nullable: true
         tiempoSurtido nullable: true
-        comportamiento nullable: true
         kilosCorte nullable: true
         prodsCorte nullable: true
         cortador nullable: true
         tiempoCorte nullable: true
-        comportamiento nullable: true
-        entidad inList:['PST','FAC','SOL','TRS']
-    }
+        tipo inList:['PST','FAC','SOL','TRS']
+        cancelado nullable: true
+        cancelo nullable: true
+        cortes nullable: true
+        auxiliares nullable: true
+        folioFac nullable:true
+        facturo nullable:true
+        parciales nullable: true
+        autorizo nullable: true
 
-    static hasMany =[cortes:Corte]
+    }
 
     static mapping = {
         id generator: 'uuid'
+        auxiliares cascade: "all-delete-orphan"
         cortes cascade: "all-delete-orphan"
+        parciales cascade: "all-delete-orphan"
     }
+
 }
