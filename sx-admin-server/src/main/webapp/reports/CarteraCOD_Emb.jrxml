@@ -43,7 +43,6 @@
 ,c.update_user
 from venta v 
 join cuenta_por_cobrar c on (v.cuenta_por_cobrar_id=c.id)
-JOIN condicion_de_envio x on (x.venta_id=v.id)
 LEFT join ENVIO e on(e.origen=v.id)
 left join embarque q on(q.id=e.embarque_id)
 left join chofer f on (q.chofer_id=f.id)
