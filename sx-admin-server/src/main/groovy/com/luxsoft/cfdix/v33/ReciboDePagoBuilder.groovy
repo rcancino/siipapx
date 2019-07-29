@@ -44,6 +44,7 @@ class ReciboDePagoBuilder {
         .buildRelacionados()
         .buildComplementoPago()
         comprobante = sellador.sellar(comprobante, empresa)
+
         // log.debug('CFDI generado {}', CfdiUtils.serialize(comprobante))
         return comprobante
     }
