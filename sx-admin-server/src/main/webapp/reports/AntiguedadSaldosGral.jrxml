@@ -42,8 +42,8 @@
 ,SUM(CASE WHEN (TO_DAYS(CURRENT_DATE)-TO_DAYS(F.VENCIMIENTO))>90 THEN (F.TOTAL-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=F.ID AND B.FECHA<=$P{CORTE} ),0)) ELSE 0 END)  AS MAS_90
 ,SUM((F.TOTAL-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=F.ID AND B.FECHA<=$P{CORTE} ),0)))*100 /  	((SELECT SUM((F.TOTAL-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=F.ID AND B.FECHA<=$P{CORTE} ),0)))
      FROM cuenta_por_cobrar F JOIN cliente_credito C ON(F.cliente_id=C.cliente_id) WHERE F.FECHA>'2016/12/31'  AND  F.TIPO='CRE' AND  (F.TOTAL-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=F.ID AND B.FECHA<=$P{CORTE} ),0))>0 )) AS PART
-FROM  cuenta_por_cobrar F JOIN cliente_credito C ON(F.cliente_id=C.cliente_id) JOIN cliente X ON(F.CLIENTE_ID=X.ID)
-WHERE F.FECHA>'2016/12/31'  AND F.TIPO='CRE' AND F.FECHA<=$P{CORTE} AND
+FROM  cuenta_por_cobrar F JOIN cliente_credito C ON(F.cliente_id=C.cliente_id) JOIN cliente X ON(F.CLIENTE_ID=X.ID) LEFT JOIN JURIDICO J ON(J.cxc_id=F.id)
+WHERE F.FECHA>'2016/12/31'  AND F.TIPO='CRE' AND F.FECHA<=$P{CORTE} AND J.ID IS NULL AND
 (F.TOTAL-IFNULL((SELECT SUM(B.IMPORTE) FROM aplicacion_de_cobro B WHERE B.cuenta_por_cobrar_id=F.ID AND B.FECHA<=$P{CORTE} ),0))<>0
 group by X.ID
 ORDER BY  $P!{ORDER} $P!{FORMA}]]></queryString>
