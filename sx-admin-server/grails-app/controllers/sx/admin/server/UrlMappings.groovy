@@ -190,6 +190,7 @@ class UrlMappings {
 
 
         "/api/cxc/juridico"(resources: "Juridico")
+        "/api/cxc/juridico/mandarFacturas"(controller: 'juridico', action: 'mandarFacturas', method: 'PUT')
 
         // Security
         "/api/security/users"(resources: "user")

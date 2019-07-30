@@ -23,8 +23,8 @@ import sx.inventario.DevolucionDeVentaDet
 @Slf4j
 class NotaBuilder {
 
-    private factory = new ObjectFactory();
-    private Comprobante comprobante;
+    private factory = new ObjectFactory()
+    private Comprobante comprobante
     private Empresa empresa
 
     private NotaDeCredito nota
@@ -38,6 +38,7 @@ class NotaBuilder {
     CfdiSellador33 sellador
 
     def build(NotaDeCredito nota){
+        this.rmd = null
         this.nota = nota
         this.empresa = Empresa.first()
         subTotalAcumulado = 0.0
