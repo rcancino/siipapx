@@ -83,6 +83,9 @@ class Surtido {
 
     User autorizo
 
+    Date dateCreated
+    Date lastUpdated
+
 
     List<Corte> cortes =[]
 

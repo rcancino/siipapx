@@ -16,7 +16,11 @@ class SurtidoDet {
 
     String	instruccionDeEntregaParcial
 
-    EntregaParcialDet entregaParcialDet
+    String entregaParcialDet
+
+
+    Date dateCreated
+    Date lastUpdated
 
     static belongsTo = [surtido: Surtido]
 

@@ -4,6 +4,7 @@ import sx.security.User
 
 class AsignacionActividad {
 
+
     String	id
 
     User asigno

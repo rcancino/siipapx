@@ -2,6 +2,7 @@ package sx.logistica
 
 class EntregaParcialDet {
 
+
     String	id
 
     String ventaDet
@@ -18,12 +19,20 @@ class EntregaParcialDet {
 
     BigDecimal entregado = 0
 
+    BigDecimal porEntregar 
+
     String	instruccionDeEntregaParcial
 
     EntregaParcial entregaParcial
 
+
+    Date dateCreated
+    Date lastUpdated
+
     static belongsTo = [entregaParcial: EntregaParcial]
 
+    static transients = ['porEntregar']
+  
     static constraints = {
         ventaDet nullable: true
         producto nullable: true
@@ -34,8 +43,7 @@ class EntregaParcialDet {
 
     static mapping = {
         id generator:'uuid'
-       
+        entregado formula:'(select COALESCE(sum(x.cantidad),0) from surtido_det x where x.entrega_parcial_det=id)'
     }
-
 
 }
