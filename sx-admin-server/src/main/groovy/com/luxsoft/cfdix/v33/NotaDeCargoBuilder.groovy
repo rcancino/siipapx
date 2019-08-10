@@ -164,6 +164,9 @@ class NotaDeCargoBuilder {
             concepto.cantidad = 1
             concepto.unidad = unidad
             concepto.descripcion = "${prefix} ${nota.tipo} ${item.documento}  (${item.documentoFecha.format('dd/MM/yyyy')}) ${item.sucursal}"
+            if(item.cuentaPorCobrar == null && nota.tipo == 'CRE') {
+                concepto.descripcion = nota.comentario
+            }
             concepto.valorUnitario = importe
             concepto.importe = importe
 
@@ -217,19 +220,25 @@ class NotaDeCargoBuilder {
     }
 
     def buildRelacionados() {
-        if(nota.tipo != 'CHE') {
+        List relacionables = this.nota.partidas.findAll{it.cuentaPorCobrar != null}
+        if(relacionables) {
             Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
             relacionados.tipoRelacion = '02'
-            this.nota.partidas.each { NotaDeCargoDet det ->
+            relacionables.each { NotaDeCargoDet det ->
                 Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
-                def cxc = det.cuentaPorCobrar
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                def uuid = cxc.uuid
+                def cxc = det.cuentaPorCobrar 
+                def uuid = cxc.uuid
                 assert uuid, 'No existe UUID origen para la cxc :' + cxc.id
                 relacionado.UUID = uuid
                 relacionados.cfdiRelacionado.add(relacionado)
             }
             comprobante.cfdiRelacionados = relacionados
         }
+        /*
+        if(nota.tipo != 'CHE') {
+            
+        }
+        */
 
     }
 

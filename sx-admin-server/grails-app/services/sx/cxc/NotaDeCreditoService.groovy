@@ -187,7 +187,7 @@ class NotaDeCreditoService {
             nota.save failOnError: true, flush: true
             aplicar(nota)
             rmd.cobro = cobro
-            rmd.save flush: true
+            rmd.save failOnError: true, flush: true
             return nota
         } else {
             nota.cobro = rmd.cobro
