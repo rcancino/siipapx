@@ -35,6 +35,9 @@ class EntregaParcial {
 
     User autorizo
 
+    Date dateCreated
+    Date lastUpdated
+
 
    List<EntregaParcialDet> partidas =[]
 

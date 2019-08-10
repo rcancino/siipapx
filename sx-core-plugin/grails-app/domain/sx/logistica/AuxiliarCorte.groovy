@@ -3,6 +3,7 @@ package sx.logistica
 import sx.security.User
 
 class AuxiliarCorte {
+    
     String id
 
     Corte corte

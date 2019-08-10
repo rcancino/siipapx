@@ -29,6 +29,9 @@ class MesaEmpaque {
 
     User empacador8
 
+    Date dateCreated
+    Date lastUpdated
+
 
     static constraints = {
 

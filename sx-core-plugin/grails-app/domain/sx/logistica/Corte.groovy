@@ -54,6 +54,9 @@ class Corte {
 
     Boolean parcializado = false
 
+    Date dateCreated
+    Date lastUpdated
+
     List    auxiliares = []
 
     static belongsTo = [surtido: Surtido]
