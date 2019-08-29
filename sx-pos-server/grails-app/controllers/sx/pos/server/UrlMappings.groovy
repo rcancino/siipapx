@@ -209,6 +209,13 @@ class UrlMappings {
         "/api/inventario/conteos/generarConteo"(controller: "conteo", action: 'generarConteo', method: 'POST')
         "/api/inventario/conteos/generarExistencias"(controller: "conteo", action: ' generarExistencias', method: 'GET')
         "/api/inventario/conteos/limpiarExistencias"(controller: "conteo", action: ' limpiarExistencias', method: 'GET')
+        "/api/inventario/conteos/print/$id"(controller: "conteo", action: 'print', method: 'GET')
+        "/api/inventario/conteos/imprimirSectores"(controller: "conteo", action: 'imprimirSectores', method: 'GET')
+        "/api/inventario/conteos/noCapturados"(controller: "conteo", action: 'reporteNoCapturados', method: 'GET')
+        "/api/inventario/conteos/validacion"(controller: "conteo", action: 'reporteValidacion', method: 'GET')
+        "/api/inventario/conteos/diferencias"(controller: "conteo", action: 'reporteDiferencias', method: 'GET')
+        "/api/inventario/conteos/fijarConteo"(controller: "conteo", action: 'fijarConteo', method: 'POST')
+        "/api/inventario/conteos/ajustarConteo"(controller: "conteo", action: 'ajustePorConteo', method: 'POST')
 
         // Embarques
         "/api/embarques/facturistas"(resources: 'facturistaDeEmbarque')

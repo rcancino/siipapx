@@ -7,6 +7,7 @@ import grails.plugins.jasper.JasperService
 
 import grails.gorm.transactions.Transactional
 import net.sf.jasperreports.export.PdfExporterConfiguration
+import sx.inventario.Conteo
 
 @Transactional
 @GrailsCompileStatic
@@ -72,6 +73,32 @@ class ReportService {
                 reportes.add(reportDef2)
             }
         }
+        ByteArrayOutputStream  stream=jasperService.generateReport(reportes)
+        return stream
+    }
+
+    ByteArrayOutputStream imprimirSectoresConteo(String reportName, List<Conteo> sectores){
+
+        // log.debug("Ejecutando reporte {} con parametros: ${params} y data: ${data}", reportName)
+        log.debug("Ejecutando reporte {}", reportName)
+
+
+        def reportes = []
+
+        sectores.each{sector -> 
+            Map parametros = [:]
+            parametros.SECTOR = sector.id
+            def reportDef=new JasperReportDef(
+                        name:reportName,
+                        fileFormat: JasperExportFormat.PDF_FORMAT,
+                        parameters:parametros
+                        
+                )
+
+                reportes.add(reportDef)
+
+        }
+        
         ByteArrayOutputStream  stream=jasperService.generateReport(reportes)
         return stream
     }

@@ -6,9 +6,16 @@ import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 import sx.core.Sucursal
 import sx.core.Existencia
+import sx.reports.ReportService
+
 
 @Secured("ROLE_INVENTARIO_USER")
+//@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class ConteoController extends RestfulController {
+    
+    ReportService reportService
+
+    ConteoService conteoService
 
     static responseFormats = ['json']
 
@@ -48,16 +55,25 @@ class ConteoController extends RestfulController {
 
     @Transactional
     def generarConteo() {
+
+        def result = [:]
+        def found = Conteo.findAll("from Conteo where date(fecha) = ? ",[new Date()])
+        if(found) {
+            result.message = 'Los sectores ya han sido cargados'
+            respond(result, status: 200)
+            return 
+        }
+
         def username = getPrincipal().username
         def today = new Date()
-        def result = [:]
+       
         def sectores = Sector.list([sort:'sectorFolio', order:'asc']);
         def conteos = [];
         sectores.each { sector ->
             Conteo conteo = Conteo.where{ sector == sector && fecha == today}.find()
              // println "Encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
             if( !conteo ){
-                println "No encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
+               // println "No encontro conteo para sector ${sector.sectorFolio} y fecha ${today}"
                 conteo = new Conteo([
                 sucursal: sector.sucursal,
                 documento: sector.sectorFolio,
@@ -112,7 +128,7 @@ class ConteoController extends RestfulController {
             ex.save failOnError: true , flush:true
             //println 'Existencia conteo generada: ' + ex.producto.clave
         }
-        result.message = "${existencias.size()} exitencias generadas exitosamente"
+        result.message = existencias.size()+" exitencias generadas exitosamente"
         result.existencias = existencias.size()
         respond(result, status: 200)
     }
@@ -124,6 +140,234 @@ class ConteoController extends RestfulController {
         Map result = [:]
         result.message = "Existenicas para conteo eliminadas exitosamente "
         respond(result, status: 200)
+    }
+
+    def print() {
+        params.SECTOR = params.id
+        println params.id
+        def pdf = this.reportService.run('ConteoAlmacen', params)
+        def fileName = "ConteoAlmacen.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def reporteNoCapturados(Sucursal sucursal) {
+        params.SUCURSAL_ID = sucursal.id
+        println params.id
+        def pdf = this.reportService.run('NoCapturados', params)
+        def fileName = "NoCapturados.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def reporteValidacion(){
+
+        println "----------------------- Ejecutando Validacion"
+
+        def fecha  = new Date()
+        def repParams = [:]
+
+        repParams.SUC = params.sucursalId
+        repParams.FECHA = fecha
+        repParams.SECTOR_INICIAL = new Integer(params.sectorIni)
+        repParams.SECTOR_FINAL = new Integer(params.sectorFin)
+        repParams.DIF_DE = new Double(params.difDe)
+        repParams.DIF_A = new Double(params.difA)
+
+        switch(params.activo) {
+            case 'TODOS':
+                repParams.ACTIVO = ''
+            break
+            case 'ACTIVOS':
+                repParams.ACTIVO = " AND ACTIVO IS TRUE"
+            break
+            case 'INACTIVOS':
+                repParams.ACTIVO = " AND ACTIVO IS FALSE"
+            break
+            default:
+                repParams.ACTIVO = ''
+            break
+        }
+
+        switch(params.deLinea) {
+            case 'TODOS':
+                repParams.DELINEA = ''
+            break
+            case 'DE LINEA':
+                repParams.DELINEA = " AND DE LINEA IS TRUE"
+            break
+            case 'ESPECIALES':
+                repParams.DELINEA = " AND DE LINEA IS FALSE"
+            break
+            default:
+                repParams.DELINEA = ''
+            break
+        }
+
+        switch(params.filtro) {
+            case 'TODOS':
+                repParams.FILTRO = "LIKE '%' "
+            break
+            case 'SIN DIFERENCIA':
+                repParams.FILTRO = " = 0 "
+            break
+            case 'CON DIFERENCIA':
+                repParams.FILTRO = " <> 0 "
+            break
+            default:
+                repParams.FILTRO = "LIKE '%' "
+            break
+        }
+
+        switch(params.ordenado) {
+            case 'CLAVE':
+                repParams.ORDENADOR = " L.LINEA, CL.CLASE,P.CLAVE "
+            break
+            case 'NOMBRE':
+                repParams.ORDENADOR = " L.LINEA, CL.CLASE,P.DESCRIPCION "
+            break
+            case 'DIFERENCIA ASC':
+                repParams.ORDENADOR = " 11 ASC "
+            break
+            case 'DIFERENCIA DESC':
+                repParams.ORDENADOR = " 11 DESC "
+            break
+            default:
+                
+            break
+        }
+
+        def pdf = this.reportService.run('ValidacionDeCaptura', repParams)
+        def fileName = "Validacion.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def reporteDiferencias(){
+
+        println "************************Ejecutando Diferencias"
+
+        def fecha  = new Date()
+        def repParams = [:]
+
+        repParams.SUC = params.sucursalId
+        repParams.FECHA = fecha
+        repParams.SECTOR_INICIAL = new Integer(params.sectorIni)
+        repParams.SECTOR_FINAL = new Integer(params.sectorFin)
+        repParams.DIF_DE = new Double(params.difDe)
+        repParams.DIF_A = new Double(params.difA)
+
+        switch(params.activo) {
+            case 'TODOS':
+                repParams.ACTIVO = ''
+            break
+            case 'ACTIVOS':
+                repParams.ACTIVO = " AND ACTIVO IS TRUE"
+            break
+            case 'INACTIVOS':
+                repParams.ACTIVO = " AND ACTIVO IS FALSE"
+            break
+            default:
+                repParams.ACTIVO = ''
+            break
+        }
+
+        switch(params.deLinea) {
+            case 'TODOS':
+                repParams.DELINEA = ''
+            break
+            case 'DE LINEA':
+                repParams.DELINEA = " AND DE LINEA IS TRUE"
+            break
+            case 'ESPECIALES':
+                repParams.DELINEA = " AND DE LINEA IS FALSE"
+            break
+            default:
+                repParams.DELINEA = ''
+            break
+        }
+
+        switch(params.filtro) {
+            case 'TODOS':
+                repParams.FILTRO = "LIKE '%' "
+            break
+            case 'SIN DIFERENCIA':
+                repParams.FILTRO = " = 0 "
+            break
+            case 'CON DIFERENCIA':
+                repParams.FILTRO = " <> 0 "
+            break
+            default:
+                repParams.FILTRO = "LIKE '%' "
+            break
+        }
+
+        switch(params.ordenado) {
+            case 'CLAVE':
+                repParams.ORDENADOR = " L.LINEA, CL.CLASE,P.CLAVE "
+            break
+            case 'NOMBRE':
+                repParams.ORDENADOR = " L.LINEA, CL.CLASE,P.DESCRIPCION "
+            break
+            case 'DIFERENCIA ASC':
+                repParams.ORDENADOR = " 11 ASC "
+            break
+            case 'DIFERENCIA DESC':
+                repParams.ORDENADOR = " 11 DESC "
+            break
+            default:
+                
+            break
+        }
+
+        def pdf = this.reportService.run('DiferenciasEnConteo', repParams)
+        def fileName = "Diferencias.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+    }
+
+    def imprimirSectores() {
+
+        println "Imprimiendo Sectores para conteo"
+
+        //def fecha  = new Date('08/20/2019')
+        def fecha  = new Date()
+
+        def conteos = Conteo.findAll("from Conteo where date(fecha) = ? ",[fecha])
+
+        if(!conteos){
+            println "No hubo conteos para imprimir"
+            return[]
+        }
+        println conteos
+        def pdf = reportService.imprimirSectoresConteo('ConteoAlmacen.jrxml', conteos)
+        def fileName = "ConteosAlmacen.pdf"
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
+       
+    }
+
+    def fijarConteo() {
+        println "Fijando el conteo"
+        def result = [:]
+        def found = ExistenciaConteo.findAll("from ExistenciaConteo where date(fijado) = ? ",[new Date()])
+        if(found) {
+            result.message = 'El inventario ya ha sido fijado'
+            respond(result, status: 200)
+            return 
+        }
+        conteoService.fijarConteo()
+        result.message = 'El inventario se fijo con exito'
+        respond(result, status: 200)
+        return 
+    }
+
+    def ajustePorConteo() {
+        def aju = conteoService.ajustePorConteo()
+        def result = [:]
+        def mensaje ="Se genero el ajuste con Documento: " +aju.documento +" para "+ aju.partidas.size()+" productos"
+        if(aju) {
+            result.message = mensaje
+            respond(result, status: 200)
+            return 
+        }
+
+        return
     }
     
 
