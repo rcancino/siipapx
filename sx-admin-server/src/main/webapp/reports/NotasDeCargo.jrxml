@@ -38,8 +38,8 @@
 ,sum(case when x.sucursal='OFICINAS' then x.impDet else 0 end) as cargo_ofi
 FROM (
 SELECT a.id,a.serie,a.tipo,a.fecha,a.folio,y.clave,y.nombre,a.importe,a.impuesto,a.total,s.nombre as sucursal,b.importe as impDet
-FROM nota_de_cargo A JOIN cuenta_por_cobrar Z ON(A.CUENTA_POR_COBRAR_ID=Z.ID) LEFT JOIN nota_de_cargo_det B ON(A.ID=B.NOTA_ID) JOIN cliente y ON(a.cliente_id=y.id)
-LEFT JOIN cuenta_por_cobrar C ON (C.ID=B.CUENTA_POR_COBRAR_ID) join sucursal s on(c.sucursal_id=s.id)
+FROM nota_de_cargo A left JOIN cuenta_por_cobrar Z ON(A.CUENTA_POR_COBRAR_ID=Z.ID) LEFT JOIN nota_de_cargo_det B ON(A.ID=B.NOTA_ID) JOIN cliente y ON(a.cliente_id=y.id)
+LEFT JOIN cuenta_por_cobrar C ON (C.ID=B.CUENTA_POR_COBRAR_ID) left join sucursal s on(c.sucursal_id=s.id)
 WHERE A.FECHA BETWEEN $P{FECHA_INI} AND $P{FECHA_FIN} AND Z.CANCELADA IS NULL AND A.TIPO=$P{ORIGEN}
 ) as x
 group by x.id]]></queryString>
