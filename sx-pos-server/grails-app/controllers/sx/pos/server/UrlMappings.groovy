@@ -216,6 +216,8 @@ class UrlMappings {
         "/api/inventario/conteos/diferencias"(controller: "conteo", action: 'reporteDiferencias', method: 'GET')
         "/api/inventario/conteos/fijarConteo"(controller: "conteo", action: 'fijarConteo', method: 'POST')
         "/api/inventario/conteos/ajustarConteo"(controller: "conteo", action: 'ajustePorConteo', method: 'POST')
+        "/api/inventario/conteos/cargarSector"(controller: "conteo", action: 'cargarSector', method: 'POST')
+        "/api/inventario/conteos/generarExistenciaParcial"(controller: "conteo", action: 'generarExistenciaParcial', method: 'GET')
 
         // Embarques
         "/api/embarques/facturistas"(resources: 'facturistaDeEmbarque')
@@ -250,6 +252,12 @@ class UrlMappings {
         "/api/report/facturasPendientesCodEmbarques"(controller: 'ventas', action: 'facturasPendientesCodEmbarques', method: 'GET')
         "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
         "/api/report/clientesNuevos"(controller: 'ventas', action: 'clientesNuevos', method: 'GET')
+
+        // logistica
+
+        "/api/logistica/soporte"(controller: "solicitudCambio", action: 'list', method: 'GET')
+         "/api/logistica/soporte/tipos"(controller: "solicitudCambio", action: 'tipos', method: 'GET')
+        "/api/logistica/soporte/salvar"(controller: "solicitudCambio", action: 'salvar', method: 'POST')
 
         "/api/complementosIne"(resources:"complementoIne")
         "/api/complementosIne/pendientes"(controller: "complementoIne", action: 'pendientes', method: 'GET')

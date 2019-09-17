@@ -9,6 +9,7 @@ import sx.core.Existencia
 import sx.reports.ReportService
 
 
+
 @Secured("ROLE_INVENTARIO_USER")
 //@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 class ConteoController extends RestfulController {
@@ -134,11 +135,61 @@ class ConteoController extends RestfulController {
     }
 
     @Transactional
+    def generarExistenciaParcial(Sucursal sucursal) {
+
+        println "Generando existencia parcial... "
+
+          // println 'Params: ' + params
+        assert sucursal.id, 'Debe indicar la sucursal para genera existencias conteo'
+
+        def hoy = new Date()
+        def result = [:]
+
+        def found = ExistenciaConteo.where { fecha == hoy && sucursal == sucursal}.find()
+        
+        if(found) {
+            result.message = 'Existencias ya generadas'
+            respond(result, status: 200)
+            return 
+        }
+
+        def conteosDet = ConteoDet.findAll()
+        def ejercicio = hoy[Calendar.YEAR]
+        def mes = hoy[Calendar.MONTH] + 1
+
+        def existencias = []
+
+        conteosDet.each { det ->       
+            def existencia = Existencia.where{sucursal == sucursal && anio == ejercicio && mes == mes && producto == det.producto }.find()
+            if(existencia){
+                def ex = new ExistenciaConteo()
+                ex.existencia = existencia
+                ex.sucursal = existencia.sucursal
+                ex.producto = existencia.producto
+                ex.fecha = hoy
+                ex.cantidad = existencia.cantidad
+                ex.save failOnError: true , flush:true
+                existencias.add(ex)
+            }
+        }
+
+        result.message = existencias.size()+" exitencias generadas exitosamente"
+        result.existencias = existencias.size()
+        respond(result, status: 200)
+
+    }
+
+    @Transactional
     def limpiarExistencias(Sucursal sucursal){
         def hoy = new Date()
-        ExistenciaConteo.where { fecha == hoy && sucursal == sucursal && fijado == null}.deleteAll()
+       
+       def existencias = Existencia.findAll()
+       def conteos = Conteo.findAll()
+
+
+        // ConteoDet.deleteAll()
         Map result = [:]
-        result.message = "Existenicas para conteo eliminadas exitosamente "
+        result.message = "Tablas  Limmpias "
         respond(result, status: 200)
     }
 
@@ -368,6 +419,47 @@ class ConteoController extends RestfulController {
         }
 
         return
+    }
+
+    def cargarSector() {
+        println 'Cargando Sector ...'
+        
+        println params
+
+        def result = [:]
+        def username = getPrincipal().username
+        def today = new Date()
+
+        def found = Conteo.findByDocumento(params.sector)
+
+        if(found) {
+            result.message = 'Sector ya cargado'
+            respond(result, status: 200)
+            return 
+        }  
+
+        def sector = Sector.findBySectorFolio(params.sector)
+
+        if(sector){
+
+            def conteo = new Conteo([
+            sucursal: sector.sucursal,
+            documento: sector.sectorFolio,
+            fecha: new Date(),
+            sector: sector,
+            createUser: username
+            ])
+            sector.partidas.each { det ->
+                conteo.addToPartidas(new ConteoDet([producto: det.producto]))
+            }
+            conteo.updateUser = username
+            conteo.save failOnError: true, flush:true
+
+            respond conteo
+
+        }
+
+        return []
     }
     
 
