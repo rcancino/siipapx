@@ -45,7 +45,6 @@ class Cobrador {
     static mapping ={
         id generator:'uuid'
     }
-
     String toString() {
         return "$nombres $apellidoPaterno"
     }

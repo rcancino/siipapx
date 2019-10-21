@@ -188,6 +188,8 @@ class UrlMappings {
         "/api/bonificacionesMC/suspender/$id"(controller: 'bonificacionMC', action: 'suspender')
         "/api/bonificacionesMC/print"(controller: 'bonificacionMC', action: 'print', method: 'GET')
 
+        "/api/users/buscarPorNip"( controller:'auth', action: 'buscarPorNip', method: 'GET')
+
 
         "/api/cxc/juridico"(resources: "Juridico")
         "/api/cxc/juridico/mandarFacturas"(controller: 'juridico', action: 'mandarFacturas', method: 'PUT')
@@ -195,7 +197,7 @@ class UrlMappings {
         // Security
         "/api/security/users"(resources: "user")
         "/api/security/roles"(resources: "role")
-        "/api/security/users/findByNip"( controller:'user', action: 'findByNip', method: 'GET')
+        // "/api/security/users/findByNip"( controller:'user', action: 'findByNip', method: 'GET')
 
 
         "/"(controller: 'application', action:'index')

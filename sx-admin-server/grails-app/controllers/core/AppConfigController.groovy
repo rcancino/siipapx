@@ -16,4 +16,5 @@ class AppConfigController extends RestfulController{
     Object show() {
       respond AppConfig.first()
     }
+
 }
