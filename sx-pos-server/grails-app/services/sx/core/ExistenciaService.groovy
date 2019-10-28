@@ -118,7 +118,7 @@ class ExistenciaService {
 
     @NotTransactional
     def recalcular(Producto producto, def ejercicio, def mes){
-        //log.debug('Recalculandi existencia del {} Eje:{} Mes:{}', producto.clave, ejercicio, mes)
+        log.debug('Recalculandi existencia del {} Eje:{} Mes:{}', producto.clave, ejercicio, mes)
         Existencia exis = findExitencia(producto, ejercicio, mes)
         def movs = Inventario.executeQuery(
                 "select sum(i.cantidad) " +

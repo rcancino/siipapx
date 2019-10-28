@@ -20,6 +20,7 @@ import sx.core.Empresa
 import sx.cxc.CobroCheque
 import sx.cxc.CobroTransferencia
 import sx.cxc.CuentaPorCobrar
+import sx.cxc.SolicitudDeDeposito
 
 
 @Slf4j
@@ -131,7 +132,7 @@ class ReciboDePagoBuilder {
         pagos.version = '1.0'
 
         Pagos.Pago pago = factory.createPagosPago()
-        pago.fechaPago = DateUtils.getCfdiDate(cobro.primeraAplicacion) // Preguntar
+        pago.fechaPago = getFechaDePago(cobro) 
         pago.formaDePagoP = getFormaDePago()
         pago.monedaP = cobro.moneda.currencyCode
         if(this.cobro.moneda.currencyCode != 'MXN') {
@@ -192,6 +193,11 @@ class ReciboDePagoBuilder {
         complemento.any.add(pagos)
         comprobante.complemento = complemento
 
+    }
+
+    def getFechaDePago(Cobro c){
+         def sol = SolicitudDeDeposito.where{cobro == c}.find()
+         return  DateUtils.getCfdiDate(sol.fechaDeposito)
     }
 
     def getFormaDePago(){

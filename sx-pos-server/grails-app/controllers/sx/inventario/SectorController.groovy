@@ -38,7 +38,8 @@ class SectorController extends RestfulController {
 
         return list
     }
-
+    
+    @Secured("ROLE_INVENTARIO_USER")
     // @Override
     protected Sector saveResource(Sector resource) {
         def username = getPrincipal().username

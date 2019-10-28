@@ -59,7 +59,7 @@ class CobroService {
             } else if (cobro.tarjeta.visaMaster) {
                 cobro.tarjeta.comision = 2.36
             } else {
-                cobro.tarjeta.comision = 3.80
+                cobro.tarjeta.comision = 3.75
             }
         }
     }

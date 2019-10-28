@@ -76,7 +76,7 @@ class Producto {
 
 	ProductoSat productoSat
 
-  UnidadSat unidadSat
+  	UnidadSat unidadSat
 
 	static constraints = {
 
