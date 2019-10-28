@@ -58,4 +58,15 @@ class ChequeDevueltoController extends RestfulController<ChequeDevuelto> {
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'EstadoDeCuentaGralChe.pdf')
 
     }
+
+    def saldosPorAbogado() {
+        def fecha = params.getDate('fecha', 'dd/MM/yyyy');
+        def dpo = DespachoDeCobranza.get(params.despacho)
+        def repParams = [:]
+        repParams.FECHA = fecha
+        repParams.ABOGADO = dpo ? dpo.nombre : '%'
+        println 'PARAMS: ' + repParams
+        def pdf = reportService.run('SaldosPendientesPorAbogado.jrxml', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'SaldosPendientesPorAbogado.pdf')
+    }
 }

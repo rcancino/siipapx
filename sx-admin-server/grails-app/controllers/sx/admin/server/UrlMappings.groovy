@@ -165,6 +165,7 @@ class UrlMappings {
         "/api/cxc/cheques/reporteDeChequesDevueltos"(controller: "chequeDevuelto", action:'reporteDeChequesDevueltos', method: 'GET')
         "/api/cxc/cheques/estadoDeCuentaGeneralChe"(controller: "chequeDevuelto", action:'estadoDeCuentaGeneralChe', method: 'GET')
         "/api/cxc/cheques/estadoDeCuentaDetChe"(controller: "chequeDevuelto", action:'estadoDeCuentaDetChe', method: 'GET')
+        "/api/cxc/cheques/saldosPorAbogado"(controller: "chequeDevuelto", action:'saldosPorAbogado', method: 'GET')
 
 
         // Comisiones
