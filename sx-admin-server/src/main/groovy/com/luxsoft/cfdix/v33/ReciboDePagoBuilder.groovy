@@ -196,8 +196,13 @@ class ReciboDePagoBuilder {
     }
 
     def getFechaDePago(Cobro c){
+         def fechaPago = c.fecha
          def sol = SolicitudDeDeposito.where{cobro == c}.find()
-         return  DateUtils.getCfdiDate(sol.fechaDeposito)
+         if(sol){
+             fechaPago = sol.fechaDeposito
+         }
+        
+         return  DateUtils.getCfdiDate(fechaPago)
     }
 
     def getFormaDePago(){
