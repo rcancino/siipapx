@@ -88,7 +88,7 @@ class Cliente {
     }
 
     def getTelefonos() {
-        return medios.findAll{ it.tipo == 'TEL'}.collect {it.descripcion}
+        return medios.findAll{ it.tipo == 'TEL'}.sort{it.id}.collect {it.descripcion}
     }
 
     def getFax() {

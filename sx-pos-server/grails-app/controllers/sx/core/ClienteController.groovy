@@ -74,6 +74,7 @@ class ClienteController extends RestfulController{
             medio.sucursalCreated = sucursal.nombre
             medio.sucursalUpdated = sucursal.nombre
             medio.validado = true
+            medio.updateUser = usuario
             cliente.addToMedios(medio)
         }
         medio.descripcion = email
@@ -84,6 +85,53 @@ class ClienteController extends RestfulController{
         respond cliente
 
     }
+
+     def actualizarTelefono(Cliente cliente) {
+        if (cliente == null) {
+            notFound()
+            return
+        }
+
+        println 'Actualizando el telefono '+cliente.nombre
+
+        
+       def medios = cliente.medios.findAll{ it.tipo == 'TEL'}
+  
+
+       def medio = medios.sort{it.id}.first()
+        
+        println medio
+
+        String telefono = params.telefono
+        println "Telefono: " +telefono
+        Sucursal sucursal = AppConfig.first().sucursal
+        String usuario = params.usuario
+
+         if(!medio) {
+            medio = new ComunicacionEmpresa()
+            medio.tipo = 'TEL'
+            medio.activo = true
+            medio.cfdi = false
+            medio.comentario = 'TELEFONO 1'
+            medio.cliente = cliente
+            medio.createUser = usuario
+            medio.updateUser = usuario
+            medio.sucursalCreated = sucursal.nombre
+            medio.sucursalUpdated = sucursal.nombre
+            medio.validado = true
+            medio.updateUser = usuario
+            cliente.addToMedios(medio)
+        }
+        medio.descripcion = telefono
+        medio.updateUser = usuario
+        medio.sucursalUpdated = sucursal.nombre
+        medio.validado = false
+        cliente.save failOnError: true, flush:true
+        
+        respond cliente
+
+    }
+    
 
     def validarRfc(){
         String rfc = params.rfc
