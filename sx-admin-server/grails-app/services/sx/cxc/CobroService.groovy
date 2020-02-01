@@ -151,10 +151,12 @@ class CobroService {
         validarParaTimbrado(cobro)
         log.debug(' Generando recibo electronico de pago para cobro: {}', cobro.id)
         Comprobante comprobante = this.reciboDePagoBuilder.build(cobro)
+        
         Cfdi cfdi = cfdiService.generarCfdi(comprobante, 'P', 'COBROS')
         log.debug('CFDI generado {}', cfdi.id)
         cobro.cfdi = cfdi
         cobro.save flush: true
+        
         return cobro
     }
 

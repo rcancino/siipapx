@@ -156,7 +156,7 @@ class ReciboDePagoBuilder {
         aplicaciones.each { AplicacionDeCobro aplicacion ->
             Pagos.Pago.DoctoRelacionado relacionado = factory.createPagosPagoDoctoRelacionado()
 
-            CuentaPorCobrar cxc = aplicacion.cuentaPorCobrar
+            def cxc = aplicacion.cuentaPorCobrar
             Cfdi cfdi = cxc.cfdi
             if(!cfdi) {
                 throw new RuntimeException("La cuenta por cobrar ${cxc.tipo} ${cxc.documento} no tiene CFDI")
@@ -173,10 +173,23 @@ class ReciboDePagoBuilder {
 
             BigDecimal saldoAnterior = cxc.total
 
-            List<AplicacionDeCobro> aplicacionesAnteriores =
-                    AplicacionDeCobro.where {cuentaPorCobrar == cxc && id != aplicacion.id && cobro.cfdi != null}.list()
+            
+            def pagosAplicados = AplicacionDeCobro.findAll(""" 
+                select sum(a.importe) from AplicacionDeCobro a 
+                  where a.cuentaPorCobrar.id = ?  
+                    and a.cobro.cfdi != null
+                    """, 
+                [cxc.id])[0] ?: 0.0
 
-            BigDecimal pagosAnteriores = aplicacionesAnteriores.sum 0.0 ,{ it.importe}
+            def notasAplicadas = AplicacionDeCobro.findAll("""
+                select sum(a.importe) from AplicacionDeCobro a 
+                  where a.cuentaPorCobrar.id = ?  
+                    and a.cobro.formaDePago in ('DEVOLUCION','BONIFICACION')
+                """, 
+                [cxc.id])[0] ?: 0.0
+
+            // def aplicacionesAnteriores = aplicacionesDePagos + aplicacionesDePagos
+            def pagosAnteriores = pagosAplicados + notasAplicadas
 
             if(pagosAnteriores > 0) {
                 saldoAnterior = cxc.total - pagosAnteriores
