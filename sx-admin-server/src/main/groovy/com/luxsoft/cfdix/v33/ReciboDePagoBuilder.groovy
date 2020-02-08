@@ -140,7 +140,7 @@ class ReciboDePagoBuilder {
         }
         List<AplicacionDeCobro> aplicaciones = this.cobro.aplicaciones.findAll{it.recibo == null}
 
-        BigDecimal monto = this.cobro.aplicado
+        BigDecimal monto = this.cobro.importe
         pago.monto = monto
 
         pago.numOperacion = this.cobro.referencia
