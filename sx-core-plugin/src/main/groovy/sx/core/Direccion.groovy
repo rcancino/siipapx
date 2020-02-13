@@ -48,5 +48,10 @@ class Direccion implements GormValidateable{
         return "Calle:${calle?:''} Ext#:${numeroExterior?:''} ${numeroInterior? 'Int#:' +numeroInterior :''} Col:${colonia?: ''} CP:${codigoPostal?:''} Del/Mun:${municipio?:''} ${estado?:''} ${pais?:''}"
     }
 
+    Map toFirebaseMap() {
+        return this.properties.findAll{ k, v -> !['class','constraints', 'errors', 'longitud', 'latitud'].contains(k) }
+
+    }
+
 
 }

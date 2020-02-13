@@ -11,9 +11,11 @@ import sx.cxc.NotaDeCredito
 import sx.reports.ReportService
 
 @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
-class ClienteController extends RestfulController{
+class ClienteController extends RestfulController<Cliente>{
 
     static responseFormats = ['json']
+
+    ClienteService clienteService
 
     ReportService reportService
 
@@ -22,12 +24,13 @@ class ClienteController extends RestfulController{
     }
 
     @Override
-    protected Object updateResource(Object resource) {
-        return super.updateResource(resource)
+    protected Cliente updateResource(Cliente resource) {
+        log.info('Actualizando cliente: {}', resource)
+        return clienteService.updateCliente(resource)
     }
 
     @Override
-    protected List listAllResources(Map params) {
+    protected List<Cliente> listAllResources(Map params) {
         params.max = 30
         def query = Cliente.where {}
         params.sort = params.sort ?:'lastUpdated'
