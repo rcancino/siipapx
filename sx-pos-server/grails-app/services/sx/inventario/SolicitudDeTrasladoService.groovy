@@ -14,6 +14,7 @@ import sx.logistica.Chofer
 class SolicitudDeTrasladoService {
 
     SpringSecurityService springSecurityService
+    TrasladoService trasladoService
 
     @Publisher
     def atender(SolicitudDeTraslado sol, Chofer chofer, String comentario) {
@@ -29,7 +30,7 @@ class SolicitudDeTrasladoService {
     def onMandarFacturar(Venta venta) {
         if(venta.clasificacionVale != 'SIN_VALE' && venta.clasificacionVale != 'EXISTENCIA_VENTA') {
             log.debug (' Generando  vale automatico tipo: {} para: {}', venta.clasificacionVale, venta.statusInfo() )
-            generarValeAutomatico(venta.id);
+            def sol = generarValeAutomatico(venta.id);
         }
     }
 
@@ -62,6 +63,7 @@ class SolicitudDeTrasladoService {
                 sol.updateUser = venta.updateUser
                 sol.createUser = venta.createUser
                 sol.save()
+                return sol
             } else {
                 log.debug( 'La venta no tiene partidas que califiquen para vale')
             }

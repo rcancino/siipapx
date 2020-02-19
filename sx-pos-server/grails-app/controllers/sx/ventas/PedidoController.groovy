@@ -38,6 +38,7 @@ class PedidoController extends RestfulController {
                 query = query.where {tipo != 'CRE'}
             }
         }
+        
         if( params.term && params.term.isInteger()){
             // log.debug('Buscando por Folio: ', params.folio.toInteger())
             query = query.where { documento == params.documento.toInteger() }

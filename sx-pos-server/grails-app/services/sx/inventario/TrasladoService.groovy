@@ -36,6 +36,15 @@ class TrasladoService {
         }
     }
 
+    public generarTraslados(def solId, def chof  ){
+   
+            println "Ejecutando la generacion de traslados service" + solId
+            def origen = SolicitudDeTraslado.get(solId)
+             generarTpe(origen)
+            generarTps(origen, chof , 'DIRECTO') 
+  
+    }
+
     private generarTpe( SolicitudDeTraslado sol) {
         // log.debug('Generando TPE para Sol: {}', sol);
         Traslado traslado = new Traslado()
@@ -202,5 +211,6 @@ class TrasladoService {
         tps.uuid = cfdi.uuid
         return cfdi;
     }
+
 
 }

@@ -94,6 +94,7 @@
 	<parameter name="IMPRESO_IMAGEN" isForPrompting="false" class="java.lang.Object"/>
 	<parameter name="TELEFONOS" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="COMPLEMENTO_INE" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ENVIO_FAC" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.math.BigDecimal"/>
@@ -765,41 +766,41 @@
 						height="13"
 						key="textField-220"/>
 					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<textElement textAlignment="Left" verticalAlignment="Top">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ELAB_VTA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="222"
+						x="205"
 						y="109"
-						width="98"
+						width="112"
 						height="13"
 						key="textField-223"/>
 					<box></box>
-					<textElement textAlignment="Left">
+					<textElement textAlignment="Left" verticalAlignment="Top">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ELAB_FAC}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="373"
-						y="109"
+						x="380"
+						y="122"
 						width="62"
 						height="15"
 						key="textField-229"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Left">
 						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{KILOS}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
-						x="325"
-						y="109"
+						x="331"
+						y="122"
 						width="49"
 						height="15"
 						key="staticText-271"/>
@@ -807,7 +808,7 @@
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<text><![CDATA[KILOS ]]></text>
+				<text><![CDATA[KILOS :  ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -871,6 +872,19 @@
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["FAVOR DE REVISAR SUS DATOS FISCALES, ASI COMO EL MATERIAL QUE SOLICITO, YA QUE NO REALIZAREMOS CANCELACIONES O CAMBIO DE FACTURAS"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="320"
+						y="109"
+						width="112"
+						height="13"
+						key="textField-243"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ENVIO_FAC}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>
@@ -1438,7 +1452,7 @@
 						mode="Opaque"
 						x="352"
 						y="12"
-						width="229"
+						width="228"
 						height="13"
 						key="staticText-115"/>
 					<box>					<topPen lineWidth="0.5" lineStyle="Solid"/>
@@ -1456,7 +1470,7 @@
 						mode="Opaque"
 						x="351"
 						y="90"
-						width="230"
+						width="228"
 						height="13"
 						key="staticText-176"/>
 					<box>					<topPen lineWidth="0.5" lineStyle="Solid"/>
@@ -1980,9 +1994,9 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="485"
+						x="482"
 						y="51"
-						width="95"
+						width="98"
 						height="13"
 						key="textField-234"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1991,16 +2005,16 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<rightPen lineWidth="0.0"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="9" isBold="true" isItalic="false" isUnderline="false"/>
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SERIE}.concat( " - " ).concat($P{FOLIO}.toString())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="485"
+						x="482"
 						y="38"
-						width="95"
+						width="97"
 						height="13"
 						key="staticText-273"/>
 					<box>					<topPen lineWidth="0.5" lineStyle="Solid"/>
@@ -2016,7 +2030,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="408"
+						x="405"
 						y="38"
 						width="44"
 						height="13"
@@ -2033,7 +2047,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="408"
+						x="405"
 						y="51"
 						width="44"
 						height="13"
@@ -2053,7 +2067,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 						mode="Opaque"
 						x="352"
 						y="38"
-						width="56"
+						width="53"
 						height="13"
 						key="staticText-275"/>
 					<box>					<topPen lineWidth="0.5" lineStyle="Solid"/>
@@ -2070,7 +2084,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						x="352"
 						y="51"
-						width="56"
+						width="53"
 						height="13"
 						key="textField-236"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -2085,7 +2099,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="452"
+						x="449"
 						y="51"
 						width="33"
 						height="13"
@@ -2103,7 +2117,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="452"
+						x="449"
 						y="38"
 						width="33"
 						height="13"
@@ -2398,7 +2412,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Transparent"
 						x="351"
-						y="13"
+						y="11"
 						width="229"
 						height="126"
 						key="rectangle-15"/>

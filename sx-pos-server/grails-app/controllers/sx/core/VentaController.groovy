@@ -12,7 +12,7 @@ import sx.cxc.CuentaPorCobrar
 import sx.logistica.CondicionDeEnvio
 import sx.logistica.Envio
 import sx.reports.ReportService
-
+import sx.inventario.SolicitudDeTrasladoService
 
 @Secured("hasRole('ROLE_POS_USER')")
 class VentaController extends RestfulController{
@@ -22,6 +22,8 @@ class VentaController extends RestfulController{
     VentaService ventaService
 
     ReportService reportService
+
+    SolicitudDeTrasladoService solicitudDeTrasladoService
 
     VentaController(){
         super(Venta)
@@ -401,6 +403,12 @@ class VentaController extends RestfulController{
             pedido.noFacturable=true;
             pedido.save failOnError:true, flush:true
         }
+    }
+
+    def generarValeAutomatico(){
+        println "Generando vale automatico para: "+params.id
+        solicitudDeTrasladoService.generarValeAutomatico(params.id)
+        return {}
     }
 
 }

@@ -203,6 +203,7 @@ class V33PdfGenerator {
         parametros.PUESTO = venta.puesto ? 'PUESTO' : null
         parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'
         parametros.ELAB_VTA = venta.createUser ?: 'ND'
+        parametros.ENVIO_FAC = venta.facturarUsuario ?: 'ND'
         parametros.IMPRESO = venta.impreso
         if(envio){
             parametros.IMPRESO = null

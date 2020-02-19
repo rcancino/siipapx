@@ -91,6 +91,7 @@
 	<parameter name="FACTURA_USD" isForPrompting="false" class="java.lang.Object"/>
 	<parameter name="IMPRESO_IMAGEN" isForPrompting="false" class="java.lang.Object"/>
 	<parameter name="TELEFONOS" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ENVIO_FAC" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.math.BigDecimal"/>
@@ -438,84 +439,6 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PUESTO}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement
-						x="4"
-						y="76"
-						width="39"
-						height="13"
-						key="staticText-269"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<text><![CDATA[PEDIDO : ]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="43"
-						y="76"
-						width="48"
-						height="13"
-						key="textField-219"/>
-					<box></box>
-					<textElement textAlignment="Left">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$P{PEDIDO}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="91"
-						y="76"
-						width="112"
-						height="13"
-						key="textField-220"/>
-					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ELAB_VTA}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="222"
-						y="76"
-						width="98"
-						height="13"
-						key="textField-223"/>
-					<box></box>
-					<textElement textAlignment="Left">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ELAB_FAC}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="373"
-						y="76"
-						width="62"
-						height="15"
-						key="textField-229"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{KILOS}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="325"
-						y="76"
-						width="49"
-						height="15"
-						key="staticText-271"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<text><![CDATA[KILOS ]]></text>
-				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="506"
@@ -530,6 +453,97 @@
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FPAGO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="4"
+						y="76"
+						width="39"
+						height="13"
+						key="staticText-301"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[PEDIDO : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="43"
+						y="76"
+						width="48"
+						height="13"
+						key="textField-241"/>
+					<box></box>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$P{PEDIDO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="91"
+						y="76"
+						width="112"
+						height="13"
+						key="textField-242"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ELAB_VTA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="205"
+						y="76"
+						width="112"
+						height="13"
+						key="textField-243"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ELAB_FAC}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="320"
+						y="76"
+						width="112"
+						height="13"
+						key="textField-244"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ENVIO_FAC}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="331"
+						y="89"
+						width="49"
+						height="15"
+						key="staticText-302"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[KILOS :  ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="89"
+						width="62"
+						height="15"
+						key="textField-245"/>
+					<box></box>
+					<textElement textAlignment="Left">
+						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{KILOS}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>

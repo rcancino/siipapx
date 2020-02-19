@@ -96,9 +96,12 @@ class ClienteController extends RestfulController{
 
         
        def medios = cliente.medios.findAll{ it.tipo == 'TEL'}
-  
-
-       def medio = medios.sort{it.id}.first()
+    
+        def medio = null
+        if(medios){
+            medio = medios?.sort{it.id}?.first()
+        }
+        
         
         println medio
 
@@ -122,6 +125,7 @@ class ClienteController extends RestfulController{
             medio.updateUser = usuario
             cliente.addToMedios(medio)
         }
+        
         medio.descripcion = telefono
         medio.updateUser = usuario
         medio.sucursalUpdated = sucursal.nombre
