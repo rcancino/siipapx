@@ -140,7 +140,7 @@ class ReciboDePagoBuilder {
         }
         List<AplicacionDeCobro> aplicaciones = this.cobro.aplicaciones.findAll{it.recibo == null}
 
-        BigDecimal monto = this.cobro.aplicado
+        BigDecimal monto = this.cobro.importe
         pago.monto = monto
 
         pago.numOperacion = this.cobro.referencia
@@ -153,6 +153,7 @@ class ReciboDePagoBuilder {
             // pago.ctaOrdenante = transferencia. // PENDIENTE
             // pago.ctaBeneficiario = transferencia.cuentaDestino.numero
         }
+        log.info('Recibo de pago por: {}', pago.monto)
         aplicaciones.each { AplicacionDeCobro aplicacion ->
             Pagos.Pago.DoctoRelacionado relacionado = factory.createPagosPagoDoctoRelacionado()
 
@@ -161,6 +162,9 @@ class ReciboDePagoBuilder {
             if(!cfdi) {
                 throw new RuntimeException("La cuenta por cobrar ${cxc.tipo} ${cxc.documento} no tiene CFDI")
             }
+            
+            log.info('CxC: {}', cxc.id)
+
             relacionado.idDocumento = cfdi.uuid
             relacionado.folio = cxc.documento
             relacionado.serie = cxc.cfdi.serie
@@ -178,16 +182,17 @@ class ReciboDePagoBuilder {
                 select sum(a.importe) from AplicacionDeCobro a 
                   where a.cuentaPorCobrar.id = ?  
                     and a.cobro.cfdi != null
+                    and a.cobro.formaDePago not in ('DEVOLUCION','BONIFICACION')
                     """, 
                 [cxc.id])[0] ?: 0.0
-
+            log.debug('Pagos aplicados: {}', pagosAplicados)
             def notasAplicadas = AplicacionDeCobro.findAll("""
                 select sum(a.importe) from AplicacionDeCobro a 
                   where a.cuentaPorCobrar.id = ?  
                     and a.cobro.formaDePago in ('DEVOLUCION','BONIFICACION')
                 """, 
                 [cxc.id])[0] ?: 0.0
-
+            log.debug('Notas aplicadas: {}', notasAplicadas)
             // def aplicacionesAnteriores = aplicacionesDePagos + aplicacionesDePagos
             def pagosAnteriores = pagosAplicados + notasAplicadas
 
@@ -198,7 +203,7 @@ class ReciboDePagoBuilder {
             relacionado.impSaldoAnt = saldoAnterior
             relacionado.impPagado = aplicacion.importe
             relacionado.impSaldoInsoluto = relacionado.impSaldoAnt - relacionado.impPagado
-            log.debug("Imp Fac: ${cxc.total} Importe saldo anterior: ${saldoAnterior } Pago: ${aplicacion.importe} Sdo Insoluto: ${relacionado.impSaldoInsoluto}")
+            log.debug("Fac: {cxc.folio} Total: ${cxc.total} Saldo anterior: ${saldoAnterior } Pago aplicado: ${relacionado.impPagado} Saldo Insoluto: ${relacionado.impSaldoInsoluto}")
             pago.doctoRelacionado.add(relacionado)
 
         }
