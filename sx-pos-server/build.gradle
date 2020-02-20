@@ -4,7 +4,7 @@ apply plugin:"org.grails.grails-gsp"
 grails {
     plugins {
       compile project(':sx-core-plugin')
-      // compile project(':sx-reports-plugin')
+      compile project(':sx-firebase-plugin')
     }
 }
 
