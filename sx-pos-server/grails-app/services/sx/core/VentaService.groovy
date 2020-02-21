@@ -7,6 +7,7 @@ import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.commons.lang3.time.DateUtils
+
 import sx.cfdi.Cfdi
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
@@ -14,6 +15,7 @@ import sx.cxc.AplicacionDeCobro
 import sx.cxc.Cobro
 import sx.cxc.CuentaPorCobrar
 import lx.cfdi.v33.CfdiUtils
+import sx.cloud.LxPedidoService
 
 
 import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
@@ -31,6 +33,8 @@ class VentaService implements  EventPublisher{
     SpringSecurityService springSecurityService
 
     InventarioService inventarioService
+
+    LxPedidoService lxPedidoService
 
     @Publisher
     def save(Venta venta) {
@@ -155,13 +159,30 @@ class VentaService implements  EventPublisher{
      */
     @Publisher
     def mandarFacturar(String ventaId, String usuario) {
+
         Venta venta = Venta.get(ventaId)
+        log.debug('Mandando facturar venta......'+ venta.getFolio())
+        
         venta.facturarUsuario = usuario
-        // log.debug('Mandando facturar venta......'+ venta.getFolio())
         venta.facturar = new Date()
-        venta.save()
+        // venta.save()
+        mandarFacturarCallCenter(venta)
         return venta
     }
+
+    def mandarFacturarCallCenter(Venta venta) {
+        if(venta.sw2 == null) 
+            return
+        log.info('Actualizando estatus de facturable en CallCenter (Firebase)')
+        
+        // 1. - Pedido
+        lxPedidoService.updatePedido(venta.sw2, ['status': 'POR_FACTURAR', 'atiende': venta.facturarUsuario])
+        
+        // 2. - PedidoLog
+        Map logChanges = [status: 'POR_FACTURAR', atiende: venta.facturarUsuario, facturable: venta.facturar]
+        lxPedidoService.updateLog(venta.sw2, logChanges)
+    }
+
 
     @Publisher
     def facturar(Venta pedido) {
@@ -234,7 +255,21 @@ class VentaService implements  EventPublisher{
         def cfdi = cfdiService.generarCfdi(comprobante, 'I', venta.ventaIne)
         cxc.cfdi = cfdi
         cxc.save(flush: true)
+        notificarCallCenterFacturado(venta, cfdi)
         return cfdi
+    }
+
+    def notificarCallCenterFacturado(Venta venta, Cfdi cfdi) {
+        if (venta.sw2) {
+            log.info('Notificando CallCenter de pedido facturado ')
+            // 1. - Pedido
+            lxPedidoService.updatePedido(venta.sw2, ['status': 'FACTURADO'])
+            // 2. - PedidoLog
+            Map logChanges = [
+                facturacion: [serie: cfdi.serie,folio: cfdi.folio, creado: cfdi.dateCreated]
+                ]
+            lxPedidoService.updateLog(venta.sw2, logChanges)
+        }
     }
 
     def logEntity(Venta venta) {

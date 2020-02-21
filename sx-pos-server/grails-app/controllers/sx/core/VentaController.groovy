@@ -145,8 +145,6 @@ class VentaController extends RestfulController{
     }
 
     def pendientes(Sucursal sucursal) {
-
-        println  "*******"+params
         if (sucursal == null) {
             notFound()
             return
@@ -154,9 +152,15 @@ class VentaController extends RestfulController{
         params.max = params.registros ?:100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
+        
         log.info('Pendientes: {}', params)
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null }
 
+        Boolean callcenter = params.getBoolean('callcenter', false)
+        if(callcenter) 
+            query = query.where{sw2 != null}
+        else 
+            query = query.where{sw2 == null}
         if( params.fechaInicial) {
             Periodo periodo = new Periodo()
             periodo.properties = params

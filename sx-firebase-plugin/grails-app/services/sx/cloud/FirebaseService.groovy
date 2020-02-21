@@ -11,11 +11,10 @@ import groovy.util.logging.Slf4j
 import com.google.cloud.firestore.Firestore
 import com.google.cloud.firestore.DocumentChange
 import com.google.cloud.firestore.DocumentSnapshot
-
-
+import com.google.cloud.firestore.SetOptions
+import com.google.cloud.firestore.WriteResult
 import com.google.cloud.firestore.FirestoreException
-
-
+import com.google.api.core.ApiFuture
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.*
@@ -58,6 +57,15 @@ class FirebaseService {
 
     FirebaseApp getFirebaseApp() {
         return this.app
+    }
+
+    void updateCollection(String collection, String id, Map changes) {
+        ApiFuture<WriteResult> result = getFirestore()
+            .collection(collection)
+            .document(id)
+            .set(changes, SetOptions.merge())
+        def updateTime = result.get().getUpdateTime().toDate().format('dd/MM/yyyy')
+        log.debug("Collection {} updated at: {} " , collection, updateTime)
     }
 
 	
