@@ -118,6 +118,8 @@ class Venta {
 
     Boolean surtido = false
 
+    Boolean callcenter = false
+
     static constraints = {
         nombre nullable: true
         tipo  inList:['CON','COD','CRE','PSF','INE','OTR','ACF','ANT','AND']
