@@ -21,7 +21,7 @@ class ActualizarExistenciasJob {
      */
     static triggers = {
         // simple name:'simpleTrigger', startDelay: 10000, repeatInterval: 60000 , repeatCount: 10
-        cron name: 'everyTrigger', cronExpression: "0 0 8-18 ? * MON-SAT"
+        cron name: 'everyTrigger', cronExpression: "0 0 8 ? * SUN"
     }
 
     def execute() {

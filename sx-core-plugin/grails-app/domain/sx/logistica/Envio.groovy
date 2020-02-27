@@ -77,6 +77,11 @@ class Envio {
 
     Date lastUpdated
 
+    Date salida
+    
+    String callcenter 
+    
+
     static  hasMany= [partidas : EnvioDet]
 
     static belongsTo = [embarque: Embarque]
@@ -97,6 +102,8 @@ class Envio {
         recibio nullable: true
         comentario nullable: true
         cliente nullable: true
+        salida nullable: true
+        callcenter nullable: true
 
     }
 

@@ -74,6 +74,9 @@ class EmbarqueController extends RestfulController {
                     condicion.parcial = true
                     condicion.save()
                 }
+                if(condicion.venta.callcenter) {
+                    it.callcenter = condicion.venta.sw2
+                }
                 // Actualizando valor
                 if (!it.partidas) {
                     // log.debug('Calculando valor de evnio TOTAL')
@@ -128,22 +131,18 @@ class EmbarqueController extends RestfulController {
 
 
     private cargarEnvioParaVenta(DocumentSearchCommand command){
-        log.debug('Preparando envio {}', command)
-      /*  def q = CondicionDeEnvio.where{
-            venta.sucursal == command.sucursal && 
-            venta.cuentaPorCobrar.documento == command.documento &&
-            venta.cuentaPorCobrar.fecha == command.fecha
-
-             q = q.where {
-            asignado == null || (asignado != null && parcial == true)
-        }
-        }*/
+        log.debug('Buscando venta: {}', command)
 
         def params=[command.sucursal,command.documento,command.fecha]
-
-        def q=CondicionDeEnvio.find(" from CondicionDeEnvio c  where c.venta.sucursal=? and c.venta.cuentaPorCobrar.documento=? and c.venta.cuentaPorCobrar.fecha=? and (asignado=null or parcial=true) ",params)
+        def condicion = CondicionDeEnvio.find(
+            " from CondicionDeEnvio c  " +
+            " where c.venta.sucursal=? " +
+            "  and c.venta.cuentaPorCobrar.documento = ? " +
+            "  and c.venta.cuentaPorCobrar.fecha = ? " + 
+            "  and (asignado = null or parcial = true) ",
+            params)
        
-        CondicionDeEnvio res = q
+        CondicionDeEnvio res = condicion
         if (res == null) {
             notFound()
             return
@@ -164,6 +163,7 @@ class EmbarqueController extends RestfulController {
         envio.nombre = venta.cliente.nombre
         envio.kilos = venta.kilos
         envio.parcial = isParcial
+
         return envio
     }
 
@@ -241,11 +241,14 @@ class EmbarqueController extends RestfulController {
 
     @Transactional
     def registrarSalida(Embarque res) {
+
         if (res == null) {
             notFound()
             return
         }
+        log.info('Registrando slaida del embarque: {}', res.documento)
         res.salida = new Date()
+        res.partidas.each {it.salida = res.salida}
         res.save()
         respond res
     }
@@ -307,7 +310,6 @@ class EmbarqueController extends RestfulController {
 
             def repParams = [:]
             repParams['ID'] = params.id
-            println 'Ejecutando reporte de engregas por chofer con parametros: ' + repParams
             def pdf = this.reportService.run(reportName, repParams)
             def fileName = "FacturaEnvio.pdf"
             render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: fileName)
@@ -326,19 +328,18 @@ class EmbarqueController extends RestfulController {
  
 
     def enviosPendientes() {
+        log.info('Buscando envios pendientes')
         def list=[]
         def q = CondicionDeEnvio.where{
            asignado == null || (asignado != null && parcial == true  )
         }
-            q = q.where {
-                venta.cuentaPorCobrar != null
+        q = q.where { venta.cuentaPorCobrar != null}
+        q.list().each{
+            def enviado=Envio.findAllByOrigen(it.venta.id).sum{it.kilos}
+            if(it.venta.kilos!= enviado ){
+                list.add(it)
+            }
         }
-         q.list().each{
-                def enviado=Envio.findAllByOrigen(it.venta.id).sum{it.kilos}
-                if(it.venta.kilos!= enviado ){
-                    list.add(it)
-                }
-         }
         respond list 
     }
 

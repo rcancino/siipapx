@@ -224,7 +224,35 @@ class VentaService implements  EventPublisher{
         pedido.cuentaPorCobrar = cxc
         pedido.save flush: true
         inventarioService.afectarInventariosPorFacturar(pedido);
+        
+        // Actualizar Firebase Pedido y PedidoLog
+        if(pedido.callcenter && pedido.sw2) {
+            notificarFacturacionEnFirebase(pedido)
+        }
         return pedido
+    }
+
+    /**
+    * Firebase notification
+    *
+    * Fase: FACTURADO
+    */
+    def notificarFacturacionEnFirebase(Venta venta ) {
+        def cxc = venta.cuentaPorCobrar
+        def serie = venta.tipo
+        def folio = venta.documento.toString()
+        
+        // Log Pedido
+        def changes = [
+            status: 'FACTURADO',
+            facturacion: [
+                serie: serie,
+                folio: folio, 
+                creado: cxc.dateCreated
+            ]
+        ]
+        lxPedidoService.updatePedido(venta.sw2, changes)
+        lxPedidoService.updateLog(venta.sw2, changes)
     }
 
     def generarCfdi_Bak(Venta venta){
@@ -245,7 +273,29 @@ class VentaService implements  EventPublisher{
             cfdi.receptorRfc=cxc.cliente.rfc
          cfdi = cfdiTimbradoService.timbrar(cfdi)
         cxc.save flush:true
+
+        // Notificar Firebase de facturacion
+        if(venta.callcenter && venta.sw2) {
+            notificarTimbradoEnFirebase(venta, cfdi)
+        }
         return cfdi
+    }
+
+    /**
+    * Firebase notification
+    *
+    * Fase: FACTURADO_TIMBRADO
+    */
+    def notificarTimbradoEnFirebase(Venta venta, Cfdi cfdi) {
+        if(venta.callcenter && venta.sw2) { 
+            def changes = [
+                status: 'FACTURADO_TIMBRADO',
+                facturacion: [uuid: cfdi.uuid],
+                timbrado: cfdi.timbre.fechaTimbrado
+            ]
+            lxPedidoService.updatePedido(venta.sw2, changes)
+            lxPedidoService.updateLog(venta.sw2, changes)
+        }
     }
 
     @Transactional
@@ -255,22 +305,10 @@ class VentaService implements  EventPublisher{
         def cfdi = cfdiService.generarCfdi(comprobante, 'I', venta.ventaIne)
         cxc.cfdi = cfdi
         cxc.save(flush: true)
-        notificarCallCenterFacturado(venta, cfdi)
         return cfdi
     }
 
-    def notificarCallCenterFacturado(Venta venta, Cfdi cfdi) {
-        if (venta.sw2) {
-            log.info('Notificando CallCenter de pedido facturado ')
-            // 1. - Pedido
-            lxPedidoService.updatePedido(venta.sw2, ['status': 'FACTURADO'])
-            // 2. - PedidoLog
-            Map logChanges = [
-                facturacion: [serie: cfdi.serie,folio: cfdi.folio, creado: cfdi.dateCreated]
-                ]
-            lxPedidoService.updateLog(venta.sw2, logChanges)
-        }
-    }
+
 
     def logEntity(Venta venta) {
         /*
@@ -331,6 +369,9 @@ class VentaService implements  EventPublisher{
             cfdi.status = 'CANCELACION_PENDIENTE'
             cfdi.save flush:true
         }
+        if (factura.callcenter && factura.sw2) {
+            notificarCancelacionEnFirebase(factura)
+        }
         return factura
     }
 
@@ -381,6 +422,40 @@ class VentaService implements  EventPublisher{
             }
         }
         return cxc
+    }
+
+    /**
+    * Firebase notification
+    *
+    * Fase: FACTURADO_TIMBRADO
+    */
+    def notificarCancelacionEnFirebase(Venta venta) {
+        if(venta.callcenter && venta.sw2) { 
+            def changes = [
+                status: 'FACTURADO_CANCELADO',
+                facturacion: null,
+                timbrado: null
+            ]
+            lxPedidoService.updatePedido(venta.sw2, changes)
+            lxPedidoService.updateLog(venta.sw2, changes)
+        }
+    }
+
+
+    def regresaraPendiente(Venta venta) {
+        venta.facturar = null
+        venta = venta.save(flush: true)
+        def changes = [status: 'FACTURABLE']
+        lxPedidoService.updatePedido(venta.sw2, changes)
+        lxPedidoService.updateLog(venta.sw2, changes)
+        return venta
+    }
+
+    void delete(Venta venta) {
+        venta.delete flush: true
+        def changes = [status: 'COTIZACION']
+        lxPedidoService.updatePedido(venta.sw2, changes)
+        lxPedidoService.updateLog(venta.sw2, changes)
     }
 
 

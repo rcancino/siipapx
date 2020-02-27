@@ -27,6 +27,7 @@ class LxPedidoService {
 
     FirebaseService firebaseService
 
+
     void updatePedido(String id, Map changes) {
         firebaseService.updateCollection('pedidos', id, changes)
     }
@@ -34,8 +35,6 @@ class LxPedidoService {
     void updateLog(String id, Map changes) {
         firebaseService.updateCollection('pedidos_log', id, changes)
     }
-
-    
 
 
 }

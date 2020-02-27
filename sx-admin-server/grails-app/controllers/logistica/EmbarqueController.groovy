@@ -234,11 +234,14 @@ class EmbarqueController extends RestfulController {
 
     @Transactional
     def registrarSalida(Embarque res) {
+
         if (res == null) {
             notFound()
             return
         }
+        log.info('Registrando slaida del embarque: {}', res.docmento)
         res.salida = new Date()
+        res.partidas.each {it.salida = res.salida}
         res.save()
         respond res
     }

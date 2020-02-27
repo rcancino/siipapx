@@ -26,7 +26,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import grails.compiler.GrailsCompileStatic
 
 @Slf4j
-@CompileDynamic
+// @CompileDynamic
 class FirebaseService {
 
     
@@ -60,12 +60,35 @@ class FirebaseService {
     }
 
     void updateCollection(String collection, String id, Map changes) {
-        ApiFuture<WriteResult> result = getFirestore()
+        try {
+            ApiFuture<WriteResult> result = getFirestore()
             .collection(collection)
             .document(id)
             .set(changes, SetOptions.merge())
-        def updateTime = result.get().getUpdateTime().toDate().format('dd/MM/yyyy')
-        log.debug("Collection {} updated at: {} " , collection, updateTime)
+            def updateTime = result.get().getUpdateTime().toDate().format('dd/MM/yyyy')
+            log.debug('{}/{} UPDATED at : {}', collection, id, updateTime)
+        }
+        catch(Exception ex) {
+            def msg = ExceptionUtils.getRootCauseMessage(ex)
+            log.error('Error actualizando {} DocId: {} , Msg: {}', collection, id, msg)
+        }
+    }
+
+    void updateDocument(String docPath,  Map changes) {
+        try {
+            ApiFuture<WriteResult> result = getFirestore()
+            .document(docPath)
+            .set(changes, SetOptions.merge())
+            def updateTime = result.get()
+                .getUpdateTime()
+                .toDate()
+                .format('dd/MM/yyyy')
+            log.debug('{}/{} UPDATED at : {}', collection, id, updateTime)
+        }
+        catch(Exception ex) {
+            def msg = ExceptionUtils.getRootCauseMessage(ex)
+            log.error('Error actualizando: {} DocId: {} , Msg: {}', docPath, msg)
+        }
     }
 
 	

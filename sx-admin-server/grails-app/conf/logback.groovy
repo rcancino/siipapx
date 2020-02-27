@@ -2,7 +2,7 @@ import grails.util.BuildSettings
 import grails.util.Environment
 import org.springframework.boot.logging.logback.ColorConverter
 import org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter
-
+import ch.qos.logback.core.util.FileSize
 import java.nio.charset.Charset
 
 conversionRule 'clr', ColorConverter
@@ -23,6 +23,25 @@ appender('STDOUT', ConsoleAppender) {
 }
 
 def targetDir = BuildSettings.TARGET_DIR
+def USER_HOME = System.getProperty("user.home")
+
+appender('FIREBASE', RollingFileAppender) {
+    append = false
+    encoder(PatternLayoutEncoder) {
+        pattern =
+                '%d{MMM-dd HH:mm} ' + // Date
+                '%clr(%5p) ' + // Log level
+                '%clr(%-40.40logger{39}){cyan} %clr(:){faint} ' + // Logger
+                '%msg%n' // Message
+    }
+    rollingPolicy(TimeBasedRollingPolicy) {
+        fileNamePattern = "${USER_HOME}/.swx-logs/sx-admin-firebase-%d{yyyy-MM-dd}.log"
+        maxHistory = 5
+        totalSizeCap = FileSize.valueOf("1GB")
+    }
+}
+
+
 if (Environment.isDevelopmentMode() && targetDir != null) {
     appender("FULL_STACKTRACE", FileAppender) {
         file = "${targetDir}/stacktrace.log"
@@ -60,7 +79,9 @@ if (Environment.isDevelopmentMode()) {
     logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft", DEBUG, ['STDOUT'], false)
     logger("sx.integracion", DEBUG, ['STDOUT'], false)
-
+} else {
+    root(ERROR, ['STDOUT'])
+    logger("sx.cloud", INFO, ['STDOUT', 'FIREBASE'], false)
 
 }
 root(ERROR, ['STDOUT'])

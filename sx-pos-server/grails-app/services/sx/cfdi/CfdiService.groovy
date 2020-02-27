@@ -19,6 +19,8 @@ import sx.reports.ReportService
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+import grails.util.Environment
+
 @Transactional
 class CfdiService {
 
@@ -108,12 +110,6 @@ class CfdiService {
 
 
     AppConfig getConfig() {
-        /*
-        if(!this.config){
-            this.config = AppConfig.first()
-        }
-        return this.config
-        */
         return AppConfig.first()
     }
 
@@ -235,6 +231,12 @@ class CfdiService {
 
         }
 
+    }
+
+    Boolean isTimbradoDePrueba() {
+        Boolean produccion = (Environment.current == Environment.PRODUCTION)
+        Boolean queretaro = Environment.current.name == 'queretaro'
+        return !(produccion || queretaro)
     }
 
 

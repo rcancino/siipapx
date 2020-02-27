@@ -8,11 +8,14 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.http.HttpStatus
+
 import sx.cxc.CuentaPorCobrar
 import sx.logistica.CondicionDeEnvio
 import sx.logistica.Envio
 import sx.reports.ReportService
 import sx.inventario.SolicitudDeTrasladoService
+
+
 
 @Secured("hasRole('ROLE_POS_USER')")
 class VentaController extends RestfulController{
@@ -62,6 +65,17 @@ class VentaController extends RestfulController{
         log.debug('Mandando facturar: ' + params)
         def res = ventaService.mandarFacturar(params.id, params.usuario)
         respond res
+    }
+
+    @Transactional
+    def regresaraPendiente(Venta venta) {
+        if(venta == null) {
+            notFound()
+            return
+        }
+        def res = ventaService.regresaraPendiente(venta)
+        respond res
+        
     }
 
     @Transactional
@@ -143,6 +157,8 @@ class VentaController extends RestfulController{
         log.debug('Actualizando venta: {}', resource)
         return ventaService.save(resource)
     }
+
+
 
     def pendientes(Sucursal sucursal) {
         if (sucursal == null) {
@@ -413,6 +429,25 @@ class VentaController extends RestfulController{
         println "Generando vale automatico para: "+params.id
         solicitudDeTrasladoService.generarValeAutomatico(params.id)
         return {}
+    }
+
+    /**
+     * Deletes a resource for the given id
+     * @param id The id
+     */
+    @Transactional
+    def delete() {
+        if(handleReadOnly()) {
+            return
+        }
+        def venta = Venta.get(params.id)
+        if (venta == null) {
+            transactionStatus.setRollbackOnly()
+            notFound()
+            return
+        }
+        this.ventaService.delete(venta)
+        render status: HttpStatus.NO_CONTENT
     }
 
 }
