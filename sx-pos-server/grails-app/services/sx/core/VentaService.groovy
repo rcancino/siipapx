@@ -179,7 +179,7 @@ class VentaService implements  EventPublisher{
         lxPedidoService.updatePedido(venta.sw2, ['status': 'POR_FACTURAR', 'atiende': venta.facturarUsuario])
         
         // 2. - PedidoLog
-        Map logChanges = [status: 'POR_FACTURAR', atiende: venta.facturarUsuario, facturable: venta.facturar]
+        Map logChanges = [status: 'POR_FACTURAR', atiende: venta.facturarUsuario, facturable: venta.facturar, atendido: new Date()]
         lxPedidoService.updateLog(venta.sw2, logChanges)
     }
 
