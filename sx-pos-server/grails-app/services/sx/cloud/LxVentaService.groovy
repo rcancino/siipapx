@@ -3,10 +3,13 @@ package sx.cloud
 import javax.annotation.Nullable
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import javax.annotation.PreDestroy
+
 import groovy.transform.CompileDynamic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
-import javax.annotation.PostConstruct
+
+import grails.gorm.transactions.Transactional
 
 import com.google.firebase.cloud.*
 import com.google.cloud.firestore.Firestore
@@ -25,8 +28,6 @@ import com.google.cloud.firestore.DocumentChange
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.FirestoreException;
 import com.google.cloud.firestore.EventListener;
-import grails.gorm.transactions.Transactional
-
 
 
 import sx.core.AppConfig
@@ -47,6 +48,7 @@ import sx.logistica.CondicionDeEnvio
 class LxVentaService {
 
     FirebaseService firebaseService
+    ListenerRegistration registration
 
     def dataSource
 
@@ -259,11 +261,8 @@ try{
     
     }
 
-    //@PostConstruct
+    @PostConstruct
     def listenerRegistration(){
-
-        ListenerRegistration registration
-
     
         def suc = AppConfig.first().sucursal
 
@@ -289,8 +288,8 @@ try{
                             ventaCreate(dc)
 							break
 						case 'MODIFIED':
-                            println('Se modifico un pedido Existente')
-                            ventaCreate(dc)
+                            // println('Se modifico un pedido Existente')
+                            // ventaCreate(dc)
 							break
 						case 'REMOVED':
 							println('Se elimino un pedido')
@@ -302,8 +301,12 @@ try{
 		})
     }   
 
+    @PreDestroy
     def desRegistrarListener(){
-        registration.remove()
+        if(registration) {
+            registration.remove()
+            log.info('Firbase listener for collection: {} removed' , COLLECTION)
+        }
     }
 
 }

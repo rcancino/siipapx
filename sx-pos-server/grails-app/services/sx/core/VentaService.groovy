@@ -240,7 +240,7 @@ class VentaService implements  EventPublisher{
     def notificarFacturacionEnFirebase(Venta venta ) {
         def cxc = venta.cuentaPorCobrar
         def serie = venta.tipo
-        def folio = venta.documento.toString()
+        def folio = cxc.documento.toString()
         
         // Log Pedido
         def changes = [
