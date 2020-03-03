@@ -82,8 +82,11 @@ class LxVentaService {
         Map<String,Object> pedido = pedidoSnapshot.getData() 
         
         if(pedido.sucursal == suc.nombre && pedido.status == 'CERRADO'){
-
-            pedidoToVenta(pedido, suc, pedidoSnapshot)
+            try{
+                pedidoToVenta(pedido, suc, pedidoSnapshot)
+            }catch( Exception e ){
+                e.printStackTrace();
+            }
         
         }
 
@@ -129,6 +132,9 @@ class LxVentaService {
                     
         DocumentReference pedidoRef = pedidoSnapshot.getReference()
         ApiFuture<WriteResult> writeResult = pedidoRef.set(update, SetOptions.merge())  
+        
+        
+        firebaseService.updateCollection('pedidos_log', pedido.id, update)
 
     }
 
@@ -155,7 +161,7 @@ try{
         venta.comprador = pedido.comprador
         venta.corteImporte = pedido.corteImporte
         venta.createUser = pedido.createUser
-        venta.createUser = pedido.updateUser
+        venta.updateUser = pedido.updateUser
         venta.descuento = pedido.descuento
         venta.descuentoOriginal = pedido.descuento
         venta.descuentoImporte = pedido.descuentoImporte
