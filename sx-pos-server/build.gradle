@@ -42,4 +42,17 @@ war {
     war.baseName = "sx-pos-server-${env.substring(0,4)}"
     war.version = ''
 }
+springBoot {
+    executable = true
+}
 
+task buildConf() {
+    doLast {
+        String fileName = war.archiveName.replaceAll(".war", ".conf")
+        File file = file("build/libs/${fileName}")
+        file.append("JAVA_OPTS=-Xmx2048M")
+        file.append("\nRUN_ARGS=\"--JDBC_CONNECTION_STRING=localhost/siipapx_oficinas --server.port=3036\"")
+    }// url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
+}
+
+war.finalizedBy(buildConf)

@@ -47,6 +47,14 @@ class LxExistenciaService {
         null
     }
 
+    void afterInsert(PostInsertEvent event) {   
+        Existencia exis = getExistencia(event)
+        if ( exis ) {
+            log.info('{} {} Exis: {} ({})', event.eventType.name(), event.entity.name, exis.clave, exis.sucursalNombre)
+            String id = exis.producto.id
+            updateFirebase(exis)
+        }
+    }
 
     @Subscriber
     void afterUpdate(PostUpdateEvent event) {	
@@ -54,12 +62,6 @@ class LxExistenciaService {
         if ( exis ) {
             log.info('{} {} Exis: {} ({})', event.eventType.name(), event.entity.name, exis.clave, exis.sucursalNombre)
             String id = exis.producto.id
-            Map data = [
-                almacen: exis.sucursalNombre,
-                cantidad: exis.cantidad as Long,
-                recorte: exis.recorte as Long,
-                recorteComentario: exis.recorteComentario
-            ]
             updateFirebase(exis)
         }
     }
@@ -117,6 +119,17 @@ class LxExistenciaService {
             def msg = ExceptionUtils.getRootCauseMessage(ex)
             log.error('Error actualizando firebase , Msg: {}', msg)
         }
+    }
+
+    Map toFirebaseMap(Existencia exis) {
+        Map<String,Object> exist = [
+            id: exis.producto.id,
+            clave: exis.producto.clave, 
+            descripcion: exis.producto.descripcion,
+            producto: exis.producto.id,
+            ejercicio: exis.anio as Integer,
+            mes: exis.mes as Integer
+        ]
     }
 
 
