@@ -96,7 +96,8 @@ environments:
     production:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://localhost/siipapx?autoReconnect=false
+            #url: jdbc:mysql://localhost/siipapx?autoReconnect=false
+            url: jdbc:mysql://${JDBC_CONNECTION_STRING}?autoReconnect=true
             username: root
             password: sys
             properties:
@@ -117,7 +118,8 @@ environments:
     certificacion:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
+            #url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
+            url: jdbc:mysql://${JDBC_CONNECTION_STRING}?autoReconnect=true
             username: root
             password: sys
 ---

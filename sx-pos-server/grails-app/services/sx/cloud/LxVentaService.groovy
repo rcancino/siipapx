@@ -9,6 +9,9 @@ import groovy.transform.CompileDynamic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 
+import org.springframework.context.ApplicationListener
+import org.springframework.context.event.ContextRefreshedEvent
+
 import grails.gorm.transactions.Transactional
 
 import com.google.firebase.cloud.*
@@ -42,39 +45,21 @@ import sx.core.Producto
 import sx.logistica.CondicionDeEnvio
 
 
-
 @Slf4j
 @Transactional
-class LxVentaService {
+class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, EventListener<QuerySnapshot> {
+
+    static lazyInit = false
 
     FirebaseService firebaseService
     ListenerRegistration registration
+    def suc
 
-    def dataSource
-
-    static String TIME_FORMAT = 'dd/MM/yyyy HH:mm'
-    
-
-    def ventaCreate(){
-       
-        def suc = AppConfig.first().sucursal
-
-        Firestore db = firebaseService.getFirestore()
-
-        CollectionReference pedidos  = db.collection("pedidos");
-
-        Query query = pedidos.whereEqualTo('status', 'CERRADO').whereEqualTo('sucursal', suc.nombre)
-        ApiFuture<QuerySnapshot> querySnapshot = query.get();
-
-        querySnapshot.get().getDocuments().each{pedidoSnapshot->
-
-            Map<String,Object> pedido =  pedidoSnapshot.getData() 
-
-            pedidoToVenta(pedido, suc, pedidoSnapshot)
-          
-        } 
-        
+    @Override 
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        start()
     }
+    
 
     def ventaCreate(DocumentChange documentChange) {
  
@@ -82,20 +67,18 @@ class LxVentaService {
 
         DocumentSnapshot pedidoSnapshot =documentChange.getDocument()
         Map<String,Object> pedido = pedidoSnapshot.getData() 
-        
-        if(pedido.sucursal == suc.nombre && pedido.status == 'CERRADO'){
-            try{
-                pedidoToVenta(pedido, suc, pedidoSnapshot)
-            }catch( Exception e ){
-                e.printStackTrace();
-            }
-        
+
+        try{
+            pedidoToVenta(pedido, suc, pedidoSnapshot)
+        }catch( Exception e ){
+            e.printStackTrace();
+            log.error(e)
         }
 
     }
 
     def pedidoToVenta(Map<String,Object> pedido, Sucursal suc, def pedidoSnapshot) {
-
+        log.debug('Generando Venta para el pedido {}', pedido.folio)
         // Creacion de la Venta
         Venta venta = crearVenta(pedido, suc)
         
@@ -118,8 +101,6 @@ class LxVentaService {
                 venta.addToPartidas(ventaDet)
             }
         }
-        
-        
         // Validar si tiene envio para crear CondicionDeEnvio
         if(pedido.envio){
             def condicion = crearCondicionEnvio(pedido.envio)
@@ -143,16 +124,12 @@ class LxVentaService {
     
 
 
-    def crearVenta(Map<String,Object> pedido, def sucursalLocal){
-
-                   
+    def crearVenta(Map<String,Object> pedido, def sucursalLocal) {
      
        // def cliente = Cliente.findByNombre(pedido.nombre)
         def cliente = Cliente.get(pedido.cliente)
         def vendedor = Vendedor.findByNombres('CASA')
         def venta = new Venta()
-try{
-
 
         venta.cargosPorManiobra = pedido.cargosPorManiobra
         venta.cfdiMail = pedido.cfdiMail
@@ -187,9 +164,6 @@ try{
         venta.vendedor = vendedor
         venta.atencion='TELEFONICA'
         venta.callcenter = true
-}catch(Exception e){
-    e.printStackTrace()
-}      
         return venta
     }
 
@@ -261,51 +235,79 @@ try{
     
     }
 
-    @PostConstruct
+    void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirestoreException ex) {
+        if(ex) {
+            String msg = ExceptionUtils.getRootCauseMessage(ex)
+            log.error("Error: {}", msg, ex)
+        }
+        // log.info('Changes detected: {}', snapshots)
+        snapshots.getDocumentChanges().each { DocumentChange dc ->
+            log.info('Document: {} Type: {}', dc.getDocument().getData().folio, dc.type)
+            switch (dc.type) {
+                case 'ADDED':
+                    //println('Se agrego un pedido: ')
+                    ventaCreate(dc)
+                    break
+                case 'MODIFIED':
+                    // ventaCreate(dc)
+                    break
+                case 'REMOVED':
+                    break
+            }
+            /*
+            if(dc.type == 'ADDED') {
+                log.debug('Detectando nuevo pedido')
+                ventaCreate(dc)
+            }
+            */
+        }
+        
+    }
+
+    /*
     def listenerRegistration(){
-    
-        def suc = AppConfig.first().sucursal
 
         Firestore db = firebaseService.getFirestore()
+        def suc = AppConfig.first().sucursal
 
 		registration = db.collection("pedidos").whereEqualTo('sucursal', suc.nombre)
-                .whereEqualTo('status', 'CERRADO')
+                .whereEqualTo('status', 'CERRADO2')
 				.addSnapshotListener(new EventListener<QuerySnapshot>() {
 			@Override
 			void onEvent(
 					@Nullable QuerySnapshot snapshots,
 					@Nullable FirestoreException ex) {
 				if(ex) {
-                    println "Error"
 					String msg = ExceptionUtils.getRootCauseMessage(ex)
-					println("Error: {}", msg, ex)
+                    log.error(msg, ex)
 				}
+                
 				snapshots.getDocumentChanges().each { DocumentChange dc ->
-
-					switch (dc.type) {
-						case 'ADDED':
-							println('Se agrego un pedido: ')
-                            ventaCreate(dc)
-							break
-						case 'MODIFIED':
-                            // println('Se modifico un pedido Existente')
-                            // ventaCreate(dc)
-							break
-						case 'REMOVED':
-							println('Se elimino un pedido')
-							break
-					}
-
+                    if(dc.type == 'ADDED') {
+                        ventaCreate(dc)
+                    }
 				}
 			}
 		})
+        log.info('Listening to firestore collection: {}', 'pedidos')
+    }
+    */
+
+    def start() {
+        suc = AppConfig.first().sucursal
+        Firestore db = firebaseService.getFirestore()
+        registration = db.collection('pedidos')
+        .whereEqualTo('sucursal', suc.nombre)
+        .whereEqualTo('status', 'CERRADO')
+        .addSnapshotListener(this)
+        log.debug('Listening to firestore collection: {}', 'pedidos')
     }   
 
     @PreDestroy
-    def desRegistrarListener(){
+    def stop(){
         if(registration) {
             registration.remove()
-            log.info('Firbase listener for collection: {} removed' , COLLECTION)
+            log.debug('Firbase listener for collection: {} removed' , 'pedidos')
         }
     }
 

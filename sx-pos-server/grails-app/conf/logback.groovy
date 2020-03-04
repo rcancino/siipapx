@@ -22,7 +22,7 @@ appender('STDOUT', ConsoleAppender) {
 
 def targetDir = BuildSettings.TARGET_DIR
 def USER_HOME = System.getProperty("user.home")
-
+def HOME_DIR = Environment.isDevelopmentMode() ? targetDir : '.'
 appender('FIREBASE', RollingFileAppender) {
     append = false
     encoder(PatternLayoutEncoder) {
@@ -33,7 +33,7 @@ appender('FIREBASE', RollingFileAppender) {
                 '%msg%n' // Message
     }
     rollingPolicy(TimeBasedRollingPolicy) {
-        fileNamePattern = "${USER_HOME}/.swx-logs/pos-firebase-%d{yyyy-MM-dd}.log"
+        fileNamePattern = "${HOME_DIR}/logs/firebase-%d{yyyy-MM-dd}.log"
         maxHistory = 5
         totalSizeCap = FileSize.valueOf("1GB")
     }
@@ -69,7 +69,7 @@ if (Environment.isDevelopmentMode()) {
     logger("sx.cxc", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
     logger("pos.server", ERROR, ['STDOUT'], false)
-
+    logger("sx.cloud", DEBUG, ['STDOUT', 'FIREBASE'], false)
 
 }
 if (Environment == Environment.PRODUCTION) {
@@ -88,12 +88,8 @@ if (Environment == Environment.PRODUCTION) {
     logger("sx.cxc", ERROR, ['STDOUT'], false)
     logger("com.luxsoft.cfdix.v33", ERROR, ['STDOUT'], false)
     logger("pos.server", ERROR, ['STDOUT'], false)
-}  else {
-    root(ERROR, ['STDOUT'])
     logger("sx.cloud", DEBUG, ['STDOUT', 'FIREBASE'], false)
-
-}
-
+}  
 
 root(ERROR, ['STDOUT'])
 
