@@ -175,7 +175,8 @@ class CobroController extends RestfulController<Cobro>{
             // log.debug('Facturas por aplicar : {}', resource.pendientesDeAplicar)
             return cobroService.registrarAplicacion(resource)
         }
-        return super.updateResource(resource)
+        // return super.updateResource(resource)
+        return cobroService.save(resource)
     }
 
     def saldar(Cobro cobro){

@@ -171,7 +171,7 @@ class VentaService implements  EventPublisher{
     }
 
     def mandarFacturarCallCenter(Venta venta) {
-        if(venta.sw2 == null) 
+        if(venta.callcenter &&  venta.sw2 == null) 
             return
         log.info('Actualizando estatus de facturable en CallCenter (Firebase)')
         
