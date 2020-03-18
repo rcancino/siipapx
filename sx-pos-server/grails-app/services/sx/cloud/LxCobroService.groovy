@@ -24,7 +24,11 @@ import com.google.cloud.firestore.DocumentSnapshot
 import com.google.cloud.firestore.DocumentChange
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.FirestoreException;
+
 import com.google.cloud.firestore.EventListener;
+import org.springframework.context.ApplicationListener
+import org.springframework.context.event.ContextRefreshedEvent
+
 import grails.gorm.transactions.Transactional
 
 
@@ -43,72 +47,60 @@ import sx.tesoreria.CuentaDeBanco
 
 @Slf4j
 @Transactional
-class LxCobroService {
+class LxCobroService implements ApplicationListener<ContextRefreshedEvent>, EventListener<QuerySnapshot>  {
+
+    static lazyInit = false
 
     FirebaseService firebaseService
+    ListenerRegistration registration
+    def suc
 
-    def dataSource
+    @Override 
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        start()
+    }
 
     static String TIME_FORMAT = 'dd/MM/yyyy HH:mm'
 
-    def cobroCreate(){
-        Sucursal sucursal = AppConfig.first().sucursal
-        Firestore db = firebaseService.getFirestore()
-        CollectionReference depositos  = db.collection("depositos");
-        Query query = depositos.whereEqualTo('estado', 'AUTORIZADO').whereEqualTo('sucursal', sucursal.nombre).whereEqualTo('atendido', false)
-        ApiFuture<QuerySnapshot> querySnapshot = query.get();
-        querySnapshot.get().getDocuments().each{depositoSnapshot->
-            Map<String,Object> deposito =  depositoSnapshot.getData()
-            println deposito
-            def solicitud = crearSolicitudDeposito(deposito)
-            crearCobro(solicitud)
-            /*
-            Map<String, Object> update = new HashMap<>();
-            update.put("atendido", true);
-                    
-            DocumentReference depositoRef = depositoSnapshot.getReference()
-            ApiFuture<WriteResult> writeResult = depositoRef.set(update, SetOptions.merge()) 
-            */ 
-        } 
-    }
 
     def cobroCreate(DocumentChange documentChange) {
  
-        println "Generando el cobro desde el documento change"
+       // println "Generando el cobro desde el documento change"
 
         def suc = AppConfig.first().sucursal
 
         DocumentSnapshot depositoSnapshot =documentChange.getDocument()
         Map<String,Object> deposito = depositoSnapshot.getData() 
-
             depositoFbToDeposito(deposito, depositoSnapshot)
-
-
     }
 
     def depositoFbToDeposito(Map<String,Object> deposito, def depositoSnapshot){
 
-        println "Dentro del fb"
         def solicitud = crearSolicitudDeposito(deposito)
+         
         def cobro = crearCobro(solicitud)
-        if(cobro){
-            println "atendiendo"
+        
+        if(cobro){  
+             
             Map<String, Object> update = new HashMap<>();
-            update.put("atendido", true);
-                    
+            update.put("estado", 'ATENDIDO');          
             DocumentReference depositoRef = depositoSnapshot.getReference()
             ApiFuture<WriteResult> writeResult = depositoRef.set(update, SetOptions.merge()) 
         }
+        
+  
 
     }
     
     def crearSolicitudDeposito(Map<String,Object> depositoFb){
+         
         if(depositoFb){
+             
             Cliente cliente = Cliente.get(depositoFb.cliente.id) 
             Banco banco = Banco.get(depositoFb.banco.id)
             CuentaDeBanco cuenta = CuentaDeBanco.get(depositoFb.cuenta.id)
             def suc = AppConfig.first().sucursal
-            
+           
             SolicitudDeDeposito sol = new SolicitudDeDeposito()    
             sol.sucursal =  suc
             sol.cliente = cliente
@@ -135,7 +127,7 @@ class LxCobroService {
             if(depositoFb.importes.tarjeta > 0){
                 sol.tarjeta =  depositoFb.importes.tarjeta 
             }
-            
+           
             sol.save failOnError:true, flush:true
             return sol
         }
@@ -191,9 +183,51 @@ class LxCobroService {
         }
     }
 
+    void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirestoreException ex) {
+        if(ex) {
+            String msg = ExceptionUtils.getRootCauseMessage(ex)
+            log.error("Error: {}", msg, ex)
+        }
+        // log.info('Changes detected: {}', snapshots)
+        snapshots.getDocumentChanges().each { DocumentChange dc ->
+            log.info('Document: {} Type: {}', dc.getDocument().getData().folio, dc.type)
+            switch (dc.type) {
+                case 'ADDED':
+                    //println('Se agrego un deposito: ')              
+                        cobroCreate(dc)
+                    break
+                case 'MODIFIED':
+                    // println('Se modifico un deposito ') 
+                    break
+                case 'REMOVED':
+                    // println('Se elimino un deposito: ')    
+                    break
+            }
+        }
+        
+    }
+
+    def start() {
+        suc = AppConfig.first().sucursal
+        Firestore db = firebaseService.getFirestore()
+        registration = db.collection('depositos')
+        .whereEqualTo('sucursal', suc.nombre)
+        .whereEqualTo('cerrado', true)
+        .whereEqualTo('estado', 'AUTORIZADO')
+        .addSnapshotListener(this)
+        log.debug('Listening to firestore collection: {}', 'depositos')
+    }   
+
+    @PreDestroy
+    def stop(){
+        if(registration) {
+            registration.remove()
+            log.debug('Firbase listener for collection: {} removed' , 'depositos')
+        }
+    }
 
         //@PostConstruct
-    def listenerRegistration(){
+    /* def listenerRegistration(){
 
         ListenerRegistration registration
 
@@ -232,6 +266,6 @@ class LxCobroService {
 				}
 			}
 		})
-    } 
+    } */ 
 
 }
