@@ -173,10 +173,12 @@ class VentaController extends RestfulController{
         def query = Venta.where{ sucursal == sucursal && cuentaPorCobrar == null && facturar == null }
 
         Boolean callcenter = params.getBoolean('callcenter', false)
-        if(callcenter) 
-            query = query.where{sw2 != null}
+        if(callcenter) {
+            log.info('Ventas de callcenter: {}', callcenter)
+            query = query.where{callcenter == true}
+        }
         else 
-            query = query.where{sw2 == null}
+            query = query.where{callcenter == false}
         if( params.fechaInicial) {
             Periodo periodo = new Periodo()
             periodo.properties = params
