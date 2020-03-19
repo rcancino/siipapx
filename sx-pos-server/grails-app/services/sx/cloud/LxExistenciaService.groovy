@@ -73,26 +73,23 @@ class LxExistenciaService {
                 almacen: exis.sucursalNombre,
                 cantidad: exis.cantidad as Long,
                 recorte: exis.recorte as Long,
-                recorteComentario: exis.recorteComentario
+                recorteComentario: exis.recorteComentario,
+                lastUpdated: exis.lastUpdated
             ]
-
         	String id = exis.producto.id
-        	String collection = 'exis'
-        	DocumentReference docRef =  firebaseService.getFirestore().document("${collection}/${id}")
+        	String collection = 'existencias'
+        	
+            DocumentReference docRef =  firebaseService
+                .getFirestore()
+                .document("${collection}/${id}")
+
         	DocumentSnapshot snapShot = docRef.get().get()
 
         	ApiFuture<WriteResult> result = null
 
         	if (!snapShot.exists()) {
                     
-                Map<String,Object> exist = [
-                    id: exis.producto.id,
-                    clave: exis.producto.clave, 
-                    descripcion: exis.producto.descripcion,
-                    producto: exis.producto.id,
-                    ejercicio: exis.anio as Integer,
-                    mes: exis.mes as Integer
-                    ]
+                Map<String,Object> exist = toFirebaseMap(exis)
                 docRef.set(exist)
 
                 result = docRef
@@ -123,10 +120,8 @@ class LxExistenciaService {
 
     Map toFirebaseMap(Existencia exis) {
         Map<String,Object> exist = [
-            id: exis.producto.id,
             clave: exis.producto.clave, 
             descripcion: exis.producto.descripcion,
-            producto: exis.producto.id,
             ejercicio: exis.anio as Integer,
             mes: exis.mes as Integer
         ]
