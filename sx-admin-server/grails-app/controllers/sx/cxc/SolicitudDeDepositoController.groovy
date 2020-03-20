@@ -1,10 +1,14 @@
 package sx.cxc
 
-import com.luxsoft.utils.Periodo
+import groovy.util.logging.Slf4j
+import groovy.transform.ToString
+
+
 import grails.gorm.transactions.Transactional
 import grails.rest.RestfulController
-import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
+
+import com.luxsoft.utils.Periodo
 import sx.core.AppConfig
 import sx.core.Folio
 import sx.core.Sucursal
@@ -13,9 +17,9 @@ import sx.tesoreria.Banco
 import sx.tesoreria.CuentaDeBanco
 import sx.tesoreria.SolicitudDeDepositoService
 
-
+@Slf4j
 @Secured("hasRole('ROLE_POS_USER')")
-class SolicitudDeDepositoController extends RestfulController{
+class SolicitudDeDepositoController extends RestfulController<SolicitudDeDeposito>{
 
     static responseFormats = ['json']
 
@@ -274,7 +278,7 @@ class SolicitudDeDepositoController extends RestfulController{
 
 
     @Override
-    protected Object createResource() {
+    protected SolicitudDeDeposito createResource() {
         SolicitudDeDeposito sol = new SolicitudDeDeposito()
         bindData sol, getObjectToBind()
         sol.sucursal = Sucursal.where { clave == 1}.find()
@@ -293,7 +297,7 @@ class SolicitudDeDepositoController extends RestfulController{
     }
 
     @Override
-    protected Object updateResource(Object resource) {
+    protected SolicitudDeDeposito updateResource(SolicitudDeDeposito resource) {
         // log.debug('Actualizando solicitud: {} ', resource)
         resource.total = resource.cheque + resource.efectivo + resource.transferencia
         return super.updateResource(resource)
@@ -308,6 +312,22 @@ class SolicitudDeDepositoController extends RestfulController{
         // log.debug('Duplicada: ', duplicada)
 
         respond duplicada?: ['OK']
+    }
+
+    def buscarPosibleDuplicadaCallcenter(PosibleDuplicadoCommand command) {
+        def duplicada = SolicitudDeDeposito.where{
+            total == command.total && 
+            banco.id == command.banco && 
+            cuenta.id == command.cuenta && 
+            fechaDeposito == command.fechaDeposito
+        }.find()
+        
+        if(!duplicada) {
+            notFound()
+            return
+        }
+        
+        respond duplicada
     }
 
     def ingreso(SolicitudDeDeposito sol) {
@@ -378,4 +398,12 @@ class SolsFechaSucursalCommand {
     String toString() {
         return " ${sucursal.nombre} ${fecha.format('dd/MM/yyyy')}"
     }
+}
+
+class PosibleDuplicadoCommand {
+    String banco
+    String cuenta
+    BigDecimal total
+    Date fechaDeposito
+    
 }

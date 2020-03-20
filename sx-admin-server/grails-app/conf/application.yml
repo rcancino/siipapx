@@ -92,11 +92,11 @@ environments:
         dataSource:
             dbCreate: none
             #url: jdbc:mysql://localhost/distribucionx?autoReconnect=false
-            url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=true
+            #url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=true
             #url: jdbc:mysql://10.10.1.225/qro_ofi?autoReconnect=false
             #url: jdbc:mysql://localhost/siipapx_queretaro?autoReconnect=true
             #url: jdbc:mysql://10.10.1.229/siipapx_queretaro_ofi?autoReconnect=true
-            #url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=true
+            url: jdbc:mysql://10.10.1.229/siipapx?autoReconnect=true
             username: root
             password: sys
     test:
