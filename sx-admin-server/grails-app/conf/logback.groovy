@@ -66,7 +66,7 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
     logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft", DEBUG, ['STDOUT'], false)
     logger("sx.crm", DEBUG, ['STDOUT'], false)
-
+    logger("sx.cloud", DEBUG, ['STDOUT', 'FIREBASE'], false)
 }
 
 if (Environment.isDevelopmentMode()) {
@@ -79,6 +79,7 @@ if (Environment.isDevelopmentMode()) {
     logger("com.luxsoft.cfdix.v33", DEBUG, ['STDOUT'], false)
     logger("com.luxsoft", DEBUG, ['STDOUT'], false)
     logger("sx.integracion", DEBUG, ['STDOUT'], false)
+    logger("sx.cloud", DEBUG, ['STDOUT', 'FIREBASE'], false)
 } else {
     root(ERROR, ['STDOUT'])
     logger("sx.cloud", INFO, ['STDOUT', 'FIREBASE'], false)
