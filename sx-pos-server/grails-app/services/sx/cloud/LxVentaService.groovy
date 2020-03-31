@@ -153,6 +153,9 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         venta.kilos = pedido.kilos
         venta.moneda = Currency.getInstance(pedido.moneda)
         venta.tipo = pedido.tipo
+        if(pedido.tipo ="COD"){
+            venta.cod = true 
+        }
         venta.nombre = pedido.nombre
         venta.subtotal = pedido.subtotal
         venta.total = pedido.total

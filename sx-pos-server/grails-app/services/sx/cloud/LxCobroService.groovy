@@ -113,7 +113,7 @@ class LxCobroService implements ApplicationListener<ContextRefreshedEvent>, Even
             //sol.fechaDeposito = depositoFb.fechaDeposito
             sol.fechaDeposito =  Date.parse("yyyy-MM-dd'T'HH:mm:ss", depositoFb.fechaDeposito)
             sol.referencia = depositoFb.referencia
-            sol.comentario = depositoFb.estado
+            sol.comentario = 'AUTORIZADO'
             sol.sw2 = depositoFb.id
             if(depositoFb.transferencia){
                 sol.transferencia = depositoFb.total            
@@ -224,6 +224,10 @@ class LxCobroService implements ApplicationListener<ContextRefreshedEvent>, Even
             registration.remove()
             log.debug('Firbase listener for collection: {} removed' , 'depositos')
         }
+    }
+
+    def createAudit(){
+
     }
 
         //@PostConstruct
