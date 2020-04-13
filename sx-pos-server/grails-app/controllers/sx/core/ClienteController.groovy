@@ -43,6 +43,7 @@ class ClienteController extends RestfulController{
             def clave = "SX${serie.substring(0,2)}${fol}"
             log.debug('Clave generada para cliente nuevo {} : {} ', resource.nombre, clave);
             resource.clave = clave
+            resource.id = UUID.randomUUID().toString()
             resource.createUser = username
             if (resource.vendedor == null) {
                 resource.vendedor = Vendedor.where { nombres == 'CASA'}.find()

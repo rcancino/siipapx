@@ -43,6 +43,7 @@ import sx.core.Venta
 import sx.core.VentaDet
 import sx.core.Producto
 import sx.logistica.CondicionDeEnvio
+import sx.core.ComunicacionEmpresa
 
 
 @Slf4j
@@ -108,7 +109,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
             condicion.venta = venta
         }
         
-        venta.save failOnError:true,flush:true
+       venta.save failOnError:true,flush:true
 
         Map<String, Object> update = new HashMap<>();
         update.put("status", "FACTURABLE");
@@ -127,7 +128,10 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
     def crearVenta(Map<String,Object> pedido, def sucursalLocal) {
      
        // def cliente = Cliente.findByNombre(pedido.nombre)
-        def cliente = Cliente.get(pedido.cliente)
+        def cliente = Cliente.get(pedido.cliente.id)
+        if(!cliente){
+           cliente = crearCliente(pedido, sucursalLocal)
+        }
         def vendedor = Vendedor.findByNombres('CASA')
         def venta = new Venta()
 
@@ -221,9 +225,6 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         direccion.municipio = envio.direccion.municipio
         direccion.codigoPostal = envio.direccion.codigoPostal
         direccion.estado = envio.direccion.estado
-        //direccion.pais='MEXICO'
-        //direccion.latitud =  0
-        //direccion.longitud = 0
         
         def condicion = new CondicionDeEnvio()
         
@@ -235,7 +236,65 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         condicion.condiciones = "Tipo: "+envio.tipo+" Contacto: "+envio.contacto+" Tel:"+envio.telefono+" Horario: "+envio.horario
         
         return condicion 
+    }
     
+    def crearCliente( pedido, sucursalLocal){
+
+        println "Creando el cliente ..."
+
+        def clienteFb = pedido.cliente
+
+        def cliente = new Cliente()
+    	
+        cliente.clave = clienteFb.clave
+    	cliente.rfc = clienteFb.rfc
+    	cliente.nombre = clienteFb.nombre
+        cliente.email= clienteFb.email
+        cliente.createUser = pedido.createUser
+        cliente.updateUser = pedido.createUser
+        cliente.sucursal = sucursalLocal
+        def direccion = crearDireccionCliente(clienteFb)
+        cliente.direccion = direccion   
+        cliente.id = clienteFb.id
+        
+        if(clienteFb.medios){
+            clienteFb.medios.each{
+               def medio = new ComunicacionEmpresa()
+                medio.id = it.id
+                medio.tipo = it.tipo
+                medio.activo = it.activo
+                medio.cfdi = it.cfdi
+                medio.comentario = ''
+                medio.cliente = cliente
+                medio.createUser = pedido.createUser
+                medio.updateUser = pedido.createUser
+                medio.sucursalCreated = sucursalLocal.nombre
+                medio.sucursalUpdated = sucursalLocal.nombre
+                medio.validado = true
+                cliente.addToMedios(medio)
+            }
+        }
+        
+        cliente.save failOnError:true,flush:true
+        return cliente
+    }
+
+
+    Direccion crearDireccionCliente(clienteFb){
+
+        println "creando direccion del cliente"
+        def direccionFb = clienteFb.direccion
+        def direccion = new Direccion()
+        direccion.calle = direccionFb.calle
+        direccion.numeroInterior = direccionFb.numeroInterior
+        direccion.numeroExterior = direccionFb.numeroExterior
+        direccion.colonia = direccionFb.colonia
+        direccion.municipio = direccionFb.municipio
+        direccion.codigoPostal = direccionFb.codigoPostal
+        direccion.estado = direccionFb.estado
+
+        return direccion
+
     }
 
     void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirestoreException ex) {

@@ -77,7 +77,7 @@ class Cliente {
     static embedded = ['direccion']
 
     static mapping={
-        id generator:'uuid'
+        id generator:'assigned'
         medios cascade: "all-delete-orphan"
     }
 
