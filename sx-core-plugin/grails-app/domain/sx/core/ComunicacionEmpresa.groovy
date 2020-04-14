@@ -46,7 +46,7 @@ class ComunicacionEmpresa {
 
     }
     static  mapping={
-        id generator:'uuid'
+        id generator: 'assigned'
     }
 
     static belongsTo = [cliente: Cliente]

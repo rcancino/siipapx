@@ -240,8 +240,6 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
     
     def crearCliente( pedido, sucursalLocal){
 
-        println "Creando el cliente ..."
-
         def clienteFb = pedido.cliente
 
         def cliente = new Cliente()
@@ -281,8 +279,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
 
 
     Direccion crearDireccionCliente(clienteFb){
-
-        println "creando direccion del cliente"
+        
         def direccionFb = clienteFb.direccion
         def direccion = new Direccion()
         direccion.calle = direccionFb.calle

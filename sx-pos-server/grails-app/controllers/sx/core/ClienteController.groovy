@@ -48,6 +48,11 @@ class ClienteController extends RestfulController{
             if (resource.vendedor == null) {
                 resource.vendedor = Vendedor.where { nombres == 'CASA'}.find()
             }
+            if(resource.medios){
+                resource.medios.each{
+                    it.id = UUID.randomUUID().toString()
+                }
+            }
         }
         resource.updateUser = username
         return super.saveResource(resource)
@@ -65,6 +70,7 @@ class ClienteController extends RestfulController{
         log.debug('Medio localizado: {}', medio)
         if(!medio) {
             medio = new ComunicacionEmpresa()
+            medio.id = UUID.randomUUID().toString()
             medio.tipo = 'MAIL'
             medio.activo = true
             medio.cfdi = true
@@ -95,16 +101,12 @@ class ClienteController extends RestfulController{
 
         println 'Actualizando el telefono '+cliente.nombre
 
-        
-       def medios = cliente.medios.findAll{ it.tipo == 'TEL'}
+        def medios = cliente.medios.findAll{ it.tipo == 'TEL'}
     
         def medio = null
         if(medios){
             medio = medios?.sort{it.id}?.first()
         }
-        
-        
-        println medio
 
         String telefono = params.telefono
         println "Telefono: " +telefono
@@ -113,6 +115,7 @@ class ClienteController extends RestfulController{
 
          if(!medio) {
             medio = new ComunicacionEmpresa()
+            medio.id = UUID.randomUUID().toString()
             medio.tipo = 'TEL'
             medio.activo = true
             medio.cfdi = false
@@ -136,15 +139,10 @@ class ClienteController extends RestfulController{
         respond cliente
 
     }
-    
 
     def validarRfc(){
         String rfc = params.rfc
         Cliente found = Cliente.where {rfc == rfc}.find()
         respond found?: []
     }
-
-
-
-
 }
