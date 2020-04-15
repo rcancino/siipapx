@@ -269,6 +269,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
                 medio.sucursalCreated = sucursalLocal.nombre
                 medio.sucursalUpdated = sucursalLocal.nombre
                 medio.validado = true
+                medio.descripcion = it.descripcion
                 cliente.addToMedios(medio)
             }
         }
@@ -279,7 +280,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
 
 
     Direccion crearDireccionCliente(clienteFb){
-        
+
         def direccionFb = clienteFb.direccion
         def direccion = new Direccion()
         direccion.calle = direccionFb.calle
