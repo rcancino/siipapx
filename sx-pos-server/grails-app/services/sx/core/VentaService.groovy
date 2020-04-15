@@ -290,8 +290,13 @@ class VentaService implements  EventPublisher{
         if(venta.callcenter && venta.sw2) { 
             def changes = [
                 status: 'FACTURADO_TIMBRADO',
-                facturacion: [uuid: cfdi.uuid],
-                timbrado: cfdi.timbre.fechaTimbrado
+                facturacion: [
+                    serie: cfdi.serie,
+                    folio: cfdi.folio, 
+                    creado: cfdi.dateCreated,
+                    cfdi: [id: cfdi.id, uuid: cfdi.uuid]
+                ],
+                // timbrado: cfdi.timbre.fechaTimbrado
             ]
             lxPedidoService.updatePedido(venta.sw2, changes)
             lxPedidoService.updateLog(venta.sw2, changes)
