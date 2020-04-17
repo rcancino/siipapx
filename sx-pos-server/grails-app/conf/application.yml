@@ -134,3 +134,21 @@ environments:
 grails:
     cors:
         enabled: true
+---
+environments:
+  development:
+    siipapx:
+      firebase:
+        url: https://siipapx-436ce.firebaseio.com
+        bucket: siipapx-436ce.appspot.com
+  production:
+    siipapx:
+      firebase:
+        url: https://siipapx-436ce.firebaseio.com
+        bucket: siipapx-436ce.appspot.com
+  certificacion:
+    siipapx:
+      firebase:
+        url: https://siipapx-436ce.firebaseio.com
+        bucket: siipapx-436ce.appspot.com
+---
