@@ -40,6 +40,9 @@ class FirebaseService {
     @Value('${siipapx.firebase.bucket}')
     String firebaseBucket
 
+    @Value('${siipapx.firebase.projectId}')
+    String projectId
+
 	
     void initFirebase() {
     	// FileInputStream serviceAccount = new FileInputStream("/Users/rubencancino/Desktop/firebase/siipapx-436ce-firebase-adminsdk-ci4eg-779346f0c5.json");

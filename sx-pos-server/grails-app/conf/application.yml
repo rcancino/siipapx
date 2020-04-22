@@ -144,11 +144,13 @@ environments:
   production:
     siipapx:
       firebase:
+        projectId: 'siipapx-436ce'
         url: https://siipapx-436ce.firebaseio.com
         bucket: siipapx-436ce.appspot.com
   certificacion:
     siipapx:
       firebase:
+        projectId: 'siipapx-436ce'
         url: https://siipapx-436ce.firebaseio.com
         bucket: siipapx-436ce.appspot.com
 ---

@@ -264,6 +264,21 @@ class VentaController extends RestfulController{
         respond pedido
     }
 
+    @Transactional
+    def registrarPuesto() {
+        Venta venta = Venta.get(params.id)
+        bindData venta, getObjectToBind()
+        venta = ventaService.registrarPuesto(venta)
+        respond venta
+    }
+    
+    @Transactional
+    def quitarPuesto() {
+        Venta venta = Venta.get(params.id)
+        venta = ventaService.quitarPuesto(venta)
+        respond venta   
+    }
+ 
     /**
      * Facturas de Contado, es decir tipo CON and COD
      * @param sucursal

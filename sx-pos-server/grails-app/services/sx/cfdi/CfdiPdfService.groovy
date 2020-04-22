@@ -60,14 +60,9 @@ class CfdiPdfService {
         String objectName = "cfdis/${cfdi.serie}-${cfdi.folio}.pdf"
         def rawData = this.generarPdf(cfdi)
         def data = rawData.toByteArray()
-        /*
         
-        
-        def target = new File('/Users/rubencancino/dumps', name)
-        target.setBytes(rawData.toByteArray())
-        */
-        String projectId = 'siipapx-436ce'
-        String bucketName = 'siipapx-436ce.appspot.com'
+        String projectId = firebaseService.projectId //'siipapx-436ce'
+        String bucketName = firebaseService.firebaseBucket // 'siipapx-436ce.appspot.com'
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService()
 
         BlobId blobId = BlobId.of(bucketName, objectName)

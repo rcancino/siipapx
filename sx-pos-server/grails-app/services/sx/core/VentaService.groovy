@@ -183,6 +183,34 @@ class VentaService implements  EventPublisher{
         lxPedidoService.updateLog(venta.sw2, logChanges)
     }
 
+    def registrarPuesto(Venta venta) {
+        venta.puesto = new Date()
+        venta.save flush: true
+        registrarPuestoCallCenter(venta)
+        return venta
+    }
+    def quitarPuesto(Venta venta) {
+        venta.puesto = null
+        venta.save flush: true
+        registrarPuestoCallCenter(venta)
+        return venta
+    }
+
+    def registrarPuestoCallCenter(Venta venta) {
+        if(venta.callcenter &&  venta.sw2 == null) 
+            return
+        log.info('Registrando PUESTO en Firebase')
+        def puesto = venta.puesto
+        Map changes = [puesto: null]
+        if(puesto) {
+            changes = [puesto: [fecha: puesto, usuario: getUser()]]
+        }
+        // 1. - Pedido
+        lxPedidoService.updatePedido(venta.sw2, changes)
+        // 2. - PedidoLog
+        lxPedidoService.updateLog(venta.sw2, changes)
+    }
+
 
     @Publisher
     def facturar(Venta pedido) {
