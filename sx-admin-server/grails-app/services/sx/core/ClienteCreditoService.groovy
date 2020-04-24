@@ -13,7 +13,7 @@ class ClienteCreditoService {
     
     ClienteCredito updateCliente(ClienteCredito credito) {
         ClienteCredito target = credito.save failOnError: true, flush: true
-        lxClienteCreditoService.push(target)
+        // lxClienteCreditoService.push(target)
         return target
 
     }

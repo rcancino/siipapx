@@ -17,7 +17,7 @@ class ClienteService {
     
     Cliente updateCliente(Cliente cliente) {
         Cliente target = cliente.save failOnError: true, flush: true
-        updateFirebase(target)
+        // updateFirebase(target)
         return target
 
     }

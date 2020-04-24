@@ -25,6 +25,7 @@ class ClienteController extends RestfulController<Cliente>{
 
     @Override
     protected Cliente updateResource(Cliente resource) {
+        println 'Actualizando cliente.....'
         log.info('Actualizando cliente: {}', resource)
         return clienteService.updateCliente(resource)
     }
@@ -35,6 +36,7 @@ class ClienteController extends RestfulController<Cliente>{
         def query = Cliente.where {}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
+        log.info('List: {}', params)
         if (params.cartera) {
             if(params.cartera.startsWith('CRE') ){
                 query = query.where {credito != null && credito.lineaDeCredito != null}

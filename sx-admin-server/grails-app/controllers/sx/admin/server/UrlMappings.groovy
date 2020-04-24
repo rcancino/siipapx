@@ -22,6 +22,7 @@ class UrlMappings {
         }
         "/api/clientes"(resources: "cliente"){
             "/credito"(resources: 'clienteCredito')
+            "/socios"(resources: 'socio')
         }
         "/api/clientes/actualizarCfdiMail/$id"(controller: "cliente", action: 'actualizarCfdiMail', method: 'PUT')
         "/api/clientes/$id/facturas"(controller: 'cliente', action: 'facturas', method: 'GET')
@@ -29,9 +30,10 @@ class UrlMappings {
         "/api/clientes/$id/cobros"(controller: 'cliente', action: 'cobros', method: 'GET')
         "/api/clientes/$id/notas"(controller: 'cliente', action: 'notas', method: 'GET')
         // "/api/clientes/$id/socios"(controller: 'cliente', action: 'socios', method: 'GET')
-        "/api/clientes"(resources: "cliente"){
-            "/socios"(resources: 'socio')
+        /*"/api/clientes"(resources: "cliente"){
+            
         }
+        */
 
         "/api/clientes/estadoDeCuenta"(controller: "cliente", action: 'estadoDeCuenta', method: 'GET')
 

@@ -96,7 +96,11 @@ class NotaBuilder {
     def buildFormaDePago() {
         comprobante.metodoPago = CMetodoPago.PUE
         if (nota.tipoCartera == 'CRE') {
-            comprobante.formaPago = '99'
+            if(nota.formaDePago == null)
+                comprobante.formaPago = '99'
+            else {
+                comprobante.formaPago = nota.formaDePago
+            }
         } else {
             if (this.nota.tipo.startsWith('DEV')) {
                 buildFormaDePagoDevolucionContado()

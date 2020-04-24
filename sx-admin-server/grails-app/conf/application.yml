@@ -90,7 +90,7 @@ dataSource:
 environments:
     development:
         dataSource:
-            dbCreate: none
+            dbCreate: update
             #url: jdbc:mysql://localhost/distribucionx?autoReconnect=false
             url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=true
             #url: jdbc:mysql://10.10.1.225/qro_ofi?autoReconnect=false
