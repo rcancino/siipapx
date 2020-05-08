@@ -10,8 +10,7 @@ package sx.tesoreria
 class MovimientoDeTesoreria {
 
     String id
-
-    Long folio
+    
 
     Date fecha
 
@@ -35,6 +34,7 @@ class MovimientoDeTesoreria {
     static mapping = {
         id generator: 'uuid'
         fecha type: 'date'
+
     }
 }
 

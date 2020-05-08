@@ -63,7 +63,7 @@ class Comision {
         cancelada nullable: true
         updateUser nullable: true
         createUser nullable: true
-        tipo unique: ['cxc']
+        // tipo unique: ['cxc']
         clave maxSize: 5
     }
 

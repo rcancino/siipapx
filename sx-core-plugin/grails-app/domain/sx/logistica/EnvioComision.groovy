@@ -37,6 +37,7 @@ class EnvioComision {
     static constraints = {
         fechaComision nullable:true
         comentarioDeComision nullable: true
+        venta nullable: true
     }
 
     static  mapping = {

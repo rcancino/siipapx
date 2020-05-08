@@ -199,6 +199,9 @@ class V33PdfGenerator {
         }
         parametros.TIPO = tipo
         parametros.PEDIDO = venta.documento
+        if(venta.callcenter) {
+            parametros.PEDIDO = "CC${venta.documento}"
+        }
         parametros.COMENTARIO = venta.comentario
         parametros.PUESTO = venta.puesto ? 'PUESTO' : null
         parametros.ELAB_FAC = venta.cuentaPorCobrar.updateUser ?: 'ND'

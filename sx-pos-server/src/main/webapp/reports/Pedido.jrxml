@@ -47,6 +47,7 @@
        ,IFNULL((SELECT CONCAT('CEL ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='CEL'),' ')	
        ,IFNULL((SELECT CONCAT('FAX ',MAX(T.DESCRIPCION))  FROM comunicacion_empresa T WHERE T.CLIENTE_ID=V.CLIENTE_ID AND T.TIPO='FAX'),' ')
 ) AS TELEFONOS
+,(case when v.CALLCENTER is true then "SOLICITUD DE VENTA (PEDIDO) CALL CENTER  -  " else "SOLICITUD DE VENTA (PEDIDO)  " end) etSolVta
 from venta_det I 
 JOIN venta V ON(I.venta_id=V.id)
 JOIN cliente C ON(V.cliente_id=C.id)
@@ -97,6 +98,7 @@ order by i.partidas_idx]]></queryString>
 	<field name="MDV" class="java.math.BigDecimal"/>
 	<field name="MODO_VENTA" class="java.lang.String"/>
 	<field name="TELEFONOS" class="java.lang.String"/>
+	<field name="etSolVta" class="java.lang.String"/>
 
 	<sortField name="GRUPO" />
 
@@ -165,19 +167,6 @@ order by i.partidas_idx]]></queryString>
 		</pageHeader>
 		<columnHeader>
 			<band height="141"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="354"
-						y="27"
-						width="160"
-						height="15"
-						key="staticText-1"/>
-					<box></box>
-					<textElement textAlignment="Right">
-						<font pdfFontName="Helvetica-Oblique" isBold="false" isItalic="true" isUnderline="true"/>
-					</textElement>
-				<text><![CDATA[SOLICITUD DE VENTA (PEDIDO)]]></text>
-				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="133"
@@ -631,6 +620,19 @@ order by i.partidas_idx]]></queryString>
 					</textElement>
 				<text><![CDATA[g.]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="245"
+						y="27"
+						width="272"
+						height="13"
+						key="textField-39"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font pdfFontName="Helvetica-Oblique" isBold="false" isItalic="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{etSolVta}]]></textFieldExpression>
+				</textField>
 			</band>
 		</columnHeader>
 		<detail>
