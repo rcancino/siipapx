@@ -80,8 +80,8 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            #url: jdbc:mysql://localhost:3306/siipap_tacuba?autoReconnect=false
-            url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
+            url: jdbc:mysql://localhost:3306/siipap_tacuba?autoReconnect=false
+            #url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
             username: root
             password: sys
     test:
@@ -122,6 +122,21 @@ environments:
             url: jdbc:mysql://${JDBC_CONNECTION_STRING}?autoReconnect=true
             username: root
             password: sys
+            properties:
+                maxActive: 10
+                maxIdle: 10
+                minIdle: 3
+                initialSize: 3
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+                maxWait: 10000
+                validationQuery: 'SELECT 1'
+                validationQueryTimeout: 3
+                validationInterval: 15000
 ---
 server:
   port: 9090
@@ -134,23 +149,3 @@ environments:
 grails:
     cors:
         enabled: true
----
-environments:
-  development:
-    siipapx:
-      firebase:
-        url: https://siipapx-436ce.firebaseio.com
-        bucket: siipapx-436ce.appspot.com
-  production:
-    siipapx:
-      firebase:
-        projectId: 'siipapx-436ce'
-        url: https://siipapx-436ce.firebaseio.com
-        bucket: siipapx-436ce.appspot.com
-  certificacion:
-    siipapx:
-      firebase:
-        projectId: 'siipapx-436ce'
-        url: https://siipapx-436ce.firebaseio.com
-        bucket: siipapx-436ce.appspot.com
----
