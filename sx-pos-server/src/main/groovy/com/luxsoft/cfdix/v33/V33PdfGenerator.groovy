@@ -200,7 +200,8 @@ class V33PdfGenerator {
         parametros.TIPO = tipo
         parametros.PEDIDO = venta.documento
         if(venta.callcenter) {
-            parametros.PEDIDO = "CC${venta.documento}"
+            //parametros.PEDIDO = "CC${venta.documento}"
+            parametros.CALLCENTER = 'CC'
         }
         parametros.COMENTARIO = venta.comentario
         parametros.PUESTO = venta.puesto ? 'PUESTO' : null

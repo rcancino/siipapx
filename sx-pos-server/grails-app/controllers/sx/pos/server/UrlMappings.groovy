@@ -103,6 +103,7 @@ class UrlMappings {
         "/api/ventas/pedidosPendientes/$id"( controller: 'venta', action: 'pedidosPendientes', method: 'GET')
         "/api/ventas/getPartidas/$id"(controller: 'venta', action: 'buscarPartidas', method: 'GET')
         "/api/ventas/noFacturables"( controller: 'venta', action: 'noFacturables')
+        "/api/ventas/regresarCallcenter/$id"( controller: 'venta', action: 'regresarCallcenter', method: 'PUT')
 
 
 

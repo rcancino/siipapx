@@ -95,6 +95,7 @@
 	<parameter name="TELEFONOS" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="COMPLEMENTO_INE" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="ENVIO_FAC" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="CALLCENTER" isForPrompting="true" class="java.lang.String"/>
 
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="cantidad" class="java.math.BigDecimal"/>
@@ -747,9 +748,9 @@
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="43"
+						x="59"
 						y="109"
-						width="48"
+						width="40"
 						height="13"
 						key="textField-219"/>
 					<box></box>
@@ -760,7 +761,7 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="91"
+						x="100"
 						y="109"
 						width="112"
 						height="13"
@@ -773,7 +774,7 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="205"
+						x="214"
 						y="109"
 						width="112"
 						height="13"
@@ -875,7 +876,7 @@
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="320"
+						x="329"
 						y="109"
 						width="112"
 						height="13"
@@ -885,6 +886,19 @@
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ENVIO_FAC}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="42"
+						y="109"
+						width="17"
+						height="13"
+						key="textField-244"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{CALLCENTER}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>

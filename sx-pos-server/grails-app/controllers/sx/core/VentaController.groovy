@@ -467,6 +467,21 @@ class VentaController extends RestfulController{
         render status: HttpStatus.NO_CONTENT
     }
 
+    @Transactional
+    def regresarCallcenter() {
+        if(handleReadOnly()) {
+            return
+        }
+        def venta = Venta.get(params.id)
+        if (venta == null) {
+            transactionStatus.setRollbackOnly()
+            notFound()
+            return
+        }
+        this.ventaService.regresarCallcenter(venta, params.usuario)
+        render status: HttpStatus.NO_CONTENT
+    }
+
 }
 
 @ToString(includeNames=true,includePackage=false)
