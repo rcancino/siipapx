@@ -268,7 +268,7 @@ class VentaController extends RestfulController{
     def registrarPuesto() {
         Venta venta = Venta.get(params.id)
         bindData venta, getObjectToBind()
-        venta = ventaService.registrarPuesto(venta)
+        venta = ventaService.registrarPuesto(venta, params.usuario)
         respond venta
     }
     
