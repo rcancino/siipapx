@@ -233,6 +233,9 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         if(envio.fechaDeEntrega){
             condicion.fechaDeEntrega = envio.fechaDeEntrega.toDate()
         }
+        if(envio.transporte){
+            condicion.transporte = envio.transporte
+        }
         condicion.condiciones = "Tipo: "+envio.tipo+" Contacto: "+envio.contacto+" Tel:"+envio.telefono+" Horario: "+envio.horario
         
         return condicion 

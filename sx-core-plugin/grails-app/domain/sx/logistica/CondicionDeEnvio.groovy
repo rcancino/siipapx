@@ -42,6 +42,8 @@ class CondicionDeEnvio {
 
     String grupo
 
+    String transporte
+
     static constraints = {
         condiciones nullable: true
         comentario nullable: true
