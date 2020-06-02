@@ -218,7 +218,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         
         def direccion = new Direccion()
         
-        direccion.calle = envio.calle
+        direccion.calle = envio.direccion.calle
         direccion.numeroInterior = envio.direccion.numeroInterior
         direccion.numeroExterior = envio.direccion.numeroExterior
         direccion.colonia = envio.direccion.colonia
@@ -232,6 +232,9 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         condicion.comentario = envio.comentario
         if(envio.fechaDeEntrega){
             condicion.fechaDeEntrega = envio.fechaDeEntrega.toDate()
+        }
+        if(envio.transporte){
+            condicion.transporte = envio.transporte
         }
         condicion.condiciones = "Tipo: "+envio.tipo+" Contacto: "+envio.contacto+" Tel:"+envio.telefono+" Horario: "+envio.horario
         
