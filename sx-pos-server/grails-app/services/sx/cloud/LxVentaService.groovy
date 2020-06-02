@@ -218,7 +218,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         
         def direccion = new Direccion()
         
-        direccion.calle = envio.calle
+        direccion.calle = envio.direccion.calle
         direccion.numeroInterior = envio.direccion.numeroInterior
         direccion.numeroExterior = envio.direccion.numeroExterior
         direccion.colonia = envio.direccion.colonia
