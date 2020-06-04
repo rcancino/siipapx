@@ -51,6 +51,7 @@ class CondicionDeEnvio {
         zona nullable: true, maxSize:20
         municipio nullable: true, maxSize: 100
         grupo nullable: true, maxSize:10
+        transporte nullable:true
     }
 
     static embedded = ['direccion']
