@@ -238,6 +238,11 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         }
         condicion.condiciones = "Tipo: "+envio.tipo+" Contacto: "+envio.contacto+" Tel:"+envio.telefono+" Horario: "+envio.horario
         
+        if(envio.tipo == 'OCURRE'){
+            condicion.ocurre = true
+        }
+
+
         return condicion 
     }
     
