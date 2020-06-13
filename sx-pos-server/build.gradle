@@ -31,11 +31,19 @@ dependencies {
 
 
 }
-/*
+
 bootRun {
-    systemProperties = System.properties
+    
+    // systemProperties  System.properties
+    
+
+    jvmArgs('-Dspring.output.ansi.enabled=always')
+    jvmArgs('-Xmx1024m')
+    // addResources = true
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+    systemProperties System.properties
 }
-*/
 
 war {
     String env = System.getProperty('grails.env') ?: 'prod'

@@ -9,7 +9,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import org.apache.commons.lang3.time.DateUtils
 
 import sx.cfdi.Cfdi
+import sx.cfdi.CfdiPdfService
 import sx.cfdi.CfdiService
+import sx.cfdi.CfdiPdfService
 import sx.cfdi.CfdiTimbradoService
 import sx.cxc.AplicacionDeCobro
 import sx.cxc.Cobro
@@ -35,6 +37,8 @@ class VentaService implements  EventPublisher{
     InventarioService inventarioService
 
     LxPedidoService lxPedidoService
+
+    CfdiPdfService cfdiPdfService
 
     @Publisher
     def save(Venta venta) {
@@ -305,6 +309,7 @@ class VentaService implements  EventPublisher{
         // Notificar Firebase de facturacion
         if(venta.callcenter) {
             notificarTimbradoEnFirebase(venta, cfdi)
+            cfdiPdfService.pushToFireStorage(cfdi)
         }
         return cfdi
     }
@@ -402,7 +407,7 @@ class VentaService implements  EventPublisher{
             cfdi.status = 'CANCELACION_PENDIENTE'
             cfdi.save flush:true
         }
-        if (factura.callcenter && factura.sw2) {
+        if (factura.callcenter ) {
             notificarCancelacionEnFirebase(factura)
         }
         return factura

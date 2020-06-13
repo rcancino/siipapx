@@ -72,6 +72,7 @@ class CfdiPdfService {
             .build()
 
         storage.create(blobInfo,data)
+        log.info('Factura {} publicada en firebase exitosamente', objectName)
 
     }
 
