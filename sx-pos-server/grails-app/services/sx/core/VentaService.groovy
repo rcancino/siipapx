@@ -254,7 +254,7 @@ class VentaService implements  EventPublisher{
         inventarioService.afectarInventariosPorFacturar(pedido);
         
         // Actualizar Firebase Pedido y PedidoLog
-        if(pedido.callcenter && pedido.sw2) {
+        if(pedido.callcenter) {
             notificarFacturacionEnFirebase(pedido)
         }
         return pedido
@@ -303,7 +303,7 @@ class VentaService implements  EventPublisher{
         cxc.save flush:true
 
         // Notificar Firebase de facturacion
-        if(venta.callcenter && venta.sw2) {
+        if(venta.callcenter) {
             notificarTimbradoEnFirebase(venta, cfdi)
         }
         return cfdi
