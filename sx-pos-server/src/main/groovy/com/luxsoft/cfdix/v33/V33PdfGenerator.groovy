@@ -20,6 +20,7 @@ import sx.cfdi.CfdiTimbre
 
 import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
+import sx.core.TransporteEmpresa
 
 
 class V33PdfGenerator {
@@ -219,20 +220,22 @@ class V33PdfGenerator {
         if (venta.envio) {
             // parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
             parametros.ENVIO = venta.envio.condiciones
-            def envio = venta.envio
-            String fechaDeEntrega = envio.fechaDeEntrega ? envio.fechaDeEntrega.format('dd/MM/yyyy') : ''
-            if (envio.transporte) { // Transporte existe 
+            def condEnvio = venta.envio
+            String fechaDeEntrega = condEnvio.fechaDeEntrega ? condEnvio.fechaDeEntrega.format('dd/MM/yyyy') : ''
+            println("Transporte: ${condEnvio.transporte}")
+            if (condEnvio.transporte) { // Transporte existe 
                 
-                def transporte = TransporteEmpresa.get(envio.transporte)
-                String direccionEntrega = trasporte.direccion.toLabel()
-                String datosContacto =  "${envio.condiciones} ${transporte.nombre} ${fechaDeEntrega} ${envio.comentario}"
+                
+                def transporte = TransporteEmpresa.get(condEnvio.transporte)
+                String direccionEntrega = transporte.direccion.toLabel()
+                String datosContacto =  "${condEnvio.condiciones} ${transporte.nombre} ${fechaDeEntrega} ${condEnvio.comentario}"
                 String entrega = "${direccionEntrega}\n ${datosContacto}"
                 parametros.DIR_ENTREGA = entrega
 
             } else {
                 
-                String direccionEntrega = envio.direccion.toLabel()
-                String datosContacto =  "${envio.condiciones}  ${fechaDeEntrega} ${envio.comentario}"
+                String direccionEntrega = condEnvio.direccion.toLabel()
+                String datosContacto =  "${condEnvio.condiciones}  ${fechaDeEntrega} ${condEnvio.comentario}"
                 String entrega = "${direccionEntrega}\n ${datosContacto}"
                 parametros.DIR_ENTREGA = entrega
             }

@@ -946,7 +946,7 @@
 					<reportElement
 						x="257"
 						y="19"
-						width="235"
+						width="224"
 						height="15"
 						key="textField-163"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -964,7 +964,7 @@
 						mode="Opaque"
 						x="257"
 						y="4"
-						width="235"
+						width="224"
 						height="15"
 						forecolor="#FFFFFF"
 						backcolor="#999999"
@@ -1001,9 +1001,9 @@
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="492"
+						x="481"
 						y="19"
-						width="82"
+						width="93"
 						height="15"
 						key="textField-164"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1012,16 +1012,16 @@
 					<rightPen lineWidth="0.0"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="false"/>
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SERIE}.concat( " - " ).concat($P{FOLIO}.toString())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="492"
+						x="481"
 						y="4"
-						width="82"
+						width="93"
 						height="15"
 						forecolor="#FFFFFF"
 						backcolor="#999999"
@@ -1064,7 +1064,7 @@
 				</textField>
 				<staticText>
 					<reportElement
-						x="257"
+						x="258"
 						y="107"
 						width="38"
 						height="13"

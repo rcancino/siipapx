@@ -35,6 +35,13 @@
 ,F.ARRIBO,F.RECEPCION,F.RECIBIO,CONCAT(IFNULL(F.COMENTARIO,''),' ',IFNULL(I.COMENTARIO,'')) AS COMENTARIO
 ,f.forma_pago AS FPAGO,F.VALOR
 ,(SELECT CASE WHEN y.permite_cheque IS FALSE THEN "No Permitir Cheque            F.Pago: " else "F.Pago: " end) as PERMCHE
+
+,(SELECT CONCAT((CASE WHEN Y.CONDICIONES LIKE'%OCURRE%' then 'OCURRE: ' ELSE 'FORANEO_DOM: ' END),IFNULL(X.DIRECCION_CALLE,''),' #',IFNULL(X.DIRECCION_NUMERO_EXTERIOR,''),' ',IFNULL(X.DIRECCION_NUMERO_INTERIOR,''),', ',IFNULL(X.DIRECCION_COLONIA,''),', ',IFNULL(X.DIRECCION_CODIGO_POSTAL,''),', ',IFNULL(X.DIRECCION_MUNICIPIO,''),', ',IFNULL(X.DIRECCION_ESTADO,'')) FROM condicion_de_envio Y JOIN transporte_empresa X ON(Y.TRANSPORTE=X.ID)  WHERE Y.VENTA_ID=V.ID  AND X.ID IS NOT NULL ) AS DIR_TRANSPORTE
+
+,(SELECT CONCAT(IFNULL(X.DIRECCION_CALLE,''),' #',IFNULL(X.DIRECCION_NUMERO_EXTERIOR,''),' ',IFNULL(X.DIRECCION_NUMERO_INTERIOR,''),', ',IFNULL(X.DIRECCION_COLONIA,''),', ',IFNULL(X.DIRECCION_CODIGO_POSTAL,''),', ',IFNULL(X.DIRECCION_MUNICIPIO,''),', ',IFNULL(X.DIRECCION_ESTADO,'')) FROM condicion_de_envio X  WHERE V.ID=X.VENTA_ID)  AS DIR_ENTREGA
+,I.CONDICIONES,i.comentario COM_CONDICION,I.FECHA_DE_ENTREGA,ifnull((SELECT concat("TRANSP=",x.nombre) FROM condicion_de_envio Y JOIN transporte_empresa X ON(Y.TRANSPORTE=X.ID)  WHERE Y.VENTA_ID=V.ID  AND X.ID IS NOT NULL ),'') AS NOMBRE_TRANSPORTE
+
+
 from embarque e 
 join sucursal s on(s.id=e.sucursal_id)
 join chofer c on(c.id=e.chofer_id)
@@ -76,6 +83,12 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 	<field name="FPAGO" class="java.lang.String"/>
 	<field name="VALOR" class="java.math.BigDecimal"/>
 	<field name="PERMCHE" class="java.lang.String"/>
+	<field name="DIR_TRANSPORTE" class="java.lang.String"/>
+	<field name="DIR_ENTREGA" class="java.lang.String"/>
+	<field name="CONDICIONES" class="java.lang.String"/>
+	<field name="COM_CONDICION" class="java.lang.String"/>
+	<field name="FECHA_DE_ENTREGA" class="java.sql.Timestamp"/>
+	<field name="NOMBRE_TRANSPORTE" class="java.lang.String"/>
 
 	<variable name="IMPORTE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{VALOR}]]></variableExpression>
@@ -460,7 +473,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="26"  isSplitAllowed="true" >
+			<band height="46"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="4"
@@ -516,17 +529,17 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="636"
-						y="1"
+						y="7"
 						width="121"
-						height="22"
+						height="34"
 						key="textField"/>
 					<box>					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
 </box>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Top">
 						<font fontName="Arial" size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COMENTARIO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{COM_CONDICION}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -692,7 +705,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="24"
+						y="45"
 						width="764"
 						height="1"
 						forecolor="#CCCCCC"
@@ -742,6 +755,71 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 						<font fontName="Arial" size="5"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PERMCHE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="55"
+						y="23"
+						width="580"
+						height="11"
+						key="textField-47"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DIR_TRANSPORTE}==null ?  $F{DIR_ENTREGA}  :  $F{DIR_TRANSPORTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="5"
+						y="23"
+						width="50"
+						height="11"
+						key="staticText-70"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[DIR_ENVIO=]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="5"
+						y="34"
+						width="55"
+						height="11"
+						key="staticText-71"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+				<text><![CDATA[F_ENTREGA=]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="60"
+						y="34"
+						width="45"
+						height="11"
+						key="textField-48"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{FECHA_DE_ENTREGA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="106"
+						y="34"
+						width="529"
+						height="11"
+						key="textField-49"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CONDICIONES}.concat(" ").concat($F{NOMBRE_TRANSPORTE})]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
