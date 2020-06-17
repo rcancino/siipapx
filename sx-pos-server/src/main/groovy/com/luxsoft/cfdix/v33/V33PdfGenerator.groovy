@@ -217,9 +217,28 @@ class V33PdfGenerator {
         parametros.ENVIO = "LOCAL"
 
         if (venta.envio) {
-            parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
+            // parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
             parametros.ENVIO = venta.envio.condiciones
+            def envio = venta.envio
+            String fechaDeEntrega = envio.fechaDeEntrega ? envio.fechaDeEntrega.format('dd/MM/yyyy') : ''
+            if (envio.transporte) { // Transporte existe 
+                
+                def transporte = TransporteEmpresa.get(envio.transporte)
+                String direccionEntrega = trasporte.direccion.toLabel()
+                String datosContacto =  "${envio.condiciones} ${transporte.nombre} ${fechaDeEntrega} ${envio.comentario}"
+                String entrega = "${direccionEntrega}\n ${datosContacto}"
+                parametros.DIR_ENTREGA = entrega
+
+            } else {
+                
+                String direccionEntrega = envio.direccion.toLabel()
+                String datosContacto =  "${envio.condiciones}  ${fechaDeEntrega} ${envio.comentario}"
+                String entrega = "${direccionEntrega}\n ${datosContacto}"
+                parametros.DIR_ENTREGA = entrega
+            }
+
         }
+
         if(venta.impreso == null) {
             venta.impreso = new Date()
             venta = venta.save flush:true
