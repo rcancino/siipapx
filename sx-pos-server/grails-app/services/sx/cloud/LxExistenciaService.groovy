@@ -68,9 +68,9 @@ class LxExistenciaService {
 
    	void updateFirebase(Existencia exis) {
         try {
-            
+            String nombre = exis.sucursal.nombre == 'CALLE 4' ? 'CALLE4' : exis.sucursal.nombre
             Map data = [
-                almacen: exis.sucursalNombre,
+                almacen: nombre,
                 cantidad: exis.cantidad as Long,
                 recorte: exis.recorte as Long,
                 recorteComentario: exis.recorteComentario,
