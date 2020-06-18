@@ -27,7 +27,7 @@ class V33PdfGenerator {
 
     final static SimpleDateFormat CFDI_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
-    static getReportData(Cfdi cfdi, envio = false){
+    static getReportData(Cfdi cfdi, envio = false, actualizarImpreso = true){
 
         File xmlFile = FileUtils.toFile(cfdi.url)
         Comprobante comprobante = CfdiUtils.read(xmlFile)
@@ -80,14 +80,14 @@ class V33PdfGenerator {
             }
             return res
         }
-        def params = getParametros(cfdi, comprobante, xmlFile, envio)
+        def params = getParametros(cfdi, comprobante, xmlFile, envio, actualizarImpreso)
         def data = [:]
         data['CONCEPTOS'] = modelData
         data['PARAMETROS'] = params
         return data
     }
 
-    static getParametros(Cfdi cfdi, Comprobante comprobante, File xmlFile, boolean envio){
+    static getParametros(Cfdi cfdi, Comprobante comprobante, File xmlFile, boolean envio, actualizarImpreso = true){
         def params=[:]
         params["VERSION"] = comprobante.version
         params["SERIE"] = comprobante.getSerie()
@@ -138,7 +138,7 @@ class V33PdfGenerator {
             params.put("RfcProvCertif", timbre.rfcProvCertif)
         }
         params.FECHA = comprobante.fecha
-        cargarParametrosAdicionales(cfdi, params, envio)
+        cargarParametrosAdicionales(cfdi, params, envio, actualizarImpreso)
         if(comprobante.getComplemento()) {
             comprobante.getComplemento().any.each {
                 if(it instanceof  INE) {
@@ -175,15 +175,15 @@ class V33PdfGenerator {
 
     }
 
-    public static cargarParametrosAdicionales(Cfdi cfdi, Map parametros, boolean envio){
+    public static cargarParametrosAdicionales(Cfdi cfdi, Map parametros, boolean envio, boolean actualizarImpreso = true){
         switch (cfdi.origen) {
             case 'VENTA':
-                parametrosAdicionalesVenta(cfdi, parametros, envio)
+                parametrosAdicionalesVenta(cfdi, parametros, envio, actualizarImpreso)
                 break
         }
     }
 
-    public static parametrosAdicionalesVenta(Cfdi cfdi, Map parametros, boolean envio ) {
+    public static parametrosAdicionalesVenta(Cfdi cfdi, Map parametros, boolean envio, boolean actualizarImpreso = true ) {
         Venta venta = Venta.where {cuentaPorCobrar.cfdi == cfdi}.find()
 
         assert venta, 'No existe la venta origen del CFDI: ' + cfdi.id
@@ -242,7 +242,7 @@ class V33PdfGenerator {
 
         }
 
-        if(venta.impreso == null) {
+        if(venta.impreso == null && actualizarImpreso) {
             venta.impreso = new Date()
             venta = venta.save flush:true
         }

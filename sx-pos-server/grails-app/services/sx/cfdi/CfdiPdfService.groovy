@@ -45,9 +45,9 @@ class CfdiPdfService {
 
     FirebaseService firebaseService
 
-    ByteArrayOutputStream generarPdf( Cfdi cfdi, boolean envio = true) {
+    ByteArrayOutputStream generarPdf( Cfdi cfdi, boolean envio = true, boolean actualizar = false) {
         def realPath = grailsResourceLocator.findResourceForURI("/reports").getURI().getPath() ?: 'reports'
-        def data = V33PdfGenerator.getReportData(cfdi, envio)
+        def data = V33PdfGenerator.getReportData(cfdi, envio, actualizar)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
