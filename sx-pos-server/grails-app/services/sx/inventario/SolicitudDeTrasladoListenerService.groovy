@@ -24,6 +24,7 @@ import sx.logistica.Chofer
 @Transactional
 class SolicitudDeTrasladoListenerService {
 
+/*
     TrasladoService trasladoService
 
     String getId(AbstractPersistenceEvent event) {
@@ -77,5 +78,5 @@ class SolicitudDeTrasladoListenerService {
 
     }
 
-    
+    */
 }
