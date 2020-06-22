@@ -221,24 +221,27 @@ class V33PdfGenerator {
             // parametros.DIR_ENTREGA = venta.envio.direccion.toLabel()
             parametros.ENVIO = venta.envio.condiciones
             def condEnvio = venta.envio
+
             String fechaDeEntrega = condEnvio.fechaDeEntrega ? condEnvio.fechaDeEntrega.format('dd/MM/yyyy') : ''
-            println("Transporte: ${condEnvio.transporte}")
+            String comentarioEnvio = "Com:" + condEnvio.comentario?: ''
+
+            String renglon1 = condEnvio.direccion.toLabel()
+            String renglon2 = "${condEnvio.condiciones}  ${fechaDeEntrega} ${comentarioEnvio}"
+            String renglon3 = ""
+            
+
             if (condEnvio.transporte) { // Transporte existe 
                 
-                
                 def transporte = TransporteEmpresa.get(condEnvio.transporte)
-                String direccionEntrega = transporte.direccion.toLabel()
-                String datosContacto =  "${condEnvio.condiciones} ${transporte.nombre} ${fechaDeEntrega} ${condEnvio.comentario}"
-                String entrega = "${direccionEntrega}\n ${datosContacto}"
-                parametros.DIR_ENTREGA = entrega
-
-            } else {
+                String nombreTransporte = "Trans: ${transporte.nombre}"
+                renglon2 = renglon2 + "  " + nombreTransporte 
+                renglon3 = renglon3 + transporte.direccion.toLabel()
                 
-                String direccionEntrega = condEnvio.direccion.toLabel()
-                String datosContacto =  "${condEnvio.condiciones}  ${fechaDeEntrega} ${condEnvio.comentario}"
-                String entrega = "${direccionEntrega}\n ${datosContacto}"
-                parametros.DIR_ENTREGA = entrega
             }
+
+            String dirEntrega = "${renglon1}\n${renglon2}\n${renglon3}"
+
+            parametros.DIR_ENTREGA = dirEntrega
 
         }
 

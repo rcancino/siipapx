@@ -610,7 +610,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 					<reportElement
 						x="171"
 						y="12"
-						width="250"
+						width="465"
 						height="11"
 						key="textField-33"/>
 					<box></box>
@@ -624,7 +624,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 						x="534"
 						y="1"
 						width="102"
-						height="22"
+						height="11"
 						key="textField-36"/>
 					<box>					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
@@ -639,7 +639,7 @@ ORDER BY F.fecha_documento,F.nombre]]></queryString>
 						x="421"
 						y="1"
 						width="113"
-						height="22"
+						height="11"
 						key="textField-37"/>
 					<box>					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
