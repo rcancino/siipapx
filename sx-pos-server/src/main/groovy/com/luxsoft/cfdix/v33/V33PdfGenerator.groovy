@@ -223,11 +223,11 @@ class V33PdfGenerator {
             def condEnvio = venta.envio
 
             String fechaDeEntrega = condEnvio.fechaDeEntrega ? condEnvio.fechaDeEntrega.format('dd/MM/yyyy') : ''
-            String comentarioEnvio = "Com:" + condEnvio.comentario?: ''
+            String comentarioEnvio = "" + condEnvio.comentario?: ''
 
             String renglon1 = condEnvio.direccion.toLabel()
             String renglon2 = "${condEnvio.condiciones}  "
-            String renglon3 = " ${comentarioEnvio} ${fechaDeEntrega} "
+            String renglon3 = " ( ${comentarioEnvio} ${fechaDeEntrega} ) "
             
 
             if (condEnvio.transporte) { // Transporte existe 
