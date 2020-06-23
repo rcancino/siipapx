@@ -226,17 +226,15 @@ class V33PdfGenerator {
             String comentarioEnvio = "Com:" + condEnvio.comentario?: ''
 
             String renglon1 = condEnvio.direccion.toLabel()
-            String renglon2 = "${condEnvio.condiciones}  ${fechaDeEntrega} ${comentarioEnvio}"
-            String renglon3 = ""
+            String renglon2 = "${condEnvio.condiciones}  "
+            String renglon3 = " ${comentarioEnvio} ${fechaDeEntrega} "
             
 
             if (condEnvio.transporte) { // Transporte existe 
                 
                 def transporte = TransporteEmpresa.get(condEnvio.transporte)
-                String nombreTransporte = "Trans: ${transporte.nombre}"
-                renglon2 = renglon2 + "  " + nombreTransporte 
-                renglon3 = renglon3 + transporte.direccion.toLabel()
-                
+                renglon2 = "${renglon2} Transporte: ${transporte.nombre}"
+                renglon3 = "Dir: " + transporte.direccion.toLabel() + " " + renglon3 
             }
 
             String dirEntrega = "${renglon1}\n${renglon2}\n${renglon3}"
