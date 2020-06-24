@@ -62,7 +62,7 @@ class NotaDeCargoBuilder {
         comprobante.setFecha(DateUtils.getCfdiDate(new Date()))
         comprobante.moneda =  V33CfdiUtils.getMonedaCode(nota.moneda)
         if(nota.moneda != MonedaUtils.PESOS){
-            comprobante.tipoCambio = nota.tc
+            comprobante.tipoCambio = nota.tipoDeCambio
         }
         comprobante.lugarExpedicion = empresa.direccion.codigoPostal
         return this

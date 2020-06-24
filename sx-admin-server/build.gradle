@@ -9,7 +9,7 @@ grails {
     }
 }
 
-version "1.0.44"
+version "1.0.45"
 
 dependencies {
     //compile project(':sx-core-plugin')
@@ -42,8 +42,40 @@ bootRun {
 }
 */
 
+bootRun {
+    jvmArgs('-Dspring.output.ansi.enabled=always')
+    jvmArgs('-Xmx1024m')
+    // addResources = true
+
+    // Firebase Dev data
+    /*jvmArgs('-Dsiipapx.firebase.projectId=siipapx-51354')
+    jvmArgs('-Dsiipapx.firebase.url=https://siipapx-51354.firebaseio.com')
+    jvmArgs('-Dsiipapx.firebase.bucket=siipapx-51354.appspot.com')
+    */
+
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+    systemProperties System.properties
+
+    println 'FIREBASE CONFIG: ' + System.getProperty('siipapx.firebase.projectId')
+}
+
 war {
     String env = System.getProperty('grails.env') ?: 'prod'
     war.baseName = "${rootProject.name}-${env}"
     // war.version = ''
 }
+
+task buildConf() {
+    doLast {
+        String fileName = war.archiveName.replaceAll(".war", ".conf")
+        File file = file("build/libs/${fileName}")
+        file.append("JAVA_OPTS=-Xmx2048M")
+        file.append("\nRUN_ARGS=\"--JDBC_CONNECTION_STRING=localhost/siipapx_oficinas --server.port=3036")
+        file.append(" --siipapx.firebase.projectId=siipapx-51354")
+        file.append(" --siipapx.firebase.url=https://siipapx-51354.firebaseio.com")
+        file.append(" --siipapx.firebase.bucket=siipapx-51354.appspot.com\"")
+    }// url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
+}
+
+war.finalizedBy(buildConf)

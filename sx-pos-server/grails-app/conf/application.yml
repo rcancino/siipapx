@@ -80,10 +80,13 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            #url: jdbc:mysql://localhost:3306/siipap_tacuba?autoReconnect=false
-            url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
+            url: jdbc:mysql://localhost:3306/siipap_tacuba?autoReconnect=false
+            #url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
             username: root
             password: sys
+        firebase:
+            url: https://siipapx-436ce.firebaseio.com
+            bucket: siipapx-436ce.appspot.com
     test:
         dataSource:
             dbCreate: create-drop
@@ -149,3 +152,25 @@ environments:
 grails:
     cors:
         enabled: true
+---
+siipapx:
+    firebase:
+        projectId: siipapx-436ce
+        url: https://siipapx-436ce.firebaseio.com
+        bucket: siipapx-436ce.appspot.com
+# environments:
+#     development:
+#         siipapx:
+#             firebase:
+#                 url: https://siipapx-436ce.firebaseio.com
+#                 bucket: siipapx-436ce.appspot.com
+#     production:
+#             siipapx:
+#                 firebase:
+#                 url: https://siipapx-436ce.firebaseio.com
+#                 bucket: siipapx-436ce.appspot.com
+#     certificacion:
+#             siipapx:
+#                 firebase:
+#                 url: https://siipapx-436ce.firebaseio.com
+#                 bucket: siipapx-436ce.appspot.com

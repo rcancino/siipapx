@@ -91,8 +91,8 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            #url: jdbc:mysql://localhost/distribucionx?autoReconnect=false
-            url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=true
+            url: jdbc:mysql://localhost/siipapx_dev?autoReconnect=false
+            #url: jdbc:mysql://10.10.1.229/siipapx_dev?autoReconnect=true
             #url: jdbc:mysql://10.10.1.225/qro_ofi?autoReconnect=false
             #url: jdbc:mysql://localhost/siipapx_queretaro?autoReconnect=true
             #url: jdbc:mysql://10.10.1.229/siipapx_queretaro_ofi?autoReconnect=true
@@ -175,16 +175,19 @@ environments:
   development:
     siipapx:
       firebase:
+        projectId: siipapx-436ce
         url: https://siipapx-436ce.firebaseio.com
         bucket: siipapx-436ce.appspot.com
   production:
     siipapx:
       firebase:
-        url: https://siipapx-436ce.firebaseio.com
-        bucket: siipapx-436ce.appspot.com
+        projectId: siipapx-51354
+        url: https://siipapx-51354.firebaseio.com
+        bucket: siipapx-51354.appspot.com
   certificacion:
     siipapx:
       firebase:
+        projectId: siipapx-436ce
         url: https://siipapx-436ce.firebaseio.com
         bucket: siipapx-436ce.appspot.com
 ---
