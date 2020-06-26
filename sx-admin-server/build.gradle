@@ -66,6 +66,10 @@ war {
     // war.version = ''
 }
 
+springBoot {
+    executable = true
+}
+
 task buildConf() {
     doLast {
         String fileName = war.archiveName.replaceAll(".war", ".conf")
