@@ -22,7 +22,7 @@ class CfdiCadenaBuilder33 {
     private Transformer transformer;
 
     String build(Comprobante comprobante){
-        log.debug('Generando cadena original para comprobante {}', comprobante.folio)
+        log.debug('CxcAdmin: Generando cadena original para comprobante {}', comprobante.folio)
         // Build transformer
         Transformer transformer = getTransformer()
 

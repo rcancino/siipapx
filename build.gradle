@@ -20,7 +20,7 @@ ext {
 
 allprojects {
 
-    version "1.0.45"
+    version "1.0.46"
     group "lx.siipapx"
 
     apply plugin: 'idea'
