@@ -8,15 +8,15 @@ import sx.core.Sucursal
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
 class AplicacionDeCobro {
 
-    String	id
+    String id
 
-    Cobro	cobro
+    Cobro cobro
 
     CuentaPorCobrar	cuentaPorCobrar
 
-    Date	fecha
+    Date fecha
 
-    BigDecimal	importe	 = 0
+    BigDecimal importe = 0
 
     String formaDePago
 
@@ -24,12 +24,13 @@ class AplicacionDeCobro {
 
     String recibo
 
+    String moneda = 'MXN'
+
+    BigDecimal tipoDeCambio = 1.0 // 22.4413
+
     Date dateCreated
-
     Date lastUpdated
-
     String createUser
-
     String updateUser
 
     static constraints = {
@@ -39,6 +40,8 @@ class AplicacionDeCobro {
         updateUser nullable: true
         formaDePago nullable: true
         recibo nullable: true
+        moneda nullable: true, maxSize: 3
+        tipoDeCambio nullable: true, scale: 6
     }
 
     static mapping = {
@@ -47,6 +50,7 @@ class AplicacionDeCobro {
     }
 
     static belongsTo = [cobro: Cobro]
+
 }
 
 

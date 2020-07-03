@@ -8,6 +8,7 @@ import grails.util.Environment
 import grails.web.context.ServletContextHolder
 import groovy.xml.XmlUtil
 import lx.cfdi.v33.CfdiUtils
+import lx.cfdi.v33.Pagos
 import lx.cfdi.v33.Comprobante
 import lx.cfdi.v33.pagos.PagosUtils
 import org.apache.commons.lang3.StringEscapeUtils
@@ -16,6 +17,14 @@ import org.grails.core.io.ResourceLocator
 import sx.core.AppConfig
 import sx.core.Venta
 import sx.reports.ReportService
+
+import javax.xml.XMLConstants
+import javax.xml.bind.JAXBContext
+import javax.xml.bind.Marshaller
+
+import javax.xml.validation.Schema
+import javax.xml.validation.SchemaFactory
+
 
 import com.luxsoft.utils.ZipUtils
 import org.apache.commons.io.FileUtils
@@ -48,10 +57,12 @@ class CfdiService {
         try {
             byte[] data
             if(cfdi.tipoDeComprobante == 'P') {
-                println 'CFDI de comprobante....'
-                data = PagosUtils.toXmlByteArray(comprobante)
+                // data = PagosUtils.serialize(comprobante).bytes
+                data = toXmlByteArrayDePago(comprobante)
             } else {
-                data = CfdiUtils.toXmlByteArray(comprobante)
+                // data = CfdiUtils.toXmlByteArray(comprobante)
+                data = toXmlByteArray(comprobante)
+                // data = CfdiUtils.serialize(comprobante).bytes
             }
             saveXml(cfdi, data)
             cfdi.save failOnError: true, flush:true
@@ -204,6 +215,34 @@ class CfdiService {
         assert cfdiDir.exists(), 'No existe el directorio: ' + cfdiDir.path
         return cfdiDir
     }
+
+
+    def toXmlByteArray(Comprobante comprobante){
+        JAXBContext context = JAXBContext.newInstance(Comprobante.class)
+        Marshaller marshaller = context.createMarshaller()
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true)
+        String xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd"
+        marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, xsiSchemaLocation)
+    
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        marshaller.marshal(comprobante, os)
+        return os.toByteArray()
+    }
+
+
+    def toXmlByteArrayDePago(Comprobante comprobante){
+        StringWriter writer = new StringWriter()
+        JAXBContext context = JAXBContext.newInstance(Comprobante.class, Pagos.class)
+        String xsiSchemaLocation = "http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv33.xsd http://www.sat.gob.mx/Pagos http://www.sat.gob.mx/sitio_internet/cfd/Pagos/Pagos10.xsd"
+        Marshaller marshaller = context.createMarshaller()
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,true)
+        marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION,xsiSchemaLocation)
+
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        marshaller.marshal(comprobante, os)
+        return os.toByteArray()
+    }
+
 
 
 

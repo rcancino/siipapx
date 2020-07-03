@@ -25,7 +25,7 @@ class ClienteController extends RestfulController<Cliente>{
 
     @Override
     protected Cliente updateResource(Cliente resource) {
-        println 'Actualizando cliente.....'
+        
         log.info('Actualizando cliente: {}', resource)
         return clienteService.updateCliente(resource)
     }

@@ -267,6 +267,11 @@ class CobroController extends RestfulController<Cobro>{
         log.error(message, ExceptionUtils.getRootCause(e))
         respond([message: message], status: 500)
     }
+
+    // def show(Cobro cobro) {
+    //     log.info('Show2 cobro: {} {}', cobro.id, cobro.cliente.nombre)
+    //     respond(cobro, view: 'get')
+    // }
  }
 
 class PorSucursalFechaRepCommand {

@@ -21,6 +21,7 @@ import sx.cxc.CobroCheque
 import sx.cxc.CobroTransferencia
 import sx.cxc.CuentaPorCobrar
 import sx.cxc.SolicitudDeDeposito
+import sx.utils.MonedaUtils
 
 
 @Slf4j
@@ -154,6 +155,7 @@ class ReciboDePagoBuilder {
             // pago.ctaBeneficiario = transferencia.cuentaDestino.numero
         }
         log.info('Recibo de pago por: {}', pago.monto)
+        def sumaImpPagado = 0
         aplicaciones.each { AplicacionDeCobro aplicacion ->
             Pagos.Pago.DoctoRelacionado relacionado = factory.createPagosPagoDoctoRelacionado()
 
@@ -163,15 +165,17 @@ class ReciboDePagoBuilder {
                 throw new RuntimeException("La cuenta por cobrar ${cxc.tipo} ${cxc.documento} no tiene CFDI")
             }
             
-            log.info('CxC: {}', cxc.id)
+            // log.info('CxC: {} ({})', cxc.id, cxc.moneda)
 
             relacionado.idDocumento = cfdi.uuid
             relacionado.folio = cxc.documento
             relacionado.serie = cxc.cfdi.serie
             relacionado.monedaDR = cxc.moneda.currencyCode
             if(this.cobro.moneda.currencyCode != cxc.moneda.currencyCode) {
-                relacionado.tipoCambioDR = cxc.tipoDeCambio
+                //relacionado.tipoCambioDR = cxc.tipoDeCambio
+                relacionado.tipoCambioDR = MonedaUtils.round(1 / aplicacion.tipoDeCambio, 6)
             }
+            
             relacionado.metodoDePagoDR = 'PPD'
             relacionado.numParcialidad = 1
 
@@ -179,20 +183,21 @@ class ReciboDePagoBuilder {
 
             
             def pagosAplicados = AplicacionDeCobro.findAll(""" 
-                select sum(a.importe) from AplicacionDeCobro a 
+                select sum(a.importe * a.tipoDeCambio) from AplicacionDeCobro a 
                   where a.cuentaPorCobrar.id = ?  
                     and a.cobro.cfdi != null
                     and a.cobro.formaDePago not in ('DEVOLUCION','BONIFICACION')
                     """, 
                 [cxc.id])[0] ?: 0.0
-            log.debug('Pagos aplicados: {}', pagosAplicados)
+            
             def notasAplicadas = AplicacionDeCobro.findAll("""
                 select sum(a.importe) from AplicacionDeCobro a 
                   where a.cuentaPorCobrar.id = ?  
                     and a.cobro.formaDePago in ('DEVOLUCION','BONIFICACION')
                 """, 
                 [cxc.id])[0] ?: 0.0
-            log.debug('Notas aplicadas: {}', notasAplicadas)
+
+            
             // def aplicacionesAnteriores = aplicacionesDePagos + aplicacionesDePagos
             def pagosAnteriores = pagosAplicados + notasAplicadas
 
@@ -202,11 +207,26 @@ class ReciboDePagoBuilder {
 
             relacionado.impSaldoAnt = saldoAnterior
             relacionado.impPagado = aplicacion.importe
+
+            
+            if(relacionado.tipoCambioDR) {
+                // relacionado.impSaldoAnt = MonedaUtils.round(saldoAnterior * relacionado.tipoCambioDR, 2)
+                // relacionado.impPagado = MonedaUtils.round(aplicacion.importe * relacionado.tipoCambioDR, 2)
+            }
+
             relacionado.impSaldoInsoluto = relacionado.impSaldoAnt - relacionado.impPagado
-            log.debug("Fac: {cxc.folio} Total: ${cxc.total} Saldo anterior: ${saldoAnterior } Pago aplicado: ${relacionado.impPagado} Saldo Insoluto: ${relacionado.impSaldoInsoluto}")
+            
+            
+            if(this.cobro.moneda.currencyCode != cxc.moneda.currencyCode) {
+                log.debug('Pagos anteriores: {} Descuentos: {}', pagosAplicados, notasAplicadas)
+                log.debug("Fac: ${cxc.documento} Total: ${cxc.total} Saldo anterior: ${saldoAnterior } Pago aplicado: ${relacionado.impPagado} Saldo Insoluto: ${relacionado.impSaldoInsoluto} MonedaDR: ${relacionado.monedaDR} TC: ${relacionado.tipoCambioDR}")
+                log.debug('Importe convertido: {}', MonedaUtils.round( (aplicacion.importe * relacionado.tipoCambioDR), 2 ))
+            }
             pago.doctoRelacionado.add(relacionado)
+            sumaImpPagado += relacionado.impPagado
 
         }
+        log.info('Suma ImpPagado: {}', sumaImpPagado)
         pagos.pago.add(pago)
         complemento.any.add(pagos)
         comprobante.complemento = complemento

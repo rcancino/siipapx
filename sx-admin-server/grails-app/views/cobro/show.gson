@@ -4,10 +4,11 @@ model {
     Cobro cobro
 }
 
-json g.render(cobro, [deep:false, excludes:['cliente','sucursal','aplicaciones','moneda']]){
+json g.render(cobro, [deep:false, excludes:['cliente', 'sucursal', 'aplicaciones', 'moneda', 'transferencia']]){
     sucursal  {
         id cobro.sucursal.id
         nombre cobro.sucursal.nombre
+        data 'TEST DATA'
     }
     sucursalNombre cobro.sucursal.nombre
     cliente g.render(cobro.cliente, [includes: ['id', 'nombre', 'rfc']]) {
@@ -18,6 +19,7 @@ json g.render(cobro, [deep:false, excludes:['cliente','sucursal','aplicaciones',
     }
     moneda cobro.moneda.currencyCode
     disponible cobro.getDisponible()
+    saldo cobro.saldo
     aplicaciones g.render(cobro.aplicaciones)
     if(cobro.cheque) {
         cheque g.render(cobro.cheque)

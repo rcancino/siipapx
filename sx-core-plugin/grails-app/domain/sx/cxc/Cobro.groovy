@@ -46,7 +46,7 @@ class  Cobro {
 
     String sw2
 
-    List aplicaciones = []
+    List<AplicacionDeCobro> aplicaciones = []
 
     BigDecimal aplicado = 0
 
@@ -88,7 +88,7 @@ class  Cobro {
         diferenciaFecha nullable: true
         diferencia nullable: true
         comentario nullable: true
-        tipoDeCambio(scale:6)
+        tipoDeCambio scale:6
         cfdi nullable: true
     }
 
@@ -99,8 +99,8 @@ class  Cobro {
         cliente index: 'COBRO_IDX2'
         formaDePago index: 'COBRO_IDX3'
         aplicaciones cascade: "all-delete-orphan"
-        aplicado formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cobro_id=id)'
-        saldo formula:'importe - diferencia - (select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cobro_id=id)'
+        aplicado formula:'(select COALESCE(sum(x.importe * x.tipo_de_cambio),0) from aplicacion_de_cobro x where x.cobro_id=id)'
+        saldo formula:'importe - diferencia - (select COALESCE(sum(x.importe * x.tipo_de_cambio),0) from aplicacion_de_cobro x where x.cobro_id=id)'
         diferenciaFecha type: 'date'
     }
 

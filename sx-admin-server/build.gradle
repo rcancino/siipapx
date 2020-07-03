@@ -9,7 +9,7 @@ grails {
     }
 }
 
-version "1.0.46"
+version "1.0.48"
 
 dependencies {
     //compile project(':sx-core-plugin')
@@ -41,29 +41,21 @@ bootRun {
     addResources  true
 }
 */
-
+/*
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
     jvmArgs('-Xmx1024m')
     // addResources = true
-
-    // Firebase Dev data
-    /*jvmArgs('-Dsiipapx.firebase.projectId=siipapx-51354')
-    jvmArgs('-Dsiipapx.firebase.url=https://siipapx-51354.firebaseio.com')
-    jvmArgs('-Dsiipapx.firebase.bucket=siipapx-51354.appspot.com')
-    */
-
     String springProfilesActive = 'spring.profiles.active'
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
     systemProperties System.properties
-
-    println 'FIREBASE CONFIG: ' + System.getProperty('siipapx.firebase.projectId')
 }
+*/
 
 war {
     String env = System.getProperty('grails.env') ?: 'prod'
     war.baseName = "${rootProject.name}-${env}"
-    // war.version = ''
+    war.version = ''
 }
 
 springBoot {
