@@ -31,7 +31,7 @@ dependencies {
 
 
 }
-
+/*
 bootRun {
     
     // systemProperties  System.properties
@@ -44,7 +44,7 @@ bootRun {
     systemProperty springProfilesActive, System.getProperty(springProfilesActive)
     systemProperties System.properties
 }
-
+*/
 war {
     String env = System.getProperty('grails.env') ?: 'prod'
     war.baseName = "sx-pos-server-${env.substring(0,4)}"

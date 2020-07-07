@@ -56,7 +56,58 @@ class CfdiPdfService {
     }
 
     def pushToFireStorage(Cfdi cfdi) {
+        pushPdf(cfdi)
+        pushXml(cfdi)
+    }
 
+    def pushPdf(Cfdi cfdi) {
+
+        String objectName =buildOjbectName(cfdi, 'pdf')
+        def rawData = this.generarPdf(cfdi)
+        def data = rawData.toByteArray()
+        
+        publishCfdiDocument(objectName, data, "application/pdf", [size: data.length, uuid: cfdi.uuid, receptorRfc: cfdi.receptorRfc, tipoArchivo: 'pdf'])
+        log.info('Factura {} publicada en firebase exitosamente', objectName)
+
+    }
+
+    def pushXml(Cfdi cfdi) {
+        // Object
+        String objectName =buildOjbectName(cfdi, 'xml')
+        def data = cfdi.getUrl().getBytes()
+        publishCfdiDocument(objectName, data, "text/xml", [size: data.length, uuid: cfdi.uuid, receptorRfc: cfdi.receptorRfc, tipoArchivo: 'xml'])
+        log.info('Factura {} publicada en firebase exitosamente', objectName)
+
+    }
+
+    def publishCfdiDocument(String objectName, def data, String contentType, Map metaData) {
+        String projectId = firebaseService.projectId //'siipapx-436ce'
+        String bucketName = firebaseService.firebaseBucket // 'siipapx-436ce.appspot.com'
+        Storage storage = StorageOptions.newBuilder()
+            .setProjectId(projectId)
+            .build()
+            .getService()
+
+        BlobId blobId = BlobId.of(bucketName, objectName)
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+            .setContentType(contentType)
+            .setMetadata(metaData)
+            .build()
+
+        storage.create(blobInfo,data)
+        log.info('Documento {} publicada EXITOSAMENTE en firebase', objectName)
+    }
+
+    String buildOjbectName(Cfdi cfdi, String sufix) {
+        return "cfdis/${cfdi.serie}-${cfdi.folio}.${sufix}"
+    }
+
+
+    /**
+    *
+    * @Deprecated: Usuar pushPdfDocument
+    **/
+    def pushPdf_Old(Cfdi cfdi) {
         String objectName = "cfdis/${cfdi.serie}-${cfdi.folio}.pdf"
         def rawData = this.generarPdf(cfdi)
         def data = rawData.toByteArray()
@@ -75,17 +126,6 @@ class CfdiPdfService {
         log.info('Factura {} publicada en firebase exitosamente', objectName)
 
     }
-
-    /*
-    def generarImpresionV33( Cfdi cfdi) {
-        def logoPath = ServletContextHolder.getServletContext().getRealPath("reports/PAPEL_CFDI_LOGO.jpg")
-        def data = V33PdfGenerator.getReportData(cfdi, true)
-        Map parametros = data['PARAMETROS']
-        parametros.PAPELSA = logoPath
-        return reportService.run('PapelCFDI3.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
-    }
-    */
-    
 
 
 
