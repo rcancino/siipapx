@@ -199,14 +199,14 @@ class ReciboDePagoBuilder {
 
             
             // def aplicacionesAnteriores = aplicacionesDePagos + aplicacionesDePagos
-            def pagosAnteriores = pagosAplicados + notasAplicadas
+            def pagosAnteriores = MonedaUtils.round(pagosAplicados + notasAplicadas, 2)
 
             if(pagosAnteriores > 0) {
                 saldoAnterior = cxc.total - pagosAnteriores
             }
 
-            relacionado.impSaldoAnt = saldoAnterior
-            relacionado.impPagado = aplicacion.importe
+            relacionado.impSaldoAnt = MonedaUtils.round(saldoAnterior, 2)
+            relacionado.impPagado = MonedaUtils.round(aplicacion.importe, 2)
 
             
             if(relacionado.tipoCambioDR) {
