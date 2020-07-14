@@ -21,7 +21,7 @@ import net.glxn.qrgen.QRCode
 import net.glxn.qrgen.image.ImageType
 
 @Slf4j
-class V33PdfGenerator {
+class V33PdfGeneratorPos {
 
     final static SimpleDateFormat CFDI_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
@@ -105,9 +105,9 @@ class V33PdfGenerator {
         params["IVA"] = (comprobante?.getImpuestos()?.getTotalImpuestosTrasladados()?: 0.0) as String
         params["TOTAL"] = comprobante.getTotal() as String
         params["RECEPTOR_DIRECCION"] = 'ND'
-        params.put("METODO_PAGO", 		comprobante.metodoPago.toString());
-        params.put("FORMA_PAGO", 		comprobante.formaPago);
-        params.put("IMP_CON_LETRA", 	ImporteALetra.aLetra(comprobante.getTotal()));
+        params.put("METODO_PAGO",       comprobante.metodoPago.toString());
+        params.put("FORMA_PAGO",        comprobante.formaPago);
+        params.put("IMP_CON_LETRA",     ImporteALetra.aLetra(comprobante.getTotal()));
         params['FORMA_DE_PAGO']=comprobante.formaPago
         params['PINT_IVA']='16 '
         params["DESCUENTOS"] = comprobante.getDescuento() as String
@@ -122,8 +122,8 @@ class V33PdfGenerator {
             params["IMPORTE"] = comprobante.getTotal() as String
         }
         def emisor=comprobante.getEmisor();
-        params.put("EMISOR_NOMBRE", 	emisor.getNombre());
-        params.put("EMISOR_RFC", 		emisor.getRfc())
+        params.put("EMISOR_NOMBRE",     emisor.getNombre());
+        params.put("EMISOR_RFC",        emisor.getRfc())
         params["EMISOR_DIRECCION"] = ' '
         params["REGIMEN"] = comprobante.emisor.regimenFiscal
         params["LUGAR_EXPEDICION"] = comprobante.lugarExpedicion
@@ -198,7 +198,7 @@ class V33PdfGenerator {
         }
         parametros.TELEFONOS = venta.cliente.getTelefonos().join('/')
         if(venta.moneda != MonedaUtils.PESOS) {
-            parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetraDolares(venta.getTotal()));
+            parametros.put("IMP_CON_LETRA",     ImporteALetra.aLetraDolares(venta.getTotal()));
         }
         if(venta.socio) {
             parametros.SOCIO = venta.socio.nombre

@@ -1,4 +1,4 @@
-package sx.cfdi
+package sx.cloud
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -9,28 +9,29 @@ import groovy.util.logging.Slf4j
 import grails.util.Environment
 import grails.gorm.transactions.Transactional
 import grails.web.context.ServletContextHolder
-
+import org.grails.core.io.ResourceLocator
 
 
 import org.apache.commons.lang3.StringEscapeUtils
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.exception.ExceptionUtils
-import org.grails.core.io.ResourceLocator
+import org.apache.commons.io.FileUtils
+
+import com.google.cloud.storage.Storage
+import com.google.cloud.storage.StorageOptions
+import com.google.cloud.storage.BlobId
+import com.google.cloud.storage.BlobInfo
 
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
 
 import com.luxsoft.cfdix.CFDIXUtils
-import com.luxsoft.cfdix.v33.V33PdfGenerator
+import com.luxsoft.cfdix.v33.V33PdfGeneratorPos
 
+import sx.cfdi.Cfdi
 
 import sx.reports.ReportService
 import sx.cloud.FirebaseService
-
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
 
 
 @Slf4j
@@ -44,7 +45,8 @@ class LxCfdiService {
 
     ByteArrayOutputStream generarPdf( Cfdi cfdi, boolean envio = true, boolean actualizar = false) {
         def realPath = grailsResourceLocator.findResourceForURI("/reports").getURI().getPath() ?: 'reports'
-        def data = V33PdfGenerator.getReportData(cfdi, envio, actualizar)
+        File xmlFile = FileUtils.toFile(cfdi.url)
+        def data = V33PdfGeneratorPos.getReportData(cfdi, envio)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
