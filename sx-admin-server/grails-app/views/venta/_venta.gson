@@ -20,7 +20,7 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
     	nombre venta.vendedor.nombres
     }
     moneda venta.moneda.currencyCode
-    // envio g.render(venta.envio, [excludes: ['venta']])
+    
     if(venta.envio) {
         envio {
             id venta.envio.id
@@ -38,6 +38,6 @@ json g.render(venta, [excludes:['sucursal','cliente','vendedor','moneda','partid
             cfdi g.render(venta.cuentaPorCobrar.cfdi)
         }
     }
-    
+    folio venta.folio
 
 }

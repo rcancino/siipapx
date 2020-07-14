@@ -198,6 +198,9 @@ class UrlMappings {
         "/api/cxc/juridico"(resources: "Juridico")
         "/api/cxc/juridico/mandarFacturas"(controller: 'juridico', action: 'mandarFacturas', method: 'PUT')
 
+        // Mejoras API MonoRepo
+        "/api/devoluciones"(resources: 'devolucionDeVenta', excludes: ['create', 'edit', 'patch'])
+
         // Security
         "/api/security/users"(resources: "user")
         "/api/security/roles"(resources: "role")

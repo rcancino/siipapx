@@ -4,12 +4,15 @@ model {
     DevolucionDeVenta devolucionDeVenta
 }
 
-json g.render(devolucionDeVenta, [deep:true,excludes:['partidas','sucursal']]){
+json g.render(devolucionDeVenta, [deep:true,excludes:['partidas','sucursal', 'venta']]){
     partidas g.render(devolucionDeVenta.partidas)
+    nombre devolucionDeVenta.venta.nombre
     sucursal  {
         id devolucionDeVenta.sucursal.id
         nombre devolucionDeVenta.sucursal.nombre
     }
+    venta g.render(devolucionDeVenta.venta)
+    nota g.render(devolucionDeVenta.findNota())
 }
 
 

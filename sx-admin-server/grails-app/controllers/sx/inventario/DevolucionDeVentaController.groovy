@@ -1,8 +1,8 @@
 package sx.inventario
 
+import groovy.util.logging.Slf4j
 
 import grails.rest.*
-import grails.converters.*
 import grails.plugin.springsecurity.annotation.Secured
 
 import sx.core.Folio
@@ -11,7 +11,8 @@ import sx.core.Sucursal
 import sx.core.Venta
 
 @Secured("ROLE_INVENTARIO_USER")
-class DevolucionDeVentaController extends RestfulController {
+@Slf4j
+class DevolucionDeVentaController extends RestfulController<DevolucionDeVenta> {
 
     static responseFormats = ['json']
 
@@ -24,6 +25,7 @@ class DevolucionDeVentaController extends RestfulController {
 
         params.sort = 'lastUpdated'
         params.order = 'desc'
+        log.info('GET {}', params)
         def query = DevolucionDeVenta.where {}
         if(params.documento) {
             def documento = params.int('documento')
@@ -32,6 +34,14 @@ class DevolucionDeVentaController extends RestfulController {
         }
         if(params.sucursal) {
             query = query.where { sucursal.id == params.sucursal}
+        }
+        if (params.periodo) {
+            def periodo = params.periodo
+            query = query.where {fecha >= periodo.fechaInicial && fecha <= periodo.fechaFinal}
+        }
+        if (params.cartera) {
+            def cartera = params.cartera
+            query = query.where {venta.tipo == cartera}
         }
         return query.list(params)
     }

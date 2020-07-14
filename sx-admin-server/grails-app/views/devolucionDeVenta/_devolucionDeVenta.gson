@@ -21,6 +21,7 @@ json g.render(devolucionDeVenta){
         }
         moneda devolucionDeVenta?.venta?.moneda?.currencyCode
         tipoDeCambio devolucionDeVenta?.venta?.tipoDeCambio
+        folio devolucionDeVenta?.venta?.folio
     }
     factura devolucionDeVenta?.venta?.cuentaPorCobrar?.documento
     nota g.render(devolucionDeVenta.findNota())
