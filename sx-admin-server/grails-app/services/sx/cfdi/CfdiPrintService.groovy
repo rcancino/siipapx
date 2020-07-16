@@ -31,7 +31,8 @@ class CfdiPrintService {
 
     def generarPdfFactura(Cfdi cfdi){
         def realPath = ServletContextHolder.getServletContext().getRealPath("reports") ?: 'reports'
-        def data = V33PdfGenerator.getReportData(cfdi, cfdiLocationService.getXml(cfdi), true)
+        // def data = V33PdfGenerator.getReportData(cfdi, cfdiLocationService.getXml(cfdi), true)
+        def data = V33PdfGenerator.getReportData(cfdi, true)
         Map parametros = data['PARAMETROS']
         parametros.PAPELSA = realPath + '/PAPEL_CFDI_LOGO.jpg'
         parametros.IMPRESO_IMAGEN = realPath + '/Impreso.jpg'
