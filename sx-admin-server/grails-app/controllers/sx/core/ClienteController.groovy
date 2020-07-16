@@ -32,10 +32,10 @@ class ClienteController extends RestfulController<Cliente>{
 
     @Override
     protected List<Cliente> listAllResources(Map params) {
-        params.max = 30
-        def query = Cliente.where {}
+        params.max = 100
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
+        def query = Cliente.where {}
         log.info('List: {}', params)
         if (params.cartera) {
             if(params.cartera.startsWith('CRE') ){
@@ -44,6 +44,15 @@ class ClienteController extends RestfulController<Cliente>{
                 // log.debug('BUSCANDO : {}', params)
                 // query = query.where {credito == null }
             }
+        }
+        if(params.tipo) {
+            def tipo = params.tipo
+            if(tipo == 'CREDITO') {
+                log.info('CREDITO+++: {}', tipo)
+                query = query.where {credito != null && credito.lineaDeCredito != null}
+            } else if(tipo == 'CONTADO'){
+                query = query.where {credito == null}
+            } 
         }
         if(params.term){
             def search = '%' + params.term + '%'
