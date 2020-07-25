@@ -7,7 +7,14 @@ import sx.core.Cliente
 import sx.core.Sucursal
 import sx.utils.MonedaUtils
 
-
+/*
+ * Todo: Ajustes pendientes (manuales) a la base de datos de produccion para liberación 
+ * - Permitir nulos en la columna de cobro
+ * - Agrgar las columna de concepto para aumentar la clasificación de Notas de crédito
+ * - Agregar columna de cancelacion y cancelacion_motivo (Para cuando ya tiene asociado un CFDI)
+ * 
+ *
+ */
 @ToString(includeNames=true,includePackage=false, excludes = ['id, version, partidas'])
 @EqualsAndHashCode(includeFields = true,includes = ['id, serie','folio'])
 class NotaDeCredito {
@@ -18,9 +25,11 @@ class NotaDeCredito {
 
     String nombre
 
+    String concepto
+
     String serie
 
-    Long folio = 0
+    Long folio = -1
 
     String tipo
 
@@ -28,7 +37,7 @@ class NotaDeCredito {
 
     String tipoDeCalculo = 'PORCENTAJE'
 
-    String baseDelCalculo = 'Saldo'
+    String baseDelCalculo = 'SALDO'
 
     Date fecha = new Date()
 
@@ -48,8 +57,6 @@ class NotaDeCredito {
 
     List<NotaDeCreditoDet> partidas = []
 
-    Cfdi cfdi
-
     Sucursal sucursal
 
     BigDecimal descuento = 0.0
@@ -62,10 +69,6 @@ class NotaDeCredito {
 
     String sw2
 
-    Date dateCreated
-
-    Date lastUpdated
-
     String usoDeCfdi
 
     String formaDePago
@@ -76,8 +79,17 @@ class NotaDeCredito {
 
     Boolean sinReferencia = false
 
+    Cfdi cfdi
+
+    Date cancelacion
+    String cancelacionMotivo
+    String cancelacionUsuario
+
     String createUser
     String updateUser
+    Date dateCreated
+    Date lastUpdated
+
 
     static constraints = {
         serie maxSize: 20
@@ -92,10 +104,8 @@ class NotaDeCredito {
         })
         comentario nullable:true
         cfdi nullable:true
-        // cobro nullable: true
+        cobro nullable: true
         sw2 nullable: true
-        createUser nullable: true
-        updateUser nullable: true
         usoDeCfdi nullable: true, maxSize:3
         formaDePago nullable: true, maxSize: 40
         rmd nullable: true
@@ -103,6 +113,12 @@ class NotaDeCredito {
         nombre nullable: true
         tipoDeCalculo nullable: true, maxSize: 20
         baseDelCalculo nullable: true, maxSize: 20
+        concepto nullable: true, maxSize: 20
+        createUser nullable: true
+        updateUser nullable: true
+        cancelacion nullable: true
+        cancelacionMotivo nullable: true
+        cancelacionUsuario nullable: true
     }
 
     static hasMany =[partidas:NotaDeCreditoDet]

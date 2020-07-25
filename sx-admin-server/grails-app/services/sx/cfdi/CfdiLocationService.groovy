@@ -11,8 +11,6 @@ class CfdiLocationService {
 
     private AppConfig config
 
-
-
     Byte[] getXml(Cfdi cfdi, Boolean downloadIfNotFound = true){
         String fileName = cfdi.url.getPath().substring(cfdi.url.getPath().lastIndexOf('/')+1)
         File file = new File(getCfdiLocation(cfdi), fileName)

@@ -78,6 +78,10 @@ class CuentaPorCobrar {
 
     Date juridico = null
 
+    Integer atrasoCalculado
+    
+    BigDecimal saldoReal
+
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
         tipo nullable:true, inList:['CON','COD','CRE','CHE','JUR','PSF','INE','OTR','ACF','ANT','AND']
@@ -102,10 +106,18 @@ class CuentaPorCobrar {
         id generator:'uuid'
         fecha type:'date' ,index: 'CXC_IDX1'
         vencimiento type: 'date'
-        cliente index: 'CXC_IDX3'
         cancelada type: 'date'
-        pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
         juridico type: 'date'
+
+        // Formulas
+        pagos formula:'(select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id)'
+        saldoReal formula:'total - (select COALESCE(sum(x.importe),0) from aplicacion_de_cobro x where x.cuenta_por_cobrar_id=id) '
+        atrasoCalculado formula: 'IF( TO_DAYS(CURRENT_DATE()) - TO_DAYS(IFNULL(vencimiento, fecha))  < 0, 0, TO_DAYS(CURRENT_DATE()) - TO_DAYS( IFNULL(vencimiento, fecha)) ) '
+        
+        // Indexs
+        cliente index: 'CXC_IDX3'
+        formaDePago index: 'CXC_IDX9'
+        vencimiento index: 'CXC_IDX10'
     }
 
     static transients = ['saldo','folio','atraso']

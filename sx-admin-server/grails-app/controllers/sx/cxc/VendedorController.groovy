@@ -1,4 +1,4 @@
-package cxc
+package sx.cxc
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController

@@ -3,6 +3,14 @@ package sx.cxc
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
+/*
+ * Todo: Ajustes pendientes (manuales) a la base de datos de produccion para liberación 
+ * 
+ * A NotaDeCreditoDet:
+ * - Agregar la columna de total
+ * - Agregar la columna de uuid
+ *
+ */
 @EqualsAndHashCode(includeFields = true,includes = ['id','cuentaPorCobrar'])
 class NotaDeCreditoDet {
 
@@ -15,6 +23,8 @@ class NotaDeCreditoDet {
     BigDecimal impuesto = 0.0
 
     BigDecimal importe = 0.0
+
+    BigDecimal total = 0.0
 
     Long documento = 0
 
@@ -30,8 +40,11 @@ class NotaDeCreditoDet {
 
     String comentario
 
+    String uuid
+
     static constraints = {
         comentario nullable:true
+        uuid nullable: true
     }
 
     static mapping={
@@ -39,6 +52,7 @@ class NotaDeCreditoDet {
         fechaDocumento type: 'date'
         tipoDeDocumento maxSize:10
         sucursal maxSize: 20
+
     }
 
     static belongsTo =[nota:NotaDeCredito]

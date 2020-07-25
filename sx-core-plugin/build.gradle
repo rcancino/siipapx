@@ -7,3 +7,6 @@ dependencies {
   compile 'org.apache.commons:commons-lang3:3.1'
 }
 */
+dependencies {
+    compile 'org.grails.plugins:spring-security-core:3.2.0'
+}

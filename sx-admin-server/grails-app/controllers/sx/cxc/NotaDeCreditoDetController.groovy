@@ -5,7 +5,7 @@ import grails.transaction.Transactional
 
 import static org.springframework.http.HttpStatus.NO_CONTENT
 
-class NotaDeCreditoDetController extends RestfulController{
+class NotaDeCreditoDetController extends RestfulController<NotaDeCreditoDet>{
 
     static responseFormats = ['json']
 
@@ -14,7 +14,7 @@ class NotaDeCreditoDetController extends RestfulController{
     }
 
     @Override
-    protected List listAllResources(Map params) {
+    protected List<NotaDeCreditoDet> listAllResources(Map params) {
         def query = NotaDeCreditoDet.where {}
         if(params.notaDeCreditoId){
             query = query.where{nota.id == params.notaDeCreditoId}
@@ -37,13 +37,6 @@ class NotaDeCreditoDetController extends RestfulController{
 
         nota.save flush:true
         render status: NO_CONTENT
-        /*request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [classMessageArg, instance.id])
-                redirect action:"listaDePreciosVenta.index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT } // NO CONTENT STATUS CODE
-        }*/
 
     }
 }

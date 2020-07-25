@@ -9,7 +9,7 @@ import sx.core.Sucursal
 import sx.reports.ReportService
 
 @Secured("hasRole('ROLE_POS_USER')")
-class VentaCreditoController extends RestfulController{
+class VentaCreditoController extends RestfulController<VentaCredito>{
 
     static responseFormats = ['json']
 

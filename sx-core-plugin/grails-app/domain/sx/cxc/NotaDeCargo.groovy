@@ -7,7 +7,13 @@ import sx.core.Cliente
 import sx.core.Sucursal
 
 /**
- * Created by rcancino on 23/03/17.
+ * Todo: Ajustes pendientes (manuales) a la base de datos de produccion para liberación 
+ * - Quitar el not-null a cuentaPorCobrar
+ * - Agregar la columna de uuid a NotaDeCargoDet
+ * - Agregar columna de cancelacion y cancelacion_motivo (Para cuando ya tiene asociado un CFDI)
+ *
+ *
+ *
  */
 @ToString( includes = "serie, folio, fecha, cliente", includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id','serie', 'folio'])
@@ -23,17 +29,19 @@ class NotaDeCargo {
 
     String tipo
 
-    String serie
+    String serie = 'CAR'
 
-    Long folio
+    Long folio = -1
 
     String formaDePago = "POR DEFINIR"
 
-    BigDecimal importe
+    BigDecimal cargo = 0.0
 
-    BigDecimal impuesto
+    BigDecimal importe = 0.0
 
-    BigDecimal total
+    BigDecimal impuesto = 0.0
+
+    BigDecimal total = 0.0
 
     Currency moneda = Currency.getInstance('MXN')
 
@@ -47,22 +55,20 @@ class NotaDeCargo {
 
     String usoDeCfdi
 
-    List partidas = []
-
-    BigDecimal cargo = 0.0
+    List<NotaDeCargoDet> partidas = []
 
     String	sw2
 
+    String tipoDeCalculo = 'PORCENTAJE'
+
+    Date cancelacion
+    String cancelacionMotivo
+    String cancelacionUsuario
+
     Date dateCreated
-
     Date lastUpdated
-
     String createUser
-
     String updateUser
-
-    String tipoDeCalculo
-
 
     static constraints = {
         serie maxSize: 20
@@ -74,6 +80,10 @@ class NotaDeCargo {
         sw2 nullable:true
         cfdi nullable: true
         tipoDeCalculo inList: ['PORCENTAJE','PRORRATEO']
+        cuentaPorCobrar nullable: true
+        cancelacion nullable: true
+        cancelacionMotivo nullable: true
+        cancelacionUsuario nullable: true
     }
 
     static hasMany =[partidas:NotaDeCargoDet]

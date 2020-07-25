@@ -1,5 +1,7 @@
 package sx.cfdi
 
+import groovy.util.logging.Slf4j
+
 import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.cfdix.v33.NotaPdfGenerator
 import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
@@ -22,6 +24,7 @@ import sx.reports.ReportService
 
 
 @Secured("hasRole('ROLE_POS_USER')")
+@Slf4j
 class CfdiController extends RestfulController{
 
     CfdiTimbradoService cfdiTimbradoService
@@ -35,6 +38,8 @@ class CfdiController extends RestfulController{
     CfdiPrintService cfdiPrintService
 
     CfdiMailService cfdiMailService
+
+    NotaDeCargoPdfGenerator notaDeCargoPdfGenerator
 
     static responseFormats = ['json']
 
@@ -53,8 +58,9 @@ class CfdiController extends RestfulController{
     @Transactional
     def print( Cfdi cfdi) {
         log.info('Imprimiendo CFDI: ', params)
-        def pdf = cfdiPrintService.getPdf(cfdi)
-        render (file: pdf, contentType: 'application/pdf', filename: cfdi.fileName)
+        // def pdf = cfdiPrintService.getPdf(cfdi)
+        def pdf = generarImpresionV33(cfdi)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'NotaDeCredito.pdf')
     }
 
     def descargarXml(Cfdi cfdi) {
@@ -105,7 +111,7 @@ class CfdiController extends RestfulController{
     private generarPdfNotaDeCargo( Cfdi cfdi) {
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
         NotaDeCargo cargo = NotaDeCargo.where{cfdi == cfdi}.find()
-        def data = NotaDeCargoPdfGenerator.getReportData(cargo)
+        def data = notaDeCargoPdfGenerator.getReportData(cargo)
         Map parametros = data['PARAMETROS']
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
         return reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])

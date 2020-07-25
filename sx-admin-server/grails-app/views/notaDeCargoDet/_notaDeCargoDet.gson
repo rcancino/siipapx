@@ -1,0 +1,9 @@
+import sx.cxc.NotaDeCargoDet
+
+model {
+    NotaDeCargoDet notaDeCargoDet
+}
+
+json g.render(notaDeCargoDet, [excludes:['nota','cuentaPorCobrar'] ]){
+    
+}

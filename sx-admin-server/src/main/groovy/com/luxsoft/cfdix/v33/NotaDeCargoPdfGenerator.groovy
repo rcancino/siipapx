@@ -1,5 +1,7 @@
 package com.luxsoft.cfdix.v33
 
+import groovy.util.logging.Slf4j
+
 import com.luxsoft.utils.ImporteALetra
 import lx.cfdi.v33.CfdiUtils
 import lx.cfdi.v33.Comprobante
@@ -17,13 +19,24 @@ import java.text.MessageFormat
 /**
  *
  */
+ @Slf4j
 class NotaDeCargoPdfGenerator {
 
-    static getReportData(NotaDeCargo nota){
+    def cfdiLocationService
+
+    def getReportData(NotaDeCargo nota){
         assert nota.cfdi
         Cfdi cfdi = nota.cfdi
+        Comprobante comprobante 
         File xmlFile = FileUtils.toFile(cfdi.url)
-        Comprobante comprobante = CfdiUtils.read(xmlFile)
+        
+        if(xmlFile.exists()) {
+            comprobante = CfdiUtils.read(xmlFile)
+        } else {
+            def data = cfdiLocationService.getXml(cfdi)
+            comprobante = CfdiUtils.read(data)   
+        }
+        
 
         def conceptos = comprobante.conceptos.concepto
 
@@ -56,7 +69,7 @@ class NotaDeCargoPdfGenerator {
         return data
     }
 
-    public static  generarQR(Cfdi cfdi) {
+    def  generarQR(Cfdi cfdi) {
         String pattern="?re=${0}&rr={1}&tt={2,number,##########.######}&id,{3}"
         String qq=MessageFormat.format(pattern, cfdi.emisorRfc,cfdi.receptorRfc,cfdi.total,cfdi.uuid)
         File file=QRCode.from(qq).to(ImageType.GIF).withSize(250, 250).file()
@@ -64,7 +77,7 @@ class NotaDeCargoPdfGenerator {
 
     }
 
-    static getParametros(NotaDeCargo nota, Cfdi cfdi, Comprobante comprobante, File xmlFile){
+    def  getParametros(NotaDeCargo nota, Cfdi cfdi, Comprobante comprobante, File xmlFile){
         def params=[:]
         params["VERSION"] = comprobante.version
         params["SERIE"] = comprobante.getSerie()

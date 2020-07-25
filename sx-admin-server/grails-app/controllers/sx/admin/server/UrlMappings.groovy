@@ -29,11 +29,7 @@ class UrlMappings {
         "/api/clientes/$id/cxc"(controller: 'cliente', action: 'cxc', method: 'GET')
         "/api/clientes/$id/cobros"(controller: 'cliente', action: 'cobros', method: 'GET')
         "/api/clientes/$id/notas"(controller: 'cliente', action: 'notas', method: 'GET')
-        // "/api/clientes/$id/socios"(controller: 'cliente', action: 'socios', method: 'GET')
-        /*"/api/clientes"(resources: "cliente"){
-            
-        }
-        */
+        
 
         "/api/clientes/estadoDeCuenta"(controller: "cliente", action: 'estadoDeCuenta', method: 'GET')
 
@@ -59,11 +55,6 @@ class UrlMappings {
         "/api/cfdis/enviarEmail/$id?"(controller:"cfdi", action:"enviarEmail")
         "/api/cfdis/envioBatch"(controller: "cfdi", action: 'envioBatch', method: 'PUT')
         "/api/cfdis/envioBatchNormal"(controller: "cfdi", action: 'envioBatchNormal', method: 'PUT')
-
-
-        // Compras
-        "/api/compras"(resources: "compra")
-        "/api/compras/print/$ID"(controller: 'compra', action: 'print', method: 'GET')
 
         // Ventas
         "/api/ventas"(resources:"venta")
@@ -133,6 +124,7 @@ class UrlMappings {
 
         "/api/cxc/notasDeCargo"(resources: "notaDeCargo")
         "/api/cxc/notasDeCargo/timbrar/$id"(controller: 'notaDeCargo', action: 'timbrar', method: 'POST')
+        "/api/cxc/notasDeCargo/cancelar/$id"(controller: 'notaDeCargo', action: 'cancelar', method: 'PUT')
         "/api/cxc/notasDeCargo/print/$id"(controller: 'notaDeCargo', action: 'print', method: 'GET')
         "/api/cxc/notasDeCargo/reporteDeNotasDeCargo"(controller: 'notaDeCargo', action: 'reporteDeNotasDeCargo', method: 'GET')
 

@@ -4,6 +4,7 @@ import com.luxsoft.cfdix.v33.CfdiSellador33
 import com.luxsoft.cfdix.v33.NotaBuilder
 import com.luxsoft.cfdix.v33.NotaDeCargoBuilder
 import com.luxsoft.cfdix.v33.ReciboDePagoBuilder
+import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import org.springframework.web.servlet.i18n.FixedLocaleResolver
 
 // Place your Spring DSL code here
@@ -28,6 +29,10 @@ beans = {
     reciboDePagoBuilder(ReciboDePagoBuilder){
         sellador = ref('cfdiSellador')
     }
+
+    notaDeCargoPdfGenerator(NotaDeCargoPdfGenerator){
+        cfdiLocationService = ref('cfdiLocationService')
+    } 
 
     localeResolver(FixedLocaleResolver, Locale.US){
         defaultLocale = new Locale('es', 'MX')

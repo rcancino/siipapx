@@ -6,9 +6,11 @@ model {
 // json tmpl.notaDeCargo(notaDeCargo)
 
 json g.render(notaDeCargo, [deep: false, excludes:['moneda','partidas']]) {
+    nombre notaDeCargo.cliente.nombre
     cliente g.render(notaDeCargo.cliente)
     moneda notaDeCargo.moneda.currencyCode
-    partidas g.render(notaDeCargo.partidas, [deep:true, excludes:['nota']] )
+    // partidas g.render(notaDeCargo.partidas, [deep:false, excludes:['nota']] )
+    partidas g.render(notaDeCargo.partidas )
     cuentaPorCobrar g.render(notaDeCargo.cuentaPorCobrar)
     cfdi g.render(notaDeCargo.cfdi)
 }

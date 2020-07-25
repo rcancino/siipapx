@@ -36,6 +36,8 @@ class NotaDeCargoDet {
 
     BigDecimal documentoSaldo = 0.0
 
+    String uuid
+
     String sucursal
 
     String comentario
@@ -46,6 +48,7 @@ class NotaDeCargoDet {
         concepto nullable: true
         documentoTipo maxSize:10
         sucursal maxSize: 20
+        uuid nullable: true
     }
 
     static mapping={

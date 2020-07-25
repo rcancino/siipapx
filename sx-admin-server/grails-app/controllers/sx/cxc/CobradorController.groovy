@@ -5,7 +5,7 @@ import grails.rest.RestfulController
 import sx.core.Cobrador
 
 @Secured("hasRole('CXC_USER')")
-class CobradorController extends RestfulController{
+class CobradorController extends RestfulController<Cobrador>{
     static responseFormats = ['json']
 
     CobradorController(){
@@ -13,7 +13,7 @@ class CobradorController extends RestfulController{
     }
 
     @Override
-    protected List listAllResources(Map params) {
+    protected List<Cobrador> listAllResources(Map params) {
         params.max = 500
         return super.listAllResources(params)
     }

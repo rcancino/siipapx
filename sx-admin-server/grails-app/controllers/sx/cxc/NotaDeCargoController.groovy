@@ -1,19 +1,22 @@
 package sx.cxc
 
-import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
-import com.luxsoft.utils.MonedaUtils
-import com.luxsoft.utils.Periodo
-import grails.rest.*
-import grails.converters.*
-import grails.plugin.springsecurity.annotation.Secured
-import grails.web.http.HttpHeaders
-import sx.reports.ReportService
+import groovy.util.logging.Slf4j
 
-import static org.springframework.http.HttpStatus.CREATED
-import static org.springframework.http.HttpStatus.OK
+import grails.gorm.transactions.Transactional
+import grails.rest.RestfulController
+import grails.plugin.springsecurity.annotation.Secured
+import grails.web.servlet.mvc.GrailsParameterMap
+
+import org.apache.commons.lang3.exception.ExceptionUtils
+
+import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
+import sx.reports.ReportService
+import com.luxsoft.utils.Periodo
+
 
 @Secured("hasRole('ROLE_CXC_USER')")
-class NotaDeCargoController extends RestfulController {
+@Slf4j
+class NotaDeCargoController extends RestfulController<NotaDeCargo> {
     
     static responseFormats = ['json']
 
@@ -21,50 +24,77 @@ class NotaDeCargoController extends RestfulController {
 
     ReportService reportService
 
+    NotaDeCargoPdfGenerator notaDeCargoPdfGenerator
+
     NotaDeCargoController() {
         super(NotaDeCargo)
     }
 
     @Override
-    Object save() {
-        NotaDeCargo nota = createResource()
-        nota.validate(['cliente','total'])
-        if (nota.hasErrors()) {
-            // transactionStatus.setRollbackOnly()
-            respond nota.errors, view:'create' // STATUS CODE 422
-            return
-        }
-        nota = notaDeCargoService.save(nota);
-        respond nota, [status: CREATED, view:'show']
+    protected NotaDeCargo saveResource(NotaDeCargo resource) {
+        return notaDeCargoService.save(resource)
     }
 
     @Override
-    protected Object updateResource(Object resource) {
-        notaDeCargoService.update(resource)
+    protected NotaDeCargo updateResource(NotaDeCargo resource) {
+        return notaDeCargoService.update(resource)
     }
 
     @Override
-    protected Object createResource() {
+    protected NotaDeCargo createResource() {
         NotaDeCargo instance = new NotaDeCargo()
+        instance.sucursal = notaDeCargoService.getSucursal()
         bindData instance, getObjectToBind()
-        instance.serie = 'CAR'
-        instance.impuesto = 0.0
-        // instance.total = 0.0
         return instance
     }
 
     @Override
-    protected void deleteResource(Object resource) {
+    protected void deleteResource(NotaDeCargo resource) {
         notaDeCargoService.delete(resource)
     }
 
     @Override
-    protected List listAllResources(Map params) {
-        log.debug('List {}', params)
-        def query = NotaDeCargo.where {}
-        params.max = 30
+    Object index(Integer max) {
+        GrailsParameterMap params = (GrailsParameterMap)this.params;
+
+        params.max = Math.min(max ?: 20, 100)
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
+
+        log.debug('GET[List] {}', params)
+
+        def query = NotaDeCargo.where {}
+
+        if(params.cartera) {
+            query = query.where { tipo == params.cartera}
+        }
+        
+        if(params.periodo) {
+            def periodo = params.periodo
+            query = query.where{ fecha >= periodo.fechaInicial && fecha <= periodo.fechaFinal}
+        }
+
+        if(params.term) {
+            log.debug('Term: {}', params['term'])
+            if(params.term.isInteger()) {
+                query = query.where{folio == params.term.toInteger()}
+            } else {
+                def search = '%' + params.term + '%'
+                query = query.where { cliente.nombre =~ search}
+            }
+        }
+        respond query.list(params)
+    }
+
+    /*
+    @Override
+    protected List<NotaDeCargo> listAllResources(Map ptm) {
+        GrailsParameterMap params = (GrailsParameterMap)params
+        log.debug('List {}', ptm)
+        params.max = Math.min(max ?: 20, 100)
+        params.sort = params.sort ?:'lastUpdated'
+        params.order = params.order ?:'desc'
+        def query = NotaDeCargo.where {}
         if(params.cartera) {
             query = query.where { tipo == params.cartera}
         }
@@ -80,22 +110,31 @@ class NotaDeCargoController extends RestfulController {
         return query.list(params)
     }
 
+     */
+
 
     def print(NotaDeCargo nota) {
         assert nota.cfdi, 'Nota sin timbrar: ' + nota.id
         def realPath = servletContext.getRealPath("/reports") ?: 'reports'
-        def data = NotaDeCargoPdfGenerator.getReportData(nota)
+        def data = notaDeCargoPdfGenerator.getReportData(nota)
         Map parametros = data['PARAMETROS']
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
         def pdf  = reportService.run('PapelCFDI3Nota.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'NotaDeCredito.pdf')
     }
 
-
+    @Transactional
     def timbrar(NotaDeCargo nota) {
-        assert !nota.cfdi, 'Nota ya timbrada'
         nota = notaDeCargoService.timbrar(nota)
-        respond nota
+        respond (nota, view: 'show')
+    }
+
+    @Transactional
+    def cancelar(NotaDeCargo cargo) {
+        String motivo = params.motivo
+        log.info('Cancelando Nota de cargo: {}  motivo:{}', cargo.folio, motivo)
+        cargo = notaDeCargoService.cancelar(cargo, motivo)
+        respond (cargo, view: 'show')
     }
 
     def reporteDeNotasDeCargo() {
@@ -109,5 +148,11 @@ class NotaDeCargoController extends RestfulController {
         ]
         def pdf  = reportService.run('NotasDeCargo.jrxml', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ComisionTarjetas.pdf')
+    }
+
+    def handleException(Exception e) {
+        String message = ExceptionUtils.getRootCauseMessage(e)
+        log.error(message, ExceptionUtils.getRootCause(e))
+        respond([message: message], status: 500)
     }
 }

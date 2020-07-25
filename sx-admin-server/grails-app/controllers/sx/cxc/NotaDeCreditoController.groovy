@@ -1,22 +1,27 @@
 package sx.cxc
 
-import com.luxsoft.cfdix.v33.NotaPdfGenerator
-import com.luxsoft.utils.Periodo
+import groovy.util.logging.Slf4j
+
+import org.apache.commons.lang3.exception.ExceptionUtils
+
 import grails.gorm.transactions.Transactional
+import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.RestfulController
 
-import grails.plugin.springsecurity.annotation.Secured
-import org.apache.commons.lang3.exception.ExceptionUtils
 import sx.reports.ReportService
 import sx.core.Sucursal
 import sx.inventario.DevolucionDeVenta
+import com.luxsoft.cfdix.v33.NotaPdfGenerator
+import com.luxsoft.utils.Periodo
+
 
 /**
  * Controlador central REST de notas de credito CxC
  *
  */
+@Slf4j
 @Secured("hasRole('ROLE_CXC_USER')")
-class NotaDeCreditoController extends RestfulController{
+class NotaDeCreditoController extends RestfulController<NotaDeCredito>{
 
     static responseFormats = ['json']
 
@@ -28,11 +33,9 @@ class NotaDeCreditoController extends RestfulController{
         super(NotaDeCredito)
     }
 
+    /*
     @Transactional
     def save() {
-        if(handleReadOnly()) {
-            return
-        }
         NotaDeCredito nota = new NotaDeCredito()
         bindData nota, getObjectToBind()
         Sucursal sucursal = Sucursal.where { nombre == 'OFICINAS'}.find()
@@ -40,26 +43,56 @@ class NotaDeCreditoController extends RestfulController{
         nota = notaDeCreditoService.generarBonificacion(nota)
         log.debug('Nota generada: {}', nota)
         respond nota
+    }
+    */
 
+    @Override
+    protected NotaDeCredito saveResource(NotaDeCredito resource) {
+        return notaDeCreditoService.save(resource)
     }
 
     @Override
-    protected List listAllResources(Map params) {
-        // log.debug('Buscando notas {}', params)
-        params.max = 10
-        params.sort = 'lastUpdated'
-        params.order = 'desc'
-        // log.debug('Buscando notas: {}',params)
+    protected NotaDeCredito updateResource(NotaDeCredito resource) {
+        return notaDeCreditoService.update(resource)
+    }
+
+    @Override
+    protected NotaDeCredito createResource() {
+        NotaDeCredito instance = new NotaDeCredito()
+        instance.sucursal = notaDeCreditoService.getSucursal()
+        bindData instance, getObjectToBind()
+        return instance
+    }
+
+    @Override
+    protected List<NotaDeCredito> listAllResources(Map params) {
+        
+        params.max = Math.max(params.max?:10, 100)
+        params.sort = params.sort?:'lastUpdated'
+        params.order = params.order?: 'desc'
+
+        log.debug('Buscando notas: {}',params)
+
         def query = NotaDeCredito.where{ }
+        
         if(params.cartera) {
             String cartera = params.cartera
             query = query.where{tipoCartera == cartera}
         }
-        if(params.tipo) {
-            String tipo = params.tipo
-            query = query.where{tipo == tipo}
+        
+        if(params.periodo) {
+            def periodo = params.periodo
+            query = query.where{fecha >= periodo.fechaInicial && fecha <= periodo.fechaFinal}
         }
+        
+        def list = query.list(params)
+        respond list
+    }
 
+    def search() {
+        params.max = params.max ?: 10
+        def query = NotaDeCredito.where{ }
+        
         if(params.term) {
             def search = '%' + params.term + '%'
             if(params.term.isInteger()) {
@@ -70,9 +103,7 @@ class NotaDeCreditoController extends RestfulController{
                 query = query.where { cliente.nombre =~ search}
             }
         }
-        def list = query.list(params)
-        // log.debug('Found: {}', list.size())
-        respond list
+        respond query.list(params)
     }
 
     def buscarRmd() {
@@ -239,11 +270,6 @@ class NotaDeCreditoController extends RestfulController{
         respond nota
     }
 
-    def handleNotaDeCreditoException(NotaDeCreditoException sx) {
-        String msg = ExceptionUtils.getRootCauseMessage(sx)
-        respond ([message: sx.message], status: 422)
-    }
-
     def reporteDeNotasDeCredito() {
         // log.debug('Re: {}', params)
         Periodo periodo = new Periodo()
@@ -261,4 +287,12 @@ class NotaDeCreditoController extends RestfulController{
     protected void deleteResource(NotaDeCredito nota) {
         notaDeCreditoService.eliminar(nota)
     }
+
+    def handleException(Exception e) {
+        String message = ExceptionUtils.getRootCauseMessage(e)
+        log.error(message, ExceptionUtils.getRootCause(e))
+        respond([message: message], status: 500)
+    }
+
+
 }

@@ -6,16 +6,19 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import lx.cfdi.v33.Comprobante
 import com.luxsoft.cfdix.v33.NotaBuilder
 
+import sx.core.Sucursal
 import sx.core.Folio
 import sx.cfdi.Cfdi
 import sx.core.Venta
 import sx.inventario.DevolucionDeVenta
+import sx.core.LogUser
+import sx.core.AppConfig
 import sx.cfdi.CfdiService
 import sx.cfdi.CfdiTimbradoService
 import com.luxsoft.utils.MonedaUtils
 
 @Transactional
-class NotaDeCreditoService {
+class NotaDeCreditoService implements LogUser{
 
     NotaBuilder notaBuilder
 
@@ -23,9 +26,30 @@ class NotaDeCreditoService {
 
     CfdiTimbradoService cfdiTimbradoService
 
+    Sucursal sucursal = null
+
+    /**
+    * Persiste la nota de crédito asignandole folio 
+    */
+    def save(NotaDeCredito nota) {
+        if(nota.id) throw new NotaDeCreditoException("Nota existente Id: ${nota.id}");
+        nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', nota.serie)
+        logEntity(nota)
+        nota.save failOnError: true, flush: true
+    }
+
+    def update(NotaDeCredito nota) {
+        logEntity(nota)
+        nota.save failOnError: true, flush: true
+        return nota
+    }
+
+    /**
+    *
+    *   @deprecated  As of version 3.0.0 Should use saveBonificacion and updateBonificacion
+    */
     def generarBonificacion(NotaDeCredito nota) {
         nota.tipo = 'BONIFICACION'
-
         String serie = "BON${nota.tipoCartera}"
         nota.serie = serie
         nota.folio = Folio.nextFolio('NOTA_DE_CREDITO', serie)
@@ -332,6 +356,13 @@ class NotaDeCreditoService {
         cfdiTimbradoService
         nota.comentario = 'CANCELADA'
         nota.save flush: true
+    }
+
+    Sucursal getSucursal() {
+        if(!this.sucursal) {
+            this.sucursal = AppConfig.first().sucursal
+        }
+        return this.sucursal
     }
 
 

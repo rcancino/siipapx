@@ -24,7 +24,7 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     @Override
-    protected List listAllResources(Map params) {
+    protected List<CuentaPorCobrar> listAllResources(Map params) {
 
         def query = CuentaPorCobrar.where {}
         params.sort = params.sort ?:'lastUpdated'
@@ -98,26 +98,11 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     def pendientes(Cliente cliente) {
-        log.info('Pendientes {}', params)
         if (cliente == null) {
             notFound()
             return
         }
-        // params.max = 100
-        params.sort = params.sort ?:'fecha'
-        params.order = params.order ?:'asc'
-        def cartera = params.cartera ?: 'CRE'
-        def rows = CuentaPorCobrar.findAll(
-                "from CuentaPorCobrar c  where c.cliente = ? and c.tipo = ? and c.total - c.pagos > 0 ",
-                [cliente, cartera])
-        if(cartera == 'JUR') {
-            rows = CuentaPorCobrar.findAll(
-                    "from CuentaPorCobrar c  where c.cliente = ?  and c.total - c.pagos > 0 ",
-                    [cliente])
-        }
-
-        log.debug('Cuentas por cobrar para: {} : {}', cliente.nombre, rows.size())
-        respond rows
+        respond cuentaPorCobrarService.findPendientes(cliente)
     }
 
     def antiguedad(){
