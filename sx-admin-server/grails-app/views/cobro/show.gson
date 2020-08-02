@@ -8,8 +8,8 @@ json g.render(cobro, [deep:false, excludes:['cliente', 'sucursal', 'aplicaciones
     sucursal  {
         id cobro.sucursal.id
         nombre cobro.sucursal.nombre
-        data 'TEST DATA'
     }
+    nombre cobro.cliente.nombre
     sucursalNombre cobro.sucursal.nombre
     cliente g.render(cobro.cliente, [includes: ['id', 'nombre', 'rfc']]) {
         id cobro.cliente.id

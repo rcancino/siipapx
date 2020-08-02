@@ -36,14 +36,6 @@ class  Cobro {
 
     Boolean enviado = false
 
-    Date dateCreated
-
-    Date lastUpdated
-
-    String createUser
-
-    String updateUser
-
     String sw2
 
     List<AplicacionDeCobro> aplicaciones = []
@@ -67,6 +59,12 @@ class  Cobro {
     String ingreso
 
     Cfdi cfdi
+
+    Date dateCreated
+    Date lastUpdated
+
+    String createUser
+    String updateUser
 
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 

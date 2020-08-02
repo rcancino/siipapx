@@ -33,9 +33,9 @@ class CobroController extends RestfulController<Cobro>{
 
     @Override
     protected List<Cobro> listAllResources(Map params) {
-        log.debug('List {}', params)
+        log.debug('Cobros GET Params: {}', params)
         def query = Cobro.where {}
-        params.max = 100
+        params.max = params.max?: 50
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
         if(params.cartera) {
@@ -44,6 +44,10 @@ class CobroController extends RestfulController<Cobro>{
                 tipoCartera = 'COD'
             }
             query = query.where { tipo == tipoCartera}
+        }
+        if(params.monetarios) {
+            query = query.where{formaDePago != 'DEVOLUCION'}
+            query = query.where{formaDePago != 'BONIFICACION'}
         }
         if(params.sucursal) {
             query = query.where {sucursal == Sucursal.get(params.sucursal)}
@@ -100,7 +104,7 @@ class CobroController extends RestfulController<Cobro>{
 
     def disponibles() {
         log.debug('Disponibles {}', params)
-        String hql = 'from Cobro c where c.importe - c.aplicado -c.diferencia > 0  and tipo like ? order by fecha asc'
+        String hql = 'from Cobro c where c.importe - c.aplicado - c.diferencia > 0  and tipo like ? order by fecha asc'
         params.max = 300
         String cartera = params.cartera ?: '%'
 
