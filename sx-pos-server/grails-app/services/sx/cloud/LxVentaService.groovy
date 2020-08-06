@@ -191,6 +191,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         ventaDet.descuentoOriginal = partida.descuentoOriginal
         ventaDet.importeCortes = partida.importeCortes
         ventaDet.descuentoImporte = partida.descuentoImporte
+        ventaDet.descuento = partida.descuento
         ventaDet.nacional = partida.nacional
         ventaDet.precioLista = partida.precioLista
         ventaDet.comentario = partida.comentario
