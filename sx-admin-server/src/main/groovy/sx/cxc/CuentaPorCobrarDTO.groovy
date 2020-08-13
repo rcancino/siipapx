@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 import groovy.transform.Canonical
 import groovy.transform.ToString
 import sx.cfdi.CfdiDto
+import sx.core.Cliente
 
 // @CompileStatic
 @Canonical
@@ -12,7 +13,8 @@ class CuentaPorCobrarDTO {
     String id
     String clienteId
     String nombre
-
+    String cfdiMail
+    Map cliente
     String sucursal
     String tipo
     String tipoDocumento
@@ -37,6 +39,7 @@ class CuentaPorCobrarDTO {
     String cancelacionUsuario
     String cancelacionMotivo
     Date juridico = null
+    String comentario
     CfdiDto cfdi
 
 
@@ -45,7 +48,9 @@ class CuentaPorCobrarDTO {
     CuentaPorCobrarDTO(CuentaPorCobrar cxc) {
         id = cxc.id
         clienteId = cxc.cliente.id
+        cfdiMail = cxc.cliente.cfdiMail
         nombre = cxc.cliente.nombre
+        cliente = [id: cxc.cliente.id, nombre: cxc.cliente.nombre, cfdiMail: cxc.cliente.cfdiMail]
         sucursal = cxc.sucursal.nombre
         tipo = cxc.tipo
         tipoDocumento = cxc.tipoDocumento
@@ -60,7 +65,7 @@ class CuentaPorCobrarDTO {
         moneda = cxc.moneda
         tipoDeCambio = cxc.tipoDeCambio
         importe = cxc.importe
-        this.descuentoImporte = cxc.descuentoImporte
+        descuentoImporte = cxc.descuentoImporte
         subtotal = cxc.subtotal
         impuesto = cxc.impuesto
         total = cxc.total
@@ -71,6 +76,7 @@ class CuentaPorCobrarDTO {
         cancelacionUsuario = cxc.cancelacionUsuario
         cancelacionMotivo = cxc.cancelacionMotivo
         juridico = cxc.juridico
+        comentario = cxc.comentario
     }
 }
 

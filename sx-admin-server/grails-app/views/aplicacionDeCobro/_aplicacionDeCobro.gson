@@ -7,7 +7,7 @@ json g.render(aplicacionDeCobro, [excludes:['cuentaPorCobrar']]){
     cuentaPorCobrar g.render(aplicacionDeCobro.cuentaPorCobrar)
     sucursal aplicacionDeCobro.cuentaPorCobrar.sucursal.nombre
     fechaDocumento aplicacionDeCobro.cuentaPorCobrar.fecha
-    serieDocumento aplicacionDeCobro.cuentaPorCobrar.tipoDocumento
+    serieDocumento aplicacionDeCobro.cuentaPorCobrar.tipo
     folioDocumento aplicacionDeCobro.cuentaPorCobrar.documento
     totalDocumento aplicacionDeCobro.cuentaPorCobrar.total
     pagosDocumento aplicacionDeCobro.cuentaPorCobrar.pagos

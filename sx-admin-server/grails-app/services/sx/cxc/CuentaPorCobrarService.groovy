@@ -7,6 +7,7 @@ import grails.gorm.transactions.ReadOnly
 
 import sx.core.Cliente
 import sx.core.AppConfig
+import com.luxsoft.utils.Periodo
 
 @Secured("IS_AUTHENTICATED_ANONYMOUSLY")
 @Slf4j
@@ -36,6 +37,24 @@ class CuentaPorCobrarService {
 
         }
         return cxc
+    }
+
+    @ReadOnly
+    List<CuentaPorCobrarDTO> findAll(String cartera, Periodo periodo, Map params = [max: 100] ) {
+        List<CuentaPorCobrar> rows = CuentaPorCobrar
+                .findAll(
+                """from CuentaPorCobrar c 
+                  where c.fecha between :fechaInicial and :fechaFinal 
+                    and c.tipo = :tipo 
+                    order by c.fecha
+                """
+                , [tipo: cartera, 
+                fechaInicial:periodo.fechaInicial, 
+                fechaFinal:periodo.fechaFinal]
+                , params)
+        List<CuentaPorCobrarDTO> res = rows.collect { cxc -> new CuentaPorCobrarDTO(cxc)}
+        log.info('Registros de cartera: {}', res.size())
+        return res
     }
 
     @ReadOnly

@@ -5,6 +5,7 @@ import groovy.transform.ToString
 import sx.cfdi.Cfdi
 import sx.core.Cliente
 import sx.core.Sucursal
+import sx.core.Venta
 
 @ToString(excludes = ['id,version,sw2,dateCreated,lastUpdated'],includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id'])
@@ -139,6 +140,10 @@ class CuentaPorCobrar {
         return 0
     }
 
+
+    Venta findVenta(){
+        return Venta.where{cuentaPorCobrar == this}.find()
+    }
 
 
 

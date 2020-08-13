@@ -9,12 +9,12 @@ grails {
     }
 }
 
-version "1.0.48"
+version "2.0.0"
 
 dependencies {
     //compile project(':sx-core-plugin')
-    compile 'org.grails.plugins:spring-security-core:3.2.0'
-    compile "org.grails.plugins:spring-security-rest:2.0.0.M2"
+    // compile 'org.grails.plugins:spring-security-core:3.2.1'
+    compile "org.grails.plugins:spring-security-rest:2.0.0.RC1"
 
     compile 'lx.cfdi:v33:1.0.5'
 

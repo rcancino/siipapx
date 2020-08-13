@@ -1,14 +1,19 @@
 package sx.cxc
 
-import com.luxsoft.utils.ImporteALetra
-import com.luxsoft.utils.Periodo
+import groovy.util.logging.Slf4j
+
 import grails.rest.RestfulController
 import grails.plugin.springsecurity.annotation.Secured
-import sx.core.Cliente
-import sx.core.Sucursal
-import sx.reports.ReportService
 
-@Secured("hasRole('ROLE_POS_USER')")
+import sx.reports.ReportService
+import sx.core.Cliente
+import sx.core.Venta
+import sx.core.Sucursal
+import com.luxsoft.utils.ImporteALetra
+import com.luxsoft.utils.Periodo
+
+@Secured("hasAnyRole('ROLE_ADMIN', 'ROLE_CXC', 'ROLE_CXC_ADMIN')")
+@Slf4j
 class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
     static responseFormats = ['json']
@@ -24,8 +29,14 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
     }
 
     @Override
-    protected List<CuentaPorCobrar> listAllResources(Map params) {
+    def show() {
+        CuentaPorCobrar cxc = CuentaPorCobrar.get(params.id)
+        [cxc: cxc]
+    }
 
+    @Override
+    protected List<CuentaPorCobrar> listAllResources(Map params) {
+       
         def query = CuentaPorCobrar.where {}
         params.sort = params.sort ?:'lastUpdated'
         params.order = params.order ?:'desc'
@@ -39,6 +50,17 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
             query = query.where { cliente.id == params.cliente}
         }
         return query.list(params)
+        /*
+        params.sort = params.sort ?: 'lastUpdated'
+        params.order = params.order ?:'desc'
+        params.max = params.max ?: 100
+        log.info('[GET - CXC] {}', params)
+        def periodo = params.periodo
+        def cartera = params.cartera
+        def res = cuentaPorCobrarService.findAll(cartera, periodo, params)
+        log.infoç(res)
+        respond res
+        */
     }
 
     def search() {
@@ -95,6 +117,16 @@ class CuentaPorCobrarController extends RestfulController<CuentaPorCobrar>{
 
         respond query.list(params)
 
+    }
+
+    def facturas() {
+        params.sort = params.sort ?: 'lastUpdated'
+        params.order = params.order ?:'desc'
+        params.max = params.max ?: 200
+        def periodo = params.periodo
+        def cartera = params.cartera
+        log.info('Facturas [GET] {}', params)
+        respond cuentaPorCobrarService.findAll(cartera, periodo, params)
     }
 
     def pendientes(Cliente cliente) {

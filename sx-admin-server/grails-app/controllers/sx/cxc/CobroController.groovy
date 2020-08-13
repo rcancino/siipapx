@@ -1,5 +1,7 @@
 package sx.cxc
 
+import groovy.util.logging.Slf4j
+import groovy.transform.ToString
 
 import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
 import com.luxsoft.utils.Periodo
@@ -15,8 +17,9 @@ import sx.reports.ReportService
 import sx.core.Sucursal
 
 
-@Secured("hasRole('ROLE_CXC_USER')")
+@Secured("hasAnyRole('ROLE_ADMIN', 'ROLE_CXC', 'ROLE_CXC_ADMIN')")
 // @GrailsCompileStatic
+@Slf4j
 class CobroController extends RestfulController<Cobro>{
 
     CobroService cobroService
@@ -66,15 +69,6 @@ class CobroController extends RestfulController<Cobro>{
         params.order = params.order ?:'asc'
 
         def query = Cobro.where { formaDePago != 'PAGO_DIF' }
-        /*
-        if(params.cartera) {
-            String tipoCartera = params.cartera
-            if(tipoCartera == 'CON') {
-                tipoCartera = 'COD'
-            }
-            query = query.where { tipo == tipoCartera}
-        }
-        */
 
         if(params.cartera){
             def cart = params.cartera
@@ -122,13 +116,7 @@ class CobroController extends RestfulController<Cobro>{
 
 
 
-    protected Cobro createResource() {
-        log.debug('Generando cobro: {}', params)
-        Cobro cobro =  new Cobro()
-        bindData cobro, getObjectToBind()
-        cobro.sucursal = AppConfig.first().sucursal
-        return cobro
-    }
+    
 
     def cobrosMonetarios(CobranzaPorFechaCommand command) {
         // log.debug('Cobros {}', params)
@@ -166,21 +154,28 @@ class CobroController extends RestfulController<Cobro>{
         respond query.list(params)
     }
 
-
-
-
     protected Cobro saveResource(Cobro resource) {
         return cobroService.save(resource)
     }
 
 
     protected Cobro updateResource(Cobro resource) {
-        if (resource.pendientesDeAplicar) {
-            // log.debug('Facturas por aplicar : {}', resource.pendientesDeAplicar)
-            return cobroService.registrarAplicacion(resource)
+        return cobroService.update(resource)
+    }
+
+    /**
+    * Elimina multiples cobros aplicados
+    * VALIDADO
+    */
+    def eliminarAplicacion(EliminarAplicacionesCommand command) {
+        log.info('Elimiando aplicacion: {}', command)
+        if(command == null) {
+            notFound()
+            return
         }
-        // return super.updateResource(resource)
-        return cobroService.save(resource)
+        Cobro cobro = cobroService.eliminarAplicacion(command.cobro, command.aplicaciones)
+        cobro.refresh()
+        respond(cobro, view: 'show')
     }
 
     def saldar(Cobro cobro){
@@ -227,7 +222,7 @@ class CobroController extends RestfulController<Cobro>{
 
     def timbrar(Cobro cobro) {
         cobro = cobroService.timbrar(cobro)
-        forward action: 'show', id: cobro.id
+        respond cobro, view: 'show'
     }
 
     def timbradoBatch(TimbradoBatchCommand command) {
@@ -247,21 +242,15 @@ class CobroController extends RestfulController<Cobro>{
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'ReciboDePagoCFDI33.pdf')
     }
 
+    /**
+    * Aplica cobros a multiples facturas controlando el importe por aplicar
+    * VALIDADO: 12/08/2020
+    */
     def aplicar(AplicarCobroCommand command) {
         log.debug('Aplicar cobro: {} a cuentas: {}', command.cobro.id, command.cuentas.collect{it.id}.join(','))
         Cobro cobro = cobroService.registrarAplicacion(command.cobro, command.cuentas)
         cobro.refresh()
-        forward action: 'show', id: command.cobro.id
-    }
-
-    def eliminarAplicacion(AplicacionDeCobro aplicacionDeCobro) {
-        if(aplicacionDeCobro == null) {
-            notFound()
-            return
-        }
-        Cobro cobro = cobroService.eliminarAplicacion(aplicacionDeCobro)
-        cobro.refresh()
-        forward action: 'show', id: cobro.id
+        respond(cobro, view: 'show')
     }
 
 
@@ -272,11 +261,18 @@ class CobroController extends RestfulController<Cobro>{
         respond([message: message], status: 500)
     }
 
-    // def show(Cobro cobro) {
-    //     log.info('Show2 cobro: {} {}', cobro.id, cobro.cliente.nombre)
-    //     respond(cobro, view: 'get')
-    // }
+    
  }
+
+// @ToString(includeNames=true,includePackage=false)
+class EliminarAplicacionesCommand {
+    Cobro cobro
+    List<AplicacionDeCobro> aplicaciones
+
+    String toString() {
+        "Cobro: ${cobro?.id} Aplicaciones: ${aplicaciones?.size()}"
+    }
+}
 
 class PorSucursalFechaRepCommand {
     Sucursal sucursal

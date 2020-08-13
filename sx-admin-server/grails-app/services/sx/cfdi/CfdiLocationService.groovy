@@ -60,7 +60,8 @@ class CfdiLocationService {
 
     def getCfdiMainDir() {
         if(Environment.current == Environment.DEVELOPMENT){
-            return System.properties['user.home'] + '/cfdis'
+            String userHome = System.getProperty('user.home')
+            return "${userHome}/cfdis"
         } else {
             return getConfig().cfdiLocation
         }

@@ -1,0 +1,23 @@
+import sx.core.Venta
+
+model {
+    Venta venta
+}
+
+json g.render(venta, [excludes:['cuentaPorCobrar', 'cliente', 'sucursal', 'moneda','vendedor', 'envio', 'partidas']]){
+    
+    moneda venta.moneda.currencyCode
+    if(venta.envio) {
+        envio {
+            id venta.envio.id
+            condiciones venta.envio.condiciones
+            direccion g.render(venta.envio.direccion)
+        }
+    }
+    // partidas g.render(venta.partidas, [deep: true,excludes:['venta',  'inventario', 'sucursal', 'corte']] ) 
+    
+    partidas g.render(template:"facturaDet", collection: venta.partidas, var:'ventaDet')
+    
+    folio venta.folio
+
+}

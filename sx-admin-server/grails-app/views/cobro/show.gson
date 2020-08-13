@@ -4,7 +4,7 @@ model {
     Cobro cobro
 }
 
-json g.render(cobro, [deep:false, excludes:['cliente', 'sucursal', 'aplicaciones', 'moneda', 'transferencia']]){
+json g.render(cobro, [deep:false, excludes:['cliente', 'sucursal', 'aplicaciones', 'moneda', 'transferencia', 'cfdi']]){
     sucursal  {
         id cobro.sucursal.id
         nombre cobro.sucursal.nombre
@@ -25,8 +25,14 @@ json g.render(cobro, [deep:false, excludes:['cliente', 'sucursal', 'aplicaciones
         cheque g.render(cobro.cheque)
         bancoOrigen cobro.cheque.bancoOrigen.nombre
     }
+    cfdi g.render(cobro.cfdi)
     if(cobro.cfdi) {
         recibo cobro.cfdi.uuid
+    }
+    if( ['EFECTIVO', 'CHEQUE', 'TRANSFERENCIA', 'TARJETA_DEBITO', 'TARJETA_CREDITO'].contains(cobro.formaDePago )) {
+        timbrable true
+    } else {
+        timbrable false
     }
 
 }

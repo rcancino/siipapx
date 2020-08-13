@@ -52,8 +52,6 @@ class  Cobro {
 
     String comentario
 
-    List<CuentaPorCobrar> pendientesDeAplicar = []
-
     Date fechaDeAplicacion
 
     String ingreso
@@ -62,7 +60,6 @@ class  Cobro {
 
     Date dateCreated
     Date lastUpdated
-
     String createUser
     String updateUser
 
@@ -97,12 +94,12 @@ class  Cobro {
         cliente index: 'COBRO_IDX2'
         formaDePago index: 'COBRO_IDX3'
         aplicaciones cascade: "all-delete-orphan"
-        aplicado formula:'(select COALESCE(sum(x.importe * x.tipo_de_cambio),0) from aplicacion_de_cobro x where x.cobro_id=id)'
-        saldo formula:'importe - diferencia - (select COALESCE(sum(x.importe * x.tipo_de_cambio),0) from aplicacion_de_cobro x where x.cobro_id=id)'
+        aplicado formula:'(select IFNULL( sum(x.importe * IFNULL(x.tipo_de_cambio, 1.0)), 0) from aplicacion_de_cobro x where x.cobro_id=id)'
+        saldo formula:'importe - diferencia -  (select IFNULL( sum(x.importe * IFNULL(x.tipo_de_cambio, 1)), 0)  from aplicacion_de_cobro x where x.cobro_id=id)'
         diferenciaFecha type: 'date'
     }
 
-    static transients = ['disponible', 'pendientesDeAplicar', 'fechaDeAplicacion', 'ingreso']
+    static transients = ['disponible', 'fechaDeAplicacion', 'ingreso']
 
     BigDecimal getDisponible(){
         return this.importe - this.aplicado - this.diferencia

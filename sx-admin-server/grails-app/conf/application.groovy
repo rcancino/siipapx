@@ -1,8 +1,9 @@
-grails.plugin.springsecurity.active = false
+grails.plugin.springsecurity.active = true
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'sx.security.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'sx.security.UserRole'
 grails.plugin.springsecurity.authority.className = 'sx.security.Role'
 grails.plugin.springsecurity.rest.token.storage.jwt.expiration = 3600 * 15
+grails.plugin.springsecurity.rest.token.storage.jwt.secret = 'sx.security.version2.uuid2423994939129'
 grails.plugin.springsecurity.filterChain.chainMap = [
     [
             pattern: '/assets/**',

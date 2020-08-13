@@ -6,6 +6,7 @@ import com.luxsoft.cfdix.v33.NotaDeCargoBuilder
 import com.luxsoft.cfdix.v33.ReciboDePagoBuilder
 import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import org.springframework.web.servlet.i18n.FixedLocaleResolver
+import sx.security.UserInfoClaimpProvider
 
 // Place your Spring DSL code here
 beans = {
@@ -38,4 +39,6 @@ beans = {
         defaultLocale = new Locale('es', 'MX')
         Locale.setDefault(defaultLocale)
     }
+
+    userInfoClaimpProvider(UserInfoClaimpProvider) {}
 }

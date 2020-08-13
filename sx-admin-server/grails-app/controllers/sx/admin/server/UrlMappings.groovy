@@ -29,8 +29,6 @@ class UrlMappings {
         "/api/clientes/$id/cxc"(controller: 'cliente', action: 'cxc', method: 'GET')
         "/api/clientes/$id/cobros"(controller: 'cliente', action: 'cobros', method: 'GET')
         "/api/clientes/$id/notas"(controller: 'cliente', action: 'notas', method: 'GET')
-        
-
         "/api/clientes/estadoDeCuenta"(controller: "cliente", action: 'estadoDeCuenta', method: 'GET')
 
         // SAT
@@ -40,18 +38,14 @@ class UrlMappings {
         // Tesoreria
         "/api/tesoreria/bancos"(resources: "banco")
         "/api/tesoreria/cuentas"(resources: "cuentaDeBanco")
-        "/api/tesoreria/fichas"(resources: "ficha"){
-            "/cheques"( controller: 'ficha', action: 'cheques')
-            "/ingreso"( controller: 'ficha', action: 'ingreso')
-        }
-        "/api/tesoreria/fichas/generar"(controller: "ficha", action: 'generar', method: 'GET')
-        "/api/tesoreria/fichas/reporteDeRelacionDeFichas"(controller: "ficha", action: 'reporteDeRelacionDeFichas', method: 'GET')
-
+        
+        
         //Comprobantes fiscales de proveedores CFDI's
         "/api/cfdis"(resources: "cfdi")
         "/api/cfdis/mostrarXml/$id?"(controller:"cfdi", action:"mostrarXml")
         "/api/cfdis/descargarXml/$id?"(controller:"cfdi", action:"descargarXml", method: 'GET')
         "/api/cfdis/print/$id"(controller: "cfdi", action: 'print', method: 'GET')
+        "/api/cfdis/enviarComprobantes"(controller:"cfdi", action:"enviarComprobantes", method: 'PUT')
         "/api/cfdis/enviarEmail/$id?"(controller:"cfdi", action:"enviarEmail")
         "/api/cfdis/envioBatch"(controller: "cfdi", action: 'envioBatch', method: 'PUT')
         "/api/cfdis/envioBatchNormal"(controller: "cfdi", action: 'envioBatchNormal', method: 'PUT')
@@ -78,24 +72,16 @@ class UrlMappings {
         "/api/tesoreria/solicitudes/cobranzaCod"(controller: 'solicitudDeDeposito', action: 'cobranzaCod',  method: 'GET')
         "/api/tesoreria/solicitudes/disponibles"(controller: 'solicitudDeDeposito', action: 'disponibles',  method: 'GET')
         "/api/tesoreria/solicitudes/ventasDiarias"(controller: 'solicitudDeDeposito', action: 'ventasDiarias',  method: 'GET')
-
-        "/api/tesoreria/cortesTarjeta"(resources: 'corteDeTarjeta')
-        "/api/tesoreria/cortesTarjeta/pendientes"( controller: 'corteDeTarjeta', action: 'pendientes')
-        "/api/tesoreria/cortesTarjeta/generarCortes"( controller: 'corteDeTarjeta', action: 'generarCortes', method: 'POST')
-        "/api/tesoreria/cortesTarjeta/ajustarCobro"( controller: 'corteDeTarjeta', action: 'ajustarCobro', method: 'PUT')
-        "/api/tesoreria/cortesTarjeta/aplicar/$id"( controller: 'corteDeTarjeta', action: 'aplicar', method: 'PUT')
-        "/api/tesoreria/cortesTarjeta/cancelarAplicacion/$id"( controller: 'corteDeTarjeta', action: 'cancelarAplicacion', method: 'PUT')
-        "/api/tesoreria/cortesTarjeta/reporteDeComisionesTarjeta"(controller: 'corteDeTarjeta', action: 'reporteDeComisionesTarjeta', method: 'GET')
-
-        "/api/tesoreria/movimientosDeTesoreria"(resources: 'movimientoDeTesoreria')
+        
 
         // CXC
-        "/api/cxc/cobro"(resources: "cobro") {
-            "aplicaciones"(resources: 'aplicacionDeCobro', excludes:['create', 'save', 'edit','patch'])
+        "/api/cxc/cobro"(resources: "cobro", excludes:['create', 'save','edit','patch']) {
+            // "aplicaciones"(resources: 'aplicacionDeCobro', excludes:['create', 'edit', 'patch'])
         }
         "/api/cxc/cobro/cobrosMonetarios"(controller: "cobro", action: 'cobrosMonetarios', method: 'GET')
         "/api/cxc/cobro/disponibles"(controller: "cobro", action: 'disponibles', method: 'GET')
         "/api/cxc/cobro/aplicar/$id"(controller: "cobro", action: 'aplicar', method: 'PUT')
+        
         "/api/cxc/cobro/eliminarAplicacion/$id"(controller: "cobro", action: 'eliminarAplicacion', method: 'PUT')
         "/api/cxc/cobro/saldar/$id"(controller: "cobro", action: 'saldar', method: 'PUT')
         "/api/cxc/cobro/registrarChequeDevuelto/$id"(controller: "cobro", action: 'registrarChequeDevuelto', method: 'PUT')
@@ -131,6 +117,7 @@ class UrlMappings {
 
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/search"(controller:'cuentaPorCobrar', action: 'search', method: 'GET')
+        "/api/cuentasPorCobrar/facturas"(controller:'cuentaPorCobrar', action: 'facturas', method: 'GET')
         "/api/cuentasPorCobrar/antiguedad"(controller: 'cuentaPorCobrar', action: 'antiguedad', method: 'GET')
         /**  Reportes Antigueadd y CXC **/
         "/api/cuentasPorCobrar/antiguedad/print"(controller: 'cuentaPorCobrar', action: 'printAntiguedad', method: 'GET')
@@ -168,11 +155,6 @@ class UrlMappings {
         "/api/cxc/comisiones/generarComisiones"(controller: 'comision', action: 'generarComisiones', method: 'GET')
         "/api/cxc/comisiones/reporteDeComisiones"(controller: 'comision', action: 'reporteDeComisiones', method: 'GET')
 
-
-        //Existencias
-        "/api/existencias"(resources: "existencia")
-        "/api/existencias/$producto/$year/$month"(controller: 'existencia', action: 'buscarExistencias')
-
         //Bonificaciones mejores clientes
         "/api/crm/mejoresClientes"(resources: "bonificacionMC"){
             "/aplicaciones"(resources: 'bonificacionMCAplicacion', excludes:['create', 'edit','patch'])
@@ -200,6 +182,7 @@ class UrlMappings {
 
 
         "/"(controller: 'application', action:'index')
+        "/api/session"(controller: 'application', action: 'session')
         "500"(view: '/error')
         "404"(view: '/notFound')
     }

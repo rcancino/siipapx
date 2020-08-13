@@ -1,15 +1,15 @@
 package sx.integracion
 
-import com.luxsoft.utils.Periodo
+import java.sql.SQLException
 import groovy.sql.Sql
 import groovy.util.logging.Slf4j
-import org.apache.commons.lang.exception.ExceptionUtils
+
 import org.springframework.stereotype.Component
+import org.apache.commons.lang.exception.ExceptionUtils
+
 import sx.bi.VentaPorFacturista
 import sx.core.Sucursal
-
-import java.sql.SQLException
-
+import com.luxsoft.utils.Periodo
 
 @Component
 @Slf4j

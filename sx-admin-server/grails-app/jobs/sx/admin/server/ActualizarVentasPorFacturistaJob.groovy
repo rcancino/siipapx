@@ -1,7 +1,11 @@
 package sx.admin.server
 
 import groovy.util.logging.Slf4j
+
+import grails.util.Environment
+
 import org.apache.commons.lang3.exception.ExceptionUtils
+
 import sx.integracion.VentaPorFacturistaIntegration
 
 @Slf4j
@@ -20,15 +24,23 @@ class ActualizarVentasPorFacturistaJob {
      *                  `- Second, 0-59
      */
     static triggers = {
-        cron name: 'everyTrigger', cronExpression: "0 0 8,11,13,17,18,20 ? * MON-SAT"
+        cron name: 'everyTrigger', cronExpression: "0 0 8,20 ? * MON-SAT"
     }
 
     def execute() {
         try {
-            ventaPorFacturistaIntegration.actualizar(new Date())
+            if(ejecutar()) {
+                ventaPorFacturistaIntegration.actualizar(new Date())
+            }
         }catch (Exception ex) {
             String msg = ExceptionUtils.getRootCauseMessage(ex)
             log.error(msg)
         }
+    }
+
+    Boolean ejecutar() {
+        Boolean produccion = (Environment.current == Environment.PRODUCTION)
+        Boolean queretaro = Environment.current.name == 'queretaro'
+        return !(produccion || queretaro)
     }
 }

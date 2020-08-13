@@ -70,7 +70,6 @@ class V33PdfGeneratorPos {
                 res.pedimento = data
             }
             if (venta) {
-                log.info('Preparando venta: {} con {} partidas', venta.id, venta.partidas.size());
                 VentaDet partida = venta.partidas.get(index++)
                 if (partida) {
                     if (partida.corte) {

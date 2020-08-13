@@ -1,8 +1,12 @@
 package sx.cloud
 
 import groovy.util.logging.Slf4j
+import groovy.json.JsonSlurper
 
 import org.springframework.beans.factory.annotation.Value
+
+import grails.compiler.GrailsCompileStatic
+import grails.util.Environment
 
 import com.mailjet.client.errors.MailjetException
 import com.mailjet.client.errors.MailjetSocketTimeoutException
@@ -14,8 +18,15 @@ import com.mailjet.client.resource.Emailv31
 
 import org.json.JSONArray
 import org.json.JSONObject
+
+import sx.cfdi.Cfdi
+import sx.cfdi.MailjetLog
+import sx.cfdi.EnvioDeComprobantes
+import sx.cfdi.CfdiLocationService
+import sx.cfdi.CfdiPrintService
   
 @Slf4j
+// @GrailsCompileStatic
 class MailJetService {
 
   @Value('${MJ_APIKEY_PUBLIC}')
@@ -24,8 +35,131 @@ class MailJetService {
   @Value('${MJ_APIKEY_PRIVATE}')
   String mailJetPrivateKey;
 
-  @Value('${MJ_SENDER:luxsoft.cancino@gmail.com}')
+  @Value('${MJ_DEFAUL_SENDER}')
   String mailJetDefaultSender;
+
+  CfdiLocationService cfdiLocationService
+  CfdiPrintService cfdiPrintService
+
+  private MailjetClient client 
+
+
+
+  def enviarComprobantes(EnvioDeComprobantes command) {
+    if(!command.source) command.source = mailJetDefaultSender 
+    String message = buildDefaultMessage(command)
+    log.debug('Enviando {} comprobantes a: {} email:{}', command.cfdis.size(), command.nombre, command.target)
+    
+    JSONArray attachments = buildAttachments(command)
+    
+    MailjetRequest request = new MailjetRequest(Emailv31.resource)
+      .property(Emailv31.MESSAGES, new JSONArray()
+                .put(new JSONObject()
+                    .put(Emailv31.Message.FROM, new JSONObject()
+                        .put("Email", command.source)
+                        .put("Name", "Papel S.A. de C.V. (Ventas)"))
+                    .put(Emailv31.Message.TO, new JSONArray()
+                        .put(new JSONObject()
+                            .put("Email", command.target)
+                            .put("Name", command.nombre)))
+                    .put(Emailv31.Message.SUBJECT, "Comprobantes electrónicos")
+                    .put(Emailv31.Message.TEXTPART, message)
+                    // .put(Emailv31.Message.HTMLPART, "<h3>Dear passenger 1, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!</h3><br />May the delivery force be with you!")
+                    .put(Emailv31.Message.ATTACHMENTS, attachments)));
+    
+    request.property(Emailv31.SANDBOX_MODE, isSandboxMode())  
+    MailjetResponse response = getClient().post(request);
+    def status = response.getStatus()
+    def data = response.getData()
+    log.info('Response Status: {}', status)
+    // log.info('Response Data: {}', response.getData())
+    def mLog = buildLog(data, command)
+    mLog.statusCode = status
+
+
+    if(status == 200 ){
+      log.info('Envio exitoso actualizando cfdis')
+      command.cfdis.each {
+        
+        def cfdi = Cfdi.get(it.toString())
+        cfdi.enviado = new Date()
+        cfdi.email = command.target
+        cfdi.save flush: true
+        // emaiLog.save failOnError: true, flush: true
+      }
+    }
+    mLog.save failOnError: true, flush: true
+    return mLog
+  }
+
+  protected JSONArray buildAttachments(EnvioDeComprobantes command) {
+    JSONArray attachments = new JSONArray()
+    command.cfdis.each {
+      // def pdfEncoded = new URL(pdfPath).getBytes().encodeBase64()
+      Cfdi cfdi = Cfdi.get(it)
+      Byte[] xml = cfdiLocationService.getXml(cfdi)
+      Byte[] pdf = cfdiPrintService.getPdf(cfdi)
+      String factura = cfdi.fileName
+      def xmlEncoded = xml.encodeBase64()
+      def pdfEncoded = pdf.encodeBase64()
+        attachments.put(new JSONObject()
+          .put("ContentType", "application/xml")
+          .put("Filename", "${factura}")
+          .put("Base64Content", xmlEncoded)
+        )
+        .put(new JSONObject()
+          .put("ContentType", "application/pdf")
+          .put("Filename", "${factura}.pdf")
+          .put("Base64Content", pdfEncoded)
+        )
+    }
+    return attachments
+  }
+
+  protected buildLog(JSONArray data, EnvioDeComprobantes command) {
+
+    def mailjetLog = new MailjetLog()
+    mailjetLog.target = command.target
+    mailjetLog.nombre = command.nombre
+    mailjetLog.cfdis = command.cfdis
+
+    JsonSlurper slurper = new JsonSlurper()
+    String jsonString = data.toString()
+    List parsedJson = slurper.parseText(jsonString) 
+    Map xmap = parsedJson.get(0)
+
+    log.info('Parsed Json: {}', parsedJson)
+
+    String status = xmap['Status']
+    mailjetLog.status = status
+
+    log.info('Estatus {}', status)
+    if (status == 'error') {
+      def errors = xmap['Errors']
+      if(errors) {
+        log.info('Errors: {}', errors)
+        StringBuffer sb = new StringBuffer()
+        errors.each {
+          def errorMessage = it['ErrorMessage']
+          sb << errorMessage
+        }
+        mailjetLog.messageErrors = sb.toString().take(255)
+      }
+    } else if(status =='success') {
+      def to = xmap['To']
+      if(to) {
+        // log.info('MessageHref: {}', to.MessageHref.class, to.MessageUUID, to.MessageID)
+        mailjetLog.messageHref = to.MessageHref[0]
+        mailjetLog.messageUUID = to.MessageUUID[0]
+        mailjetLog.messageID = to.MessageID[0]
+      }
+    }
+    
+    log.info('MailLog: {}', mailjetLog)
+    return mailjetLog
+  }
+
+  
 
 
   /* *
@@ -55,20 +189,18 @@ class MailJetService {
     def pdfEncoded = new URL(pdfPath).getBytes().encodeBase64()
     def xmlEncoded = new URL(xmlPath).getBytes().encodeBase64()
     
-    
-    MailjetClient client = new MailjetClient(mailJetPublicKey,mailJetPrivateKey,new ClientOptions("v3.1"))
 
     MailjetRequest request = new MailjetRequest(Emailv31.resource)
       .property(Emailv31.MESSAGES, new JSONArray()
                 .put(new JSONObject()
                     .put(Emailv31.Message.FROM, new JSONObject()
                         .put("Email", source)
-                        .put("Name", "Papel S.A. (Ventas)"))
+                        .put("Name", "Papel S.A. de C.V. (Ventas)"))
                     .put(Emailv31.Message.TO, new JSONArray()
                         .put(new JSONObject()
                             .put("Email", targetEmail)
                             .put("Name", targetName)))
-                    .put(Emailv31.Message.SUBJECT, "Envío de CFDI: ${factura}")
+                    .put(Emailv31.Message.SUBJECT, "Envío de comprobantes fiscales")
                     .put(Emailv31.Message.TEXTPART, message)
                     // .put(Emailv31.Message.HTMLPART, "<h3>Dear passenger 1, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!</h3><br />May the delivery force be with you!")
                     .put(Emailv31.Message.ATTACHMENTS, new JSONArray()
@@ -83,7 +215,7 @@ class MailJetService {
                         )
                     ));
 
-      MailjetResponse response = client.post(request);
+      MailjetResponse response = getClient().post(request);
       def status = response.getStatus()
       def data = response.getData()
       log.info('Response Status: {}', status)
@@ -91,46 +223,22 @@ class MailJetService {
       return [status: status, data: data]
   }
 
-
-  def enviarCotizacion(
-      String targetEmail, 
-      String pedido,
-      String pdfEncoded,
-      String targetName = 'NOMBRE'
-      ) throws MailjetException, MailjetSocketTimeoutException {
-
-    String source = this.mailJetDefaultSender
-    String message = """Apreciable cliente por este medio le hacemos llegar la siguiente cotización
+  String buildDefaultMessage(EnvioDeComprobantes command) {
+    """Apreciable cliente por este medio le hacemos llegar ${command.cfdis.size()} comprobantes fiscales. 
+      Este correo se envía de manera autmática favor de no responder a la dirección del mismo. 
+      Cualquier duda o aclaración la puede dirigir a: servicioaclientes@papelsa.com.mx 
             """
-    
-    MailjetClient client = new MailjetClient(mailJetPublicKey,mailJetPrivateKey,new ClientOptions("v3.1"))
+  }
 
-    MailjetRequest request = new MailjetRequest(Emailv31.resource)
-      .property(Emailv31.MESSAGES, new JSONArray()
-                .put(new JSONObject()
-                    .put(Emailv31.Message.FROM, new JSONObject()
-                        .put("Email", source)
-                        .put("Name", "Papel S.A. (Ventas)"))
-                    .put(Emailv31.Message.TO, new JSONArray()
-                        .put(new JSONObject()
-                            .put("Email", targetEmail)
-                            .put("Name", targetName)))
-                    .put(Emailv31.Message.SUBJECT, "Envío de cotización: ${pedido}")
-                    .put(Emailv31.Message.TEXTPART, message)
-                    .put(Emailv31.Message.ATTACHMENTS, new JSONArray()
-                        .put(new JSONObject()
-                            .put("ContentType", "application/pdf")
-                            .put("Filename", "PED_${pedido}.pdf")
-                            .put("Base64Content", pdfEncoded))
-                        )
-                    ));
-
-      MailjetResponse response = client.post(request);
-      def status = response.getStatus()
-      def data = response.getData()
-      log.info('Response Status: {}', status)
-      log.info('Response Data: {}', response.getData())
-      return [status: status, data: data]
+  MailjetClient getClient() {
+    if(client == null) {
+      this.client = new MailjetClient(mailJetPublicKey,mailJetPrivateKey,new ClientOptions("v3.1"))
+    } 
+    return this.client
+  }
+  
+  Boolean isSandboxMode() {
+      return Environment.isDevelopmentMode()
   }
   
 

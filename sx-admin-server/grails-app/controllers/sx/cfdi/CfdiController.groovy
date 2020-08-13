@@ -1,19 +1,23 @@
 package sx.cfdi
 
 import groovy.util.logging.Slf4j
+import groovy.transform.ToString
 
+
+import org.springframework.http.HttpStatus
+
+import grails.gorm.transactions.Transactional
+import grails.plugin.springsecurity.annotation.Secured
+import grails.rest.RestfulController
+import grails.transaction.NotTransactional
+
+import org.apache.commons.lang3.exception.ExceptionUtils
+
+import com.luxsoft.cfdix.v33.V33PdfGenerator
 import com.luxsoft.cfdix.v33.NotaDeCargoPdfGenerator
 import com.luxsoft.cfdix.v33.NotaPdfGenerator
 import com.luxsoft.cfdix.v33.ReciboDePagoPdfGenerator
-import grails.gorm.transactions.Transactional
-import grails.plugin.springsecurity.annotation.Secured
 
-import com.luxsoft.cfdix.v33.V33PdfGenerator
-import grails.rest.RestfulController
-import grails.transaction.NotTransactional
-import groovy.transform.ToString
-import org.apache.commons.lang3.exception.ExceptionUtils
-import org.springframework.http.HttpStatus
 import sx.core.Cliente
 import sx.core.Venta
 import sx.cxc.Cobro
@@ -21,9 +25,10 @@ import sx.cxc.CuentaPorCobrar
 import sx.cxc.NotaDeCargo
 import sx.cxc.NotaDeCredito
 import sx.reports.ReportService
+import sx.cloud.MailJetService
 
 
-@Secured("hasRole('ROLE_POS_USER')")
+@Secured("hasAnyRole('ROLE_ADMIN', 'ROLE_CXC', 'ROLE_CXC_ADMIN')")
 @Slf4j
 class CfdiController extends RestfulController{
 
@@ -40,6 +45,8 @@ class CfdiController extends RestfulController{
     CfdiMailService cfdiMailService
 
     NotaDeCargoPdfGenerator notaDeCargoPdfGenerator
+
+    MailJetService mailJetService
 
     static responseFormats = ['json']
 
@@ -124,6 +131,25 @@ class CfdiController extends RestfulController{
         Map parametros = data['PARAMETROS']
         parametros.LOGO = realPath + '/PAPEL_CFDI_LOGO.jpg'
        return reportService.run('ReciboDePagoCFDI33.jrxml', data['PARAMETROS'], data['CONCEPTOS'])
+    }
+
+    
+
+    @NotTransactional
+    def enviarComprobantes(EnvioTask task) {
+        if(task == null) {
+            notFound()
+            return
+        }
+        log.info('Payload: {} grupos', task.grupos.size())
+        Map result = [:]
+        task.grupos.each { grupo ->
+            log.info('Enviando: {}', grupo)
+            def mjLog =  mailJetService.enviarComprobantes(grupo)
+            result[grupo.target] = mjLog
+        }
+        
+        respond result, status:200
     }
 
     def enviarEmail(Cfdi cfdi) {
@@ -230,10 +256,29 @@ class CfdiController extends RestfulController{
 
     def handleException(Exception e) {
         String message = ExceptionUtils.getRootCauseMessage(e)
-        log.error(message, ExceptionUtils.getRootCause(e))
+        // log.error(message, ExceptionUtils.getRootCause(e))
+        log.error(message, e)
         respond([message: message], status: 500)
     }
 
+}
+
+@ToString(includeNames = true)
+public class EnvioTask {
+    List<EnvioDeComprobantes> grupos
+}
+
+@ToString(includeNames = true)
+public class EnvioDeComprobantes {
+    String target;
+    String source;
+    String nombre;
+    List<String> cfdis
+
+    static constraints = {
+        source email: true, nullable: true
+        target email: true
+    }
 }
 
 @ToString(includeNames = true)
