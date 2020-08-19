@@ -13,6 +13,7 @@ class CfdiMailService {
 
     def envioBatch(List cfdis, String targetEmail, String observacion = ''){
         def zipData = zip(cfdis)
+        println 'Zip generado: ' + zipData.length
 
         sendMail {
             multipart false
