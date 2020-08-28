@@ -259,6 +259,13 @@ class UrlMappings {
         "/api/report/ventasDiariasCheques"(controller: 'ventas', action: 'ventasDiariasCheques', method: 'GET')
         "/api/report/clientesNuevos"(controller: 'ventas', action: 'clientesNuevos', method: 'GET')
 
+
+        // Cajas
+
+         "/api/cajas/cotizaciones"(controller: "cotizacionCaja", action: 'list', method: 'GET')
+         "/api/cajas/cotizaciones/save"(controller: "cotizacionCaja", action: 'save', method: 'POST')
+         "/api/cajas/cotizaciones/cerrar/$id"(controller: "cotizacionCaja", action: 'cerrar', method: 'PUT')
+
         // logistica
 
         "/api/logistica/soporte"(controller: "solicitudCambio", action: 'list', method: 'GET')
