@@ -491,7 +491,7 @@ class VentaService implements  EventPublisher{
 
     void regresarCallcenter(Venta venta, def usuario) {
         venta.delete flush: true
-        def changes = [status: 'COTIZACION', lastUpdated: usuario]
+        def changes = [status: 'COTIZACION', updateUser: usuario]
         lxPedidoService.updatePedido(venta.sw2, changes)
         lxPedidoService.updateLog(venta.sw2, changes)
     }
