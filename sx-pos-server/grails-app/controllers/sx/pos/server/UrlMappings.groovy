@@ -261,10 +261,11 @@ class UrlMappings {
 
 
         // Cajas
-
+         "/api/cajas/cotizaciones/cotizacion"(resources: "cotizacionCaja")
          "/api/cajas/cotizaciones"(controller: "cotizacionCaja", action: 'list', method: 'GET')
          "/api/cajas/cotizaciones/save"(controller: "cotizacionCaja", action: 'save', method: 'POST')
          "/api/cajas/cotizaciones/cerrar/$id"(controller: "cotizacionCaja", action: 'cerrar', method: 'PUT')
+         "/api/cajas/cotizaciones/print/$id"(controller: "cotizacionCaja", action: 'print', method: 'GET')
 
         // logistica
 

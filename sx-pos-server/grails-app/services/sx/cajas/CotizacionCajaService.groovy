@@ -5,6 +5,7 @@ import grails.gorm.transactions.Transactional
 
 import com.luxsoft.utils.Periodo
 
+
 import sx.core.Producto
 import sx.core.Existencia
 import sx.inventario.Transformacion
@@ -12,6 +13,9 @@ import sx.inventario.TransformacionDet
 import sx.core.Inventario
 import sx.core.Sucursal
 import sx.core.Folio
+import sx.sat.ProductoSat
+import sx.sat.UnidadSat
+
 
 
 
@@ -20,13 +24,21 @@ import sx.core.Folio
 class CotizacionCajaService {
 
 
+
+
     def cerrar(cotizacionCaja){
 
         def sucursal = Sucursal.get(cotizacionCaja.sucursal.id)
 
-        cotizacionCaja.cerrada = true
+    
+        def producto = Producto.findByClave(cotizacionCaja.claveCaja)
 
-        def producto = crearProducto(cotizacionCaja)
+        if(producto){
+            println "Producto ya creado......"
+            return []
+        }
+
+         producto = crearProducto(cotizacionCaja)
 
         def  transformacion = crearTransformacion(cotizacionCaja)
 
@@ -37,8 +49,10 @@ class CotizacionCajaService {
             crearInventario(transformacion)
 
             crearExistencia(producto, sucursal, cotizacionCaja.piezas)
+        
+            cotizacionCaja.cerrada = true
 
-         cotizacionCaja.save failOnError:true, flush:true
+            cotizacionCaja.save failOnError:true, flush:true
 
         return producto
          
@@ -51,12 +65,14 @@ class CotizacionCajaService {
 	    producto.clave= cotizacionCaja.claveCaja
         producto.descripcion=cotizacionCaja.descripcionCaja
         producto.unidad = 'PZA'
-        producto.modoVenta= 'N'		
+        producto.modoVenta= 'B'		
         producto.presentacion = 'EXTENDIDO'
         producto.precioContado  = cotizacionCaja.precioPiezaContado
         producto.precioCredito = cotizacionCaja.precioPiezaCredito
         producto.ancho = cotizacionCaja.ancho
         producto.largo = cotizacionCaja.largo
+        producto.productoSat = ProductoSat.get(31);
+        producto.unidadSat = UnidadSat.get(6);
         producto.ancho = 0.0
         producto.largo = 0.0
         producto.fechaLista = new Date()
@@ -163,5 +179,9 @@ class CotizacionCajaService {
     def crearCotizacionLog(){
         
     }
+    
+    
+
+      
 
 }

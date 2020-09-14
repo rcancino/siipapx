@@ -8,11 +8,14 @@ import com.luxsoft.utils.Periodo
 import sx.core.Folio
 import sx.core.Audit
 import grails.plugin.springsecurity.annotation.Secured
+import sx.reports.ReportService
  
 @Secured("ROLE_INVENTARIO_USER")
 class CotizacionCajaController extends RestfulController {
 
    static responseFormats = ['json']
+
+   ReportService reportService
 
    CotizacionCajaController() {
        super(CotizacionCaja)
@@ -48,6 +51,18 @@ class CotizacionCajaController extends RestfulController {
     def producto = cotizacionCajaService.cerrar(cotizacionCaja)
     respond producto
   }
+
+  def print() {
+      
+      println params.id
+
+         params.ID = params.id
+         def reportName = 'CotizacionCaja.jrxml'
+         println 'Imprimiendo el reporte de cotizacion !!!'+reportName
+         def pdf =  reportService.run(reportName, params)
+         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: 'CotizacionCaja.pdf')
+   
+   } 
 
 
 

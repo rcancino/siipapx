@@ -8,10 +8,10 @@
 		 orientation="Landscape"
 		 pageWidth="792"
 		 pageHeight="612"
-		 columnWidth="736"
+		 columnWidth="762"
 		 columnSpacing="0"
-		 leftMargin="28"
-		 rightMargin="28"
+		 leftMargin="15"
+		 rightMargin="15"
 		 topMargin="14"
 		 bottomMargin="14"
 		 whenNoDataType="NoPages"
@@ -43,6 +43,7 @@
 ,ROUND(IFNULL(SUM(CASE WHEN S.CLAVE=10 THEN V.SUBTOTAL*V.TIPO_DE_CAMBIO END),0)/1000) AS VENTA_CA4
 ,ROUND(IFNULL(SUM(CASE WHEN S.CLAVE=12 THEN V.SUBTOTAL*V.TIPO_DE_CAMBIO END),0)/1000) AS VENTA_TAC
 ,ROUND(IFNULL(SUM(CASE WHEN S.CLAVE=13 THEN V.SUBTOTAL*V.TIPO_DE_CAMBIO END),0)/1000) AS VENTA_5FE
+,ROUND(IFNULL(SUM(CASE WHEN S.CLAVE=2 THEN V.SUBTOTAL*V.TIPO_DE_CAMBIO END),0)/1000) AS VENTA_VER
 
 ,ROUND(IFNULL(SUM(CASE WHEN V.TIPO='CON' THEN V.SUBTOTAL*V.TIPO_DE_CAMBIO END),0)/1000) AS TOTAL_VTA_MOS
 ,ROUND(IFNULL(SUM(CASE WHEN V.TIPO='COD' THEN V.SUBTOTAL*V.TIPO_DE_CAMBIO END),0)/1000) AS TOTAL_VTA_CAM
@@ -70,7 +71,7 @@ GROUP BY V.FECHA
 UNION
 
 SELECT FECHA,gr,TIPO AS DIA
-,ROUND(sum(-dev_and)/1000),ROUND(sum(-dev_bol)/1000),ROUND(sum(-dev_ca4)/1000),ROUND(sum(-dev_tac)/1000),ROUND(sum(-dev_5FE)/1000),ROUND(sum(-total_dev_mos)/1000)
+,ROUND(sum(-dev_and)/1000),ROUND(sum(-dev_bol)/1000),ROUND(sum(-dev_ca4)/1000),ROUND(sum(-dev_tac)/1000),ROUND(sum(-dev_5FE)/1000),ROUND(sum(-dev_VER)/1000),ROUND(sum(-total_dev_mos)/1000)
 ,ROUND(sum(-total_dev_cam)/1000),ROUND(sum(-total_dev_cont)/1000),ROUND(sum(-total_dev_cre)/1000),ROUND(sum(-total_dev)/1000),ROUND(sum(-kilos_dev_mos)/1000),ROUND(sum(-kilos_dev_cam)/1000)
 ,ROUND(sum(-kilos_dev_cont)/1000),ROUND(sum(-kilos_dev_cre)/1000),ROUND(sum(-kilos_dev_total)/1000),ROUND(sum(-preco_pro_dev)/1000),ROUND(sum(-total_fac_mos)/1000),ROUND(sum(-total_fac_cam)/1000)
 ,ROUND(sum(-total_fac_cre)/1000),ROUND(sum(-total_fac)/1000)
@@ -81,6 +82,7 @@ SELECT FECHA,gr,TIPO AS DIA
 ,IFNULL(SUM(CASE WHEN S.ID LIKE '%12d' THEN A.IMPORTE/1.16*A.TIPO_DE_CAMBIO END),0) AS DEV_CA4
 ,IFNULL(SUM(CASE WHEN S.ID LIKE '%12e' THEN A.IMPORTE/1.16*A.TIPO_DE_CAMBIO END),0) AS DEV_TAC
 ,IFNULL(SUM(CASE WHEN S.ID LIKE '%134' THEN A.IMPORTE/1.16*A.TIPO_DE_CAMBIO END),0) AS DEV_5FE
+,IFNULL(SUM(CASE WHEN S.ID LIKE '%136' THEN A.IMPORTE/1.16*A.TIPO_DE_CAMBIO END),0) AS DEV_VER
 
 ,CASE WHEN V.TIPO = 'CON' THEN SUM(A.IMPORTE/1.16*A.TIPO_DE_CAMBIO) ELSE 0 END AS TOTAL_DEV_MOS
 ,CASE WHEN V.TIPO = 'COD' THEN SUM(A.IMPORTE/1.16*A.TIPO_DE_CAMBIO) ELSE 0 END AS TOTAL_DEV_CAM
@@ -121,6 +123,7 @@ group by TIPO]]></queryString>
 	<field name="VENTA_CA4" class="java.math.BigDecimal"/>
 	<field name="VENTA_TAC" class="java.math.BigDecimal"/>
 	<field name="VENTA_5FE" class="java.math.BigDecimal"/>
+	<field name="VENTA_VER" class="java.math.BigDecimal"/>
 	<field name="TOTAL_VTA_MOS" class="java.math.BigDecimal"/>
 	<field name="TOTAL_VTA_CAM" class="java.math.BigDecimal"/>
 	<field name="TOTAL_VTA_CONT" class="java.math.BigDecimal"/>
@@ -311,6 +314,15 @@ group by TIPO]]></queryString>
 	<variable name="PORC_FCRE" class="java.lang.Double" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[new Double(100-($V{PORC_FMOS}.doubleValue()+$V{PORC_FCAM}.doubleValue()))]]></variableExpression>
 	</variable>
+	<variable name="PORC_VER" class="java.lang.Double" resetType="Report" calculation="Nothing">
+		<variableExpression><![CDATA[new Double($V{T_VER}.doubleValue()*100/$V{TV_TOTAL}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="T_VER" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{VENTA_VER}]]></variableExpression>
+	</variable>
+	<variable name="VTA_VER" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO1" calculation="Sum">
+		<variableExpression><![CDATA[$F{VENTA_VER}]]></variableExpression>
+	</variable>
 
 		<group  name="GRUPO1" >
 			<groupExpression><![CDATA[$F{GR}]]></groupExpression>
@@ -418,9 +430,9 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="180"
+						x="212"
 						y="0"
-						width="46"
+						width="38"
 						height="14"
 						backcolor="#CCCCCC"
 						key="textField"/>
@@ -437,7 +449,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="226"
+						x="250"
 						y="0"
 						width="46"
 						height="14"
@@ -456,7 +468,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="272"
+						x="296"
 						y="0"
 						width="46"
 						height="14"
@@ -475,7 +487,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="318"
+						x="342"
 						y="0"
 						width="46"
 						height="14"
@@ -494,7 +506,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="364"
+						x="388"
 						y="0"
 						width="51"
 						height="14"
@@ -513,7 +525,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="415"
+						x="439"
 						y="0"
 						width="30"
 						height="14"
@@ -532,7 +544,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="445"
+						x="469"
 						y="0"
 						width="30"
 						height="14"
@@ -551,7 +563,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="499"
 						y="0"
 						width="30"
 						height="14"
@@ -570,7 +582,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="505"
+						x="529"
 						y="0"
 						width="30"
 						height="14"
@@ -589,7 +601,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="535"
+						x="559"
 						y="0"
 						width="51"
 						height="14"
@@ -608,7 +620,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="623"
+						x="647"
 						y="0"
 						width="29"
 						height="14"
@@ -627,7 +639,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="652"
+						x="676"
 						y="0"
 						width="29"
 						height="14"
@@ -646,7 +658,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="681"
+						x="705"
 						y="0"
 						width="29"
 						height="14"
@@ -665,7 +677,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="###0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="710"
+						x="734"
 						y="0"
 						width="26"
 						height="14"
@@ -684,7 +696,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="586"
+						x="610"
 						y="0"
 						width="37"
 						height="14"
@@ -720,6 +732,25 @@ group by TIPO]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{GR}.equals(new String("A") )? "VTA" : "DEV"]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="180"
+						y="0"
+						width="32"
+						height="14"
+						backcolor="#CCCCCC"
+						key="textField-31"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{VTA_VER}]]></textFieldExpression>
+				</textField>
 			</band>
 			</groupFooter>
 		</group>
@@ -735,7 +766,7 @@ group by TIPO]]></queryString>
 			<band height="70"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="480"
+						x="504"
 						y="21"
 						width="252"
 						height="15"
@@ -748,7 +779,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="399"
+						x="423"
 						y="0"
 						width="332"
 						height="21"
@@ -762,7 +793,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="1"
+						x="25"
 						y="34"
 						width="735"
 						height="36"
@@ -781,7 +812,7 @@ group by TIPO]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="566"
+						x="590"
 						y="40"
 						width="159"
 						height="18"
@@ -794,7 +825,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="667"
+						x="691"
 						y="60"
 						width="64"
 						height="10"
@@ -855,7 +886,7 @@ group by TIPO]]></queryString>
 						mode="Opaque"
 						x="20"
 						y="0"
-						width="160"
+						width="195"
 						height="11"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -953,9 +984,9 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="180"
+						x="212"
 						y="11"
-						width="46"
+						width="38"
 						height="22"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -973,7 +1004,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="226"
+						x="250"
 						y="11"
 						width="46"
 						height="22"
@@ -993,7 +1024,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="272"
+						x="296"
 						y="11"
 						width="46"
 						height="11"
@@ -1013,7 +1044,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="272"
+						x="296"
 						y="22"
 						width="46"
 						height="11"
@@ -1033,7 +1064,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="318"
+						x="342"
 						y="11"
 						width="46"
 						height="22"
@@ -1053,7 +1084,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="415"
+						x="439"
 						y="11"
 						width="30"
 						height="22"
@@ -1073,7 +1104,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="445"
+						x="469"
 						y="11"
 						width="30"
 						height="22"
@@ -1093,7 +1124,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="499"
 						y="22"
 						width="30"
 						height="11"
@@ -1113,7 +1144,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="499"
 						y="11"
 						width="30"
 						height="11"
@@ -1133,7 +1164,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="505"
+						x="529"
 						y="11"
 						width="30"
 						height="22"
@@ -1153,7 +1184,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="586"
+						x="610"
 						y="11"
 						width="37"
 						height="11"
@@ -1173,7 +1204,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="586"
+						x="610"
 						y="0"
 						width="37"
 						height="11"
@@ -1193,7 +1224,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="586"
+						x="610"
 						y="22"
 						width="37"
 						height="11"
@@ -1213,7 +1244,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="623"
+						x="647"
 						y="11"
 						width="29"
 						height="22"
@@ -1233,7 +1264,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="652"
+						x="676"
 						y="11"
 						width="29"
 						height="22"
@@ -1253,7 +1284,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="681"
+						x="705"
 						y="11"
 						width="29"
 						height="22"
@@ -1273,7 +1304,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="710"
+						x="734"
 						y="11"
 						width="26"
 						height="22"
@@ -1293,9 +1324,9 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="180"
+						x="212"
 						y="0"
-						width="184"
+						width="176"
 						height="11"
 						forecolor="#000000"
 						backcolor="#CCCCCC"
@@ -1313,7 +1344,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="415"
+						x="439"
 						y="0"
 						width="120"
 						height="11"
@@ -1333,7 +1364,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="623"
+						x="647"
 						y="0"
 						width="113"
 						height="11"
@@ -1353,7 +1384,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="364"
+						x="388"
 						y="0"
 						width="51"
 						height="11"
@@ -1373,7 +1404,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="364"
+						x="388"
 						y="11"
 						width="51"
 						height="11"
@@ -1393,7 +1424,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="364"
+						x="388"
 						y="22"
 						width="51"
 						height="11"
@@ -1413,7 +1444,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="535"
+						x="559"
 						y="0"
 						width="51"
 						height="11"
@@ -1433,7 +1464,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="535"
+						x="559"
 						y="11"
 						width="51"
 						height="11"
@@ -1453,7 +1484,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="535"
+						x="559"
 						y="22"
 						width="51"
 						height="11"
@@ -1469,6 +1500,26 @@ group by TIPO]]></queryString>
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[TONS.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="180"
+						y="11"
+						width="32"
+						height="22"
+						forecolor="#000000"
+						backcolor="#CCCCCC"
+						key="staticText-66"/>
+					<box>					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[VER]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
@@ -1578,9 +1629,9 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="180"
+						x="212"
 						y="0"
-						width="46"
+						width="38"
 						height="14"
 						key="textField"/>
 					<box>					<topPen lineWidth="0.5"/>
@@ -1595,7 +1646,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="226"
+						x="250"
 						y="0"
 						width="46"
 						height="14"
@@ -1612,7 +1663,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="272"
+						x="296"
 						y="0"
 						width="46"
 						height="14"
@@ -1629,7 +1680,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="318"
+						x="342"
 						y="0"
 						width="46"
 						height="14"
@@ -1646,7 +1697,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="364"
+						x="388"
 						y="0"
 						width="51"
 						height="14"
@@ -1663,7 +1714,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="415"
+						x="439"
 						y="0"
 						width="30"
 						height="14"
@@ -1680,7 +1731,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="445"
+						x="469"
 						y="0"
 						width="30"
 						height="14"
@@ -1697,7 +1748,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="475"
+						x="499"
 						y="0"
 						width="30"
 						height="14"
@@ -1714,7 +1765,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="505"
+						x="529"
 						y="0"
 						width="30"
 						height="14"
@@ -1731,7 +1782,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="535"
+						x="559"
 						y="0"
 						width="51"
 						height="14"
@@ -1748,7 +1799,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="623"
+						x="647"
 						y="0"
 						width="29"
 						height="14"
@@ -1765,7 +1816,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="652"
+						x="676"
 						y="0"
 						width="29"
 						height="14"
@@ -1782,7 +1833,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="681"
+						x="705"
 						y="0"
 						width="29"
 						height="14"
@@ -1799,7 +1850,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="710"
+						x="734"
 						y="0"
 						width="26"
 						height="14"
@@ -1816,7 +1867,7 @@ group by TIPO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="586"
+						x="610"
 						y="0"
 						width="37"
 						height="14"
@@ -1830,6 +1881,23 @@ group by TIPO]]></queryString>
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{PREC_PROM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="180"
+						y="0"
+						width="32"
+						height="14"
+						key="textField-30"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VENTA_VER}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -2169,9 +2237,9 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="180"
+						x="212"
 						y="0"
-						width="46"
+						width="38"
 						height="14"
 						backcolor="#CCCCCC"
 						key="textField-15"/>
@@ -2188,7 +2256,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="226"
+						x="250"
 						y="0"
 						width="46"
 						height="14"
@@ -2207,7 +2275,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="272"
+						x="296"
 						y="0"
 						width="46"
 						height="14"
@@ -2226,7 +2294,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="318"
+						x="342"
 						y="0"
 						width="46"
 						height="14"
@@ -2245,7 +2313,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="364"
+						x="388"
 						y="0"
 						width="51"
 						height="14"
@@ -2264,7 +2332,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="415"
+						x="439"
 						y="0"
 						width="30"
 						height="14"
@@ -2283,7 +2351,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="445"
+						x="469"
 						y="0"
 						width="30"
 						height="14"
@@ -2302,7 +2370,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="499"
 						y="0"
 						width="30"
 						height="14"
@@ -2321,7 +2389,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="505"
+						x="529"
 						y="0"
 						width="30"
 						height="14"
@@ -2340,7 +2408,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="535"
+						x="559"
 						y="0"
 						width="51"
 						height="14"
@@ -2359,7 +2427,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="623"
+						x="647"
 						y="0"
 						width="29"
 						height="14"
@@ -2378,7 +2446,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="652"
+						x="676"
 						y="0"
 						width="29"
 						height="14"
@@ -2397,7 +2465,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="681"
+						x="705"
 						y="0"
 						width="29"
 						height="14"
@@ -2416,7 +2484,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="710"
+						x="734"
 						y="0"
 						width="26"
 						height="14"
@@ -2435,7 +2503,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="586"
+						x="610"
 						y="0"
 						width="37"
 						height="14"
@@ -2496,9 +2564,9 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="180"
+						x="212"
 						y="14"
-						width="46"
+						width="38"
 						height="14"
 						backcolor="#CCCCCC"
 						key="textField"/>
@@ -2515,7 +2583,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="226"
+						x="250"
 						y="14"
 						width="46"
 						height="14"
@@ -2534,7 +2602,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="272"
+						x="296"
 						y="14"
 						width="46"
 						height="14"
@@ -2553,7 +2621,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="318"
+						x="342"
 						y="14"
 						width="46"
 						height="14"
@@ -2572,7 +2640,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="364"
+						x="388"
 						y="14"
 						width="51"
 						height="14"
@@ -2686,7 +2754,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="415"
+						x="439"
 						y="14"
 						width="30"
 						height="14"
@@ -2705,7 +2773,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="445"
+						x="469"
 						y="14"
 						width="30"
 						height="14"
@@ -2724,7 +2792,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="475"
+						x="499"
 						y="14"
 						width="30"
 						height="14"
@@ -2743,7 +2811,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="505"
+						x="529"
 						y="14"
 						width="30"
 						height="14"
@@ -2762,7 +2830,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="535"
+						x="559"
 						y="14"
 						width="51"
 						height="14"
@@ -2781,7 +2849,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="710"
+						x="734"
 						y="14"
 						width="26"
 						height="14"
@@ -2800,7 +2868,7 @@ group by TIPO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="586"
+						x="610"
 						y="14"
 						width="37"
 						height="14"
@@ -2819,7 +2887,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="681"
+						x="705"
 						y="14"
 						width="29"
 						height="14"
@@ -2838,7 +2906,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="652"
+						x="676"
 						y="14"
 						width="29"
 						height="14"
@@ -2857,7 +2925,7 @@ group by TIPO]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="623"
+						x="647"
 						y="14"
 						width="29"
 						height="14"
@@ -2872,6 +2940,44 @@ group by TIPO]]></queryString>
 						<font size="7"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{PORC_FMOS}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="180"
+						y="0"
+						width="32"
+						height="14"
+						backcolor="#CCCCCC"
+						key="textField-32"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{T_VER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Opaque"
+						x="180"
+						y="14"
+						width="32"
+						height="14"
+						backcolor="#CCCCCC"
+						key="textField-33"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{PORC_VER}]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>

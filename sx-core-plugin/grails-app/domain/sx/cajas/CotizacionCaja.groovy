@@ -67,6 +67,14 @@ class CotizacionCaja {
 
     String descripcionCaja
 
+    String productoClave
+
+    String productoDescripcion
+
+    BigDecimal productoPrecioContado
+
+    BigDecimal productoPrecioCredito
+
     static constraints = {
         folio nullable: true
         tipo nullable: true
@@ -75,6 +83,10 @@ class CotizacionCaja {
         comentario nullable: true
         createUser nullable: true
         updateUser nullable: true
+        productoClave nullable:true
+        productoDescripcion nullable:true
+        productoPrecioContado nullable:true
+        productoPrecioCredito nullable:true
     }
 
     static mapping = {
