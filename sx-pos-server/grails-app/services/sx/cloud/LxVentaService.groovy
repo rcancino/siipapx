@@ -99,6 +99,11 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
                     corte.ventaDet = ventaDet
                 }
                 
+                if(partida.clave ="MANIOBRAF"){
+                    venta.cargosPorManiobra = partida.total
+                }
+
+
                 venta.addToPartidas(ventaDet)
             }
         }
@@ -201,6 +206,8 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
         ventaDet.impuestoTasa =  partida.impuestoTasa
         ventaDet.importe = partida.importe
         ventaDet.sw2 = partida.id
+
+    
         
         return ventaDet
     }
