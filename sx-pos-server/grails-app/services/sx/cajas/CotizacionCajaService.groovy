@@ -67,14 +67,25 @@ class CotizacionCajaService {
         producto.unidad = 'PZA'
         producto.modoVenta= 'B'		
         producto.presentacion = 'EXTENDIDO'
-        producto.precioContado  = cotizacionCaja.precioPiezaContado
-        producto.precioCredito = cotizacionCaja.precioPiezaCredito
+        if(cotizacionCaja.precioEspecialContado) {
+            producto.precioContado  = cotizacionCaja.precioEspecialContado
+        }else{
+            producto.precioContado  = cotizacionCaja.precioPiezaContado
+        }
+
+        if(cotizacionCaja.precioEspecialCredito) {
+            producto.precioCredito  = cotizacionCaja.precioEspecialCredito
+        }else{
+            producto.precioCredito = cotizacionCaja.precioPiezaCredito
+        }
         producto.ancho = cotizacionCaja.ancho
         producto.largo = cotizacionCaja.largo
         producto.productoSat = ProductoSat.get(31);
         producto.unidadSat = UnidadSat.get(6);
         producto.ancho = 0.0
         producto.largo = 0.0
+        producto.kilos = cotizacionCaja.kilos
+        producto.gramos = cotizacionCaja.gramos
         producto.fechaLista = new Date()
 
         producto.save failOnError:true, flush:true
