@@ -51,6 +51,10 @@ class CotizacionCaja {
 
     BigDecimal precioEspecialContado = 0.00
 
+    BigDecimal kilos = 0.00
+
+    BigDecimal gramos = 0.00
+
     Boolean cerrada = false
 
     String comentario
@@ -87,6 +91,8 @@ class CotizacionCaja {
         productoDescripcion nullable:true
         productoPrecioContado nullable:true
         productoPrecioCredito nullable:true
+        kilos nullable:true
+        gramos nullable:true
     }
 
     static mapping = {

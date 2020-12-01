@@ -1371,11 +1371,11 @@
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="154"  isSplitAllowed="true" >
+			<band height="166"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="352"
-						y="25"
+						y="35"
 						width="229"
 						height="13"
 						key="textField"/>
@@ -1392,7 +1392,7 @@
 				<staticText>
 					<reportElement
 						x="69"
-						y="140"
+						y="150"
 						width="57"
 						height="14"
 						key="staticText-91"/>
@@ -1410,7 +1410,7 @@
 				<staticText>
 					<reportElement
 						x="174"
-						y="140"
+						y="150"
 						width="274"
 						height="14"
 						key="staticText-92"/>
@@ -1428,7 +1428,7 @@
 				<staticText>
 					<reportElement
 						x="506"
-						y="140"
+						y="150"
 						width="74"
 						height="14"
 						key="staticText-93"/>
@@ -1446,7 +1446,7 @@
 				<staticText>
 					<reportElement
 						x="448"
-						y="140"
+						y="150"
 						width="58"
 						height="14"
 						key="staticText-95"/>
@@ -1465,7 +1465,7 @@
 					<reportElement
 						mode="Opaque"
 						x="352"
-						y="12"
+						y="22"
 						width="228"
 						height="13"
 						key="staticText-115"/>
@@ -1483,7 +1483,7 @@
 					<reportElement
 						mode="Opaque"
 						x="351"
-						y="90"
+						y="100"
 						width="228"
 						height="13"
 						key="staticText-176"/>
@@ -1500,7 +1500,7 @@
 				<staticText>
 					<reportElement
 						x="126"
-						y="140"
+						y="150"
 						width="48"
 						height="14"
 						key="staticText-184"/>
@@ -1518,7 +1518,7 @@
 				<staticText>
 					<reportElement
 						x="11"
-						y="140"
+						y="150"
 						width="58"
 						height="14"
 						key="staticText-193"/>
@@ -1536,7 +1536,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="351"
-						y="103"
+						y="113"
 						width="230"
 						height="22"
 						key="textField-157"/>
@@ -1549,7 +1549,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="497"
-						y="91"
+						y="101"
 						width="81"
 						height="11"
 						key="textField-158"/>
@@ -1562,7 +1562,7 @@
 				<staticText>
 					<reportElement
 						x="462"
-						y="91"
+						y="101"
 						width="36"
 						height="11"
 						key="staticText-209"/>
@@ -1575,7 +1575,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="3"
-						y="53"
+						y="63"
 						width="143"
 						height="10"
 						forecolor="#000000"
@@ -1590,7 +1590,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="27"
-						y="63"
+						y="73"
 						width="61"
 						height="10"
 						forecolor="#000000"
@@ -1605,7 +1605,7 @@
 				<staticText>
 					<reportElement
 						x="3"
-						y="63"
+						y="73"
 						width="24"
 						height="10"
 						key="staticText-218"/>
@@ -1618,7 +1618,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="58"
-						y="73"
+						y="83"
 						width="28"
 						height="10"
 						forecolor="#000000"
@@ -1633,7 +1633,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="126"
-						y="63"
+						y="73"
 						width="19"
 						height="10"
 						forecolor="#000000"
@@ -1648,7 +1648,7 @@
 				<staticText>
 					<reportElement
 						x="4"
-						y="73"
+						y="83"
 						width="54"
 						height="10"
 						key="staticText-219"/>
@@ -1661,7 +1661,7 @@
 				<staticText>
 					<reportElement
 						x="85"
-						y="63"
+						y="73"
 						width="41"
 						height="10"
 						key="staticText-220"/>
@@ -1674,7 +1674,7 @@
 				<textField isStretchWithOverflow="false" pattern="yyyy-MM-dd'T'HH:mm:ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="36"
-						y="83"
+						y="93"
 						width="109"
 						height="13"
 						forecolor="#000000"
@@ -1689,7 +1689,7 @@
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="129"
-						y="73"
+						y="83"
 						width="16"
 						height="10"
 						forecolor="#000000"
@@ -1704,7 +1704,7 @@
 				<staticText>
 					<reportElement
 						x="3"
-						y="83"
+						y="93"
 						width="33"
 						height="13"
 						key="staticText-221"/>
@@ -1717,7 +1717,7 @@
 				<staticText>
 					<reportElement
 						x="89"
-						y="73"
+						y="83"
 						width="40"
 						height="10"
 						key="staticText-222"/>
@@ -1730,7 +1730,7 @@
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="3"
-						y="11"
+						y="21"
 						width="143"
 						height="42"
 						key="image-2"/>
@@ -1742,7 +1742,7 @@
 					<reportElement
 						mode="Opaque"
 						x="90"
-						y="105"
+						y="115"
 						width="87"
 						height="8"
 						forecolor="#000000"
@@ -1760,7 +1760,7 @@
 					<reportElement
 						mode="Opaque"
 						x="90"
-						y="111"
+						y="121"
 						width="87"
 						height="27"
 						forecolor="#000000"
@@ -1781,7 +1781,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="180"
-						y="105"
+						y="115"
 						width="79"
 						height="8"
 						forecolor="#000000"
@@ -1799,7 +1799,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="180"
-						y="111"
+						y="121"
 						width="79"
 						height="27"
 						forecolor="#000000"
@@ -1820,7 +1820,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="263"
-						y="105"
+						y="115"
 						width="84"
 						height="8"
 						forecolor="#000000"
@@ -1838,7 +1838,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="263"
-						y="111"
+						y="121"
 						width="84"
 						height="27"
 						forecolor="#000000"
@@ -1859,7 +1859,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Opaque"
 						x="2"
-						y="105"
+						y="115"
 						width="86"
 						height="8"
 						forecolor="#000000"
@@ -1875,7 +1875,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Opaque"
 						x="3"
-						y="111"
+						y="121"
 						width="85"
 						height="27"
 						forecolor="#000000"
@@ -1895,7 +1895,7 @@ C.P. 02870  TEL/FAX: 5342-7166]]></text>
 					<reportElement
 						mode="Transparent"
 						x="2"
-						y="12"
+						y="22"
 						width="144"
 						height="85"
 						key="rectangle-11"
@@ -1906,7 +1906,7 @@ C.P. 02870  TEL/FAX: 5342-7166]]></text>
 					<reportElement
 						mode="Opaque"
 						x="151"
-						y="73"
+						y="83"
 						width="93"
 						height="27"
 						forecolor="#000000"
@@ -1927,7 +1927,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="151"
-						y="65"
+						y="75"
 						width="93"
 						height="8"
 						forecolor="#000000"
@@ -1945,7 +1945,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="250"
-						y="73"
+						y="83"
 						width="93"
 						height="27"
 						forecolor="#000000"
@@ -1966,7 +1966,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="250"
-						y="65"
+						y="75"
 						width="93"
 						height="8"
 						forecolor="#000000"
@@ -1982,34 +1982,8 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="260"
-						y="28"
-						width="90"
-						height="18"
-						key="textField-194"/>
-					<box></box>
-					<textElement textAlignment="Center" verticalAlignment="Bottom">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ENVIO}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="280"
-						y="14"
-						width="63"
-						height="13"
-						key="textField-195"/>
-					<box></box>
-					<textElement textAlignment="Center">
-						<font fontName="Serif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
 						x="482"
-						y="51"
+						y="61"
 						width="98"
 						height="13"
 						key="textField-234"/>
@@ -2027,7 +2001,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="482"
-						y="38"
+						y="48"
 						width="97"
 						height="13"
 						key="staticText-273"/>
@@ -2045,7 +2019,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="405"
-						y="38"
+						y="48"
 						width="44"
 						height="13"
 						key="staticText-274"/>
@@ -2062,7 +2036,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="405"
-						y="51"
+						y="61"
 						width="44"
 						height="13"
 						key="textField-235"/>
@@ -2080,7 +2054,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="352"
-						y="38"
+						y="48"
 						width="53"
 						height="13"
 						key="staticText-275"/>
@@ -2097,7 +2071,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="352"
-						y="51"
+						y="61"
 						width="53"
 						height="13"
 						key="textField-236"/>
@@ -2114,7 +2088,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="449"
-						y="51"
+						y="61"
 						width="33"
 						height="13"
 						key="textField-237"/>
@@ -2132,7 +2106,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="449"
-						y="38"
+						y="48"
 						width="33"
 						height="13"
 						key="staticText-276"/>
@@ -2150,7 +2124,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="351"
-						y="64"
+						y="74"
 						width="229"
 						height="13"
 						key="staticText-277"/>
@@ -2167,7 +2141,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="351"
-						y="77"
+						y="87"
 						width="229"
 						height="13"
 						key="textField-238"/>
@@ -2185,7 +2159,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Transparent"
 						x="152"
-						y="12"
+						y="22"
 						width="101"
 						height="46"
 						key="rectangle-13"/>
@@ -2195,7 +2169,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="30"
+						y="40"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2210,13 +2184,13 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<text><![CDATA[DR. ANDRADE No. 78 Y 80
 COL. DOCTORES
 DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO.
-C.P. 06720  TEL/FAX: 5578-7400]]></text>
+C.P. 06720  TEL/FAX: 55 5578-7400]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="22"
+						y="32"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2234,7 +2208,7 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="30"
+						y="40"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2249,13 +2223,13 @@ C.P. 06720  TEL/FAX: 5578-7400]]></text>
 				<text><![CDATA[5 DE FEBRERO No. 378
 COL. OBRERA
 DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO.
-C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
+C.P.06800 TEL:8114-5435 TEL/FAX:55 5740-7777]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="22"
+						y="32"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2273,7 +2247,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="22"
+						y="32"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2291,7 +2265,7 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="30"
+						y="40"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2306,13 +2280,13 @@ C.P.06800 TEL:8114-5435 TEL/FAX:5740-7777]]></text>
 				<text><![CDATA[BIOLOGO MAXIMINO MARTINEZ No. 3902
 COL. SAN SALVADOR XOCHIMANCA
 DELEG. AZCAPOTZALCO, MÉXICO, CIUDAD DE MÉXICO.
-C.P. 02870  TEL/FAX: 2465-0399]]></text>
+C.P. 02870  TEL/FAX: 55 2465-0399]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="22"
+						y="32"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2330,7 +2304,7 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="30"
+						y="40"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2345,13 +2319,13 @@ C.P. 02870  TEL/FAX: 2465-0399]]></text>
 				<text><![CDATA[CALLE 4 No. 194-A
 COL. GRANJAS SAN ANTONIO
 DELEG. IZTAPALAPA, MÉXICO, CIUDAD DE MÉXICO.
-C.P. 09070  TEL/FAX: 5685-3176]]></text>
+C.P. 09070  TEL/FAX: 55 5685-3176]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="22"
+						y="32"
 						width="97"
 						height="8"
 						forecolor="#000000"
@@ -2369,7 +2343,7 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 					<reportElement
 						mode="Opaque"
 						x="154"
-						y="30"
+						y="40"
 						width="97"
 						height="27"
 						forecolor="#000000"
@@ -2384,13 +2358,13 @@ C.P. 09070  TEL/FAX: 5685-3176]]></text>
 				<text><![CDATA[BOLIVAR No. 95-D
 COL. CENTRO
 DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO.
-C.P. 06080  TEL/FAX: 5709-2022]]></text>
+C.P. 06080  TEL/FAX: 55 5709-2022]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="155"
-						y="13"
+						y="23"
 						width="98"
 						height="8"
 						forecolor="#000000"
@@ -2408,7 +2382,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="380"
-						y="125"
+						y="135"
 						width="200"
 						height="13"
 						key="textField-239"/>
@@ -2426,7 +2400,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					<reportElement
 						mode="Transparent"
 						x="351"
-						y="11"
+						y="21"
 						width="229"
 						height="126"
 						key="rectangle-15"/>
@@ -2435,7 +2409,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<staticText>
 					<reportElement
 						x="352"
-						y="125"
+						y="135"
 						width="30"
 						height="13"
 						key="staticText-299"/>
@@ -2445,23 +2419,10 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 					</textElement>
 				<text><![CDATA[TELS.: ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="259"
-						y="46"
-						width="90"
-						height="18"
-						key="textField-240"/>
-					<box></box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="true" isItalic="false" isUnderline="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PUESTO}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="22"
+						x="6"
 						y="1"
 						width="256"
 						height="10"
@@ -2480,7 +2441,7 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="278"
+						x="262"
 						y="1"
 						width="73"
 						height="12"
@@ -2495,6 +2456,123 @@ C.P. 06080  TEL/FAX: 5709-2022]]></text>
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="9" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[ 8114 5435   ****]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="154"
+						y="40"
+						width="97"
+						height="27"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-305">
+							<printWhenExpression><![CDATA[new Boolean($P{SERIE}.startsWith( "VE" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="4" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[VERTIZ No 176
+COL. DOCTORES
+DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO. 
+C.P. 06720, TEL/FAX: 55 5134-2310]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="154"
+						y="32"
+						width="97"
+						height="8"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-306">
+							<printWhenExpression><![CDATA[new Boolean($P{SERIE}.startsWith( "VE" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="5" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SUCURSAL:    VERTIZ 176]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="409"
+						y="1"
+						width="90"
+						height="18"
+						key="textField-245"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{ENVIO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="346"
+						y="1"
+						width="63"
+						height="18"
+						key="textField-246"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="Serif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="506"
+						y="1"
+						width="70"
+						height="18"
+						key="textField-247"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="12" isBold="true" isItalic="false" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PUESTO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="261"
+						y="35"
+						width="84"
+						height="8"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-307">
+							<printWhenExpression><![CDATA[new Boolean(!$P{SERIE}.startsWith( "VE" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="5" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SUCURSAL:    VERTIZ 176]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="261"
+						y="41"
+						width="84"
+						height="27"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-308">
+							<printWhenExpression><![CDATA[new Boolean(!$P{SERIE}.startsWith( "VE" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="4" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[VERTIZ No 176
+COL. DOCTORES
+DELEG. CUAUHTEMOC, MÉXICO, CIUDAD DE MÉXICO. 
+C.P. 06720, TEL/FAX: 55 5134-2310]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
