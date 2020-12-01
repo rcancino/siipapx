@@ -59,7 +59,7 @@ class V33RemisionGenerator {
                 def data = cc.informacionAduanera.collect {it.numeroPedimento}.join(',')
                 res.pedimento = data
             }
-            if (venta) {
+            if (venta && venta.partidas.size()>1) {
                 VentaDet partida = venta.partidas.get(index++)
                 if (partida) {
                     if (partida.corte) {
