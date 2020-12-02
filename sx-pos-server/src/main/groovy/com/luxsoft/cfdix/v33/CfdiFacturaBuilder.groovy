@@ -164,6 +164,7 @@ class CfdiFacturaBuilder {
                     break
                 case 'BONIFICACION':
                 case 'DEVOLUCION':
+                case 'COMPENSACION':
                     comprobante.formaPago = '17'
                     break
                 default:
@@ -202,6 +203,7 @@ class CfdiFacturaBuilder {
                         break
                     case 'BONIFICACION':
                     case 'DEVOLUCION':
+                    case 'COMPENSACION':
                         comprobante.formaPago = '17'
                         break
                     default:
