@@ -1,6 +1,8 @@
 package com.luxsoft.cfdix.v33
 
 import groovy.util.logging.Slf4j
+import groovy.json.JsonSlurper
+
 import lx.cfdi.v33.ine.INE
 import lx.cfdi.v33.ine.TAmbito
 import lx.cfdi.v33.ine.TClaveEntidad
@@ -33,6 +35,7 @@ import sx.utils.MonedaUtils
 
 import java.math.RoundingMode
 
+
 /**
  * TODO: Parametrizar el regimenFiscal de
  */
@@ -58,14 +61,15 @@ class CfdiFacturaBuilder {
         this.empresa = Empresa.first()
         // assert empresa, 'La empresa no esta registrada...'
         buildComprobante()
-                .buildFormaDePago()
-                .ajustarFormaDePago()
-                .buildEmisor()
-                .buildReceptor()
-                .buildConceptos()
-                .buildImpuestos()
-                .buildTotales()
-                .buildCertificado()
+            .buildFormaDePago()
+            .ajustarFormaDePago()
+            .buildEmisor()
+            .buildReceptor()
+            .buildConceptos()
+            .buildImpuestos()
+            .buildTotales()
+            .buildCertificado()
+            .buildRelacionados()
 
         // CfdiSellador33 sellador = new CfdiSellador33()
         if(venta.ventaIne) {
@@ -348,6 +352,26 @@ class CfdiFacturaBuilder {
 
     Comprobante getComprobante(){
         return this.comprobante
+    }
+
+    def buildRelacionados() {
+        if(cxc.relacionados) {
+            Comprobante.CfdiRelacionados relacionados = factory.createComprobanteCfdiRelacionados()
+            List rows = this.parseRelacionados(cxc.relacionados)
+            rows.each {
+                relacionados.tipoRelacion = it.tipo
+                Comprobante.CfdiRelacionados.CfdiRelacionado relacionado = factory.createComprobanteCfdiRelacionadosCfdiRelacionado()
+                relacionado.UUID = it.uuid
+                relacionados.cfdiRelacionado.add(relacionado)
+            }
+            comprobante.cfdiRelacionados = relacionados
+        }
+
+        return this.comprobante
+    }
+
+    List parseRelacionados(String json) {
+        return new JsonSlurper().parseText(json)
     }
 
 }

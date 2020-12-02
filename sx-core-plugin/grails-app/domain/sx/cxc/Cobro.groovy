@@ -68,6 +68,8 @@ class  Cobro {
 
     Cfdi cfdi
 
+    String anticipoSat
+
     static hasOne = [cheque: CobroCheque, deposito: CobroDeposito, transferencia: CobroTransferencia,tarjeta: CobroTarjeta]
 
     static hasMany =[aplicaciones: AplicacionDeCobro]
@@ -90,6 +92,7 @@ class  Cobro {
         comentario nullable: true
         tipoDeCambio scale:6
         cfdi nullable: true
+        anticipoSat nullable: true
     }
 
     static mapping={

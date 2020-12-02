@@ -22,6 +22,7 @@ import sx.cloud.LxPedidoService
 
 import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 import sx.inventario.InventarioService
+import sx.cxc.AnticipoSatService
 
 @Transactional
 class VentaService implements  EventPublisher{
@@ -39,6 +40,8 @@ class VentaService implements  EventPublisher{
     LxPedidoService lxPedidoService
 
     CfdiPdfService cfdiPdfService
+
+    AnticipoSatService anticipoSatService
 
     @Publisher
     def save(Venta venta) {
@@ -302,15 +305,21 @@ class VentaService implements  EventPublisher{
         log.debug("Timbrando  {}", venta.statusInfo())
         def cxc = venta.cuentaPorCobrar
         def cfdi = cxc.cfdi
-            cfdi.receptorRfc=cxc.cliente.rfc
-         cfdi = cfdiTimbradoService.timbrar(cfdi)
+        cfdi.receptorRfc = cxc.cliente.rfc
+        cfdi = cfdiTimbradoService.timbrar(cfdi)
+        cxc.uuid = cfdi.uuid
         cxc.save flush:true
 
         // Notificar Firebase de facturacion
-        if(venta.callcenter) {
+        if(venta.callcenter || venta.tipo) {
             notificarTimbradoEnFirebase(venta, cfdi)
             cfdiPdfService.pushToFireStorage(cfdi)
         }
+
+        if(cxc.tipo == 'ANT') {
+            anticipoSatService.generarAnticipo(cxc)
+        }
+
         return cfdi
     }
 
