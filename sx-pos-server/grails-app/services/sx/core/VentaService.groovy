@@ -23,6 +23,8 @@ import sx.cloud.LxPedidoService
 import com.luxsoft.cfdix.v33.CfdiFacturaBuilder
 import sx.inventario.InventarioService
 import sx.cxc.AnticipoSatService
+import sx.cxc.AnticipoSat
+import sx.cxc.AnticipoSatDet
 
 @Transactional
 class VentaService implements  EventPublisher{
@@ -46,7 +48,7 @@ class VentaService implements  EventPublisher{
     @Publisher
     def save(Venta venta) {
         if(venta.tipo == 'ANT'){
-            return saveFacturaDeAnticipo(venta)
+            return saveVentaDeAnticipo(venta)
         }
         fixCortes(venta)
         fixDescuentos(venta)
@@ -66,9 +68,29 @@ class VentaService implements  EventPublisher{
         return venta
     }
 
-    def saveFacturaDeAnticipo(Venta venta) {
+    def saveVentaDeAnticipo(Venta venta) {
+        log.debug('Generando venta de anticipo...')
         fixNombre(venta)
         fixVendedor(venta)
+
+        def total = venta.total
+        def importe = MonedaUtils.calcularImporteDelTotal(total, 6)
+        def impuesto = MonedaUtils.calcularImpuesto(importe)
+        impuesto = MonedaUtils.round(impuesto)
+        importe = MonedaUtils.round(importe)
+        log.info('Total: {} Importe: {} Impuesto: {}', total, importe, impuesto)
+        assert total == (importe + impuesto)
+        venta.importe = importe
+        venta.subtotal = importe
+        venta.impuesto = impuesto
+        venta.total = importe + impuesto
+
+        def det = venta.partidas.get(0)
+        det.importe = importe
+        det.subtotal = importe
+        det.impuesto = impuesto
+        det.total = venta.total
+
         if(venta.id == null){
             Folio folio=Folio.findOrCreateWhere(entidad: 'VENTAS', serie: 'ANTICIPOS')
             def res = folio.folio + 1
@@ -76,11 +98,7 @@ class VentaService implements  EventPublisher{
             venta.documento = res
             folio.save()
         }
-        // Generar partida de anticipo
-        /*
-        VentaDet det = new VentaDet()
-        det.producto = Producto.where{}
-        */
+        
         venta.save()
     }
 
@@ -311,15 +329,31 @@ class VentaService implements  EventPublisher{
         cxc.save flush:true
 
         // Notificar Firebase de facturacion
-        if(venta.callcenter || venta.tipo) {
+        if(venta.callcenter ) {
             notificarTimbradoEnFirebase(venta, cfdi)
             cfdiPdfService.pushToFireStorage(cfdi)
         }
 
-        if(cxc.tipo == 'ANT') {
-            anticipoSatService.generarAnticipo(cxc)
+        if (venta.tipo == 'CRE') {
+            cfdiPdfService.pushToFireStorage(cfdi)
         }
 
+        if(cxc.tipo == 'ANT') {
+            def anticipo = anticipoSatService.generarAnticipo(cxc)
+            anticipo.refresh()
+            anticipoSatService.updateFirebase(anticipo)
+            cfdiPdfService.pushToFireStorage(cfdi)
+        }
+
+        if(cxc.anticipo) {
+            log.debug('Actualizando anticipo')
+            def anticipoDet = AnticipoSatDet.where{cxc == cxc.id}.find()
+            if(anticipoDet) {
+                anticipoDet.uuid = cfdi.uuid
+                anticipoDet = anticipoDet.save flush: true
+                anticipoSatService.updateFirebase(anticipoDet.anticipo)
+            }
+        }
         return cfdi
     }
 
@@ -329,7 +363,7 @@ class VentaService implements  EventPublisher{
     * Fase: FACTURADO_TIMBRADO
     */
     def notificarTimbradoEnFirebase(Venta venta, Cfdi cfdi) {
-        if(venta.callcenter && venta.sw2) { 
+        if(venta.callcenter) { 
             def changes = [
                 status: 'FACTURADO_TIMBRADO',
                 facturacion: [
@@ -344,6 +378,8 @@ class VentaService implements  EventPublisher{
             lxPedidoService.updateLog(venta.sw2, changes)
         }
     }
+
+    
 
     @Transactional
     def generarCfdi(Venta venta){
@@ -387,6 +423,11 @@ class VentaService implements  EventPublisher{
         assert username, 'Debe registrar usiuario para la cancelacion'
         assert motivo, 'Debe registrar motivo de cancelacion'
 
+        log.debug('Cancelando factura {}', factura.statusInfo())
+        CuentaPorCobrar cxc = factura.cuentaPorCobrar
+
+
+
         if(validarDia) {
             Date hoy = new Date()
             boolean mismoDia = DateUtils.isSameDay(hoy, factura.cuentaPorCobrar.fecha)
@@ -395,9 +436,34 @@ class VentaService implements  EventPublisher{
             }
         }
 
+        if(cxc.anticipo) {
+            log.debug('Cancelando aplicacion de anticipo')
+            def anticipoDet = AnticipoSatDet.where{cxc == cxc.id}.find()
+            if(anticipoDet) {
+                def anticipo = anticipoDet.anticipo
+                if(anticipoDet.egresoUuid) {
+                    throw new RuntimeException("""
+                        Esta venta facturada no se puede cancelar al tener un anticipo aplicado con 
+                        EGRESO TIMBRADO:${anticipoDet.egresoUuid} 
+                        """)
+                }
+                anticipoDet.delete flush: true
+                anticipoSatService.updateFirebase(anticipo)
+            }
+        }
 
-        log.debug('Cancelando factura {}', factura.statusInfo())
-        CuentaPorCobrar cxc = factura.cuentaPorCobrar
+        if(cxc.tipo == 'ANT') {
+            AnticipoSat anticipo = AnticipoSat.where{cxc == cxc.id}.find()
+            // def aplicaciones = AnticipoSatDet.findAll("from AnticipoSatDet a where a.anticipo.cxc = ?", cxc.id)
+            if(anticipo.aplicaciones) {
+                throw new RuntimeException("""
+                        Esta facturada de anticipo no se puede cancelar por que ya se a usado para pagar 
+                        ${anticipo.aplicaciones.size()} venta(s)
+                        """)
+            } 
+        } 
+        
+
         Cfdi cfdi = cxc.cfdi
 
         // 1o Desvincular la cuenta por cobrar y la venta
@@ -416,9 +482,28 @@ class VentaService implements  EventPublisher{
             cfdi.status = 'CANCELACION_PENDIENTE'
             cfdi.save flush:true
         }
+
         if (factura.callcenter ) {
             notificarCancelacionEnFirebase(factura)
         }
+        // Si es anticipo eliminar el registro de AnticipoSat local y en firebase
+        if(cxc.tipo == 'ANT') {
+            AnticipoSat anticipo = AnticipoSat.where{cxc == cxc.id}.find()
+            anticipo.delete flush: true
+            anticipoSatService.deleteFromFirebase(anticipo)
+        }
+
+        // Si se aplico un AnticipoSatDet entonces eliminarlo local y en firebase
+        if(cxc.anticipo) {
+            log.debug('Cancelando aplicacion de anticipo')
+            def anticipoDet = AnticipoSatDet.where{cxc == cxc.id}.find()
+            if(anticipoDet) {
+                def anticipo = anticipoDet.anticipo
+                anticipoDet.delete flush: true
+                anticipoSatService.updateFirebase(anticipo)
+            }
+        } 
+
         return factura
     }
 

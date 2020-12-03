@@ -79,6 +79,8 @@ class CuentaPorCobrar {
     Date juridico = null
 
     String relacionados
+    String anticipo
+    String anticipoTipo
 
     static constraints = {
         tipoDocumento inList:['VENTA','CHEQUE_DEVUELTO','DEVOLUCION_CLIENTE','NOTA_DE_CARGO']
@@ -97,6 +99,9 @@ class CuentaPorCobrar {
         credito nullable: true
         vencimiento nullable: true
         juridico nullable: true
+        relacionados nullable: true
+        anticipo nullable: true, maxSize:50
+        anticipoTipo nullable: true, inList: ['TOTAL', 'PARCIAL']
     }
 
 

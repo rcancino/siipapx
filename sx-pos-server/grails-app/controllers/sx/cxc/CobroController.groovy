@@ -27,6 +27,8 @@ class CobroController extends RestfulController{
 
     CajaBonificacionMCService cajaBonificacionMCService
 
+    AnticipoSatService anticipoSatService
+
     static responseFormats = ['json']
 
     CobroController() {
@@ -183,6 +185,48 @@ class CobroController extends RestfulController{
         def pdf = reportService.run('RelacionDeFichasCaja', repParams)
         render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "CajaArqueo.pdf")
 
+    }
+
+    def buscarAnticiposDisponibles(Cliente cliente) {
+        log.debug('Buscando anticipos para: {}', cliente);
+        if(cliente) {
+            def data = AnticipoSat.where{cliente == cliente.id}.list()
+            respond data
+            return
+        }
+        def data = [:]
+        respond data
+    }
+
+    @Transactional
+    def registrarCobroConAnticipo() {
+        log.debug('Registrando cobro con anticipo params: {}', params)
+        def venta = Venta.get(params.ventaId)
+        def anticipo = AnticipoSat.get(params.anticipoId)
+        if(!venta.cuentaPorCobrar) {
+            log.debug('Genrando cuenta por cobrar...')
+            venta = ventaService.generarCuentaPorCobrar(venta)
+        }
+        def cxc = venta.cuentaPorCobrar
+        log.debug('Cxc: {}', cxc.id)
+        log.debug('Anticpo: {}', anticipo.id)
+        def res = anticipoSatService.generarCobroConAnticipo(cxc, anticipo)
+        def cobro = res.cobro
+        cxc = res.cxc
+        log.debug('Cobro generado: {}', cobro.id)
+        if(venta.tipo != cxc.tipo) {
+            venta.tipo = cxc.tipo
+            venta.cod = cxc.tipo == 'COD'
+            venta.save flush:true
+        }
+
+        anticipo.addToAplicaciones(anticipoSatService.registrarDetalle(cobro, cxc))
+        anticipo = anticipo.save flush: true
+        anticipo.refresh()
+        anticipoSatService.updateFirebase(anticipo)
+        
+        venta.refresh()
+        respond venta
     }
 
 }

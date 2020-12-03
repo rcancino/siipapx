@@ -52,6 +52,19 @@ class CobroService {
         return cxc
     }
 
+
+    def aplicarCobroDeAnticipo(CuentaPorCobrar cxc, Cobro cobro) {
+        def aplicacion = new AplicacionDeCobro()
+        aplicacion.cuentaPorCobrar = cxc
+        aplicacion.fecha = new Date()
+        aplicacion.importe = cobro.importe
+        aplicacion.formaDePago = cobro.formaDePago
+        cobro.primeraAplicacion = aplicacion.fecha
+        cobro.addToAplicaciones(aplicacion)
+        return cobro.save()  //failOnError: true, flush: true
+        
+    }
+
     private setComisiones(Cobro cobro) {
         if (cobro.tarjeta) {
             if(cobro.tarjeta.debitoCredito) {

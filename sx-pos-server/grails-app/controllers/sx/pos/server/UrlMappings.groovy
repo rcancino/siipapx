@@ -140,6 +140,10 @@ class UrlMappings {
         "/api/cxc/cobro/buscarBonificacionesMC/$id"(controller: 'cobro', action: 'buscarBonificacionesMC')
         "/api/cxc/cobro/generarDisponiblesMC/$id"(controller: 'cobro', action: 'generarDisponiblesMC')
 
+        "/api/cxc/cobro/buscarAnticiposDisponibles"(controller: 'cobro', action: 'buscarAnticiposDisponibles')
+        "/api/cxc/cobro/registrarCobroConAnticipo"(controller: 'cobro', action: 'registrarCobroConAnticipo', method: 'POST')
+        
+
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
         "/api/cuentasPorCobrar/buscarVenta/$id"(controller: 'cuentaPorCobrar', action: 'buscarVenta', method: 'GET')

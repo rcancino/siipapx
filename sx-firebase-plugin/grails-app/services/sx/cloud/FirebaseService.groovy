@@ -125,6 +125,27 @@ class FirebaseService {
 
     }
 
+    void deleteDocument(String collection, String documentId) {
+        try {
+            
+            ApiFuture<WriteResult> result = getFirestore()
+            .collection(collection)
+            .document(documentId)
+            .delete()
+
+            def updateTime = result.get()
+                .getUpdateTime()
+                .toDate()
+                .format('dd/MM/yyyy')
+                
+            log.debug('{}/{} Deleted at : {}', collection, documentId, updateTime)
+        }
+        catch(Exception ex) {
+            def msg = ExceptionUtils.getRootCauseMessage(ex)
+            log.error('Error eliminando: DocId: {} , Msg: {}', documentId, msg)
+        }
+    }
+
 	
 }
 

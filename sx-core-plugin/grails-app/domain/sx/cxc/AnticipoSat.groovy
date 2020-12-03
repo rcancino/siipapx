@@ -37,6 +37,8 @@ class AnticipoSat {
     BigDecimal disponible
     
     String comentario
+
+    Set<AnticipoSatDet> aplicaciones = []
     
 
     Date dateCreated
@@ -60,13 +62,31 @@ class AnticipoSat {
         id generator:'uuid'
         fecha type: 'date'
         disponible formula:'total - (select COALESCE(sum(x.importe),0) from cobro x where x.anticipo_sat=id)'
+        aplicaciones cascade: "all-delete-orphan"
     }
 
-    
+    static hasMany =[aplicaciones: AnticipoSatDet]
 
     static transients = ['folio']
 
     String getFolio() {
         return "${cfdiSerie}-${cfdiFolio} UUID: ${uuid}"
+    }
+
+    Map toFirebase() {
+        Map data = filter(this.properties)
+        data.aplicaciones = this.aplicaciones.collect{ item -> item.toFirebase()}
+        data.folio = "${cfdiSerie}-${cfdiFolio}" as String
+        data.importe = this.importe.toDouble()
+        data.impuesto = this.impuesto.toDouble()
+        data.total = this.total.toDouble()
+        data.disponible = this.disponible.toDouble()
+        data.tipoDeCambio = this.tipoDeCambio.toDouble()
+        return data
+    }
+
+    Map filter(Map data) {
+        data = data.findAll{ k, v -> !['class','constraints', 'errors', 'aplicaciones'].contains(k) }
+        return data
     }
 }
