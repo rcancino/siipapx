@@ -9,7 +9,7 @@ import sx.core.Sucursal
 /**
  * Created by Ruben Cancino 1/12/2020
  */
-@ToString( includes = ['cliente','fecha', 'cxc', 'importe'], includeNames=true,includePackage=false)
+@ToString( includes = ['cxcTipo', 'cxcDocumento', 'importe'], includeNames=true,includePackage=false)
 @EqualsAndHashCode(includeFields = true,includes = ['id','cobro'])
 class AnticipoSatDet {
 
@@ -67,11 +67,12 @@ class AnticipoSatDet {
         Map data = filter(this.properties)
         data.importe = this.importe.toDouble()
         data.tipoDeCambio = this.tipoDeCambio.toDouble()
+        data.id = this.id
         return data
     }
     
     Map filter(Map data) {
-        data = data.findAll{ k, v -> !['class','constraints', 'errors', 'anticipo'].contains(k) }
+        data = data.findAll{ k, v -> !['class','constraints', 'errors', 'anticipo', 'anticipoId'].contains(k) }
         return data
     }
     

@@ -124,13 +124,12 @@ class AnticipoSatService {
     }
 
     void updateFirebase(AnticipoSat anticipo) {
-        Map changes = anticipo.toFirebase().findAll{entry -> entry.key != 'folio'}
-        changes['folio'] = "${anticipo.cfdiSerie}-${anticipo.cfdiFolio}" as String
-        firebaseService.updateCollection('anticipos', anticipo.id, anticipo.toFirebase())
+        Map changes = anticipo.toFirebase()
+        firebaseService.updateCollection('anticipos', anticipo.getFolio(), anticipo.toFirebase())
     }
 
     void deleteFromFirebase(AnticipoSat anticipo) {
-        firebaseService.deleteDocument('anticipos', anticipo.id)
+        firebaseService.deleteDocument('anticipos', anticipo.getFolio())
     }
 
 }

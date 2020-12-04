@@ -70,13 +70,14 @@ class AnticipoSat {
     static transients = ['folio']
 
     String getFolio() {
-        return "${cfdiSerie}-${cfdiFolio} UUID: ${uuid}"
+        return "${cfdiSerie}-${cfdiFolio}" as String
     }
 
     Map toFirebase() {
         Map data = filter(this.properties)
+        data.id = this.id
         data.aplicaciones = this.aplicaciones.collect{ item -> item.toFirebase()}
-        data.folio = "${cfdiSerie}-${cfdiFolio}" as String
+        data.folio = this.getFolio()
         data.importe = this.importe.toDouble()
         data.impuesto = this.impuesto.toDouble()
         data.total = this.total.toDouble()
