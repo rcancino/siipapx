@@ -980,7 +980,7 @@
 					<textElement textAlignment="Left">
 						<font size="7"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{RelacionUUID}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TipoRelacion}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupFooter>

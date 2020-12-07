@@ -126,7 +126,7 @@ class V33PdfGenerator {
 
         if(relacionados){
             params.put('RelacionUUID', relacionados.cfdiRelacionado.get(0).UUID)
-            params.put('Tipo_Relacion', relacionados.tipoRelacion)
+            params.put('TipoRelacion', relacionados.tipoRelacion)
         }
         if(cfdi.uuid!=null){
             def img = generarQR(cfdi)
