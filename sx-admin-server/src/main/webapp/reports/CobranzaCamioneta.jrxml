@@ -50,7 +50,7 @@
         WHEN o.forma_de_pago='TARJETA' THEN 5
         WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5
         WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
-        WHEN ANTICIPO IS TRUE THEN 6
+        WHEN o.ANTICIPO IS TRUE THEN 6
         WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
  ELSE 10 END AS ORDEN_PAGO
 ,IFNULL(((    SELECT SUM(O.IMPORTE) 	FROM cobro o
