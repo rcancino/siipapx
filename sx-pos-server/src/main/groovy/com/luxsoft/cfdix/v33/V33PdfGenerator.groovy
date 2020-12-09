@@ -123,8 +123,10 @@ class V33PdfGenerator {
         params["REGIMEN"] = comprobante.emisor.regimenFiscal
         params["LUGAR_EXPEDICION"] = comprobante.lugarExpedicion
         def relacionados = comprobante.cfdiRelacionados
+
         if(relacionados){
-            params.put('RelacionUUID',relacionados.cfdiRelacionado.get(0).UUID)
+            params.put('RelacionUUID', relacionados.cfdiRelacionado.get(0).UUID)
+            params.put('TipoRelacion', relacionados.tipoRelacion)
         }
         if(cfdi.uuid!=null){
             def img = generarQR(cfdi)
