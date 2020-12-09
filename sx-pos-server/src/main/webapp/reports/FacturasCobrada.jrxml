@@ -61,7 +61,7 @@ WHERE O.ID IN(SELECT A.COBRO_ID FROM aplicacion_de_cobro A JOIN cuenta_por_cobra
         WHEN o.forma_de_pago='TARJETA_DEBITO' THEN 5
         WHEN o.forma_de_pago='TARJETA_CREDITO' THEN 5.1
         WHEN o.forma_de_pago='TARJETA_AMEX' THEN 5.2
-        WHEN ANTICIPO IS TRUE THEN 6
+        WHEN o.ANTICIPO IS TRUE THEN 6
         WHEN o.forma_de_pago='PAGO_DIF'  THEN 7.2
  ELSE 10 END AS ORDEN_PAGO,A.aplicaciones_idx,a.id
 FROM  aplicacion_de_cobro A  JOIN cuenta_por_cobrar  C ON (A.cuenta_por_cobrar_id=C.ID) JOIN cobro O ON (O.ID=A.cobro_id) JOIN cliente L ON (L.ID=C.CLIENTE_ID)
