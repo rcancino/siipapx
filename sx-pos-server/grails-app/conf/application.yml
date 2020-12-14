@@ -80,7 +80,7 @@ environments:
     development:
         dataSource:
             dbCreate: update
-            url: jdbc:mysql://localhost:3306/siipapx_tacuba?autoReconnect=true&useSSL=false
+            url: jdbc:mysql://localhost:3306/siipapx_pos?autoReconnect=true&useSSL=false
             #url: jdbc:mysql://10.10.1.229:3306/siipapx_tacuba?autoReconnect=true
             username: root
             password: sys
@@ -102,7 +102,7 @@ environments:
             #url: jdbc:mysql://localhost/siipapx?autoReconnect=false
             url: jdbc:mysql://${JDBC_CONNECTION_STRING}?autoReconnect=true&useSSL=false
             username: root
-            password: siipap_RX1
+            password: ${JDBC_USER_PASSWORD}
             properties:
                 maxActive: 10
                 maxIdle: 10
