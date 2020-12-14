@@ -187,6 +187,16 @@ class CobroController extends RestfulController{
 
     }
 
+    def reporteDeAnticipos(AnticiposReportCommand command) {
+        Map repParams = [:];
+        repParams['SUCURSAL'] = params['SUCURSAL']
+        repParams['FECHA'] = command.fecha
+        
+        def pdf = reportService.run('AnticipoFacturado', repParams)
+        render (file: pdf.toByteArray(), contentType: 'application/pdf', filename: "AnticipoFacturado.pdf")
+
+    }
+
     def buscarAnticiposDisponibles(Cliente cliente) {
         log.debug('Buscando anticipos para: {}', cliente);
         if(cliente) {
@@ -267,6 +277,9 @@ public class CambioDeCheque {
 public class PorFacturarCommand {
     String tipo
     Sucursal sucursal
+}
 
-
+@ToString(includeNames=true,includePackage=false)
+public class AnticiposReportCommand {
+    Date fecha
 }

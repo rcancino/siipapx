@@ -131,6 +131,8 @@ class UrlMappings {
         "/api/tesoreria/reporteDeAarqueoCaja"(controller: 'cobro', action: 'reporteDeAarqueoCaja', method: 'GET')
         "/api/tesoreria/reporteDeFichas"(controller: 'cobro', action: 'reporteDeFichas', method: 'GET')
 
+
+
         // CXC
         "/api/cxc/cobro"(resources: "cobro")
         "/api/cxc/cobro/cobroContado"(controller: 'cobro', action: 'cobroContado')
@@ -142,7 +144,7 @@ class UrlMappings {
 
         "/api/cxc/cobro/buscarAnticiposDisponibles"(controller: 'cobro', action: 'buscarAnticiposDisponibles')
         "/api/cxc/cobro/registrarCobroConAnticipo"(controller: 'cobro', action: 'registrarCobroConAnticipo', method: 'POST')
-        
+        "/api/cxc/cobro/reporteDeAnticipos"(controller: 'cobro', action: 'reporteDeAnticipos', method: 'GET')
 
         "/api/notasDeCargo"(resources: "notaDeCargo")
         "/api/cuentasPorCobrar"(resources: 'cuentaPorCobrar')
