@@ -48,6 +48,7 @@ class Cliente {
     String updateUser
 
     Set<ComunicacionEmpresa> medios = []
+    Set<ClienteComentario> comentarios = []
 
     // ClienteCredito credito
 
@@ -72,7 +73,8 @@ class Cliente {
 
     static hasOne = [credito: ClienteCredito]
 
-    static hasMany =[medios:ComunicacionEmpresa]
+    static hasMany =[medios:ComunicacionEmpresa, comentarios: ClienteComentario,]
+    
 
     static embedded = ['direccion']
 
