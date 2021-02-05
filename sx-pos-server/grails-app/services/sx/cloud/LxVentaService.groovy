@@ -100,7 +100,7 @@ class LxVentaService implements ApplicationListener<ContextRefreshedEvent>, Even
                 }
                 
                 if(partida.clave == "MANIOBRAF"){
-                    venta.cargosPorManiobra = partida.total
+                    venta.cargosPorManiobra = partida.subtotal
                 }
 
 

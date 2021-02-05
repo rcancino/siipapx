@@ -249,6 +249,9 @@ class CfdiFacturaBuilder {
                 traslado1.tipoFactor = CTipoFactor.TASA
                 traslado1.tasaOCuota = '0.160000'
                 traslado1.importe = det.impuesto
+                if(det.impuestoTasa == 0.00){
+                    traslado1.tasaOCuota = '0.000000'
+                }
                 this.totalImpuestosTrasladados += traslado1.importe
                 concepto.impuestos.traslados.traslado.add(traslado1)
                 conceptos.concepto.add(concepto)
